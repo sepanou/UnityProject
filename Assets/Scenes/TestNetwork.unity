@@ -366,7 +366,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1371752025}
         m_TargetAssemblyTypeName: TestNetwork, Assembly-CSharp
-        m_MethodName: SendServer
+        m_MethodName: SendClient
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
