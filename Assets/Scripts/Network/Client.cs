@@ -2,12 +2,14 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+
 using Network.Packet;
 
 namespace Network {
 	public class Client: IDisposable {
 		private bool _disposed;
 		private readonly TcpClient _tcpClient;
+		private Task _runTask;
 
 		public string Address { get; }
 		public int Port { get; }
@@ -43,6 +45,7 @@ namespace Network {
 			if (IsOpen)
 				Close();
 			if (disposing) {
+				_runTask.Dispose();
 				_tcpClient.Dispose();
 				Stream.Dispose();
 			}
@@ -53,26 +56,25 @@ namespace Network {
 			if (IsOpen) return;
 			IsOpen = true;
 			OnStart();
-			Run().Wait();
-			IsOpen = false;
-		}
-
-		public async Task StartAsync() {
-			if (IsOpen) return;
-			IsOpen = true;
-			OnStart();
-			await Run();
-			IsOpen = false;
+			_runTask = Run();
 		}
 
 		public void Close() {
-			while (IsOpen) { }
+			if (!IsOpen) return;
+			IsOpen = false;
+			_runTask.Wait();
 			OnClose();
 			_tcpClient.Close();
 		}
 
 		protected void DispatchEvents() {
-			if (IsDataAvailable)
+			Verify();
+		}
+
+		private void Verify() {
+			if (!Connected)
+				Disconnect();
+			else if (IsDataAvailable)
 				OnReceive();
 		}
 

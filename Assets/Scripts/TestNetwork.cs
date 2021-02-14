@@ -20,17 +20,17 @@ public class TestNetwork: MonoBehaviour {
 
 		public MyClient(TestNetwork master, string address, int port) : base(address, port) { _master = master; }
 		protected override void OnStart() {
-			_master.LogClient($"Client: connected with {Address} on port {Port}");
+			_master.LogClient($"Connected with {Address} on port {Port}");
 		}
 
 		protected override void OnClose() {
-			_master.LogClient("Client: closed");
+			_master.LogClient("Closed");
 		}
 
 		protected override void OnReceive() {
 			PacketString packet = Receive<PacketString>();
 			packet.Read(out string message);
-			_master.LogClient($"Client: received '{message}'");
+			_master.LogClient($"Received '{message}'");
 		}
 	}
 	
@@ -40,40 +40,45 @@ public class TestNetwork: MonoBehaviour {
 		public MyServer(TestNetwork master, int port): base(port) { _master = master; }
 
 		protected override void OnStart() {
-			_master.LogServer($"Server: started on port {Port}");
+			_master.LogServer($"Started on port {Port}");
 		}
 
 		protected override void OnClose() {
-			_master.LogServer("Server: closed");
+			_master.LogServer("Closed");
 		}
 
 		protected override void OnAcceptClient(ServerClient client) {
-			_master.LogServer($"Server: accepted a connection from {client.Address}:{client.Port}");
+			_master.LogServer($"Accepted a connection from {client.Address}:{client.Port}");
 		}
 
 		protected override void OnRefuseClient(ServerClient client) {
-			_master.LogServer($"Server: refused a connection from {client.Address}:{client.Port}");
+			_master.LogServer($"Refused a connection from {client.Address}:{client.Port}");
 		}
 
 		protected override void OnDisconnectClient(ServerClient client) {
-			_master.LogServer($"Server: {client.Address}:{client.Port} got disconnected");
+			_master.LogServer($"{client.Address}:{client.Port} Got disconnected");
 		}
 
 		protected override void OnReceive(ServerClient client) {
 			PacketString packet = client.Receive<PacketString>();
 			packet.Read(out string message);
-			_master.LogServer($"Server: {client.Address}:{client.Port} sent '{message}'");
+			_master.LogServer($"{client.Address}:{client.Port} Sent '{message}'");
 		}
 	}
 
 	private MyServer _server;
 	private MyClient _client;
 
-	public void Start() {
+	private void Start() {
 		_server = new MyServer(this, 42069);
 		_server.Start();
 		
 		_client = new MyClient(this, "localhost", 42069);
 		_client.Start();
+	}
+
+	private void OnApplicationQuit() {
+		_client.Close();
+		_server.Close();
 	}
 }
