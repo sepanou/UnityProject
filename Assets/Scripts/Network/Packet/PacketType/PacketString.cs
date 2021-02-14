@@ -1,7 +1,7 @@
 using System.Text;
 
 namespace Network.Packet.PacketType {
-	public sealed class PacketString : PacketType<string> {
+	public sealed class PacketString: PacketType<string> {
 		public PacketString() { }
 		public PacketString(string data) => Write(data);
 

@@ -3,23 +3,28 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+
 using Network.Packet;
+
+using ClientSet = System.Collections.Generic.HashSet<Network.Server.ServerClient>;
 
 namespace Network {
 	public class Server: IDisposable {
-		protected class ServerClient: Client {
+		public class ServerClient: Client {
 			public Server Server { get; }
 			public ServerClient(Server server, TcpClient tcpClient) : base(tcpClient) { Server = server; }
-			protected override void OnDisconnect() => Server.DisconnectClient(this);
+			protected override void OnDisconnect() => Server.RemoveClient(this);
 			protected override void OnReceive() => Server.OnReceive(this);
 		}
 
 		private bool _disposed = false;
 		private readonly TcpListener _tcpListener;
-		private HashSet<ServerClient> _clients = new HashSet<ServerClient>();
+		private Task _runTask;
+		private ClientSet _clients = new ClientSet();
 
 		public int Port { get; }
 		public bool IsOpen { get; private set; }
+		public ClientSet.Enumerator Clients => _clients.GetEnumerator();
 
 		public Server(int port) {
 			Port = port;
@@ -36,36 +41,35 @@ namespace Network {
 		protected virtual void Dispose(bool disposing) {
 			if (_disposed) return;
 			if (IsOpen) Close();
-			// if (!disposing) return;
+			if (!disposing) return;
+			_runTask.Dispose();
 		}
 
 		public void Start() {
 			if (IsOpen) return;
 			IsOpen = true;
 			OnStart();
-			Run().Wait();
-			IsOpen = false;
-		}
-
-		public async Task StartAsync() {
-			if (IsOpen) return;
-			IsOpen = true;
-			OnStart();
-			await Run();
-			IsOpen = false;
+			_runTask = Run();
 		}
 
 		public void Close() {
-			while (IsOpen) {}
+			if (!IsOpen) return;
+			IsOpen = false;
+			_runTask.Wait();
 			ServerClient[] copyClients = new ServerClient[_clients.Count];
 			_clients.CopyTo(copyClients);
 			foreach (ServerClient client in copyClients)
-				DisconnectClient(client);
+				RemoveClient(client);
 			OnClose();
 			_tcpListener.Stop();
 		}
 
 		protected void DispatchEvents() {
+			Listen();
+			
+		}
+
+		private void Listen() {
 			while (_tcpListener.Pending())
 				ConnectClient(new ServerClient(this, _tcpListener.AcceptTcpClient()));
 		}
@@ -85,10 +89,10 @@ namespace Network {
 			_clients.Add(client);
 		}
 
-		private void DisconnectClient(ServerClient client) {
+		private void RemoveClient(ServerClient client) {
 			if (!_clients.Contains(client)) return;
-			OnDisconnectClient(client);
 			client.Close();
+			OnDisconnectClient(client);
 			_clients.Remove(client);
 		}
 
