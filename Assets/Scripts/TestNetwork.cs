@@ -1,5 +1,4 @@
-﻿using System;
-using Network;
+﻿using Network;
 using Network.Packet.PacketType;
 using UnityEngine;
 using UnityEngine.UI;
