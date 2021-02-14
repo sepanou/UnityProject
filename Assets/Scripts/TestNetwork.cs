@@ -1,4 +1,5 @@
-﻿using Network;
+﻿using System;
+using Network;
 using Network.Packet.PacketType;
 using UnityEngine;
 using UnityEngine.UI;
@@ -69,11 +70,16 @@ public class TestNetwork: MonoBehaviour {
 	private MyServer _server;
 	private MyClient _client;
 
-	public void Start() {
+	private void Start() {
 		_server = new MyServer(this, 42069);
 		_server.Start();
 		
 		_client = new MyClient(this, "localhost", 42069);
 		_client.Start();
+	}
+
+	private void OnApplicationQuit() {
+		_client.Close();
+		_server.Close();
 	}
 }
