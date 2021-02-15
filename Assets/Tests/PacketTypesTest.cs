@@ -1,6 +1,7 @@
-using System;
 using Network.Packet.PacketType;
 using NUnit.Framework;
+using UnityEngine;
+using Random = System.Random;
 
 namespace Tests {
     public class PacketTypesTest {
@@ -50,5 +51,31 @@ namespace Tests {
             packetString.Read(out string returnString);
             Assert.AreEqual(testString, returnString);
         }
+        
+        [Test]
+        public void Vector3Packets() {
+            Vector3 vector3 = new Vector3 {
+                x = _random.Next(),
+                y = _random.Next(),
+                z = _random.Next()
+            };
+            PacketPosition packetPosition = new PacketPosition(vector3);
+            packetPosition.Read(out Vector3 returnVector);
+            UnityEngine.Assertions.Assert.AreEqual(vector3, returnVector);
+        }
+        
+        [Test]
+        public void QuaternionPackets() {
+            Quaternion quaternion = new Quaternion {
+                x = _random.Next(),
+                y = _random.Next(),
+                z = _random.Next(),
+                w = _random.Next()
+            };
+            PacketRotation packetRotation = new PacketRotation(quaternion);
+            packetRotation.Read(out Quaternion returnQuaternion);
+            UnityEngine.Assertions.Assert.AreEqual(quaternion, returnQuaternion);
+        }
+        
     }
 }
