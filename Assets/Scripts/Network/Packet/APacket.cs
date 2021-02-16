@@ -27,7 +27,7 @@ namespace Network.Packet {
 		}
 		
 		protected byte[] Read(int length) {
-			if (length > _bytes.Length) throw new ArgumentOutOfRangeException($"{nameof(length)}", $"{length}", $"public byte[] testNet.Packet.Read(int): length cannot be superior to packet size {_bytes.Length}");
+			if (length > _bytes.Length) throw new ArgumentOutOfRangeException($"{nameof(length)}", $"{length}", $"public byte[] Network.Packet.APacket.Read(int): length cannot be superior to packet size {_bytes.Length}");
 			byte[] ret = new byte[length];
 			Array.Copy(_bytes, 0, ret, 0, length);
 			Array.Copy(_bytes, length, _bytes, 0, _bytes.Length - length);

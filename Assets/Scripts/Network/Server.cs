@@ -9,7 +9,24 @@ using Network.Packet;
 using ClientSet = System.Collections.Generic.HashSet<Network.Server.ServerClient>;
 
 namespace Network {
+
 	public class Server: IDisposable {
+		
+		public enum ServerPacketEnum {
+			ConnectionClosing, 
+			InfoMessage,
+			WarningMessage,
+			ErrorMessage,
+			PlayerConnectionInitResponse,
+			PlayerUpdatePosition,
+			PlayerUpdateRotation,
+			PlayerUpdateAction,
+			PlayerBroadcastMessage,
+			PlayerServerCommand,
+			EntityUpdatePosition,
+			EntityUpdateRotation,
+		}
+		
 		public class ServerClient: Client {
 			public Server Server { get; }
 			public ServerClient(Server server, TcpClient tcpClient) : base(tcpClient) { Server = server; }

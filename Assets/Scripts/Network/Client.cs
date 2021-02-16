@@ -6,7 +6,19 @@ using System.Threading.Tasks;
 using Network.Packet;
 
 namespace Network {
+	
 	public class Client: IDisposable {
+		
+		public enum ClientPacketEnum {
+			ConnectionInit,
+			ConnectionClosing,
+			BroadcastMessage,
+			PlayerUpdatePosition,
+			PlayerUpdateRotation,
+			PlayerUpdateAction,
+			ServerCommand
+		}
+		
 		private bool _disposed;
 		private readonly TcpClient _tcpClient;
 		private Task _runTask;
