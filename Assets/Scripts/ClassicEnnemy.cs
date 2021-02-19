@@ -11,7 +11,10 @@ public class ClassicEnnemy : MonoBehaviour
     public Animator animator;
     public GameObject player;
     public Rigidbody2D slimebody;
-    public int x;
+    public int hp;
+    public bool invincible;
+    public bool attacked;
+    private bool isDying;
 
     public bool isBoucing;
     // Start is called before the first frame update
@@ -29,6 +32,10 @@ public class ClassicEnnemy : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (isDying)
+        {
+            return;
+        }
         WalkingAnimation();
         Vector2 move = Vector2.MoveTowards(transform.position, player.transform.position, .03f);
         ;
@@ -42,11 +49,31 @@ public class ClassicEnnemy : MonoBehaviour
         {
             transform.position = move;
         }
+
+        if (invincible && !animator.GetCurrentAnimatorStateInfo(0).IsName("TakingDamage"))
+        {
+            invincible = false;
+            animator.Play("SlimeIdling");
+            Debug.Log("2 retoure");
+        }
     }
 
-    void WalkingTo()
+    public void TakingDamage(int atk)
     {
-        
+        if (invincible)
+        {
+            return;
+        }
+        hp -= atk;
+        if (hp <= 0)
+        {
+            isDying = true;
+            animator.SetBool("isDying", true);
+        }
+
+        invincible = true;
+        animator.Play("TakingDamage");
+        Debug.Log("sapik");
     }
 
     void WalkingAnimation()
@@ -64,5 +91,10 @@ public class ClassicEnnemy : MonoBehaviour
         lastPos = transform.position;
         transform.rotation = transformRotation;
         animator.SetBool("IsWalking", (displacement.magnitude > 0.00001));
+    }
+
+    void HasDied()  // Used by animator controller
+    {
+        gameObject.SetActive(false);
     }
 }
