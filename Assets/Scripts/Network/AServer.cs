@@ -4,7 +4,6 @@ using System.Net.Sockets;
 using System.Threading;
 
 using Network.Packet;
-
 using ClientSet = System.Collections.Generic.HashSet<Network.AServer.ServerClient>;
 
 namespace Network {
@@ -18,7 +17,7 @@ namespace Network {
 
 		private bool _disposed = false;
 		private readonly TcpListener _tcpListener;
-		private Thread _thread;
+		private readonly Thread _thread;
 		private readonly ClientSet _clients = new ClientSet();
 
 		public int TcpPort { get; }
@@ -29,12 +28,21 @@ namespace Network {
 			TcpPort = tcpPort;
 			_tcpListener = new TcpListener(IPAddress.Any, tcpPort);
 			_tcpListener.Start();
+			_thread = new Thread(Run);
+		}
+
+		private void Run() {
+			while (IsOpen) {
+				if (_tcpListener.Pending())
+					ConnectClient(new ServerClient(this, _tcpListener.AcceptTcpClient(), 0));
+			}
 		}
 
 		~AServer() => Dispose(false);
 
 		public void Dispose() {
 			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
 		protected virtual void Dispose(bool disposing) {
@@ -50,11 +58,6 @@ namespace Network {
 			if (IsOpen) return;
 			IsOpen = true;
 			OnStart();
-			_thread = new Thread(() => {
-				while (IsOpen)
-					if (_tcpListener.Pending())
-						ConnectClient(new ServerClient(this, _tcpListener.AcceptTcpClient(), 0));
-			});
 			_thread.Start();
 		}
 

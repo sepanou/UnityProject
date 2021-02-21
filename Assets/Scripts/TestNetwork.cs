@@ -69,8 +69,8 @@ public class TestNetwork: MonoBehaviour {
 	private MyServer _server;
 	private MyClient _client;
 
-	private Queue<string> _serverQueue = new Queue<string>();
-	private Queue<string> _clientQueue = new Queue<string>();
+	private readonly Queue<string> _serverQueue = new Queue<string>();
+	private readonly Queue<string> _clientQueue = new Queue<string>();
 
 	private void Start() {
 		_server = new MyServer(this, 42069);
@@ -88,7 +88,7 @@ public class TestNetwork: MonoBehaviour {
 	}
 
 	private void OnApplicationQuit() {
-		_client.ForceClose();
-		_server.ForceClose();
+		_client.Close();
+		_server.Close();
 	}
 }
