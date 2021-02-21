@@ -6,22 +6,31 @@ namespace Entity.DynamicEntity.LivingEntity
     {
         public override void GainHealth(int amount)
         {
-            throw new System.NotImplementedException();
+            CurrentHp += amount;
+            Debug.Log("Health increased by " + amount);
+            // Add behaviour later for UI (modify HealthBar)
         }
 
         public override void TakeDamage(int amount)
         {
-            throw new System.NotImplementedException();
+            CurrentHp -= amount;
+            Debug.Log("Health decreased by " + amount);
+            // Add behaviour later for UI (modify HealthBar)
         }
 
         protected override void OnDeath()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Too bad you're dead :(");
+            gameObject.SetActive(false);
         }
 
         protected void Move()
         {
-            // TODO -> makes the player move based on inputs
+            float x = Input.GetAxisRaw("Horizontal");
+            float y = Input.GetAxisRaw("Vertical");
+            Vector2 direction = new Vector2(x, y);
+            direction.Normalize();
+            RigidBody.velocity = GetSpeed() * direction;
         }
 
         protected void InstantiatePlayer()

@@ -9,13 +9,32 @@ namespace Entity.EntityInterface
         // Sprite displayed on the slot may be different from the original sprite - Read-only variable
         Sprite DisplayedSprite { get; }
         
-        // Behavior when the item is selected
+        /// <summary>
+        /// Behavior when the item is selected (ex: the entity <paramref name="source"/> is holding it)
+        /// </summary>
+        /// <param name="source"></param>
+        /// <typeparam name="T"></typeparam>
         void OnSelect<T>(T source);
-        // Behavior when the item is used ('Fire1')
+        
+        /// <summary>
+        /// Behavior when the item is used by <paramref name="source"/> (ex: 'Fire1' button pressed)
+        /// </summary>
+        /// <param name="source"></param>
+        /// <typeparam name="T"></typeparam>
         void OnUse<T>(T source);
-        // Behavior when the item is no longer selected
+
+        /// <summary>
+        /// Behavior when the item is deselected (ex: <paramref name="source"/> is no longer holding it)
+        /// </summary>
+        /// <param name="source"></param>
+        /// <typeparam name="T"></typeparam>
         void OnDeselect<T>(T source);
-        // Behavior when the item is dropped on the ground
+
+        /// <summary>
+        /// Behavior when the item is dropped by <paramref name="source"/>
+        /// </summary>
+        /// <param name="source"></param>
+        /// <typeparam name="T"></typeparam>
         void OnDrop<T>(T source);
     }
 }

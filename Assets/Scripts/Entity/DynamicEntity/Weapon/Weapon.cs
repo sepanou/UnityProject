@@ -10,7 +10,7 @@ namespace Entity.DynamicEntity.Weapon
         public Player holder;
         public bool equipped;
         // For cooldown purposes
-        [NonSerialized] protected float LastAttackTime;
+        [NonSerialized] private float _lastAttackTime;
         [SerializeField] private string _name;
         [SerializeField] private Sprite _displayedSprite;
     
@@ -44,7 +44,7 @@ namespace Entity.DynamicEntity.Weapon
         {
             Name = _name;
             DisplayedSprite = _displayedSprite;
-            LastAttackTime = float.NaN;
+            _lastAttackTime = float.NaN;
             InstantiateDynamicEntity();
         }
     }

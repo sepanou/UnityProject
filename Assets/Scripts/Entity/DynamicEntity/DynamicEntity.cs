@@ -5,6 +5,10 @@ namespace Entity.DynamicEntity
 {
     public abstract class DynamicEntity : Entity
     {
+        /// <summary>
+        /// Can represent either a velocity (= movements) or
+        /// a cooldown (= weapons) depending on the context
+        /// </summary>
         [SerializeField] private float speed;
         [NonSerialized] public Animator Animator;
 

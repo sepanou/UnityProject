@@ -6,17 +6,20 @@ namespace Entity.DynamicEntity.LivingEntity
     {
         public override void GainHealth(int amount)
         {
-            throw new System.NotImplementedException();
+            CurrentHp += amount;
+            Debug.Log("Health increased by " + amount);
         }
 
         public override void TakeDamage(int amount)
         {
-            throw new System.NotImplementedException();
+            CurrentHp -= amount;
+            Debug.Log("Health decreased by " + amount);
         }
 
         protected override void OnDeath()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("One bad dude sent to the Oblivion :)");
+            gameObject.SetActive(false);
         }
 
         protected void InstantiateMob()
