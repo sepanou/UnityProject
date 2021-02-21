@@ -1,6 +1,12 @@
 namespace Network.Packet.PacketType {
 	public abstract class PacketType<T>: APacket {
-		public abstract void Read(out T data);
-		public abstract void Write(T data);
+		public static TPacket Make<TPacket>(T data) where TPacket: PacketType<T>, new() {
+			TPacket packet = new TPacket();
+			packet.WriteType(data);
+			return packet;
+		}
+		
+		public abstract T ReadType();
+		public abstract void WriteType(T data);
 	}
 }
