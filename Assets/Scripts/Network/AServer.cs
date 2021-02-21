@@ -4,13 +4,13 @@ using System.Net.Sockets;
 using System.Threading;
 
 using Network.Packet;
-using ClientSet = System.Collections.Generic.HashSet<Network.AServer.ServerClient>;
+using ClientDict = System.Collections.Generic.Dictionary<System.Net.IPEndPoint, Network.AServer.ServerClient>;
 
 namespace Network {
 	public abstract class AServer: IDisposable {
 		public class ServerClient: AClient {
 			private readonly AServer _server;
-			public ServerClient(AServer server, TcpClient tcpClient, int udpPort): base(tcpClient, udpPort) { _server = server; }
+			public ServerClient(AServer server, TcpClient tcpClient): base(tcpClient) { _server = server; }
 			protected override bool OnDisconnect() => _server.DisconnectClient(this);
 			protected override void OnReceive() => _server.OnReceive(this);
 		}
@@ -18,23 +18,22 @@ namespace Network {
 		private bool _disposed = false;
 		private readonly TcpListener _tcpListener;
 		private readonly Thread _thread;
-		private readonly ClientSet _clients = new ClientSet();
+		private readonly ClientDict _clients = new ClientDict();
 
-		public int TcpPort { get; }
+		public readonly IPEndPoint EndPoint;
 		public bool IsOpen { get; private set; }
-		public ClientSet.Enumerator Clients => _clients.GetEnumerator();
+		public ClientDict.ValueCollection Clients => _clients.Values;
 
-		protected AServer(int tcpPort) {
-			TcpPort = tcpPort;
-			_tcpListener = new TcpListener(IPAddress.Any, tcpPort);
-			_tcpListener.Start();
+		protected AServer(IPEndPoint endPoint) {
+			_tcpListener = new TcpListener(endPoint);
+			EndPoint = (IPEndPoint)_tcpListener.LocalEndpoint;
 			_thread = new Thread(Run);
 		}
 
 		private void Run() {
 			while (IsOpen) {
 				if (_tcpListener.Pending())
-					ConnectClient(new ServerClient(this, _tcpListener.AcceptTcpClient(), 0));
+					ConnectClient(new ServerClient(this, _tcpListener.AcceptTcpClient()));
 			}
 		}
 
@@ -50,32 +49,33 @@ namespace Network {
 			_disposed = true;
 			if (IsOpen) Close();
 			if (!disposing) return;
-			foreach (ServerClient client in _clients)
+			foreach (ServerClient client in _clients.Values)
 				client.Dispose();
 		}
 
 		public void Start() {
 			if (IsOpen) return;
 			IsOpen = true;
-			OnStart();
+			_tcpListener.Start();
 			_thread.Start();
+			OnStart();
 		}
 
 		public void Close() {
 			if (!IsOpen) return;
+			OnClose();
 			IsOpen = false;
 			_thread.Join();
-			foreach (ServerClient client in _clients)
+			foreach (ServerClient client in _clients.Values)
 				client.Close();
 			_tcpListener.Stop();
-			OnClose();
 		}
 
 		public void ForceClose() {
 			if (!IsOpen) return;
 			IsOpen = false;
 			_thread.Interrupt();
-			foreach (ServerClient client in _clients)
+			foreach (ServerClient client in _clients.Values)
 				client.ForceClose();
 			_tcpListener.Stop();
 		}
@@ -91,27 +91,38 @@ namespace Network {
 		}
 
 		private void AddClient(ServerClient client) {
+			_clients.Add(client.EndPoint, client);
 			client.Start();
-			_clients.Add(client);
 		}
 
 		private bool DisconnectClient(ServerClient client) {
-			if (!_clients.Contains(client)) return false;
+			if (!_clients.ContainsKey(client.EndPoint)) return false;
 			bool result = OnDisconnectClient(client);
 			if (!result) RemoveClient(client);
 			return result;
 		}
 
 		private void RemoveClient(ServerClient client) {
-			if (!_clients.Contains(client)) return;
+			if (!_clients.ContainsKey(client.EndPoint)) return;
 			client.Close();
-			_clients.Remove(client);
+			_clients.Remove(client.EndPoint);
 		}
 
 		public void SendAllTcp(APacket packet) {
-			foreach (ServerClient client in _clients)
+			foreach (ServerClient client in _clients.Values)
 				client.SendTcp(packet);
 		}
+
+		public void SendAllUdp(APacket packet) {
+			foreach (ServerClient client in _clients.Values)
+				client.SendUdp(packet);
+		}
+
+		public void SendTcp(APacket packet, IPEndPoint endPoint)
+			=> _clients[endPoint].SendTcp(packet);
+
+		public void SendUdp(APacket packet, IPEndPoint endPoint)
+			=> _clients[endPoint].SendUdp(packet);
 
 		protected virtual void OnStart() { }
 		protected virtual void OnClose() { }

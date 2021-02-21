@@ -11,41 +11,66 @@ namespace Network {
 		private bool _disposed;
 		private readonly TcpClient _tcpClient;
 		private readonly UdpClient _udpClient;
-		private readonly Queue<APacket> _tcpQueue = new Queue<APacket>();
-		private readonly Queue<APacket> _udpQueue = new Queue<APacket>();
+		private readonly byte[] _tcpBuffer = new byte[2048];
+		private readonly NetworkStream _tcpStream;
+		private readonly Stack<byte[]> _tcpStack = new Stack<byte[]>();
+		private readonly Stack<byte[]> _udpStack = new Stack<byte[]>();
+		private readonly Stack<byte[]> _receiveStack = new Stack<byte[]>();
 		private readonly Thread _thread;
 
-		public string Address { get; }
-		public int TcpPort { get; }
-		public int UdpPort { get; }
-		public NetworkStream TcpStream { get; }
+		public IPEndPoint EndPoint { get; }
 		public bool IsOpen { get; private set; }
 		public bool Connected => _tcpClient.Connected;
 
-		protected AClient(string address, int tcpPort, int udpPort): this(new TcpClient(address, tcpPort), udpPort) { }
+		private static TcpClient TcpClientFromEndPoint(IPEndPoint endPoint) {
+			TcpClient client = new TcpClient();
+			client.Connect(endPoint);
+			return client;
+		}
 
-		protected AClient(TcpClient tcpClient, int udpPort) {
+		protected AClient(IPEndPoint endPoint): this(TcpClientFromEndPoint(endPoint)) { }
+
+		protected AClient(TcpClient tcpClient) {
 			_tcpClient = tcpClient;
-			IPEndPoint endPoint = (IPEndPoint)_tcpClient.Client.RemoteEndPoint;
-			Address = endPoint.Address.ToString();
-			TcpPort = endPoint.Port;
-			TcpStream = _tcpClient.GetStream();
+			EndPoint = (IPEndPoint)_tcpClient.Client.RemoteEndPoint;
+			_tcpStream = _tcpClient.GetStream();
 			
-			_udpClient = new UdpClient(Address, udpPort);
-			endPoint = (IPEndPoint)_udpClient.Client.RemoteEndPoint;
-			UdpPort = endPoint.Port;
+			_udpClient = new UdpClient();
+			_udpClient.Client.IOControl(
+				// SIO_UDP_CONNRESET
+				(IOControlCode)(-1744830452),
+				new byte[] { 0, 0, 0, 0 },
+				null
+			);
+			_udpClient.Connect(EndPoint);
 			
 			_thread = new Thread(Run);
 		}
 
 		private void Run() {
 			while (IsOpen) {
-				if (_tcpQueue.Count > 0)
-					_tcpQueue.Dequeue().Send(TcpStream);
-				if (TcpStream.DataAvailable)
+				if (_tcpStack.Count > 0) {
+					byte[] bytes = _tcpStack.Pop();
+					_tcpStream.Write(bytes, 0, bytes.Length);
+				}
+				
+				if (_udpStack.Count > 0) {
+					byte[] bytes = _udpStack.Pop();
+					_udpClient.Send(bytes, bytes.Length);
+				}
+
+				if (_tcpStream.DataAvailable) {
+					byte[] bytes = new byte[_tcpStream.Read(_tcpBuffer, 0, _tcpBuffer.Length)];
+					Array.Copy(_tcpBuffer, bytes, bytes.Length);
+					_receiveStack.Push(bytes);
 					OnReceive();
-				if (!Connected)
-					Disconnect();
+				}
+
+				if (_udpClient.Available > 0) {
+					IPEndPoint endPoint = EndPoint;
+					_receiveStack.Push(_udpClient.Receive(ref endPoint));
+					OnReceive();
+				}
 			}
 		}
 
@@ -63,7 +88,7 @@ namespace Network {
 			if (!disposing) return;
 			_tcpClient.Dispose();
 			_udpClient.Dispose();
-			TcpStream.Dispose();
+			_tcpStream.Dispose();
 		}
 
 		public void Start() {
@@ -96,16 +121,18 @@ namespace Network {
 		}
 
 		public void SendTcp(APacket packet)
-			=> _tcpQueue.Enqueue(packet);
+			=> _tcpStack.Push(packet.Read());
 
-		public void ReceiveTcp(APacket packet)
-			=> packet.Receive(TcpStream);
+		public void SendUdp(APacket packet)
+			=> _udpStack.Push(packet.Read());
 
-		public TPacket ReceiveTcp<TPacket>() where TPacket: APacket, new() {
-			TPacket packet = new TPacket();
-			ReceiveTcp(packet);
+		public APacket Receive(APacket packet) {
+			packet.Write(_receiveStack.Pop());
 			return packet;
 		}
+
+		public TPacket Receive<TPacket>() where TPacket: APacket, new()
+			=> (TPacket)Receive(new TPacket());
 
 		protected virtual void OnStart() { }
 		protected virtual void OnClose() { }
