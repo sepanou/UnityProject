@@ -9,10 +9,10 @@ namespace Network.Packet.PacketType {
 		/// <summary> creates packet from raw data </summary>
 		protected PacketType(byte[] bytes): base(bytes) { }
 		
-		/// <summary> reads a data of the packet's specific type </summary>
+		/// <summary> reads data from the packet </summary>
 		/// <returns> data of specific type </returns>
 		public abstract T ReadType();
-		/// <summary> writes a data of the packet's specific type </summary>
+		/// <summary> writes data to the packet </summary>
 		/// <param name="data"> data of specific type </param>
 		public abstract void WriteType(T data);
 	}
