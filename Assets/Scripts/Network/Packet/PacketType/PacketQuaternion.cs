@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketQuaternion: PacketType<Quaternion> {
-		private static readonly int? FixedSize = 4 * sizeof(float);
-		public override int? GetFixedSize() => FixedSize;
+		public override int? GetFixedSize() => 4 * sizeof(float);
 		
 		public static PacketQuaternion Make(Quaternion data)
 			=> PacketType<Quaternion>.Make<PacketQuaternion>(data);

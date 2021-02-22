@@ -2,8 +2,7 @@ using System;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketFloat: PacketType<float> {
-		private static readonly int? FixedSize = sizeof(float);
-		public override int? GetFixedSize() => FixedSize;
+		public override int? GetFixedSize() => sizeof(float);
 		
 		public static PacketFloat Make(float data)
 			=> PacketType<float>.Make<PacketFloat>(data);

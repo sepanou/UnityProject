@@ -4,7 +4,7 @@ namespace Network.Packet.Packets {
 	public class Packets: APacket {
 		public void Add(APacket packet) {
 			if (!packet.GetFixedSize().HasValue)
-				Write(PacketInt.Make<PacketInt>(packet.Length).Read());
+				Write(PacketUShort.Make((ushort)packet.Length).Read());
 			Write(packet.Read());
 		}
 		
@@ -14,8 +14,8 @@ namespace Network.Packet.Packets {
 			if (fixedSize.HasValue)
 				packet.Write(Read(fixedSize.Value));
 			else {
-				PacketInt i = new PacketInt();
-				i.Write(Read(sizeof(int)));
+				PacketUShort i = new PacketUShort();
+				i.Write(Read(sizeof(ushort)));
 				packet.Write(Read(i.ReadType()));
 			}
 			return packet;

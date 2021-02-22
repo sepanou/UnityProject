@@ -2,8 +2,7 @@ using System;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketLong: PacketType<long> {
-		private static readonly int? FixedSize = sizeof(long);
-		public override int? GetFixedSize() => FixedSize;
+		public override int? GetFixedSize() => sizeof(long);
 		
 		public static PacketLong Make(long data)
 			=> PacketType<long>.Make<PacketLong>(data);
