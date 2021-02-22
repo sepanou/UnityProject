@@ -2,7 +2,7 @@ using System;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketUShort: PacketType<ushort> {
-		public override int? GetFixedSize() => sizeof(ushort);
+		public override ushort? GetFixedSize() => sizeof(ushort);
 		
 		public PacketUShort() {}
 		public PacketUShort(byte[] bytes): base(bytes) { }

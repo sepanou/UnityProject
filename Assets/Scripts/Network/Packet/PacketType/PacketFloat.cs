@@ -2,7 +2,7 @@ using System;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketFloat: PacketType<float> {
-		public override int? GetFixedSize() => sizeof(float);
+		public override ushort? GetFixedSize() => sizeof(float);
 		
 		public PacketFloat() {}
 		public PacketFloat(byte[] bytes): base(bytes) { }

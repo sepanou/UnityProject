@@ -2,7 +2,7 @@ using System;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketULong: PacketType<ulong> {
-		public override int? GetFixedSize() => sizeof(ulong);
+		public override ushort? GetFixedSize() => sizeof(ulong);
 		
 		public PacketULong() {}
 		public PacketULong(byte[] bytes): base(bytes) { }

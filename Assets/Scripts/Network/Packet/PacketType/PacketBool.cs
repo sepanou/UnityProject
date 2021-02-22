@@ -2,7 +2,7 @@ using System;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketBool: PacketType<bool> {
-		public override int? GetFixedSize() => sizeof(bool);
+		public override ushort? GetFixedSize() => sizeof(bool);
 		
 		public PacketBool() {}
 		public PacketBool(byte[] bytes): base(bytes) { }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketVector3: PacketType<Vector3> {
-		public override int? GetFixedSize() => 3 * sizeof(float);
+		public override ushort? GetFixedSize() => 3 * sizeof(float);
 		
 		public PacketVector3() {}
 		public PacketVector3(byte[] bytes): base(bytes) { }
