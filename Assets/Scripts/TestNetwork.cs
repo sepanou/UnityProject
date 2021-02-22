@@ -19,10 +19,10 @@ public class TestNetwork: MonoBehaviour {
 	
 	public void SendServer() {
 		Packets packet = new Packets();
-		packet.Add(PacketInt.Make(255));
-		packet.Add(PacketInt.Make(255));
-		packet.Add(PacketInt.Make(255));
-		//packet.Add(PacketString.Make(serverInputField.text));
+		packet.Add(PacketInt.Make(1023));
+		packet.Add(PacketInt.Make(1023));
+		packet.Add(PacketInt.Make(1023));
+		packet.Add(PacketString.Make(serverInputField.text));
 		_server.SendAllTcp(packet);
 	}
 
@@ -31,7 +31,7 @@ public class TestNetwork: MonoBehaviour {
 		packet.Add(PacketInt.Make(255));
 		packet.Add(PacketInt.Make(511));
 		packet.Add(PacketInt.Make(1023));
-		//packet.Add(PacketString.Make(clientInputField.text));
+		packet.Add(PacketString.Make(clientInputField.text));
 		_client.SendTcp(packet);
 	}
 	
@@ -51,7 +51,8 @@ public class TestNetwork: MonoBehaviour {
 			int a = packet.Get<PacketInt>().ReadType();
 			int b = packet.Get<PacketInt>().ReadType();
 			int c = packet.Get<PacketInt>().ReadType();
-			_master.LogClient($"Received {(a, b, c)}");
+			string s = packet.Get<PacketString>().ReadType();
+			_master.LogClient($"Received {(a, b, c)} and '{s}'");
 		}
 	}
 	
@@ -82,7 +83,8 @@ public class TestNetwork: MonoBehaviour {
 			int a = packet.Get<PacketInt>().ReadType();
 			int b = packet.Get<PacketInt>().ReadType();
 			int c = packet.Get<PacketInt>().ReadType();
-			_master.LogServer($"Received {(a, b, c)} from {client.EndPoint}");
+			string s = packet.Get<PacketString>().ReadType();
+			_master.LogServer($"Received {(a, b, c)} and '{s}' from {client.EndPoint}");
 		}
 	}
 
