@@ -8,7 +8,8 @@ namespace Entity.DynamicEntity.LivingEntity
     public abstract class LivingEntity : DynamicEntity, IDamageable, IHealable
     {
         [SerializeField] private int totalHp;
-
+        [NonSerialized] protected Rigidbody2D RigidBody;
+        
         public int TotalHp
         {
             get => totalHp;
@@ -38,8 +39,7 @@ namespace Entity.DynamicEntity.LivingEntity
                 }
             }
         }
-
-        [NonSerialized] public Rigidbody2D Rigidbody;
+        
         // Different behaviours regarding TakeDamage & GainHealth
         // for player, need to update health bar
         // We may need to implement some kind of local player
@@ -51,7 +51,7 @@ namespace Entity.DynamicEntity.LivingEntity
         protected void InstantiateLivingEntity()
         {
             InstantiateDynamicEntity();
-            Rigidbody = GetComponent<Rigidbody2D>();
+            RigidBody = GetComponent<Rigidbody2D>();
         }
     }
 }
