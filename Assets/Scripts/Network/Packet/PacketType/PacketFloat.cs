@@ -4,8 +4,9 @@ namespace Network.Packet.PacketType {
 	public sealed class PacketFloat: PacketType<float> {
 		public override int? GetFixedSize() => sizeof(float);
 		
-		public static PacketFloat Make(float data)
-			=> PacketType<float>.Make<PacketFloat>(data);
+		public PacketFloat() {}
+		public PacketFloat(byte[] bytes): base(bytes) { }
+		public PacketFloat(float data) { WriteType(data); }
 		
 		public override float ReadType()
 			=>  BitConverter.ToSingle(Read(), 0);

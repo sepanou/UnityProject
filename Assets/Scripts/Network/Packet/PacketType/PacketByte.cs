@@ -2,8 +2,9 @@ namespace Network.Packet.PacketType {
 	public sealed class PacketByte: PacketType<byte> {
 		public override int? GetFixedSize() => sizeof(byte);
 		
-		public static PacketByte Make(byte data)
-			=> PacketType<byte>.Make<PacketByte>(data);
+		public PacketByte() {}
+		public PacketByte(byte[] bytes): base(bytes) { }
+		public PacketByte(byte data) { WriteType(data); }
 		
 		public override byte ReadType()
 			=> Read()[0];

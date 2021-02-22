@@ -21,6 +21,7 @@ namespace Network {
 		public IPEndPoint EndPoint { get; }
 		public bool IsOpen { get; private set; }
 		public bool Connected => _tcpClient.Connected;
+		public bool Available => _tcpClient.Available != 0 || _udpClient.Available != 0;
 
 		private static TcpClient TcpClientFromEndPoint(IPEndPoint endPoint) {
 			TcpClient client = new TcpClient();

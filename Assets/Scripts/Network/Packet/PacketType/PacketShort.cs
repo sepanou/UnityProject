@@ -4,8 +4,9 @@ namespace Network.Packet.PacketType {
 	public sealed class PacketShort: PacketType<short> {
 		public override int? GetFixedSize() => sizeof(short);
 		
-		public static PacketShort Make(short data)
-			=> PacketType<short>.Make<PacketShort>(data);
+		public PacketShort() {}
+		public PacketShort(byte[] bytes): base(bytes) { }
+		public PacketShort(short data) { WriteType(data); }
 		
 		public override short ReadType()
 			=> BitConverter.ToInt16(Read(), 0);

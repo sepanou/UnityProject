@@ -4,8 +4,9 @@ namespace Network.Packet.PacketType {
 	public sealed class PacketUInt: PacketType<uint> {
 		public override int? GetFixedSize() => sizeof(uint);
 		
-		public static PacketUInt Make(uint data)
-			=> PacketType<uint>.Make<PacketUInt>(data);
+		public PacketUInt() {}
+		public PacketUInt(byte[] bytes): base(bytes) { }
+		public PacketUInt(uint data) { WriteType(data); }
 		
 		public override uint ReadType()
 			=> BitConverter.ToUInt32(Read(), 0);

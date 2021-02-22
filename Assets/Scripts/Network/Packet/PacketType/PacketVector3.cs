@@ -5,8 +5,9 @@ namespace Network.Packet.PacketType {
 	public sealed class PacketVector3: PacketType<Vector3> {
 		public override int? GetFixedSize() => 3 * sizeof(float);
 		
-		public static PacketVector3 Make(Vector3 data)
-			=> PacketType<Vector3>.Make<PacketVector3>(data);
+		public PacketVector3() {}
+		public PacketVector3(byte[] bytes): base(bytes) { }
+		public PacketVector3(Vector3 data) { WriteType(data); }
 		
 		public override Vector3 ReadType() {
 			byte[] buff = Read();

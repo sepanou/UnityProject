@@ -4,8 +4,9 @@ namespace Network.Packet.PacketType {
 	public sealed class PacketUShort: PacketType<ushort> {
 		public override int? GetFixedSize() => sizeof(ushort);
 		
-		public static PacketUShort Make(ushort data)
-			=> PacketType<ushort>.Make<PacketUShort>(data);
+		public PacketUShort() {}
+		public PacketUShort(byte[] bytes): base(bytes) { }
+		public PacketUShort(ushort data) { WriteType(data); }
 		
 		public override ushort ReadType()
 			=> BitConverter.ToUInt16(Read(), 0);

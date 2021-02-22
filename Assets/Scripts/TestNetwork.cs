@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+
+using UnityEngine;
+using UnityEngine.UI;
+
 using Network;
 using Network.Packet.Packets;
 using Network.Packet.PacketType;
-using UnityEngine;
-using UnityEngine.UI;
 
 public class TestNetwork: MonoBehaviour {
 	public InputField serverInputField;
@@ -19,19 +21,15 @@ public class TestNetwork: MonoBehaviour {
 	
 	public void SendServer() {
 		Packets packet = new Packets();
-		packet.Add(PacketInt.Make(1023));
-		packet.Add(PacketInt.Make(1023));
-		packet.Add(PacketInt.Make(1023));
-		packet.Add(PacketString.Make(serverInputField.text));
+		packet.Add(new PacketInt(Random.Next()));
+		packet.Add(new PacketString(serverInputField.text));
 		_server.SendAllTcp(packet);
 	}
 
 	public void SendClient() {
 		Packets packet = new Packets();
-		packet.Add(PacketInt.Make(255));
-		packet.Add(PacketInt.Make(511));
-		packet.Add(PacketInt.Make(1023));
-		packet.Add(PacketString.Make(clientInputField.text));
+		packet.Add(new PacketInt(Random.Next()));
+		packet.Add(new PacketString(clientInputField.text));
 		_client.SendTcp(packet);
 	}
 	

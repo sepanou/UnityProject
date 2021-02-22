@@ -2,8 +2,9 @@ using System.Text;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketString: PacketType<string> {
-		public static PacketString Make(string data)
-			=> PacketType<string>.Make<PacketString>(data);
+		public PacketString() {}
+		public PacketString(byte[] bytes): base(bytes) { }
+		public PacketString(string data) { WriteType(data); }
 		
 		public override string ReadType()
 			=> Encoding.UTF8.GetString(Read());

@@ -5,6 +5,9 @@ namespace Network.Packet {
 		private byte[] _bytes = new byte[0];
 		public int Length => _bytes.Length;
 		
+		public APacket() {}
+		public APacket(byte[] bytes) { Write(bytes); }
+		
 		public virtual int? GetFixedSize() => null;
 
 		public void Write(byte[] bytes) {

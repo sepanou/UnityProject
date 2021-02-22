@@ -6,8 +6,9 @@ namespace Network.Packet.PacketType {
 	public sealed class PacketQuaternion: PacketType<Quaternion> {
 		public override int? GetFixedSize() => 4 * sizeof(float);
 		
-		public static PacketQuaternion Make(Quaternion data)
-			=> PacketType<Quaternion>.Make<PacketQuaternion>(data);
+		public PacketQuaternion() {}
+		public PacketQuaternion(byte[] bytes): base(bytes) { }
+		public PacketQuaternion(Quaternion data) { WriteType(data); }
 		
 		public override Quaternion ReadType() {
 			byte[] buff = Read();

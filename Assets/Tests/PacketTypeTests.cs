@@ -1,17 +1,24 @@
 using System.Collections.Generic;
-using Network.Packet.PacketType;
+
 using NUnit.Framework;
 using UnityEngine;
 
+using Network.Packet.PacketType;
+
 namespace Tests {
-	public class PacketTypesTest {
+	public class PacketTypeTests {
 		private static readonly System.Random Random = new System.Random();
 
-		private static bool PacketTypeTest<TP, T>(T ta) where TP: PacketType<T>, new()
-			=> EqualityComparer<T>.Default.Equals(ta, PacketType<T>.Make<TP>(ta).ReadType());
+		private static bool PacketTypeTest<TP, T>(T ta) where TP: PacketType<T>, new() {
+			TP p = new TP();
+			p.WriteType(ta);
+			return EqualityComparer<T>.Default.Equals(ta, p.ReadType());
+		}
 
-		private static bool PacketTypeTest<TP>(byte[] ta) where TP: PacketType<byte[]>, new () {
-			byte[] tb = PacketType<byte[]>.Make<TP>(ta).ReadType();
+		private static bool PacketTypeTest<TP>(byte[] ta) where TP: PacketType<byte[]>, new() {
+			TP p = new TP();
+			p.WriteType(ta);
+			byte[] tb = p.ReadType();
 			bool same = ta.Length == tb.Length;
 			for (int i = 0; same && i < ta.Length; ++i)
 				same = ta[i] == tb[i];
