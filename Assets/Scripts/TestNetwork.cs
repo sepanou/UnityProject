@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using Network;
+using Network.Packet.Packets;
 using Network.Packet.PacketType;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,11 +12,28 @@ public class TestNetwork: MonoBehaviour {
 	public InputField clientInputField;
 	public Text clientText;
 
+	private static readonly System.Random Random = new System.Random();
+
 	private void LogServer(string str) => _serverQueue.Enqueue(str);
 	private void LogClient(string str) => _clientQueue.Enqueue(str);
 	
-	public void SendServer() => _server.SendAllTcp(PacketString.Make<PacketString>(serverInputField.text));
-	public void SendClient() => _client.SendTcp(PacketString.Make<PacketString>(clientInputField.text));
+	public void SendServer() {
+		Packets packet = new Packets();
+		packet.Add(PacketInt.Make(255));
+		packet.Add(PacketInt.Make(255));
+		packet.Add(PacketInt.Make(255));
+		//packet.Add(PacketString.Make(serverInputField.text));
+		_server.SendAllTcp(packet);
+	}
+
+	public void SendClient() {
+		Packets packet = new Packets();
+		packet.Add(PacketInt.Make(255));
+		packet.Add(PacketInt.Make(511));
+		packet.Add(PacketInt.Make(1023));
+		//packet.Add(PacketString.Make(clientInputField.text));
+		_client.SendTcp(packet);
+	}
 	
 	private class MyClient: AClient {
 		private readonly TestNetwork _master;
@@ -28,8 +46,13 @@ public class TestNetwork: MonoBehaviour {
 		protected override void OnClose()
 			=> _master.LogClient("Closed");
 
-		protected override void OnReceive()
-			=> _master.LogClient($"Received '{Receive<PacketString>().ReadType()}'");
+		protected override void OnReceive() {
+			Packets packet = Receive<Packets>();
+			int a = packet.Get<PacketInt>().ReadType();
+			int b = packet.Get<PacketInt>().ReadType();
+			int c = packet.Get<PacketInt>().ReadType();
+			_master.LogClient($"Received {(a, b, c)}");
+		}
 	}
 	
 	private class MyServer: AServer {
@@ -54,8 +77,13 @@ public class TestNetwork: MonoBehaviour {
 			return false;
 		}
 
-		protected override void OnReceive(ServerClient client)
-			=> _master.LogServer($"{client.EndPoint} Sent '{client.Receive<PacketString>().ReadType()}'");
+		protected override void OnReceive(ServerClient client) {
+			Packets packet = client.Receive<Packets>();
+			int a = packet.Get<PacketInt>().ReadType();
+			int b = packet.Get<PacketInt>().ReadType();
+			int c = packet.Get<PacketInt>().ReadType();
+			_master.LogServer($"Received {(a, b, c)} from {client.EndPoint}");
+		}
 	}
 
 	private MyServer _server;

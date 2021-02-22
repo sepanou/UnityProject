@@ -1,8 +1,15 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketQuaternion: PacketType<Quaternion> {
+		private static readonly int? FixedSize = 4 * sizeof(float);
+		public override int? GetFixedSize() => FixedSize;
+		
+		public static PacketQuaternion Make(Quaternion data)
+			=> PacketType<Quaternion>.Make<PacketQuaternion>(data);
+		
 		public override Quaternion ReadType() {
 			byte[] buff = Read();
 			return new Quaternion {

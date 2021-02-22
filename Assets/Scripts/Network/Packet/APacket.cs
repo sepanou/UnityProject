@@ -1,12 +1,12 @@
 using System;
-using System.IO;
-using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace Network.Packet {
 	public abstract class APacket {
 		private byte[] _bytes = new byte[0];
 		public int Length => _bytes.Length;
+
+		private static readonly int? FixedSize = null;
+		public virtual int? GetFixedSize() => FixedSize;
 
 		public void Write(byte[] bytes) {
 			int oldLen = _bytes.Length;

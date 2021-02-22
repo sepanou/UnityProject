@@ -3,6 +3,12 @@ using UnityEngine;
 
 namespace Network.Packet.PacketType {
 	public sealed class PacketVector2: PacketType<Vector2> {
+		private static readonly int? FixedSize = 2 * sizeof(float);
+		public override int? GetFixedSize() => FixedSize;
+		
+		public static PacketVector2 Make(Vector2 data)
+			=> PacketType<Vector2>.Make<PacketVector2>(data);
+		
 		public override Vector2 ReadType() {
 			byte[] buff = Read();
 			return new Vector2 {
