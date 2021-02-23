@@ -1,21 +1,21 @@
+using Entity.DynamicEntity.LivingEntity.Player;
 using System;
 using Entity.DynamicEntity.LivingEntity;
-using Entity.EntityInterface;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Weapon
 {
-    public abstract class Weapon : DynamicEntity, IDisplayableItem
+    public abstract class Weapon : DynamicEntity
     {
         public Player holder;
         public bool equipped;
         public int defaultDamage;
         // For cooldown purposes
-        [NonSerialized] protected float LastAttackTime;
-        [SerializeField] protected int specialAttackCost;
-        [SerializeField] private string _name;
-        [SerializeField] private Sprite _displayedSprite;
-        [SerializeField] protected Vector3 defaultCoordsWhenLikedToPlayer;
+        protected float LastAttackTime;
+        protected int specialAttackCost;
+        private string _name;
+        private Sprite _displayedSprite;
+        protected Vector3 defaultCoordsWhenLikedToPlayer;
 
         public string Name { get; private set; }
         public Sprite DisplayedSprite { get; private set; }
@@ -39,7 +39,7 @@ namespace Entity.DynamicEntity.Weapon
             // Can't run the default & special attack simultaneously !
             if (Input.GetButtonDown("Fire1"))
                 DefaultAttack();
-            else if (holder.HasEnoughPower(specialAttackCost) && Input.GetButtonDown("Fire2"))
+            else if (holder.hasEnoughEnergy(specialAttackCost) && Input.GetButtonDown("Fire2"))
                 SpecialAttack();
         }
 

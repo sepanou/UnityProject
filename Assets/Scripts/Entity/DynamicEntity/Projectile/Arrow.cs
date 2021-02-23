@@ -1,5 +1,3 @@
-﻿using System;
-using Entity.EntityInterface;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Projectile
@@ -13,8 +11,8 @@ namespace Entity.DynamicEntity.Projectile
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.TryGetComponent(out IDamageable entity))
-                entity.TakeDamage(FromWeapon.defaultDamage);
+            if (other.gameObject.TryGetComponent(out LivingEntity.LivingEntity entity))
+                entity.GetAttacked(FromWeapon.defaultDamage);
             Destroy(gameObject);
         }
 

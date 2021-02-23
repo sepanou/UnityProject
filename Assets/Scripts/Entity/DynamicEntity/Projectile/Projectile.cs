@@ -1,16 +1,15 @@
-﻿using System;
-using Entity.DynamicEntity.Weapon;
+using Entity.DynamicEntity.Weapon.RangedWeapon;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Projectile
 {
     public abstract class Projectile : DynamicEntity
     {
-        [NonSerialized] protected RangeWeapon FromWeapon;
-        [NonSerialized] protected Rigidbody2D RigidBody;
-        [NonSerialized] protected Vector2 FacingDirection;
+        protected RangedWeapon FromWeapon;
+        protected Rigidbody2D RigidBody;
+        protected Vector2 FacingDirection;
 
-        public static void SpawnProjectile(RangeWeapon source, Vector2 position)
+        public static void SpawnProjectile(RangedWeapon source, Vector2 position)
         {
             Quaternion localRotation = Quaternion.Euler(
                 new Vector3(0, 0, Vector2.SignedAngle(Vector2.up, source.Orientation))
@@ -23,6 +22,7 @@ namespace Entity.DynamicEntity.Projectile
         }
 
         protected abstract void Move();
+
         public void InstantiateProjectile()
         {
             RigidBody = GetComponent<Rigidbody2D>();
