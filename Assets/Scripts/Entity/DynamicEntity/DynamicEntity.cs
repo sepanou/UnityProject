@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Entity.DynamicEntity
@@ -9,24 +8,26 @@ namespace Entity.DynamicEntity
         /// Can represent either a velocity (= movements) or
         /// a cooldown (= weapons) depending on the context
         /// </summary>
-        [SerializeField] private float speed;
-        [NonSerialized] public Animator Animator;
+        private float _speed;
+        protected Animator Animator;
+        protected Collider2D Collider;
 
         public float GetSpeed()
         {
-            return speed;
+            return _speed;
         }
 
         public void SetSpeed(float value)
         {
             if (value >= 0f)
-                speed = value;
+                _speed = value;
         }
 
         protected void InstantiateDynamicEntity()
         {
             InstantiateEntity();
             Animator = GetComponent<Animator>();
+            Collider = GetComponent<Collider2D>();
         }
     }
 }

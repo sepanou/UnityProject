@@ -1,57 +1,47 @@
 using System;
-using Entity.EntityInterface;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Entity.DynamicEntity.LivingEntity
 {
-    public abstract class LivingEntity : DynamicEntity, IDamageable, IHealable
+    public abstract class LivingEntity : DynamicEntity
     {
-        [SerializeField] private int totalHp;
-        [NonSerialized] protected Rigidbody2D RigidBody;
-        
-        public int TotalHp
+        private float _health;
+        private bool _isAlive = true;
+        protected Rigidbody2D Rigibody;
+
+        public void GetAttacked(int atk)
         {
-            get => totalHp;
-            set
-            {
-                if (value < 0)
-                    return;
-                totalHp = value;
-                if (_currentHp > value)
-                    CurrentHp = totalHp;
-            }
+            _health -= atk;
+            // TakeKnockback(); Needs to be implemented
+            _isAlive = _health > 0;
+            Dying();
         }
 
-        private int _currentHp;
-
-        public int CurrentHp
+        public void TakeKnockback()
         {
-            get => _currentHp;
-            set
-            {
-                if (value > 0)
-                    _currentHp = value;
-                else
-                {
-                    _currentHp = 0;
-                    OnDeath();
-                }
-            }
+            throw new NotImplementedException();
         }
-        
-        // Different behaviours regarding TakeDamage & GainHealth
-        // for player, need to update health bar
-        // We may need to implement some kind of local player
-        // differentiation especially for UI, later.
-        public abstract void GainHealth(int amount);
-        public abstract void TakeDamage(int amount);
-        protected abstract void OnDeath();
+
+        protected abstract void Dying();
+
+        protected abstract void Attack();
+
+        protected abstract void GetAttacked();
+
+        protected void ChangeHealth(float damages) // Negative damages == healing
+        {
+            _health += damages;
+        }
+
+        protected void SetHealth(float health)
+        {
+            _health = health;
+        }
 
         protected void InstantiateLivingEntity()
         {
             InstantiateDynamicEntity();
-            RigidBody = GetComponent<Rigidbody2D>();
+            Rigibody = GetComponent<Rigidbody2D>();
         }
     }
 }
