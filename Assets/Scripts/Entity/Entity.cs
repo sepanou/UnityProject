@@ -5,7 +5,7 @@ namespace Entity
     public abstract class Entity : MonoBehaviour
     {
         private SpriteRenderer Renderer;
-        
+
         protected void InstantiateEntity()
         {
             Renderer = GetComponent<SpriteRenderer>();
