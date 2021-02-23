@@ -1,4 +1,5 @@
 using System;
+using Entity.DynamicEntity.LivingEntity.PlayerClass;
 using Entity.EntityInterface;
 using UnityEngine;
 using UnityEngine.Serialization;

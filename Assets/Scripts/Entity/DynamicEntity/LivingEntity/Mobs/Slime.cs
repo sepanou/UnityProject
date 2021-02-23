@@ -19,11 +19,12 @@ namespace Entity.DynamicEntity.LivingEntity.Mobs
             Vector3 position = transform.position;
             Renderer.flipX = position.x < LastPos.x + 0.2f;
             Vector2 direction = Vector2.MoveTowards(position, target.transform.position, .03f);
+            direction.Normalize();
+            RigidBody.velocity = direction * GetSpeed();
             if (direction.magnitude > 0.1)
             {
                 Animator.SetBool("IsWalking", true);
-                transform.position = direction;
-                LastPos = direction;
+                LastPos = transform.position;
             }
             else
                 Animator.SetBool("IsWalking", false);
