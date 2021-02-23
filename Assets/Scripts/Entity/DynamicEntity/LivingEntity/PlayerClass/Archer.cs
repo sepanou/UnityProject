@@ -1,6 +1,3 @@
-using System;
-using UnityEngine;
-
 namespace Entity.DynamicEntity.LivingEntity.PlayerClass
 {
     public class Archer : Player
@@ -9,11 +6,7 @@ namespace Entity.DynamicEntity.LivingEntity.PlayerClass
         private void Start()
         {
             InstantiatePlayer();
+            PowerType = PowerTypes.Stamina;
         }
-
-        /* private void Update()
-        {
-            Move();
-        } */
     }
 }

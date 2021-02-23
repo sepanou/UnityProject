@@ -9,12 +9,14 @@ namespace Entity.DynamicEntity.Weapon
     {
         public Player holder;
         public bool equipped;
+        public int defaultDamage;
         // For cooldown purposes
         [NonSerialized] protected float LastAttackTime;
+        [SerializeField] protected int specialAttackCost;
         [SerializeField] private string _name;
         [SerializeField] private Sprite _displayedSprite;
-        [SerializeField] private Vector3 defaultCoordsWhenLikedToPlayer;
-    
+        [SerializeField] protected Vector3 defaultCoordsWhenLikedToPlayer;
+
         public string Name { get; private set; }
         public Sprite DisplayedSprite { get; private set; }
         
@@ -32,15 +34,13 @@ namespace Entity.DynamicEntity.Weapon
 
         public void OnUse<T>(T source)
         {
-            if (!holder)
+            if (!holder || !CanAttack())
                 return;
-        
-            gameObject.transform.localRotation = Quaternion.Euler(
-                new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, holder.FacingDirection))
-            );
-        
-            if (CanAttack() && Input.GetButtonDown("Fire1"))
-                Attack();
+            // Can't run the default & special attack simultaneously !
+            if (Input.GetButtonDown("Fire1"))
+                DefaultAttack();
+            else if (holder.HasEnoughPower(specialAttackCost) && Input.GetButtonDown("Fire2"))
+                SpecialAttack();
         }
 
         public void OnDeselect<T>(T source)
@@ -60,8 +60,15 @@ namespace Entity.DynamicEntity.Weapon
             gameObject.SetActive(true);
         }
 
-        protected abstract void Attack();
-        protected abstract bool CanAttack();
+        protected abstract void DefaultAttack();
+        protected abstract void SpecialAttack();
+
+        private bool CanAttack()
+        {
+            return holder &&
+                   equipped &&
+                   (float.IsNaN(LastAttackTime) || !(Time.fixedTime - LastAttackTime < GetSpeed()));
+        }
 
         protected void InitialiseWeapon()
         {

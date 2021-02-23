@@ -51,6 +51,7 @@ namespace Entity.DynamicEntity.LivingEntity
         protected void InstantiateLivingEntity()
         {
             InstantiateDynamicEntity();
+            _currentHp = totalHp;
             RigidBody = GetComponent<Rigidbody2D>();
         }
     }

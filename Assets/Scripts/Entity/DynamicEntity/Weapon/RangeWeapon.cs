@@ -1,36 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Entity.DynamicEntity.Weapon
 {
-    public class RangeWeapon : Weapon
+    public abstract class RangeWeapon : Weapon
     {
-        [SerializeField] private Transform launchPoint;
-        [SerializeField] private Projectile.Projectile projectile;
+        [SerializeField] protected Transform launchPoint;
+        [SerializeField] public Projectile.Projectile projectile;
+        [NonSerialized] public Vector2 Orientation;
 
-        
         protected void InstantiateRangeWeapon()
         {
+            Orientation = Vector2.up;
             projectile.InstantiateProjectile();
-        }
-
-        protected override void Attack()
-        {
-            if (!CanAttack())
-                return;
-            // Rotates correctly the arrow to point to the FacingDirection
-            Quaternion localRotation = Quaternion.Euler(
-                new Vector3(0, 0, Vector2.SignedAngle(Vector2.up, holder.FacingDirection))
-            );
-            Animator.Play("Attack");
-            projectile.SpawnProjectile(this, launchPoint.position, localRotation);
-            //holder.ReducePowerSource(powerSource, unitCost);
-            LastAttackTime = Time.fixedTime;
-            Debug.Log("Attack ! But only " + holder.GetPowerSource(powerSource) + " stamina left...");
-        }
-
-        protected override bool CanAttack()
-        {
-            throw new System.NotImplementedException();
+            InitialiseWeapon();
         }
     }
 }

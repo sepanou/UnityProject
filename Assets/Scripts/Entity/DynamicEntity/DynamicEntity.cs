@@ -10,7 +10,7 @@ namespace Entity.DynamicEntity
         /// a cooldown (= weapons) depending on the context
         /// </summary>
         [SerializeField] private float speed;
-        [NonSerialized] public Animator Animator;
+        [NonSerialized] protected Animator Animator;
 
         public float GetSpeed()
         {

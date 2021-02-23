@@ -8,15 +8,14 @@ namespace Entity.DynamicEntity.Projectile
     {
         protected override void Move()
         {
-            throw new System.NotImplementedException();
+            RigidBody.velocity = FacingDirection * GetSpeed();
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (other.gameObject.TryGetComponent(out IDamageable entity))
-            {
-                entity.TakeDamage(FromWeapon.);
-            }
+                entity.TakeDamage(FromWeapon.defaultDamage);
+            Destroy(gameObject);
         }
 
         private void Update()
