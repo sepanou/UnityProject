@@ -1,9 +1,13 @@
+using System;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity
 {
     public abstract class Player : LivingEntity
     {
+        // Useful for orientating the bow or launching points :)
+        [NonSerialized] public Vector3 FacingDirection;
+        
         public override void GainHealth(int amount)
         {
             CurrentHp += amount;
@@ -31,10 +35,12 @@ namespace Entity.DynamicEntity.LivingEntity
             Vector2 direction = new Vector2(x, y);
             direction.Normalize();
             RigidBody.velocity = GetSpeed() * direction;
+            FacingDirection = direction;
         }
 
         protected void InstantiatePlayer()
         {
+            FacingDirection = Vector2.up;
             InstantiateLivingEntity();
         }
     }
