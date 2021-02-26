@@ -4,6 +4,10 @@ namespace Entity.DynamicEntity.Projectile
 {
     public class Arrow : Projectile
     {
+        private void Start()
+        {
+            InstantiateProjectile();
+        }
         protected override void Move()
         {
             RigidBody.velocity = FacingDirection * GetSpeed();
