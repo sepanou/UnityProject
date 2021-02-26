@@ -5,11 +5,13 @@ public class Character: MonoBehaviour {
     private float speed = 0.125f;
     private Quaternion transformRotation;
     private Vector3 lastPos;
+    private GameObject camera;
     
     // Start is called before the first frame update
     void Start()
     {
         lastPos = transform.position;
+        camera = GameObject.Find("Main Camera");
     }
 
     // Update is called once per frame
@@ -22,7 +24,7 @@ public class Character: MonoBehaviour {
     
     void WalkingAnimation()
     {
-        if (transform.position == lastPos || GetComponentInChildren<SwordAttack>().isAttacking)
+        if (transform.position == lastPos|| GetComponentInChildren<SwordAttack>().isAttacking)
         {
             return;
         }
@@ -37,7 +39,9 @@ public class Character: MonoBehaviour {
             transformRotation.y = 180f;
         }
         lastPos = transform.position;
+        camera.transform.parent = null;
         transform.rotation = transformRotation;
+        camera.transform.parent = this.transform;
     }
 }
 
