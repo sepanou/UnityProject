@@ -1,5 +1,4 @@
 using Entity.DynamicEntity.Weapon.RangedWeapon;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Projectile
@@ -23,6 +22,7 @@ namespace Entity.DynamicEntity.Projectile
         }
 
         protected abstract void Move();
+
         public void InstantiateProjectile()
         {
             RigidBody = GetComponent<Rigidbody2D>();
