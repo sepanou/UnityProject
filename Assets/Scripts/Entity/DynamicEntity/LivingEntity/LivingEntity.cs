@@ -26,8 +26,6 @@ namespace Entity.DynamicEntity.LivingEntity
 
         protected abstract void Attack();
 
-        protected abstract void GetAttacked();
-
         protected void ChangeHealth(float damages) // Negative damages == healing
         {
             _health += damages;

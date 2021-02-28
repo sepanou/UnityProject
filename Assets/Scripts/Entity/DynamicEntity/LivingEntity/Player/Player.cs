@@ -1,25 +1,40 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Player
 {
     public abstract class Player : LivingEntity
     {
-        private float energy;
-        private Weapon.Weapon weapon;
-        private List<Item.Item> inventory;
-        private int money;
+        [SerializeField] private int energy;
+        [SerializeField] protected Weapon.Weapon weapon;
+        private List<Item.Item> _inventory;
+        private int _money = 0;
 
-        public abstract void Attack(Weapon.Weapon weapon);
+        public bool HasEnoughEnergy(int amount) => energy >= amount;
 
-        public bool hasEnoughEnergy(float energy)
+        public void ReduceEnergy(int amount)
+        {
+            energy = amount >= energy ? 0 : energy - amount;
+        }
+
+        protected void Move()
+        {
+            float x = Input.GetAxisRaw("Horizontal");
+            float y = Input.GetAxisRaw("Vertical");
+            Vector2 direction = new Vector2(x, y);
+            direction.Normalize();
+            Rigibody.velocity = GetSpeed() * direction;
+        }
+
+        public void SwitchWeapon(Weapon.Weapon oldWeapon, Item.Item newWeapon)
         {
             throw new NotImplementedException();
         }
 
-        public void switchWeapon(Weapon.Weapon oldWeapon, Item.Item newWeapon)
+        protected void InstantiatePlayer()
         {
-            throw new NotImplementedException();
+            InstantiateLivingEntity();
         }
     }
 }
