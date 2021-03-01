@@ -12,12 +12,12 @@ namespace Entity.DynamicEntity.Projectile
         public static void SpawnProjectile(RangedWeapon source, Vector2 position)
         {
             Quaternion localRotation = Quaternion.Euler(
-                new Vector3(0, 0, Vector2.SignedAngle(Vector2.up, source.Orientation))
+                new Vector3(0, 0, Vector2.SignedAngle(Vector2.up, source.orientation))
             );
             GameObject projectile = Instantiate(source.projectile.gameObject, position, localRotation);
             Projectile newProjectile = projectile.GetComponent<Projectile>();
             newProjectile.FromWeapon = source;
-            newProjectile.FacingDirection = source.Orientation;
+            newProjectile.FacingDirection = source.orientation;
             newProjectile.InstantiateProjectile();
         }
 

@@ -15,7 +15,7 @@ namespace Entity.DynamicEntity.Weapon
         protected int specialAttackCost;
         private string _name;
         private Sprite _displayedSprite;
-        protected Vector3 defaultCoordsWhenLikedToPlayer;
+        [SerializeField] protected Vector3 defaultCoordsWhenLikedToPlayer;
 
         public string Name { get; private set; }
         public Sprite DisplayedSprite { get; private set; }
@@ -34,12 +34,12 @@ namespace Entity.DynamicEntity.Weapon
 
         public void OnUse<T>(T source)
         {
-            if (!holder || !CanAttack())
+            if (source is Player player && player == holder && !CanAttack())
                 return;
             // Can't run the default & special attack simultaneously !
             if (Input.GetButtonDown("Fire1"))
                 DefaultAttack();
-            else if (holder.hasEnoughEnergy(specialAttackCost) && Input.GetButtonDown("Fire2"))
+            else if (holder.HasEnoughEnergy(specialAttackCost) && Input.GetButtonDown("Fire2"))
                 SpecialAttack();
         }
 

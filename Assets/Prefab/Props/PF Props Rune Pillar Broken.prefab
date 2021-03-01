@@ -308,3 +308,4 @@ MonoBehaviour:
   glowingSymbols:
   - {fileID: 7947911505908315093}
   delay: 0.1
+  destinationSortingLayer: HubLayer1

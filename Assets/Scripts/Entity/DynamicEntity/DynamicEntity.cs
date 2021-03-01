@@ -8,7 +8,7 @@ namespace Entity.DynamicEntity
         /// Can represent either a velocity (= movements) or
         /// a cooldown (= weapons) depending on the context
         /// </summary>
-        private float _speed;
+        [SerializeField] private float _speed;
         protected Animator Animator;
         protected Collider2D Collider;
 

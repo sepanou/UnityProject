@@ -95,19 +95,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2017461150231793244}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9b7e1cdcb8d41f3a60a2303d8743038, type: 3}
+  m_Script: {fileID: 11500000, guid: 63a9677325b04337b0dde10279575013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.25
+  _speed: 0
   holder: {fileID: 0}
   equipped: 0
-  defaultDamage: 5
-  specialAttackCost: 25
-  _name: A beautiful bow :)
-  _displayedSprite: {fileID: -8828886737162667788, guid: 3c8a34e21f8816e4f97988951d4d7615, type: 3}
-  defaultCoordsWhenLikedToPlayer: {x: 0, y: 0, z: 0}
+  defaultDamage: 0
   launchPoint: {fileID: 8642561507799599230}
   projectile: {fileID: -3282971848471082322, guid: f253105defb28994f8f1ab558d129c39, type: 3}
+  orientation: {x: 0, y: 0}
 --- !u!95 &5890061017820911818
 Animator:
   serializedVersion: 3

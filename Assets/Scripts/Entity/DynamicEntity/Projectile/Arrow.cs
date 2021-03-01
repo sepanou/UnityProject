@@ -17,10 +17,13 @@ namespace Entity.DynamicEntity.Projectile
         {
             if (other.gameObject.TryGetComponent(out LivingEntity.LivingEntity entity))
                 entity.GetAttacked(FromWeapon.defaultDamage);
+            // For TestScene ONLY
+            if (other.gameObject.TryGetComponent(out ClassicEnnemy enemy))
+                enemy.TakingDamage(FromWeapon.defaultDamage);
             Destroy(gameObject);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             Move();
         }
