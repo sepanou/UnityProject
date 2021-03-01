@@ -525,7 +525,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1405327281}
   - component: {fileID: 1405327285}
-  - component: {fileID: 1405327284}
   - component: {fileID: 1405327283}
   - component: {fileID: 1405327282}
   m_Layer: 0
@@ -561,7 +560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e74906c75ad1311238e8c9214a81b776, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 1405327284}
+  animator: {fileID: 0}
   isAttacking: 0
   atk: 1
   attacked: 0
@@ -604,25 +603,6 @@ PolygonCollider2D:
       - {x: 0.08, y: 0.04}
       - {x: 0.08, y: 0.14999999}
       - {x: 0.049999997, y: 0.29999998}
---- !u!95 &1405327284
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1405327280}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6ab2ed0c24fad65c88536d4e6bb73306, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!212 &1405327285
 SpriteRenderer:
   m_ObjectHideFlags: 0

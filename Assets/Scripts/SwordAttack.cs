@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SwordAttack : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class SwordAttack : MonoBehaviour
         //transform.position = player.transform.position - offset;
         if (Input.GetMouseButtonDown(0) && !isAttacking)
         {
-            animator.SetBool("isAttacking", true);
+            //animator.SetBool("isAttacking", true);
             isAttacking = true;
             canDamage = true;
             initialRot = transform.eulerAngles.z;
@@ -53,12 +54,31 @@ public class SwordAttack : MonoBehaviour
         }
     }
 
+    private float Mod(float f, float m)
+    {
+        float res = f % m;
+        if (res < 0f)
+        {
+            return res + m;
+        }
+
+        return res;
+    }
     private void Attacking()
     {
         if (playerChar.facingRight)
         {
-            Debug.Log(transform.eulerAngles.z);
-            canDamage = !(transform.eulerAngles.z <= initialRot - 140f) && canDamage;
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                Debug.Log(initialRot);
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log(transform.eulerAngles.z);
+            }
+
+            canDamage = !(transform.eulerAngles.z <= Mod(initialRot - 140f, 360f)) && canDamage;
             isAttacking = canDamage || !(transform.eulerAngles.z >= initialRot);
             if (canDamage)
             {
@@ -103,10 +123,7 @@ public class SwordAttack : MonoBehaviour
         mousePos.y = mousePos.y - objectPos.y;
  
         float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
-        if (!playerChar.facingRight)
-        {
-            angle -= 180f;
-        }
+        angle -= 90f;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
