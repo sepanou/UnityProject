@@ -13,9 +13,9 @@ TagManager:
   - UI
   - 
   - 
-  - HUBLayer1
-  - HUBLayer2
-  - HUBLayer3
+  - LAYER1
+  - LAYER2
+  - LAYER3
   - 
   - 
   - 
@@ -41,12 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: HUBLayer1
-    uniqueID: 2290280499
+  - name: HubLayer1
+    uniqueID: 3013518717
     locked: 0
-  - name: HUBLayer2
-    uniqueID: 4129578853
+  - name: HubLayer2
+    uniqueID: 1768251095
     locked: 0
-  - name: HUBLayer3
-    uniqueID: 1637885451
+  - name: HubLayer3
+    uniqueID: 117434105
     locked: 0
