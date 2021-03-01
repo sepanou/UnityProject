@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6644944588161500794}
   - component: {fileID: 6644944588161500793}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Collider T
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,6 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -125,7 +124,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -936881293
+  m_SortingLayerID: -1281448579
   m_SortingLayer: 1
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300074, guid: ed7554aeefd5da44a9fe1ee9b93afe77, type: 3}
@@ -341,7 +340,6 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -363,7 +361,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -936881293
+  m_SortingLayerID: -1281448579
   m_SortingLayer: 1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300016, guid: dda6bbdb704d84847b38f9eced72bf59, type: 3}
@@ -423,7 +421,6 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -445,7 +442,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -936881293
+  m_SortingLayerID: -1281448579
   m_SortingLayer: 1
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300018, guid: dda6bbdb704d84847b38f9eced72bf59, type: 3}
