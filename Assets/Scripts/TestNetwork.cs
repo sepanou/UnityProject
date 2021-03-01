@@ -46,11 +46,9 @@ public class TestNetwork: MonoBehaviour {
 
 		protected override void OnReceive() {
 			Packets packet = Receive<Packets>();
-			int a = packet.Get<PacketInt>().ReadType();
-			int b = packet.Get<PacketInt>().ReadType();
-			int c = packet.Get<PacketInt>().ReadType();
+			int r = packet.Get<PacketInt>().ReadType();
 			string s = packet.Get<PacketString>().ReadType();
-			_master.LogClient($"Received {(a, b, c)} and '{s}'");
+			_master.LogClient($"Received {r} and '{s}'");
 		}
 	}
 	
@@ -78,11 +76,9 @@ public class TestNetwork: MonoBehaviour {
 
 		protected override void OnReceive(ServerClient client) {
 			Packets packet = client.Receive<Packets>();
-			int a = packet.Get<PacketInt>().ReadType();
-			int b = packet.Get<PacketInt>().ReadType();
-			int c = packet.Get<PacketInt>().ReadType();
+			int r = packet.Get<PacketInt>().ReadType();
 			string s = packet.Get<PacketString>().ReadType();
-			_master.LogServer($"Received {(a, b, c)} and '{s}' from {client.EndPoint}");
+			_master.LogServer($"Received {r} and '{s}' from {client.EndPoint}");
 		}
 	}
 
