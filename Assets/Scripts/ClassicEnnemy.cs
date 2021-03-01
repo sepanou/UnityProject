@@ -67,7 +67,7 @@ public class ClassicEnnemy : MonoBehaviour
         if (hp <= 0)
         {
             isDying = true;
-            animator.SetBool("isDying", true);
+            animator.SetBool("IsDying", true);
         }
 
         invincible = true;
