@@ -21,7 +21,7 @@ public class SwordAttack : MonoBehaviour
         isAttacking = false;
         player = GameObject.Find("Test1");
         offset = player.transform.position - transform.position;
-        if (player.GetComponent<Character>() is { } tmp)
+        if (player.TryGetComponent(out Character tmp))
         {
             playerChar = tmp;
         }
@@ -122,9 +122,9 @@ public class SwordAttack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (canDamage && other.gameObject.GetComponent<ClassicEnnemy>() is { } ennemy)
+        if (canDamage && other.gameObject.TryGetComponent(out ClassicEnnemy enemy))
         {
-            ennemy.TakingDamage(atk);
+            enemy.TakingDamage(atk);
         }
     }
 }

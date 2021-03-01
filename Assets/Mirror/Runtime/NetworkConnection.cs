@@ -17,10 +17,9 @@ namespace Mirror
     public abstract class NetworkConnection
     {
         public const int LocalConnectionId = 0;
-        static readonly ILogger logger = LogFactory.GetLogger<NetworkConnection>();
 
-        // internal so it can be tested
-        internal readonly HashSet<NetworkIdentity> visList = new HashSet<NetworkIdentity>();
+        // NetworkIdentities that this connection can see
+        internal readonly HashSet<NetworkIdentity> observing = new HashSet<NetworkIdentity>();
 
         Dictionary<int, NetworkMessageDelegate> messageHandlers;
 
@@ -118,7 +117,7 @@ namespace Mirror
             using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
             {
                 // pack message and send allocation free
-                MessagePacker.Pack(msg, writer);
+                MessagePacking.Pack(msg, writer);
                 NetworkDiagnostics.OnSend(msg, channelId, writer.Position, 1);
                 Send(writer.ToArraySegment(), channelId);
             }
@@ -133,14 +132,14 @@ namespace Mirror
         {
             if (segment.Count > Transport.activeTransport.GetMaxPacketSize(channelId))
             {
-                logger.LogError("NetworkConnection.ValidatePacketSize: cannot send packet larger than " + Transport.activeTransport.GetMaxPacketSize(channelId) + " bytes");
+                Debug.LogError("NetworkConnection.ValidatePacketSize: cannot send packet larger than " + Transport.activeTransport.GetMaxPacketSize(channelId) + " bytes");
                 return false;
             }
 
             if (segment.Count == 0)
             {
                 // zero length packets getting into the packet queues are bad.
-                logger.LogError("NetworkConnection.ValidatePacketSize: cannot send zero bytes");
+                Debug.LogError("NetworkConnection.ValidatePacketSize: cannot send zero bytes");
                 return false;
             }
 
@@ -152,22 +151,19 @@ namespace Mirror
         // the client. they would be detected as a message. send messages instead.
         internal abstract void Send(ArraySegment<byte> segment, int channelId = Channels.DefaultReliable);
 
-        public override string ToString()
-        {
-            return $"connection({connectionId})";
-        }
+        public override string ToString() => $"connection({connectionId})";
 
-        internal void AddToVisList(NetworkIdentity identity)
+        internal void AddToObserving(NetworkIdentity identity)
         {
-            visList.Add(identity);
+            observing.Add(identity);
 
             // spawn identity for this conn
             NetworkServer.ShowForConnection(identity, this);
         }
 
-        internal void RemoveFromVisList(NetworkIdentity identity, bool isDestroyed)
+        internal void RemoveFromObserving(NetworkIdentity identity, bool isDestroyed)
         {
-            visList.Remove(identity);
+            observing.Remove(identity);
 
             if (!isDestroyed)
             {
@@ -178,17 +174,17 @@ namespace Mirror
 
         internal void RemoveObservers()
         {
-            foreach (NetworkIdentity identity in visList)
+            foreach (NetworkIdentity identity in observing)
             {
                 identity.RemoveObserverInternal(this);
             }
-            visList.Clear();
+            observing.Clear();
         }
 
         // helper function
         protected bool UnpackAndInvoke(NetworkReader reader, int channelId)
         {
-            if (MessagePacker.Unpack(reader, out int msgType))
+            if (MessagePacking.Unpack(reader, out int msgType))
             {
                 // try to invoke the handler for that message
                 if (messageHandlers.TryGetValue(msgType, out NetworkMessageDelegate msgDelegate))
@@ -199,13 +195,13 @@ namespace Mirror
                 }
                 else
                 {
-                    if (logger.LogEnabled()) logger.Log("Unknown message ID " + msgType + " " + this + ". May be due to no existing RegisterHandler for this message.");
+                    // Debug.Log("Unknown message ID " + msgType + " " + this + ". May be due to no existing RegisterHandler for this message.");
                     return false;
                 }
             }
             else
             {
-                logger.LogError("Closed connection: " + this + ". Invalid message header.");
+                Debug.LogError("Closed connection: " + this + ". Invalid message header.");
                 Disconnect();
                 return false;
             }
@@ -217,9 +213,9 @@ namespace Mirror
         /// <param name="buffer">The data received.</param>
         internal void TransportReceive(ArraySegment<byte> buffer, int channelId)
         {
-            if (buffer.Count < MessagePacker.HeaderSize)
+            if (buffer.Count < MessagePacking.HeaderSize)
             {
-                logger.LogError($"ConnectionRecv {this} Message was too short (messages should start with message id)");
+                Debug.LogError($"ConnectionRecv {this} Message was too short (messages should start with message id)");
                 Disconnect();
                 return;
             }

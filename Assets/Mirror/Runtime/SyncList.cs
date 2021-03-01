@@ -68,9 +68,7 @@ namespace Mirror
         // so we need to skip them
         int changesAhead;
 
-        public SyncList() : this(EqualityComparer<T>.Default)
-        {
-        }
+        public SyncList() : this(EqualityComparer<T>.Default) {}
 
         public SyncList(IEqualityComparer<T> comparer)
         {
@@ -425,7 +423,7 @@ namespace Mirror
 
             public void Reset() => index = -1;
             object IEnumerator.Current => Current;
-            public void Dispose() { }
+            public void Dispose() {}
         }
     }
 }
