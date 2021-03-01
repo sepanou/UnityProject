@@ -4,11 +4,26 @@ namespace Entity
 {
     public abstract class Entity : MonoBehaviour
     {
-        private SpriteRenderer _renderer;
-        
+        private SpriteRenderer Renderer;
+
         protected void InstantiateEntity()
         {
-            _renderer = GetComponent<SpriteRenderer>();
+            Renderer = GetComponent<SpriteRenderer>();
+        }
+
+        public Vector2 GetPosition2D()
+        {
+            return transform.position;
+        }
+
+        public void SetPosition2D(Vector2 newPos)
+        {
+            transform.position = newPos;
+        }
+
+        public SpriteRenderer GetSpriteRenderer()
+        {
+            return Renderer;
         }
         
     }
