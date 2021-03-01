@@ -11,9 +11,9 @@ TagManager:
   - 
   - Water
   - UI
-  - LAYER3
-  - LAYER2
-  - LAYER1
+  - 
+  - 
+  - 
   - 
   - 
   - 
@@ -40,13 +40,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: HubLayer1
-    uniqueID: 3358086003
-    locked: 0
-  - name: HubLayer2
-    uniqueID: 3847975149
-    locked: 0
-  - name: HubLayer3
-    uniqueID: 3230724427
     locked: 0
