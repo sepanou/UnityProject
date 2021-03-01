@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3882171237798193578}
   - component: {fileID: -8400060067224765335}
   m_Layer: 8
-  m_Name: Carots
+  m_Name: Carrots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,7 +46,6 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -68,10 +67,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -936881293
+  m_SortingLayerID: -1281448579
   m_SortingLayer: 1
   m_SortingOrder: 2
-  m_Sprite: {fileID: -6910591509192259436, guid: f2e11ee419f366f4b9b1c947c9602166, type: 3}
+  m_Sprite: {fileID: -6910591509192259436, guid: f2e11ee419f366f4b9b1c947c9602166,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

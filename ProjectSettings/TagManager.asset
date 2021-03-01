@@ -13,9 +13,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - LAYER1
+  - LAYER2
+  - LAYER3
   - 
   - 
   - 
@@ -40,4 +40,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: HubLayer1
+    uniqueID: 3013518717
+    locked: 0
+  - name: HubLayer2
+    uniqueID: 1768251095
+    locked: 0
+  - name: HubLayer3
+    uniqueID: 117434105
     locked: 0
