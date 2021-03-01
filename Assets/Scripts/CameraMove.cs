@@ -7,7 +7,6 @@ public class CameraMove: MonoBehaviour {
 
     private void Start()
     {
-        player = GetComponentInParent<GameObject>();
     }
 
     void FixedUpdate()
