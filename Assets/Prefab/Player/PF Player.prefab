@@ -349,4 +349,4 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   playerCamera: {fileID: 1302193366}
-  velocity: 5
+  velocity: 0.1

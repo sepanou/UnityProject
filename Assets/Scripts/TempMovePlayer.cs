@@ -19,7 +19,9 @@ public class TempMovePlayer: NetworkBehaviour {
 			float y = Input.GetAxisRaw("Vertical");
 			Vector2 direction = new Vector2(x, y);
 			direction.Normalize();
-			_body.velocity = velocity * direction;
+			if (direction.sqrMagnitude != 0)
+				_body.velocity = Vector2.zero;
+			_body.position += velocity * direction;
 		}
 	}
 }
