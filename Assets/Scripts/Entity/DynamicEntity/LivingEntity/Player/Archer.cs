@@ -1,5 +1,6 @@
 ﻿using System;
 using Entity.DynamicEntity.Weapon.RangedWeapon;
+using Entity.DynamicEntity.Weapon;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Player
