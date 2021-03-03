@@ -1,3 +1,5 @@
+using Entity.DynamicEntity.Weapon;
+using Entity.DynamicEntity.Weapon.RangedWeapon;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -24,6 +26,13 @@ public class Character : MonoBehaviour
         //WalkingAnimation();
         WhereToFace();
         transform.position += move * speed;
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Debug.Log("yeet");
+            Weapon wp = gameObject.GetComponentInChildren<Weapon>();
+            RangedWeapon rwp = gameObject.GetComponentInChildren<RangedWeapon>();
+            Debug.Log(wp.GenerateName(rwp.WeaponName));
+        }
     }
 
     public void switchSide(bool switching)
