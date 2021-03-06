@@ -1,3 +1,4 @@
+using Mirror;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Projectile
@@ -8,24 +9,20 @@ namespace Entity.DynamicEntity.Projectile
         {
             InstantiateProjectile();
         }
+
+        [ServerCallback]
         protected override void Move()
         {
+            if (RigidBody.velocity != Vector2.zero) return;
             RigidBody.velocity = FacingDirection * GetSpeed();
         }
 
+        [ServerCallback]
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (other.gameObject.TryGetComponent(out LivingEntity.LivingEntity entity))
-                entity.GetAttacked(FromWeapon.defaultDamage);
-            // For TestScene ONLY
-            if (other.gameObject.TryGetComponent(out ClassicEnnemy enemy))
-                enemy.TakingDamage(FromWeapon.defaultDamage);
-            Destroy(gameObject);
-        }
-
-        private void FixedUpdate()
-        {
-            Move();
+                entity.GetAttacked(FromWeapon.GetDamage());
+            NetworkServer.Destroy(gameObject);
         }
     }
 }

@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 572109878211023939}
   - component: {fileID: 5890061017820911818}
   - component: {fileID: 4490330234373391441}
+  - component: {fileID: -6064306282551117732}
+  - component: {fileID: 5900744793733015568}
   m_Layer: 0
   m_Name: Bow
   m_TagString: Untagged
@@ -50,7 +52,6 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -72,10 +73,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -936881293
+  m_SortingLayerID: -1281448579
   m_SortingLayer: 1
   m_SortingOrder: 2
-  m_Sprite: {fileID: -8828886737162667788, guid: 3c8a34e21f8816e4f97988951d4d7615, type: 3}
+  m_Sprite: {fileID: -8828886737162667788, guid: 3c8a34e21f8816e4f97988951d4d7615,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,12 +100,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a9677325b04337b0dde10279575013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 0
+  syncMode: 0
+  syncInterval: 0.1
+  speed: 0
   holder: {fileID: 0}
+  compatibleClass: 2
   equipped: 0
-  defaultDamage: 0
+  isGrounded: 1
+  defaultDamage: 1
+  specialAttackCost: 10
+  weaponGenerator: {fileID: 11400000, guid: e5e5295fd017fc64e83b09cabc106492, type: 2}
+  defaultCoordsWhenLikedToPlayer: {x: 0, y: 0.25, z: 0}
   launchPoint: {fileID: 8642561507799599230}
-  projectile: {fileID: -3282971848471082322, guid: f253105defb28994f8f1ab558d129c39, type: 3}
+  projectile: {fileID: -3282971848471082322, guid: f253105defb28994f8f1ab558d129c39,
+    type: 3}
   orientation: {x: 0, y: 0}
 --- !u!95 &5890061017820911818
 Animator:
@@ -140,6 +150,41 @@ CapsuleCollider2D:
   m_Offset: {x: 0.5, y: 0}
   m_Size: {x: 0.5, y: 1.38}
   m_Direction: 0
+--- !u!114 &-6064306282551117732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017461150231793244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
+--- !u!114 &5900744793733015568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017461150231793244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  localPositionSensitivity: 0.01
+  localRotationSensitivity: 0.01
+  localScaleSensitivity: 0.01
 --- !u!1 &7922785146855789578
 GameObject:
   m_ObjectHideFlags: 0

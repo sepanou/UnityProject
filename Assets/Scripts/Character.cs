@@ -1,10 +1,11 @@
+using DataBanks;
 using Entity.DynamicEntity.Weapon;
 using Entity.DynamicEntity.Weapon.RangedWeapon;
 using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-
+    [SerializeField] private WeaponGeneratorDB weaponGenerator;
     private float speed = 0.125f;
     private Quaternion transformRotation;
     private Vector3 lastPos;
@@ -31,7 +32,7 @@ public class Character : MonoBehaviour
             Debug.Log("yeet");
             Weapon wp = gameObject.GetComponentInChildren<Weapon>();
             RangedWeapon rwp = gameObject.GetComponentInChildren<RangedWeapon>();
-            Debug.Log(wp.GenerateName(rwp.WeaponName));
+            Debug.Log(weaponGenerator.GenerateName(rwp.weaponName));
         }
     }
 

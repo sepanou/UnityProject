@@ -418,9 +418,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4f867aecb54418b2509cdbdf1bc4cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5
-  energy: 100
-  weapon: {fileID: 1293440998}
 --- !u!50 &1009563220
 Rigidbody2D:
   serializedVersion: 4
@@ -468,18 +465,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.32352626, y: 0.3615775}
   m_EdgeRadius: 0
---- !u!114 &1293440998 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 572109878211023939, guid: 9c948cbb36b86df43b6f88a7aefa7a87,
-    type: 3}
-  m_PrefabInstance: {fileID: 1573198050}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63a9677325b04337b0dde10279575013, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1304078162
 GameObject:
   m_ObjectHideFlags: 0
@@ -1591,6 +1576,12 @@ PrefabInstance:
       propertyPath: defaultDamage
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 572109878211023939, guid: 9c948cbb36b86df43b6f88a7aefa7a87,
+        type: 3}
+      propertyPath: weaponGenerator
+      value: 
+      objectReference: {fileID: 11400000, guid: e5e5295fd017fc64e83b09cabc106492,
+        type: 2}
     - target: {fileID: 2017461150231793244, guid: 9c948cbb36b86df43b6f88a7aefa7a87,
         type: 3}
       propertyPath: m_Name

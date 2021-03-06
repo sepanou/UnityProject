@@ -1,27 +1,28 @@
-using System;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Entity.DynamicEntity.Weapon.RangedWeapon
 {
     public abstract class RangedWeapon : Weapon
     {
         [SerializeField] protected Transform launchPoint;
-        public Projectile.Projectile projectile;
-        [HideInInspector] public Vector2 orientation;
+        [SerializeField] private Projectile.Projectile projectile;
+        
+        [SyncVar] [HideInInspector] public Vector2 orientation;
 
         protected void InstantiateRangeWeapon()
         {
             orientation = Vector2.up;
             projectile.InstantiateProjectile();
-            InitialiseWeapon();
+            InstantiateWeapon();
         }
+
+        public Projectile.Projectile GetProjectile() => projectile;
         
         // Used for name generation
-        
-        public Dictionary<int, (int, string)> WeaponName=
-            new Dictionary<int,(int, string)>()
+        public Dictionary<int, (int, string)> weaponName=
+            new Dictionary<int,(int, string)>
             {
                 {0, (0, "L'arc")},                // 0 == masculine adjective, feminine otherwise.
                 {1, (0, "L'arc court")},
