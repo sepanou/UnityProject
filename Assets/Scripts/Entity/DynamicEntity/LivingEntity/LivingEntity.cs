@@ -1,45 +1,44 @@
 using System;
+using Mirror;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity
 {
     public abstract class LivingEntity : DynamicEntity
     {
-        private float _health;
+        [SyncVar] private float _health;
         private bool _isAlive = true;
         protected Rigidbody2D Rigibody;
 
-        public void GetAttacked(int atk)
+        protected abstract void RpcDying();
+        
+        protected void InstantiateLivingEntity()
         {
-            _health -= atk;
-            // TakeKnockback(); Needs to be implemented
-            _isAlive = _health > 0;
-            Dying();
+            // Physics only simulated on the server
+            // On client, no collision managed but triggers still work
+            if (TryGetComponent(out Rigibody)) Rigibody.bodyType = netIdentity.isServer
+                ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
+            InstantiateDynamicEntity();
         }
-
+        
         public void TakeKnockback()
         {
             throw new NotImplementedException();
         }
 
-        protected abstract void Dying();
-
-        protected abstract void Attack();
-
-        protected void ChangeHealth(float damages) // Negative damages == healing
+        [ServerCallback]
+        public void GetAttacked(int atk)
         {
-            _health += damages;
+            _health -= atk;
+            // TakeKnockback(); Needs to be implemented
+            _isAlive = _health > 0;
+            RpcDying();
         }
 
-        protected void SetHealth(float health)
-        {
-            _health = health;
-        }
+        [ServerCallback]
+        protected void ChangeHealth(float damages) => _health = Mathf.Max(_health + damages, 0);
 
-        protected void InstantiateLivingEntity()
-        {
-            InstantiateDynamicEntity();
-            Rigibody = GetComponent<Rigidbody2D>();
-        }
+        [ServerCallback]
+        protected void SetHealth(float health) => health = Mathf.Max(health, 0);
     }
 }

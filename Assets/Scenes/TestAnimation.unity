@@ -419,6 +419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a6cd3f5babf13e3baac88aeaa39d51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponGenerator: {fileID: 11400000, guid: e5e5295fd017fc64e83b09cabc106492, type: 2}
   facingRight: 0
 --- !u!50 &1009563220
 Rigidbody2D:
