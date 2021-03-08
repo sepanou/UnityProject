@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 25a26eeaae264bb4d8521f30e46b3dd6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - archerAnimator: {fileID: 9100000, guid: 66ef2cf5de882f44ca5bc81326233742, type: 2}
+  - warriorAnimator: {instanceID: 0}
+  - mageAnimator: {instanceID: 0}
+  - archerSprite: {fileID: 5731584507761909605, guid: 78dc08da4150f0e44adfcc12611a29fe,
+      type: 3}
+  - warriorSprite: {instanceID: 0}
+  - mageSprite: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
