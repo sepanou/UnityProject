@@ -1,12 +1,14 @@
 using System.Collections.Generic;
+using System.Net;
 using DataBanks;
 using Entity.Collectibles;
+using Entity.DynamicEntity.Weapon;
 using Mirror;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Player
 {
-    public enum PlayerClasses
+    public enum PlayerClasses : byte
     {
         Mage,
         Warrior,
@@ -23,28 +25,49 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         
         [SerializeField] private Camera mainCamera;
         [SerializeField] private PlayerClassAnimators classAnimators;
-        
-        [SerializeField] protected Weapon.Weapon weapon; // RpcSync
+
+        [SyncVar] public string playerName;
+        [SyncVar] public PlayerClasses playerClass;
+        [SyncVar] [SerializeField] protected Weapon.Weapon weapon;
+        [SyncVar] private int _money = 0;
         [SyncVar] [SerializeField] private int energy;
         
-        [SyncVar] public string playerName;
-        [SyncVar] public PlayerClasses playerClass; // enum = serializable
-        [SyncVar] private int _money = 0;
-        
         private List<Charm> _charms; // Could use targetRpc -> no need for others to see our charms !
-        // Should use SyncList of gameObjects (weapons) -> weaver does not support
         // serialization of Weapon objects, but it does for GameObject !
-        private List<Weapon.Weapon> _weapons;
+        [ShowInInspector]
+        private readonly SyncList<Weapon.Weapon> _weapons = new SyncList<Weapon.Weapon>();
         private int _lastAnimationStateIndex;
 
+        public override bool OnSerialize(NetworkWriter writer, bool initialState)
+        {
+            base.OnSerialize(writer, initialState);
+            writer.WriteInt32(energy);
+            writer.WriteInt32(_money);
+            writer.WriteByte((byte) playerClass);
+            writer.WriteString(playerName);
+            writer.WriteWeapon(weapon);
+            return true;
+        }
+
+        public override void OnDeserialize(NetworkReader reader, bool initialState)
+        {
+            base.OnDeserialize(reader, initialState);
+            energy = reader.ReadInt32();
+            _money = reader.ReadInt32();
+            playerClass = (PlayerClasses) reader.ReadByte();
+            playerName = reader.ReadString();
+            weapon = reader.ReadWeapon();
+        }
+        
         private void Start()
         {
             InstantiateLivingEntity();
-            _weapons = new List<Weapon.Weapon>();
             _charms = new List<Charm>();
             _lastAnimationStateIndex = 0;
             SwitchPlayerClass(playerClass);
             mainCamera.gameObject.SetActive(isLocalPlayer);
+            if (isLocalPlayer)
+                _weapons.Callback += OnWeaponsUpdated;
         }
 
         // Can be executed by both client & server (Synced data analysis) -> double check
@@ -56,6 +79,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         
         [ServerCallback]
         public void ReduceEnergy(int amount) => energy = amount >= energy ? 0 : energy - amount;
+
+        private void OnWeaponsUpdated(SyncList<Weapon.Weapon>.Operation op, int itemIndex, Weapon.Weapon oldItem, Weapon.Weapon newItem)
+        {
+            if (op != SyncList<Weapon.Weapon>.Operation.OP_ADD) return;
+            Debug.Log("New weapon added !");
+            
+            // Modify inventory HERE
+        }
 
         [ServerCallback]
         private void ApplyForceToRigidBody(float x, float y)
@@ -113,9 +144,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         [ServerCallback]
         private void SwitchWeapon(Weapon.Weapon newWeapon)
         {
-            if (weapon) weapon.RpcUnEquip();
+            if (weapon) weapon.UnEquip();
             weapon = newWeapon;
-            weapon.RpcEquip(this);
+            weapon.Equip(this);
         }
 
         [ServerCallback]
@@ -124,7 +155,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             wp.holder = this;
             wp.RpcSetWeaponParent(transform);
             if (weapon)
-                wp.RpcUnEquip();
+                wp.UnEquip();
             else
                 SwitchWeapon(wp);
             _weapons.Add(wp);
@@ -189,6 +220,23 @@ namespace Entity.DynamicEntity.LivingEntity.Player
                 NetworkServer.Spawn(Instantiate(toSpawn, toCoords, Quaternion.identity).gameObject);
                 Debug.Log("Spawned !");
             }
+        }
+    }
+    
+    public static class PlayerSerialization
+    {
+        public static void WritePlayer(this NetworkWriter writer, Player player)
+        {
+            writer.WriteBoolean(player);
+            if (player && player.netIdentity)
+                writer.WriteNetworkIdentity(player.netIdentity);
+        }
+
+        public static Player ReadPlayer(this NetworkReader reader)
+        {
+            if (!reader.ReadBoolean()) return null;
+            NetworkIdentity identity = reader.ReadNetworkIdentity();
+            return !identity ? null : identity.GetComponent<Player>();
         }
     }
 }

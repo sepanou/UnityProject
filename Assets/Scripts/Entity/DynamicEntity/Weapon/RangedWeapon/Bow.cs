@@ -6,13 +6,41 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
 {
     public class Bow : RangedWeapon
     {
-        private bool _playerFound;
-        
+        [SyncVar] private bool _playerFound;
+
+        public override bool OnSerialize(NetworkWriter writer, bool initialState)
+        {
+            base.OnSerialize(writer, initialState);
+            writer.WriteBoolean(_playerFound);
+            return true;
+        }
+
+        public override void OnDeserialize(NetworkReader reader, bool initialState)
+        {
+            base.OnDeserialize(reader, initialState);
+            _playerFound = reader.ReadBoolean();
+        }
+
         private void Start()
         {
             InstantiateRangeWeapon();
-            _playerFound = false;
+            if (isServer)
+                _playerFound = false;
         }
+        
+        private void FixedUpdate()
+        {
+            // Only run by server
+            if (isServer && isGrounded && !_playerFound) GroundedLogic();
+            if (!holder || !holder.isLocalPlayer || !equipped || isGrounded) return;
+            // Only run by the weapon's owner (client)
+            Vector3 direction = Input.mousePosition - holder.WorldToScreenPoint(transform.position);
+            OrientBow(direction);
+            CmdOrientBow(direction);
+        }
+
+        private void OrientBow(Vector2 orient) => gameObject.transform.localRotation = 
+            Quaternion.Euler(new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, orient)));
 
         [ServerCallback]
         protected override void DefaultAttack()
@@ -47,18 +75,7 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
         {
             orientation = bowOrientation;
             orientation.Normalize();
-            gameObject.transform.localRotation = Quaternion.Euler(
-                new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, orientation))
-            );
-        }
-
-        private void FixedUpdate()
-        {
-            // Only run by server
-            if (isServer && isGrounded && !_playerFound) GroundedLogic();
-            if (!holder || !holder.isLocalPlayer || !equipped || isGrounded) return;
-            // Only run by the weapon's owner (client)
-            CmdOrientBow(Input.mousePosition - holder.WorldToScreenPoint(transform.position));
+            OrientBow(orientation);
         }
     }
 }

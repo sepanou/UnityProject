@@ -13,6 +13,17 @@ namespace Entity.DynamicEntity
         protected Animator Animator;
         protected NetworkAnimator NetworkAnimator;
 
+        public override bool OnSerialize(NetworkWriter writer, bool initialState)
+        {
+            writer.WriteSingle(speed);
+            return true;
+        }
+
+        public override void OnDeserialize(NetworkReader reader, bool initialState)
+        {
+            speed = reader.ReadSingle();
+        }
+
         protected void InstantiateDynamicEntity()
         {
             InstantiateEntity();
