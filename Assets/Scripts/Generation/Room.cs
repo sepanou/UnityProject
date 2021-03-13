@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Mirror;
 using UnityEngine;
 
-namespace generation
+namespace Generation
 {
     public enum RoomType
     {
@@ -28,6 +26,7 @@ namespace generation
         private List<(char, int)> _exits;
         private int _level;
         private int _id;
+        private (int, int) _coordinate; //Bottom Left of the Room
 
         public void Start()
         {
@@ -138,6 +137,47 @@ namespace generation
             _isDiscovered = false;
             Debug.Log(_name + '\n' + $"{_dimensions}" + '\n' + $"{_exits}" + "\n" + $"{_type}" + '\n' +
                               $"{_level}" + '\n' + $"{_id}");
+        }
+
+        public bool IsDiscovered()
+        {
+            return _isDiscovered;
+        }
+
+        public (int, int) GetDimensions()
+        {
+            return _dimensions;
+        }
+
+        public string GetName()
+        {
+            return _name;
+        }
+
+        public RoomType GetRoomType()
+        {
+            return _type;
+        }
+        
+        public List<(char, int)> GetExits()
+        {
+            return _exits;
+        }
+
+        public int GetLevel()
+        {
+            return _level;
+        }
+
+        public int GetId()
+        {
+            return _id;
+        }
+
+        public (int, int) Dimensions
+        {
+            get => _dimensions;
+            set => _dimensions = value;
         }
     }
 }
