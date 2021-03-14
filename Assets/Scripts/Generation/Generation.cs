@@ -26,16 +26,163 @@ namespace Generation
             int y = _seed.Next(rMaxY);
             Room roomToPlace;
             roomToPlace = _availableRooms[RoomType.Start][_seed.Next(_availableRooms[RoomType.Start].Count)];
-            TryAddRoom(rMap, roomToPlace, x, y);
+            while (true)
+            {
+                if (TryAddRoom(lMap, rMap, roomToPlace, x, y))
+                {
+                    break;
+                }
+            }
             bool PlacedLastRoom = false;
             while (!PlacedLastRoom)
             {
-                
+                foreach (Room roomToCheckOn in lMap)
+                {
+                    foreach ((char Dir, int nbDir) in roomToCheckOn.GetExits())
+                    {
+                        (int rtcy, int rtcx) = roomToCheckOn.Coordinates;
+                        Room roomToAdd = GenerateRoom(level.Shop, level.Chests, _seed, lMap);
+                        switch (Dir)
+                        {
+                            case 'T':
+                                if (TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1))
+                                {
+                                    if (roomToAdd.GetRoomType() == RoomType.Chest)
+                                    {
+                                        level.Chests += 1;
+                                    }
+
+                                    if (roomToAdd.GetRoomType() == RoomType.Shop)
+                                    {
+                                        level._shop = true;
+                                    }
+                                }
+
+                                break;
+                            
+                            case 'B':
+                                if (TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1))
+                                {
+                                    if (roomToAdd.GetRoomType() == RoomType.Chest)
+                                    {
+                                        level.Chests += 1;
+                                    }
+
+                                    if (roomToAdd.GetRoomType() == RoomType.Shop)
+                                    {
+                                        level._shop = true;
+                                    }
+                                }
+
+                                break;
+                            
+                            case 'L':
+                                if (TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1))
+                                {
+                                    if (roomToAdd.GetRoomType() == RoomType.Chest)
+                                    {
+                                        level.Chests += 1;
+                                    }
+
+                                    if (roomToAdd.GetRoomType() == RoomType.Shop)
+                                    {
+                                        level._shop = true;
+                                    }
+                                }
+
+                                break;
+                            
+                            
+                            case 'R':
+                                if (TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1))
+                                {
+                                    if (roomToAdd.GetRoomType() == RoomType.Chest)
+                                    {
+                                        level.Chests += 1;
+                                    }
+
+                                    if (roomToAdd.GetRoomType() == RoomType.Shop)
+                                    {
+                                        level._shop = true;
+                                    }
+                                }
+
+                                break;
+                        }
+                    }
+                }
+
+                int prob = _seed.Next(100);
+                if (level.RoomsList.Count > 15 && prob < level.RoomsList.Count)
+                {
+                    foreach (Room roomToCheckOn in lMap)
+                    {
+                        foreach ((char Dir, int nbDir) in roomToCheckOn.GetExits())
+                        {
+                            (int rtcy, int rtcx) = roomToCheckOn.Coordinates;
+                            Room roomToAdd =
+                                _availableRooms[RoomType.PreBoss][_seed.Next(_availableRooms[RoomType.PreBoss].Count)];
+                            switch (Dir)
+                            {
+                                case 'T':
+                                    if (TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1))
+                                    {
+                                        PlacedLastRoom = true;
+                                    }
+
+                                    break;
+                            
+                                case 'B':
+                                    if (TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1))
+                                    {
+                                        PlacedLastRoom = true;
+                                    }
+
+                                    break;
+                            
+                                case 'L':
+                                    if (TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1))
+                                    {
+                                        PlacedLastRoom = true;
+                                    }
+
+                                    break;
+                            
+                            
+                                case 'R':
+                                    if (TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1))
+                                    {
+                                        PlacedLastRoom = true;
+                                    }
+
+                                    break;
+                            }
+                        } 
+                    }
+                }
             }
+            // Need to add Boss Room & Exit room.
 
         }
 
-        private bool TryAddRoom(Room[,] rMap, Room room, int x, int y)
+        private Room GenerateRoom(bool isThereAShop, int chests, Random seed, List<Room> lMap)
+        {
+            RoomType toGenerate;
+            int prob = seed.Next(100);
+            if (!isThereAShop && prob <= 10 + lMap.Count / 2)
+            {
+                isThereAShop = true;
+                return _availableRooms[RoomType.Shop][seed.Next(_availableRooms[RoomType.Shop].Count)];
+            }
+
+            if (prob <= 10 / (chests + 1))
+            {
+                return _availableRooms[RoomType.Chest][seed.Next(_availableRooms[RoomType.Chest].Count)];
+            }
+            
+            return _availableRooms[RoomType.Standard][seed.Next(_availableRooms[RoomType.Standard].Count)];
+        }
+        private bool TryAddRoom(List<Room> lMap, Room[,] rMap, Room room, int x, int y)
         {
             (int roomWidth, int roomHeight) = room.GetDimensions();
             if (x < 0 || y < 0 || x >= rMap.GetLength(1) || y >= rMap.GetLength(0))
@@ -66,6 +213,8 @@ namespace Generation
                 }
             }
 
+            room.Coordinates = (y, x);
+            lMap.Add(room);
             return true;
         }
 

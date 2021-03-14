@@ -9,6 +9,7 @@ namespace Generation
     public class Level : NetworkBehaviour
     {
         private int _chests;
+        public bool _shop;
         private int _levelId;
         private string _levelName;
         private Room[,] _roomsMap;
@@ -30,9 +31,10 @@ namespace Generation
 
         }
 
-        public int GetChest()
+        public int Chests
         {
-            return _chests;
+            get => _chests;
+            set => _chests = value;
         }
 
         public int GetId()
@@ -61,6 +63,12 @@ namespace Generation
         {
             get => _charMap;
             set => _charMap = value;
+        }
+
+        public bool Shop
+        {
+            get => _shop;
+            set => _shop = value;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Generation
         Exit,
         Boss,
         PreBoss,
+        DeadEnd,
         Other
     }
 
@@ -108,6 +109,9 @@ namespace Generation
                 case "Pfb":
                     _type = RoomType.PreBoss;
                     break;
+                case "Den":
+                    _type = RoomType.DeadEnd;
+                    break;
                 default:
                     _type = RoomType.Other;
                     break;
@@ -178,6 +182,12 @@ namespace Generation
         {
             get => _dimensions;
             set => _dimensions = value;
+        }
+
+        public (int, int) Coordinates
+        {
+            get => _coordinate;
+            set => _coordinate = value;
         }
     }
 }
