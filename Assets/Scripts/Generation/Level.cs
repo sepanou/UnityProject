@@ -1,74 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Generation;
+﻿using System.Collections.Generic;
 using Mirror;
 
-namespace Generation
-{
-    public class Level : NetworkBehaviour
-    {
-        private int _chests;
-        public bool _shop;
-        private int _levelId;
-        private string _levelName;
-        private Room[,] _roomsMap;
-        private List<Room> _roomsList;
-        private char[,] _charMap;
-        
-        
-        // Start is called before the first frame update
-        void Start()
-        {
-            _roomsMap = new Room[20,20];
-            _roomsList = new List<Room>();
-            _charMap = new char[20,20];
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-        public int Chests
-        {
-            get => _chests;
-            set => _chests = value;
-        }
-
-        public int GetId()
-        {
-            return _levelId;
-        }
-
-        public string GetName()
-        {
-            return _levelName;
-        }
-
-        public Room[,] RoomsMap
-        {
-            get => _roomsMap;
-            set => _roomsMap = value;
-        }
-
-        public List<Room> RoomsList
-        {
-            get => _roomsList;
-            set => _roomsList = value;
-        }
-
-        public char[,] CharMap
-        {
-            get => _charMap;
-            set => _charMap = value;
-        }
-
-        public bool Shop
-        {
-            get => _shop;
-            set => _shop = value;
-        }
-    }
+namespace Generation {
+	public class Level: NetworkBehaviour {
+		public int Chests { get; set; }
+		public bool Shop { get; set; } = false;
+		public int LevelId { get; private set; }
+		public string LevelName { get; private set; }
+		public Room[,] RoomsMap { get; private set; } = new Room[20,20];
+		public List<Room> RoomsList { get; private set; } = new List<Room>();
+	}
 }
