@@ -11,9 +11,23 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
         
         [SyncVar] [HideInInspector] public Vector2 orientation;
 
+        public override bool OnSerialize(NetworkWriter writer, bool initialState)
+        {
+            base.OnSerialize(writer, initialState);
+            writer.WriteVector2(orientation);
+            return true;
+        }
+
+        public override void OnDeserialize(NetworkReader reader, bool initialState)
+        {
+            base.OnDeserialize(reader, initialState);
+            orientation = reader.ReadVector2();
+        }
+        
         protected void InstantiateRangeWeapon()
         {
-            orientation = Vector2.up;
+            if (isServer)
+                orientation = Vector2.up;
             projectile.InstantiateProjectile();
             InstantiateWeapon();
         }

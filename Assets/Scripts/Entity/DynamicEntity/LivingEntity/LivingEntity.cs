@@ -10,6 +10,19 @@ namespace Entity.DynamicEntity.LivingEntity
         private bool _isAlive = true;
         protected Rigidbody2D Rigibody;
 
+        public override bool OnSerialize(NetworkWriter writer, bool initialState)
+        {
+            base.OnSerialize(writer, initialState);
+            writer.WriteSingle(_health);
+            return true;
+        }
+
+        public override void OnDeserialize(NetworkReader reader, bool initialState)
+        {
+            base.OnDeserialize(reader, initialState);
+            _health = reader.ReadSingle();
+        }
+
         protected abstract void RpcDying();
         
         protected void InstantiateLivingEntity()

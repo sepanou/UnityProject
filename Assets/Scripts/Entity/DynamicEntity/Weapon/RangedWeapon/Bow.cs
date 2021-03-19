@@ -6,12 +6,45 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
 {
     public class Bow : RangedWeapon
     {
-        private bool _playerFound;
+        [SyncVar] private bool _playerFound;
+
+        public override bool OnSerialize(NetworkWriter writer, bool initialState)
+        {
+            base.OnSerialize(writer, initialState);
+            writer.WriteBoolean(_playerFound);
+            return true;
+        }
+
+        public override void OnDeserialize(NetworkReader reader, bool initialState)
+        {
+            base.OnDeserialize(reader, initialState);
+            _playerFound = reader.ReadBoolean();
+        }
         
+        private void OrientateBow(Vector3 bowOrientation)
+        {
+            if (!hasAuthority) return;
+            bowOrientation.Normalize();
+            gameObject.transform.localRotation = Quaternion.Euler(
+                new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, bowOrientation)));
+            CmdUpdateOrientation(bowOrientation);
+        }
+
         private void Start()
         {
             InstantiateRangeWeapon();
-            _playerFound = false;
+            if (isServer)
+                _playerFound = false;
+        }
+        
+        private void FixedUpdate()
+        {
+            // Only run by server
+            if (isServer && isGrounded && !_playerFound) GroundedLogic();
+            if (!hasAuthority|| !equipped || isGrounded) return;
+            // Only run by the weapon's owner (client)
+            Vector3 direction = Input.mousePosition - holder.WorldToScreenPoint(transform.position);
+            OrientateBow(direction);
         }
 
         [ServerCallback]
@@ -41,24 +74,8 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
 
         [ClientRpc] // By default, attack anims are slow -> no need for persistent NetworkAnimator
         private void RpcAttackAnimation() => Animator.Play("DefaultAttack");
-
-        [Command(requiresAuthority = false)]
-        private void CmdOrientBow(Vector3 bowOrientation)
-        {
-            orientation = bowOrientation;
-            orientation.Normalize();
-            gameObject.transform.localRotation = Quaternion.Euler(
-                new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, orientation))
-            );
-        }
-
-        private void FixedUpdate()
-        {
-            // Only run by server
-            if (isServer && isGrounded && !_playerFound) GroundedLogic();
-            if (!holder || !holder.isLocalPlayer || !equipped || isGrounded) return;
-            // Only run by the weapon's owner (client)
-            CmdOrientBow(Input.mousePosition - holder.WorldToScreenPoint(transform.position));
-        }
+        
+        [Command] // Authority does not change the fact that sync vars must be updated on the server
+        private void CmdUpdateOrientation(Vector2 bowOrientation) => orientation = bowOrientation;
     }
 }

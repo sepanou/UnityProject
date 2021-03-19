@@ -1,33 +1,71 @@
+using System;
 using Entity.DynamicEntity.LivingEntity.Player;
 using System.Collections.Generic;
 using DataBanks;
 using Mirror;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using UnityEngine.SceneManagement;
 
 namespace Entity.DynamicEntity.Weapon
 {
     public abstract class Weapon : DynamicEntity
     {
-        public Player holder;
         private string _name;
         private ContactFilter2D _filter;
         
+        [SyncVar] public Player holder;
         [SyncVar] public PlayerClasses compatibleClass;
-        [SyncVar] public bool equipped, isGrounded;
+        [SyncVar] public bool equipped;
+        [SyncVar] public bool isGrounded;
         [SyncVar] protected float LastAttackTime; // For cooldown purposes
-        [SyncVar] private GameObject _holder; // Only for sync (for new players)
 
         [SerializeField] protected int defaultDamage;
         [SerializeField] protected int specialAttackCost;
         [SerializeField] protected WeaponGeneratorDB weaponGenerator;
         [SerializeField] protected Vector3 defaultCoordsWhenLikedToPlayer;
 
+        public override bool OnSerialize(NetworkWriter writer, bool initialState)
+        {
+            base.OnSerialize(writer, initialState);
+            writer.WritePlayer(holder);
+            writer.WriteByte((byte) compatibleClass);
+            writer.WriteBoolean(equipped);
+            writer.WriteBoolean(isGrounded);
+            writer.WriteSingle(LastAttackTime);
+            return true;
+        }
+
+        public override void OnDeserialize(NetworkReader reader, bool initialState)
+        {
+            base.OnDeserialize(reader, initialState);
+            holder = reader.ReadPlayer();
+            compatibleClass = (PlayerClasses) reader.ReadByte();
+            equipped = reader.ReadBoolean();
+            isGrounded = reader.ReadBoolean();
+            LastAttackTime = reader.ReadSingle();
+        }
+
         protected void InstantiateWeapon()
         {
-            isGrounded = true; // By default, weapon on the ground !
-            LastAttackTime = float.NaN;
+            if (isServer)
+            {
+                isGrounded = true; // By default, weapon on the ground !
+                LastAttackTime = -1f;
+            }
             _filter = new ContactFilter2D();
+
             InstantiateDynamicEntity();
+            
+            if (holder) SetActive(equipped);
+
+            SceneManager.sceneLoaded += (scene, mode) => SetActive(equipped);
+        }
+
+        private void SetActive(bool state)
+        {
+            Renderer.color = new Color(255, 255, 255, state ? 255 : 0);
+            enabled = state;
         }
         
         public int GetDamage() => defaultDamage;
@@ -36,7 +74,7 @@ namespace Entity.DynamicEntity.Weapon
         public bool CanAttack()
         {
             return holder && equipped &&
-                   (float.IsNaN(LastAttackTime) || !(Time.time - LastAttackTime < GetSpeed()));
+                   (LastAttackTime < 0 || !(Time.time - LastAttackTime < GetSpeed()));
         }
         
         protected abstract void DefaultAttack();
@@ -69,34 +107,57 @@ namespace Entity.DynamicEntity.Weapon
             else if (fireTwoButton && holder.HasEnoughEnergy(specialAttackCost)) SpecialAttack();
         }
 
-        [ClientRpc]
-        public void RpcSetWeaponParent(Transform parent) => transform.parent = parent;
-
-        [ClientRpc]
-        public void RpcUnEquip()
+        [ServerCallback]
+        public void Equip(Player source)
         {
-            equipped = false;
-            gameObject.SetActive(false);
-        }
-
-        [ClientRpc]
-        public void RpcEquip(Player source)
-        {
-            _holder = source.gameObject;
             holder = source;
-            transform.localPosition = defaultCoordsWhenLikedToPlayer;
             equipped = true;
-            gameObject.SetActive(true);
+            RpcEquip();
         }
         
+        [ServerCallback]
+        public void UnEquip()
+        {
+            equipped = false;
+            RpcUnEquip();
+        }
+
+        [ClientRpc]
+        private void RpcEquip()
+        {
+            transform.localPosition = defaultCoordsWhenLikedToPlayer;
+            SetActive(true);
+        }
+
+        [ClientRpc] private void RpcUnEquip() => SetActive(false);
+
+        [ClientRpc] public void RpcSetWeaponParent(Transform parent) => transform.parent = parent;
+
         // Called on client every time this object is spawned (especially when new players join)
         [ClientCallback]
         public override void OnStartClient()
         {
-            if (!_holder || !_holder.TryGetComponent(out Player player)) return;
+            if (!holder) return;
             var transfo = transform;
-            transfo.parent = player.transform;
+            transfo.parent = holder.transform;
             transfo.position = defaultCoordsWhenLikedToPlayer;
+        }
+    }
+    
+    public static class WeaponSerialization
+    {
+        public static void WriteWeapon(this NetworkWriter writer, Weapon weapon)
+        {
+            writer.WriteBoolean(weapon);
+            if (weapon && weapon.netIdentity)
+                writer.WriteNetworkIdentity(weapon.netIdentity);
+        }
+
+        public static Weapon ReadWeapon(this NetworkReader reader)
+        {
+            if (!reader.ReadBoolean()) return null;
+            NetworkIdentity identity = reader.ReadNetworkIdentity();
+            return !identity ? null : identity.GetComponent<Weapon>();
         }
     }
 }

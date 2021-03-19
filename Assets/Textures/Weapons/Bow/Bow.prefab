@@ -111,6 +111,7 @@ MonoBehaviour:
   specialAttackCost: 10
   weaponGenerator: {fileID: 11400000, guid: e5e5295fd017fc64e83b09cabc106492, type: 2}
   defaultCoordsWhenLikedToPlayer: {x: 0, y: 0.25, z: 0}
+  sprite: {fileID: -8828886737162667788, guid: 3c8a34e21f8816e4f97988951d4d7615, type: 3}
   launchPoint: {fileID: 8642561507799599230}
   projectile: {fileID: -3282971848471082322, guid: f253105defb28994f8f1ab558d129c39,
     type: 3}
@@ -180,10 +181,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0
   clientAuthority: 0
   localPositionSensitivity: 0.01
-  localRotationSensitivity: 0.01
+  localRotationSensitivity: 5
   localScaleSensitivity: 0.01
 --- !u!1 &7922785146855789578
 GameObject:

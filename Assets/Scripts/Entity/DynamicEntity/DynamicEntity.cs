@@ -11,13 +11,22 @@ namespace Entity.DynamicEntity
         /// </summary>
         [SyncVar] [SerializeField] private float speed;
         protected Animator Animator;
-        protected NetworkAnimator NetworkAnimator;
+
+        public override bool OnSerialize(NetworkWriter writer, bool initialState)
+        {
+            writer.WriteSingle(speed);
+            return true;
+        }
+
+        public override void OnDeserialize(NetworkReader reader, bool initialState)
+        {
+            speed = reader.ReadSingle();
+        }
 
         protected void InstantiateDynamicEntity()
         {
             InstantiateEntity();
             Animator = GetComponent<Animator>();
-            NetworkAnimator = GetComponent<NetworkAnimator>();
         }
 
         public float GetSpeed() => speed;

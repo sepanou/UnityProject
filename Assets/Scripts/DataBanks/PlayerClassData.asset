@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25a26eeaae264bb4d8521f30e46b3dd6, type: 3}
   m_Name: PlayerClassData
   m_EditorClassIdentifier: 
-  archerAnimator: {fileID: 9100000, guid: 66ef2cf5de882f44ca5bc81326233742, type: 2}
-  warriorAnimator: {fileID: 9100000, guid: d99c96c122bbe1b45a696b4a290c9aec, type: 2}
-  mageAnimator: {fileID: 0}
+  archerAnimator: {fileID: 9100000, guid: 61fe12a42220e5742978018cf64a47c6, type: 2}
+  warriorAnimator: {fileID: 0}
+  mageAnimator: {fileID: 9100000, guid: 3272c77f5407c9348a43e2182b5598be, type: 2}
   archerSprite: {fileID: 5731584507761909605, guid: 78dc08da4150f0e44adfcc12611a29fe,
     type: 3}
-  warriorSprite: {fileID: 3944610533857416082, guid: 3ba0f4a7f254281868a4418109d0998c,
+  warriorSprite: {fileID: 0}
+  mageSprite: {fileID: 3551177970790899033, guid: 4e7b44d13ec20b54e8e0b95735760646,
     type: 3}
-  mageSprite: {fileID: 0}
