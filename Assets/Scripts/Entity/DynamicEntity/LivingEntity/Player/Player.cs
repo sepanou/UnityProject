@@ -31,7 +31,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         [SyncVar] [SerializeField] protected Weapon.Weapon weapon;
         [SyncVar] private int _money = 0;
         [SyncVar] [SerializeField] private int energy;
-        
+
         private List<Charm> _charms; // Could use targetRpc -> no need for others to see our charms !
         // serialization of Weapon objects, but it does for GameObject !
         [ShowInInspector]
@@ -61,10 +61,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         
         private void Start()
         {
+            DontDestroyOnLoad(this);
             InstantiateLivingEntity();
             _charms = new List<Charm>();
             _lastAnimationStateIndex = 0;
-            SwitchPlayerClass(playerClass);
+            SwitchClass(playerClass);
             mainCamera.gameObject.SetActive(isLocalPlayer);
             if (isLocalPlayer)
                 _weapons.Callback += OnWeaponsUpdated;
@@ -76,9 +77,33 @@ namespace Entity.DynamicEntity.LivingEntity.Player
 
         public Vector3 WorldToScreenPoint(Vector3 position)
             => mainCamera ? mainCamera.WorldToScreenPoint(position) : Vector3.zero;
-        
-        [ServerCallback]
-        public void ReduceEnergy(int amount) => energy = amount >= energy ? 0 : energy - amount;
+
+        private void SwitchClass(PlayerClasses @class)
+        {
+            switch (@class)
+            {
+                case PlayerClasses.Archer:
+                    if (Animator) Animator.runtimeAnimatorController = classAnimators.archerAnimator;
+                    if (Renderer) Renderer.sprite = classAnimators.archerSprite;
+                    playerClass = PlayerClasses.Archer;
+                    break;
+                case PlayerClasses.Warrior:
+                    if (Animator) Animator.runtimeAnimatorController = classAnimators.warriorAnimator;
+                    if (Renderer) Renderer.sprite = classAnimators.warriorSprite;
+                    playerClass = PlayerClasses.Warrior;
+                    break;
+                case PlayerClasses.Mage:
+                    if (Animator) Animator.runtimeAnimatorController = classAnimators.mageAnimator;
+                    if (Renderer) Renderer.sprite = classAnimators.mageSprite;
+                    playerClass = PlayerClasses.Mage;
+                    break;
+                default:
+                    if (Animator) Animator.runtimeAnimatorController = classAnimators.archerAnimator;
+                    if (Renderer) Renderer.sprite = classAnimators.archerSprite;
+                    playerClass = PlayerClasses.Archer;
+                    break;
+            }
+        }
 
         private void OnWeaponsUpdated(SyncList<Weapon.Weapon>.Operation op, int itemIndex, Weapon.Weapon oldItem, Weapon.Weapon newItem)
         {
@@ -87,9 +112,32 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             
             // Modify inventory HERE
         }
+        
+        [ServerCallback] public void ReduceEnergy(int amount) => energy = amount >= energy ? 0 : energy - amount;
 
         [ServerCallback]
-        private void ApplyForceToRigidBody(float x, float y)
+        private void SwitchWeapon(Weapon.Weapon newWeapon)
+        {
+            if (weapon) weapon.UnEquip();
+            weapon = newWeapon;
+            weapon.Equip(this);
+        }
+
+        [ServerCallback]
+        private void CollectWeapon(Weapon.Weapon wp)
+        {
+            wp.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
+            wp.holder = this;
+            wp.RpcSetWeaponParent(transform);
+            if (weapon)
+                wp.UnEquip();
+            else
+                SwitchWeapon(wp);
+            _weapons.Add(wp);
+        }
+        
+        [ClientRpc]
+        private void RpcApplyForceToRigidBody(float x, float y)
         {
             if (!Rigibody) return;
             Vector2 direction = new Vector2(x, y);
@@ -109,58 +157,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             Animator.Play(WalkAnims[_lastAnimationStateIndex]);
         }
 
-        [ServerCallback]
-        private void SwitchPlayerClass(PlayerClasses @class)
-        {
-            // By default (when instantiating the gameObject), NetworkAnimator is disabled
-            if (NetworkAnimator && NetworkAnimator.enabled && @class == playerClass) return;
-            if (NetworkAnimator) NetworkAnimator.enabled = false;
-            
-            switch (@class)
-            {
-                case PlayerClasses.Archer:
-                    if (Animator) Animator.runtimeAnimatorController = classAnimators.archerAnimator;
-                    if (Renderer) Renderer.sprite = classAnimators.archerSprite;
-                    break;
-                case PlayerClasses.Warrior:
-                    if (Animator) Animator.runtimeAnimatorController = classAnimators.warriorAnimator;
-                    if (Renderer) Renderer.sprite = classAnimators.warriorSprite;
-                    break;
-                case PlayerClasses.Mage:
-                    if (Animator) Animator.runtimeAnimatorController = classAnimators.archerAnimator;
-                    if (Renderer) Renderer.sprite = classAnimators.archerSprite;
-                    break;
-                default:
-                    if (Animator) Animator.runtimeAnimatorController = classAnimators.archerAnimator;
-                    if (Renderer) Renderer.sprite = classAnimators.archerSprite;
-                    break;
-            }
+        [ClientRpc] private void RpcSwitchPlayerClass(PlayerClasses @class) => SwitchClass(@class);
 
-            if (!Animator || !NetworkAnimator) return;
-            NetworkAnimator.animator = Animator;
-            StartCoroutine(NetworkAnimator.Reload());
-        }
-
-        [ServerCallback]
-        private void SwitchWeapon(Weapon.Weapon newWeapon)
-        {
-            if (weapon) weapon.UnEquip();
-            weapon = newWeapon;
-            weapon.Equip(this);
-        }
-
-        [ServerCallback]
-        private void CollectWeapon(Weapon.Weapon wp)
-        {
-            wp.holder = this;
-            wp.RpcSetWeaponParent(transform);
-            if (weapon)
-                wp.UnEquip();
-            else
-                SwitchWeapon(wp);
-            _weapons.Add(wp);
-        }
-        
         [ClientRpc]
         public void RpcCollect(uint entityNetId)
         {
@@ -172,6 +170,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player
                 case Weapon.Weapon wp:
                     wp.isGrounded = false;
                     CollectWeapon(wp);
+                    if (wp.TryGetComponent(out NetworkTransform netTransform))
+                        netTransform.clientAuthority = true;
                     break;
                 case Charm charm:
                     break;
@@ -186,19 +186,30 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             Debug.Log("Player " + playerName + " is dead !");
         }
         
+        [Command]
+        private void CmdSwitchPlayerClass(PlayerClasses @class)
+        {
+            if (@class == playerClass) return;
+            RpcSwitchPlayerClass(@class);
+        }
+        
         // Command executed on the server
         // Only called from the client GO, on the corresponding GO on the server
         [Command]
-        private void CmdMove(float x, float y)
-        {
-            ApplyForceToRigidBody(x, y);
-        }
+        private void CmdMove(float x, float y) => RpcApplyForceToRigidBody(x, y);
         
         [Command] // Only called by clients
         private void CmdAttack(bool fireOneButton, bool fireTwoButton)
         {
             if (!fireOneButton && !fireTwoButton) return;
             if (weapon && weapon.CanAttack()) weapon.UseWeapon(fireOneButton, fireTwoButton);
+        }
+
+        [Command]
+        private void CmdSwitchWeapon()
+        {
+            if (_weapons.Count == 0) return;
+            SwitchWeapon(!weapon ? _weapons[0] : _weapons[(_weapons.IndexOf(weapon) + 1) % _weapons.Count]);
         }
         
         [ClientCallback]
@@ -215,10 +226,27 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             // For inputs
             if (!isLocalPlayer) return;
             CmdAttack(Input.GetButtonDown("Fire1"), Input.GetButtonDown("Fire2"));
+            
+            // Change class (for testing)
+            if (Input.GetKeyDown(KeyCode.C))
+                CmdSwitchPlayerClass(playerClass == PlayerClasses.Archer ? PlayerClasses.Mage : PlayerClasses.Archer);
+
             if (netIdentity.isServer && toSpawn && Input.GetKeyDown(KeyCode.K))
             {
                 NetworkServer.Spawn(Instantiate(toSpawn, toCoords, Quaternion.identity).gameObject);
                 Debug.Log("Spawned !");
+            }
+
+            if (netIdentity.isServer && Input.GetKeyDown(KeyCode.P))
+            {
+                NetworkManager.singleton.ServerChangeScene("TestBow");
+                Debug.Log("Changed scene !");
+            }
+
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                CmdSwitchWeapon();
+                Debug.Log("Changed weapon !");
             }
         }
     }

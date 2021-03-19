@@ -1,8 +1,11 @@
+using System;
 using Entity.DynamicEntity.LivingEntity.Player;
 using System.Collections.Generic;
 using DataBanks;
 using Mirror;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using UnityEngine.SceneManagement;
 
 namespace Entity.DynamicEntity.Weapon
 {
@@ -51,7 +54,18 @@ namespace Entity.DynamicEntity.Weapon
                 LastAttackTime = -1f;
             }
             _filter = new ContactFilter2D();
+
             InstantiateDynamicEntity();
+            
+            if (holder) SetActive(equipped);
+
+            SceneManager.sceneLoaded += (scene, mode) => SetActive(equipped);
+        }
+
+        private void SetActive(bool state)
+        {
+            Renderer.color = new Color(255, 255, 255, state ? 255 : 0);
+            enabled = state;
         }
         
         public int GetDamage() => defaultDamage;
@@ -112,11 +126,11 @@ namespace Entity.DynamicEntity.Weapon
         private void RpcEquip()
         {
             transform.localPosition = defaultCoordsWhenLikedToPlayer;
-            gameObject.SetActive(true);
+            SetActive(true);
         }
-        
-        [ClientRpc] private void RpcUnEquip() => gameObject.SetActive(false);
-        
+
+        [ClientRpc] private void RpcUnEquip() => SetActive(false);
+
         [ClientRpc] public void RpcSetWeaponParent(Transform parent) => transform.parent = parent;
 
         // Called on client every time this object is spawned (especially when new players join)

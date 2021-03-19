@@ -20,6 +20,15 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
             base.OnDeserialize(reader, initialState);
             _playerFound = reader.ReadBoolean();
         }
+        
+        private void OrientateBow(Vector3 bowOrientation)
+        {
+            if (!hasAuthority) return;
+            bowOrientation.Normalize();
+            gameObject.transform.localRotation = Quaternion.Euler(
+                new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, bowOrientation)));
+            CmdUpdateOrientation(bowOrientation);
+        }
 
         private void Start()
         {
@@ -32,15 +41,11 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
         {
             // Only run by server
             if (isServer && isGrounded && !_playerFound) GroundedLogic();
-            if (!holder || !holder.isLocalPlayer || !equipped || isGrounded) return;
+            if (!hasAuthority|| !equipped || isGrounded) return;
             // Only run by the weapon's owner (client)
             Vector3 direction = Input.mousePosition - holder.WorldToScreenPoint(transform.position);
-            OrientBow(direction);
-            CmdOrientBow(direction);
+            OrientateBow(direction);
         }
-
-        private void OrientBow(Vector2 orient) => gameObject.transform.localRotation = 
-            Quaternion.Euler(new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, orient)));
 
         [ServerCallback]
         protected override void DefaultAttack()
@@ -69,13 +74,8 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
 
         [ClientRpc] // By default, attack anims are slow -> no need for persistent NetworkAnimator
         private void RpcAttackAnimation() => Animator.Play("DefaultAttack");
-
-        [Command(requiresAuthority = false)]
-        private void CmdOrientBow(Vector3 bowOrientation)
-        {
-            orientation = bowOrientation;
-            orientation.Normalize();
-            OrientBow(orientation);
-        }
+        
+        [Command] // Authority does not change the fact that sync vars must be updated on the server
+        private void CmdUpdateOrientation(Vector2 bowOrientation) => orientation = bowOrientation;
     }
 }
