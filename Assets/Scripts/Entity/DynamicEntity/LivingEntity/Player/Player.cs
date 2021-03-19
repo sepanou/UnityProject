@@ -44,6 +44,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             _charms = new List<Charm>();
             _lastAnimationStateIndex = 0;
             SwitchPlayerClass(playerClass);
+            SwitchPlayerClass(playerClass);
             mainCamera.gameObject.SetActive(isLocalPlayer);
         }
 

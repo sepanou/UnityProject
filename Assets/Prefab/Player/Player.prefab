@@ -276,7 +276,7 @@ MonoBehaviour:
   weapon: {fileID: 0}
   energy: 100
   playerName: PlayerA
-  playerClass: 2
+  playerClass: 1
 --- !u!95 &8972541332924031235
 Animator:
   serializedVersion: 3
@@ -287,7 +287,7 @@ Animator:
   m_GameObject: {fileID: 5628018141983903104}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 66ef2cf5de882f44ca5bc81326233742, type: 2}
+  m_Controller: {fileID: 9100000, guid: d99c96c122bbe1b45a696b4a290c9aec, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

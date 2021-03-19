@@ -21,18 +21,22 @@ namespace Generation {
 			while (true)
 				if (TryAddRoom(lMap, rMap, roomToPlace, x, y))
 					break;
-			bool PlacedLastRoom = false;
-			while (!PlacedLastRoom) {
+			bool placedLastRoom = false;
+			while (!placedLastRoom) {
 				foreach (Room roomToCheckOn in lMap) {
-					foreach ((char Dir, int nbDir) in roomToCheckOn.GetExits()) {
+					foreach ((char dir, int nbDir) in roomToCheckOn.GetExits()) {
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
 						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, _seed, lMap);
-						if (Dir switch {
-							'T' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1),
-							'B' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1),
-							'L' => TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1),
-							'R' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1)
-						}) {
+						if (dir == 'T'
+							? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
+							: dir == 'B'
+							? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1)
+							: dir == 'L'
+							? TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1)
+							: dir == 'R'
+							? TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1)
+							: throw new Exception("invalid letter")
+					) {
 							if (roomToAdd.GetRoomType() == RoomType.Chest)
 								level.Chests += 1;
 							if (roomToAdd.GetRoomType() == RoomType.Shop)
@@ -44,15 +48,19 @@ namespace Generation {
 				int prob = _seed.Next(100);
 				if (level.RoomsList.Count > 15 && prob < level.RoomsList.Count) return;
 				foreach (Room roomToCheckOn in lMap) {
-					foreach ((char Dir, int nbDir) in roomToCheckOn.GetExits()) {
+					foreach ((char dir, int nbDir) in roomToCheckOn.GetExits()) {
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
 						Room roomToAdd = _availableRooms[RoomType.PreBoss][_seed.Next(_availableRooms[RoomType.PreBoss].Count)];
-						if (Dir switch {
-							'T' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1),
-							'B' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1),
-							'L' => TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1),
-							'R' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1)
-						}) PlacedLastRoom = true;
+						if (dir == 'T'
+							? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
+							: dir == 'B'
+							? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1)
+							: dir == 'L'
+							? TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1)
+							: dir == 'R'
+							? TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1)
+							: throw new Exception("invalid letter")
+						) placedLastRoom = true;
 					} 
 				}
 			}
@@ -62,11 +70,9 @@ namespace Generation {
 
 		private Room GenerateRoom(bool isThereAShop, int chests, Random seed, List<Room> lMap)
 		{
-			RoomType toGenerate;
 			int prob = seed.Next(100);
 			if (!isThereAShop && prob <= 10 + lMap.Count / 2)
 			{
-				isThereAShop = true;
 				return _availableRooms[RoomType.Shop][seed.Next(_availableRooms[RoomType.Shop].Count)];
 			}
 
