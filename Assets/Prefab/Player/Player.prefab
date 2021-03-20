@@ -273,7 +273,7 @@ MonoBehaviour:
   mainCamera: {fileID: 1302193366}
   classAnimators: {fileID: 11400000, guid: 2882da12331e80542b3b5aceabe162e4, type: 2}
   playerName: PlayerA
-  playerClass: 2
+  playerClass: 0
   weapon: {fileID: 0}
   energy: 100
 --- !u!95 &8972541332924031235

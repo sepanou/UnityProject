@@ -216,17 +216,35 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         private void FixedUpdate()
         {
             // For physics
-            if (!isLocalPlayer) return;
-            CmdMove(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen) return;
+            int horizontal = 0;
+            int vertical = 0;
+            if (MenuSettingsManager.Instance.inputManager.GetKeyPressed("Forward"))
+                vertical++;
+            if (MenuSettingsManager.Instance.inputManager.GetKeyPressed("Backward"))
+                vertical--;
+            if (MenuSettingsManager.Instance.inputManager.GetKeyPressed("Left"))
+                horizontal--;
+            if (MenuSettingsManager.Instance.inputManager.GetKeyPressed("Right"))
+                horizontal++;
+            CmdMove(horizontal, vertical);
         }
 
         [ClientCallback]
         private void Update()
         {
             // For inputs
-            if (!isLocalPlayer) return;
-            CmdAttack(Input.GetButtonDown("Fire1"), Input.GetButtonDown("Fire2"));
+            if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen) return;
             
+            if (MenuSettingsManager.Instance.inputManager.GetKeyDown("OpenMenu"))
+            {
+                MenuSettingsManager.Instance.OpenMenu();
+                return;
+            }
+            
+            CmdAttack(MenuSettingsManager.Instance.inputManager.GetKeyDown("DefaultAttack"), 
+                MenuSettingsManager.Instance.inputManager.GetKeyDown("SpecialAttack"));
+
             // Change class (for testing)
             if (Input.GetKeyDown(KeyCode.C))
                 CmdSwitchPlayerClass(playerClass == PlayerClasses.Archer ? PlayerClasses.Mage : PlayerClasses.Archer);
