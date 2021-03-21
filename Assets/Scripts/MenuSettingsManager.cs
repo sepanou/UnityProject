@@ -9,19 +9,26 @@ public class MenuSettingsManager : MonoBehaviour
     [SerializeField] private AudioSource soundsSource;
     [SerializeField] private EventSystem eventSystem;
     [SerializeField] private RectTransform defaultMenu;
+    [SerializeField] private InputManager inputManager;
 
     public static MenuSettingsManager Instance;
 
     public bool isOpen;
-    public InputManager inputManager;
     private FullScreenMode _fullScreenMode;
     
-    private void Start()
+    private void OnEnable()
     {
+        if (!InputManager.Instance)
+            inputManager.Awake();
+        
         if (!Instance)
             Instance = this;
         else
+        {
             Destroy(this);
+            return;
+        }
+
         DontDestroyOnLoad(this);
         _fullScreenMode = FullScreenMode.Windowed;
     }
@@ -37,6 +44,8 @@ public class MenuSettingsManager : MonoBehaviour
         isOpen = false;
         defaultMenu.gameObject.SetActive(false);
     }
+
+    public void SaveInputManager() => InputManager.Instance.SaveData();
     
     public void SetEventSystemActive(bool state)
     {

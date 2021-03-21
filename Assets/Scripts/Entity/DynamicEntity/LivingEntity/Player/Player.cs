@@ -219,13 +219,13 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen) return;
             int horizontal = 0;
             int vertical = 0;
-            if (MenuSettingsManager.Instance.inputManager.GetKeyPressed("Forward"))
+            if (InputManager.Instance.GetKeyPressed("Forward"))
                 vertical++;
-            if (MenuSettingsManager.Instance.inputManager.GetKeyPressed("Backward"))
+            if (InputManager.Instance.GetKeyPressed("Backward"))
                 vertical--;
-            if (MenuSettingsManager.Instance.inputManager.GetKeyPressed("Left"))
+            if (InputManager.Instance.GetKeyPressed("Left"))
                 horizontal--;
-            if (MenuSettingsManager.Instance.inputManager.GetKeyPressed("Right"))
+            if (InputManager.Instance.GetKeyPressed("Right"))
                 horizontal++;
             CmdMove(horizontal, vertical);
         }
@@ -236,14 +236,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             // For inputs
             if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen) return;
             
-            if (MenuSettingsManager.Instance.inputManager.GetKeyDown("OpenMenu"))
+            if (InputManager.Instance.GetKeyDown("OpenMenu"))
             {
                 MenuSettingsManager.Instance.OpenMenu();
                 return;
             }
             
-            CmdAttack(MenuSettingsManager.Instance.inputManager.GetKeyDown("DefaultAttack"), 
-                MenuSettingsManager.Instance.inputManager.GetKeyDown("SpecialAttack"));
+            CmdAttack(InputManager.Instance.GetKeyDown("DefaultAttack"), 
+                InputManager.Instance.GetKeyDown("SpecialAttack"));
 
             // Change class (for testing)
             if (Input.GetKeyDown(KeyCode.C))

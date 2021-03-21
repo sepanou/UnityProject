@@ -11,6 +11,13 @@ public class ModifyControls : MonoBehaviour
     [SerializeField] private Button button;
     [SerializeField] private string actionName;
 
+    private void Start()
+    {
+        if (!InputManager.Instance || !InputManager.Instance.TryGetKeyFromAction(actionName, out KeyCode key)) return;
+        if (keyLabel)
+            keyLabel.text = key.ToString();
+    }
+
     private IEnumerator Listener()
     {
         if (!MenuSettingsManager.Instance) yield break;
@@ -25,7 +32,7 @@ public class ModifyControls : MonoBehaviour
         {
             if (!Input.GetKey(keyCode)) continue;
             keyLabel.text = keyCode.ToString();
-            MenuSettingsManager.Instance.inputManager.ChangeKeyEntry(actionName, keyCode);
+            InputManager.Instance.ChangeKeyEntry(actionName, keyCode);
             break;
         }
 
