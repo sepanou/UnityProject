@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using DataBanks;
 using Entity.Collectibles;
 using Entity.DynamicEntity.Weapon;
 using Mirror;
+using UI_Audio;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Player
@@ -19,10 +21,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player
     {
         public Weapon.Weapon toSpawn;
         public Vector3 toCoords;
-        
+
+        public static Camera MainCamera;
         private static readonly string[] IdleAnims = {"IdleN", "IdleW", "IdleS", "IdleE"};
         private static readonly string[] WalkAnims = {"WalkN", "WalkW", "WalkS", "WalkE"};
-        
+
         [SerializeField] private Camera mainCamera;
         [SerializeField] private PlayerClassAnimators classAnimators;
 
@@ -58,7 +61,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             playerName = reader.ReadString();
             weapon = reader.ReadWeapon();
         }
-        
+
+        private void OnEnable()
+        {
+            if (!isLocalPlayer || !MainCamera) return;
+            MainCamera = mainCamera;
+            MainCamera.gameObject.SetActive(isLocalPlayer);
+        }
+
         private void Start()
         {
             DontDestroyOnLoad(this);
@@ -66,9 +76,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             _charms = new List<Charm>();
             _lastAnimationStateIndex = 0;
             SwitchClass(playerClass);
-            mainCamera.gameObject.SetActive(isLocalPlayer);
-            if (isLocalPlayer)
-                _weapons.Callback += OnWeaponsUpdated;
+
+            if (!isLocalPlayer) return;
+            _weapons.Callback += OnWeaponsUpdated;
         }
 
         // Can be executed by both client & server (Synced data analysis) -> double check
