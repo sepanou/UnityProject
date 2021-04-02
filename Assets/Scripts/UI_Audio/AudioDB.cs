@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 
 namespace UI_Audio
 {
@@ -36,7 +37,9 @@ namespace UI_Audio
     }
 
     [Serializable]
+#pragma warning disable 660,661
     public struct Sound
+#pragma warning restore 660,661
     {
         public static Sound None = new Sound {key = "None"};
         

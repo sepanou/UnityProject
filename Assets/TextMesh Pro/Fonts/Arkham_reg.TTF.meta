@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: da2642972348b35409ffca6cceba7d99
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: ARKHAM
+  fontNames:
+  - ARKHAM
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 9472063882edf954fb4391e4a6ce89ee, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

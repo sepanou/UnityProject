@@ -17,7 +17,7 @@ namespace UI_Audio
         {
             _sounds = new List<Sound>();
             _adjustingVolume = false;
-            _listener = Player.MainCamera.gameObject.GetComponent<AudioListener>();
+            _listener = MenuSettingsManager.CurrentCamera.gameObject.GetComponent<AudioListener>();
         }
 
         private bool ContainsSound(string key) => GetSound(key) != Sound.None;

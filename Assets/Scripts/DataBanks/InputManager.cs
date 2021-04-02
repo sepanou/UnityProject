@@ -118,10 +118,10 @@ namespace DataBanks
             return obj.array;
         }
 
-        public static string ToJsonArray<T>(T[] array)
+        public static string ToJsonArray<T>(T[] array, bool prettyPrint = false)
         {
             Array<T> obj = new Array<T> {array = array};
-            return JsonUtility.ToJson(obj);
+            return JsonUtility.ToJson(obj, prettyPrint);
         }
         
         public static List<T> FromJsonList<T>(string data)
@@ -130,10 +130,10 @@ namespace DataBanks
             return obj.list;
         }
 
-        public static string ToJsonList<T>(List<T> list)
+        public static string ToJsonList<T>(List<T> list, bool prettyPrint = false)
         {
             ListContainer<T> obj = new ListContainer<T> {list = list};
-            return JsonUtility.ToJson(obj);
+            return JsonUtility.ToJson(obj, prettyPrint);
         }
 
         [Serializable]

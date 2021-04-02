@@ -18,22 +18,29 @@ namespace UI_Audio
         [SerializeField] private AudioMixer audioManager;
         [SerializeField] private Slider musicSlider, soundSlider;
 
-        [Header("Mouse Sensitivity")]
-        [SerializeField] private Slider mouseXSensSlider;
-        [SerializeField] private Slider mouseYSensSlider;
-        
         [Header("Input Settings")]
         [SerializeField] private InputManager inputManager;
-        
+
+        [Header("Others")]
+        [SerializeField] private Dropdown languageDropdown;
+        [SerializeField] private LanguageManager languageManager;
+
+        [Header("Cameras")]
+        [SerializeField] private Camera defaultCamera;
+
         [Header("Menus logic")]
         [SerializeField] private EventSystem eventSystem;
         [SerializeField] private RectTransform defaultMenu;
+        [SerializeField] private RectTransform controlsMenu;
 
         public static MenuSettingsManager Instance;
+        public static Camera CurrentCamera;
 
         public bool isOpen;
         private FullScreenMode _fullScreenMode;
         private bool _modified;
+
+        private void Awake() => SwitchToUICamera();
 
         private void OnEnable()
         {
@@ -41,6 +48,8 @@ namespace UI_Audio
                 inputManager.Awake();
             if (!AudioDB.Instance)
                 audioDB.Awake();
+            if (!LanguageManager.Instance)
+                languageManager.Awake();
         
             if (!Instance)
                 Instance = this;
@@ -49,12 +58,23 @@ namespace UI_Audio
                 Destroy(this);
                 return;
             }
-
-            DontDestroyOnLoad(this);
+            
             _fullScreenMode = FullScreenMode.Windowed;
             _modified = false;
             LoadSettings();
+            controlsMenu.gameObject.SetActive(false);
+            CloseMenu();
         }
+
+        public void SwitchToCamera(Camera newCamera)
+        {
+            if (CurrentCamera)
+                CurrentCamera.gameObject.SetActive(false);
+            CurrentCamera = newCamera;
+            newCamera.gameObject.SetActive(true);
+        }
+
+        public void SwitchToUICamera() => SwitchToCamera(defaultCamera);
 
         // Load a float setting and returns the current setting value
         private float TryLoadFloatSetting(string key, float defaultValue, Action<float> action)
@@ -94,11 +114,10 @@ namespace UI_Audio
                 TryLoadFloatSetting("MusicVolume", musicSlider.value, ChangeMusicVolume);
             soundSlider.value =
                 TryLoadFloatSetting("SoundVolume", soundSlider.value, ChangeSoundsVolume);
-            // Mouse Sensitivity
-            mouseXSensSlider.value =
-                TryLoadFloatSetting("MouseSensitivityX", mouseXSensSlider.value, ChangeMouseSensitivityX);
-            mouseYSensSlider.value =
-                TryLoadFloatSetting("MouseSensitivityY", mouseYSensSlider.value, ChangeMouseSensitivityY);
+            // Others
+            BuildLanguagesDropdown();
+            languageDropdown.value =
+                TryLoadIntSetting("LanguageIndex", languageDropdown.value, ChangeLanguage);
         }
 
         private void SaveSettings()
@@ -111,9 +130,8 @@ namespace UI_Audio
             // Sound Settings
             PlayerPrefs.SetFloat("MusicVolume", musicSlider.value);
             PlayerPrefs.SetFloat("SoundVolume", soundSlider.value);
-            // Mouse Sensitivity
-            PlayerPrefs.SetFloat("MouseSensitivityX", mouseXSensSlider.value);
-            PlayerPrefs.SetFloat("MouseSensitivityY", mouseYSensSlider.value);
+            // Others
+            PlayerPrefs.SetInt("LanguageIndex", languageDropdown.value);
         }
 
         public void OpenMenu()
@@ -180,16 +198,18 @@ namespace UI_Audio
             Screen.fullScreenMode = _fullScreenMode;
         }
 
-        public void ChangeMouseSensitivityX(float sensitivity)
+        public void ChangeLanguage(int index)
         {
+            if (!languageManager || !languageDropdown) return;
             _modified = true;
-            // TODO
+            languageManager.ChangeLanguage(languageDropdown.options[languageDropdown.value].text);
         }
-    
-        public void ChangeMouseSensitivityY(float sensitivity)
+
+        private void BuildLanguagesDropdown()
         {
-            _modified = true;
-            // TODO
+            if (!languageManager || !languageDropdown)
+                return;
+            languageDropdown.options = languageManager.GetAllLanguages();
         }
     }
 }

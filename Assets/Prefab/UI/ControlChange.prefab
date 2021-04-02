@@ -221,7 +221,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47.9
+  m_fontSize: 41.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -802,11 +802,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a462f369cd7f9a94b8ecbe3b2364054c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settingsManager: {fileID: 0}
   keyLabel: {fileID: 7406091781887954022}
   button: {fileID: 7406091781818349779}
   actionName: Forward
-  inputManager: {fileID: 11400000, guid: a9c1c0329fc40ca47b81d3dbcfcaef84, type: 2}
 --- !u!222 &7406091783331026704
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1012,6 +1010,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7406091783844444713}
   - component: {fileID: 7406091783844444711}
+  - component: {fileID: 3848103341014064442}
   - component: {fileID: 7406091783844444712}
   m_Layer: 5
   m_Name: Text
@@ -1047,6 +1046,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7406091783844444714}
   m_CullTransparentMesh: 0
+--- !u!114 &3848103341014064442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7406091783844444714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77b35aec710b94441b1cc4f5b972308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fieldKey: forward
+  formatText: 
+  upperCase: 0
+  lowerCase: 0
 --- !u!114 &7406091783844444712
 MonoBehaviour:
   m_ObjectHideFlags: 0

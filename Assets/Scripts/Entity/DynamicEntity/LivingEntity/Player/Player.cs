@@ -21,8 +21,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
     {
         public Weapon.Weapon toSpawn;
         public Vector3 toCoords;
-
-        public static Camera MainCamera;
+        
         private static readonly string[] IdleAnims = {"IdleN", "IdleW", "IdleS", "IdleE"};
         private static readonly string[] WalkAnims = {"WalkN", "WalkW", "WalkS", "WalkE"};
 
@@ -32,7 +31,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         [SyncVar] public string playerName;
         [SyncVar] public PlayerClasses playerClass;
         [SyncVar] [SerializeField] protected Weapon.Weapon weapon;
-        [SyncVar] private int _money = 0;
+        [SyncVar] private int _money;
         [SyncVar] [SerializeField] private int energy;
 
         private List<Charm> _charms; // Could use targetRpc -> no need for others to see our charms !
@@ -62,13 +61,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             weapon = reader.ReadWeapon();
         }
 
-        private void OnEnable()
-        {
-            if (!isLocalPlayer || !MainCamera) return;
-            MainCamera = mainCamera;
-            MainCamera.gameObject.SetActive(isLocalPlayer);
-        }
-
         private void Start()
         {
             DontDestroyOnLoad(this);
@@ -78,6 +70,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             SwitchClass(playerClass);
 
             if (!isLocalPlayer) return;
+            MenuSettingsManager.Instance.SwitchToCamera(mainCamera);
             _weapons.Callback += OnWeaponsUpdated;
         }
 
