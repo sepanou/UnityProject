@@ -114,6 +114,10 @@
                 {
                     "fieldKey": "quit",
                     "translation": "Quit"
+                },
+                {
+                    "fieldKey": "inventory",
+                    "translation": "Inventory"
                 }
             ]
         },
@@ -231,6 +235,10 @@
                 {
                     "fieldKey": "quit",
                     "translation": "Quitter"
+                },
+                {
+                    "fieldKey": "inventory",
+                    "translation": "Inventaire"
                 }
             ]
         }
