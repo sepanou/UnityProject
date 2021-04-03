@@ -102,6 +102,18 @@
                 {
                     "fieldKey": "exclusive-fullscreen",
                     "translation": "Exclusive Full Screen"
+                },
+                {
+                    "fieldKey": "play",
+                    "translation": "Play"
+                },
+                {
+                    "fieldKey": "credits",
+                    "translation": "Credits"
+                },
+                {
+                    "fieldKey": "quit",
+                    "translation": "Quit"
                 }
             ]
         },
@@ -207,6 +219,18 @@
                 {
                     "fieldKey": "exclusive-fullscreen",
                     "translation": "Plein écran"
+                },
+                {
+                    "fieldKey": "play",
+                    "translation": "Jouer"
+                },
+                {
+                    "fieldKey": "credits",
+                    "translation": "Crédits"
+                },
+                {
+                    "fieldKey": "quit",
+                    "translation": "Quitter"
                 }
             ]
         }

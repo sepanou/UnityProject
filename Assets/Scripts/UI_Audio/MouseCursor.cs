@@ -8,12 +8,22 @@ namespace UI_Audio
 {
     public class MouseCursor : MonoBehaviour
     {
+        public static MouseCursor Instance;
+        
         private Vector2 _lastPos, _lastCameraPos;
         private Animator _animator;
         private bool _isIdling;
 
         private void Start()
         {
+            if (!Instance)
+                Instance = this;
+            else
+            {
+                Destroy(this);
+                return;
+            }
+            
             _lastPos = Input.mousePosition;
             Camera current = MenuSettingsManager.CurrentCamera;
             transform.position = current.ViewportToWorldPoint(
@@ -23,6 +33,14 @@ namespace UI_Audio
             Cursor.visible = false;
             TryGetComponent(out _animator);
             _isIdling = false;
+        }
+
+        public bool IsMouseOver(Vector3[] worldCorners)
+        {
+            Vector3 mousePos = transform.position;
+            if (mousePos.x < worldCorners[1].x || mousePos.x > worldCorners[3].x)
+                return false;
+            return !(mousePos.y < worldCorners[0].y) && !(mousePos.y > worldCorners[2].y);
         }
 
         private Vector2 ClampCoords(Vector2 viewportPoint)
@@ -68,9 +86,7 @@ namespace UI_Audio
 
             while (selectable && selectable.enabled)
             {
-                Vector3 mousePos = transform.position;
-                if (mousePos.x < corners[1].x || mousePos.x > corners[3].x) break;
-                if (mousePos.y < corners[0].y || mousePos.y > corners[2].y) break;
+                if (!IsMouseOver(corners)) break;
                 yield return new WaitForSeconds(0.1f);
             }
 
@@ -89,8 +105,7 @@ namespace UI_Audio
 
         private void Update()
         {
-            if (MenuSettingsManager.Instance && MenuSettingsManager.Instance.isOpen)
-                SetAnimation();
+            SetAnimation();
             Vector2 newPos = Input.mousePosition;
             Vector2 newCameraPos = MenuSettingsManager.CurrentCamera.transform.position;
             if (newPos == _lastPos && _lastCameraPos == newCameraPos) return;

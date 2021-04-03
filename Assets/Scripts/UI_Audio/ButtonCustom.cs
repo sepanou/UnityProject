@@ -1,0 +1,65 @@
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
+
+namespace UI_Audio
+{
+    public class ButtonCustom : Selectable
+    {
+        [SerializeField] private GameObject[] toActivate;
+        [SerializeField] private RectTransform hoveringCanvas;
+        [SerializeField] private Button.ButtonClickedEvent onClick = new Button.ButtonClickedEvent();
+        
+        private readonly Vector3[] _worldCorners = new Vector3[4];
+        private bool _isMouseOver;
+
+        public void QuitApplication()
+        {
+            #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+            #else
+            Application.Quit();
+            #endif
+        }
+        
+        private new void Start()
+        {
+            if (!hoveringCanvas)
+            {
+                Destroy(this);
+                return;
+            }
+
+            _isMouseOver = false;
+            hoveringCanvas.GetWorldCorners(_worldCorners);
+            SetTargetsActive(false);
+        }
+
+        private void SetTargetsActive(bool state)
+        {
+            foreach (GameObject obj in toActivate)
+                obj.SetActive(state);
+        }
+
+        private void Update()
+        {
+            if (!MouseCursor.Instance) return;
+            
+            bool isOver = MouseCursor.Instance.IsMouseOver(_worldCorners);
+            if (!_isMouseOver && isOver)
+            {
+                _isMouseOver = true;
+                SetTargetsActive(true);
+            }
+            else if (_isMouseOver && !isOver)
+            {
+                _isMouseOver = false;
+                SetTargetsActive(false);
+            }
+            
+            if (_isMouseOver && Input.GetMouseButtonDown(0))
+                onClick?.Invoke();
+        }
+    }
+}
