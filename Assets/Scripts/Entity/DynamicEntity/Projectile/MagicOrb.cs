@@ -1,10 +1,9 @@
-using Mirror;
+﻿using Mirror;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Projectile
 {
-    [RequireComponent(typeof(Rigidbody2D))]
-    public class Arrow : Projectile
+    public class MagicOrb : Projectile
     {
         private void Start()
         {

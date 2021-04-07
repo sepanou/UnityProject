@@ -20,3 +20,24 @@ MonoBehaviour:
     maxDistance: 10
     loop: 1
     key: HubMusic
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: b531cb6109450ee4c98f27b54c0d5c56, type: 3}
+    maxVolume: 1
+    maxDistance: 10
+    loop: 0
+    key: Button1
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: acd5be215cbf91d448d38e5bf41fd94c, type: 3}
+    maxVolume: 1
+    maxDistance: 10
+    loop: 0
+    key: Button2
+  - mixerGroup: {fileID: 4601027167205513221, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: ae2cb6c9aad08404392f7d0ef3f44067, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 1
+    key: MainMenuMusic

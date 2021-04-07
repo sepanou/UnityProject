@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class StairsLayerTrigger : MonoBehaviour
@@ -16,18 +15,13 @@ public class StairsLayerTrigger : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.TryGetComponent(out SpriteRenderer otherRenderer))
-        {
+        GameObject colliderObject = other.gameObject;
+
+        if (colliderObject.layer == _layerMaskId)
+            return;
+        
+        colliderObject.layer = _layerMaskId;
+        if (colliderObject.TryGetComponent(out SpriteRenderer otherRenderer))
             otherRenderer.sortingLayerID = _sortingLayerId;
-            other.gameObject.layer = _layerMaskId;
-        }
-            
-        SpriteRenderer[] childRenderers = other.gameObject.GetComponentsInChildren<SpriteRenderer>();
-            
-        foreach (var childRenderer in childRenderers)
-        {
-            childRenderer.sortingLayerID = _sortingLayerId;
-            childRenderer.gameObject.layer = _layerMaskId;
-        }
     }
 }

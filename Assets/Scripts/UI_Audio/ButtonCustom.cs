@@ -42,7 +42,7 @@ namespace UI_Audio
 
         private void Update()
         {
-            if (!MouseCursor.Instance) return;
+            if (!MouseCursor.Instance || !MenuSettingsManager.Instance || MenuSettingsManager.Instance.isOpen) return;
             
             bool isOver = MouseCursor.Instance.IsMouseOver(_worldCorners);
             if (!_isMouseOver && isOver)

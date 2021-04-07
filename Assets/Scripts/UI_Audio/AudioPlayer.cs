@@ -1,17 +1,62 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Player = Entity.DynamicEntity.LivingEntity.Player.Player;
 
 namespace UI_Audio
 {
     public class AudioPlayer : MonoBehaviour
     {
         private const float AttenuationConst = 5f;
+        private static readonly HashSet<Sound> OneTimeSounds = new HashSet<Sound>();
+        private static readonly GameObject OneTimeSoundsHandler = new GameObject("OneTimeSoundsHandler");
+
+        private static readonly HashSet<Sound> Musics = new HashSet<Sound>();
+        private static readonly GameObject MusicHandler = new GameObject("MusicPlayer");
+        private static AudioSource _currentMusic;
 
         private List<Sound> _sounds;
         private bool _adjustingVolume;
         private AudioListener _listener;
+
+        private static AudioSource PlaySoundOnObject(GameObject target, HashSet<Sound> sounds, string soundKey)
+        {
+            AudioSource source;
+            
+            foreach (Sound sound in sounds)
+            {
+                if (sound.key != soundKey) continue;
+                source = sound.GetAudioSource();
+                if (source) source.Play();
+                return source;
+            }
+            
+            if (!AudioDB.Instance || !AudioDB.Instance.TryGetSound(soundKey, out Sound newSound))
+                return null;
+            
+            newSound.SetAudioSource(target.AddComponent<AudioSource>());
+            newSound.InitSource();
+            source = newSound.GetAudioSource();
+            if (source) source.Play();
+            sounds.Add(newSound);
+            return source;
+        }
+        
+        public static void PlayMusic(string musicKey)
+        {
+            DontDestroyOnLoad(MusicHandler);
+            
+            if (_currentMusic)
+                _currentMusic.Stop();
+            
+            _currentMusic = PlaySoundOnObject(MusicHandler, Musics, musicKey);
+        }
+        
+        public static void PlaySoundNoDistance(string soundKey)
+        {
+            DontDestroyOnLoad(OneTimeSoundsHandler);
+            PlaySoundOnObject(OneTimeSoundsHandler, OneTimeSounds, soundKey);
+        }
         
         public void Initialize()
         {

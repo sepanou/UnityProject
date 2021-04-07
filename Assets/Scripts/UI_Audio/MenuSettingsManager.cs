@@ -64,6 +64,8 @@ namespace UI_Audio
             LoadSettings();
             controlsMenu.gameObject.SetActive(false);
             CloseMenu();
+            
+            audioDB.PlayMusic("MainMenuMusic");
         }
 
         public void SwitchToCamera(Camera newCamera)

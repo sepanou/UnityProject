@@ -1,10 +1,9 @@
-﻿using Entity.DynamicEntity.LivingEntity.Player;
-using Mirror;
+﻿using Mirror;
 using UnityEngine;
 
-namespace Entity.DynamicEntity.Weapon.RangedWeapon
+namespace Entity.DynamicEntity.Weapon.MeleeWeapon
 {
-    public class Bow : RangedWeapon
+    public class MeleeWeapon : Weapon
     {
         private void OrientateBow(Vector3 bowOrientation)
         {
@@ -12,7 +11,6 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
             bowOrientation.Normalize();
             gameObject.transform.localRotation = Quaternion.Euler(
                 new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, bowOrientation)));
-            CmdUpdateOrientation(bowOrientation);
         }
 
         private void FixedUpdate()
@@ -29,7 +27,6 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
         protected override void DefaultAttack()
         {
             RpcAttackAnimation();
-            Projectile.Projectile.SpawnProjectile(this, launchPoint.position);
             LastAttackTime = Time.time;
         }
 
@@ -37,15 +34,11 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
         protected override void SpecialAttack()
         {
             RpcAttackAnimation();
-            Projectile.Projectile.SpawnProjectile(this, launchPoint.position);
             holder.ReduceEnergy(specialAttackCost);
             LastAttackTime = Time.time;
         }
 
         [ClientRpc] // By default, attack anims are slow -> no need for persistent NetworkAnimator
         private void RpcAttackAnimation() => Animator.Play("DefaultAttack");
-        
-        [Command] // Authority does not change the fact that sync vars must be updated on the server
-        private void CmdUpdateOrientation(Vector2 bowOrientation) => orientation = bowOrientation;
     }
 }
