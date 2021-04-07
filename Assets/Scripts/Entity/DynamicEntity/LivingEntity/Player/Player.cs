@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using System.Net;
 using DataBanks;
 using Entity.Collectibles;
 using Entity.DynamicEntity.Weapon;
 using Mirror;
+using UI_Audio;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Player
@@ -22,14 +22,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         
         private static readonly string[] IdleAnims = {"IdleN", "IdleW", "IdleS", "IdleE"};
         private static readonly string[] WalkAnims = {"WalkN", "WalkW", "WalkS", "WalkE"};
-        
+
         [SerializeField] private Camera mainCamera;
         [SerializeField] private PlayerClassAnimators classAnimators;
 
         [SyncVar] public string playerName;
         [SyncVar] public PlayerClasses playerClass;
         [SyncVar] [SerializeField] protected Weapon.Weapon weapon;
-        [SyncVar] private int _money = 0;
+        [SyncVar] private int _money;
         [SyncVar] [SerializeField] private int energy;
 
         private List<Charm> _charms; // Could use targetRpc -> no need for others to see our charms !
@@ -58,7 +58,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             playerName = reader.ReadString();
             weapon = reader.ReadWeapon();
         }
-        
+
         private void Start()
         {
             DontDestroyOnLoad(this);
@@ -66,9 +66,10 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             _charms = new List<Charm>();
             _lastAnimationStateIndex = 0;
             SwitchClass(playerClass);
-            mainCamera.gameObject.SetActive(isLocalPlayer);
-            if (isLocalPlayer)
-                _weapons.Callback += OnWeaponsUpdated;
+
+            if (!isLocalPlayer) return;
+            MenuSettingsManager.Instance.SwitchToCamera(mainCamera);
+            _weapons.Callback += OnWeaponsUpdated;
         }
 
         // Can be executed by both client & server (Synced data analysis) -> double check
@@ -216,17 +217,35 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         private void FixedUpdate()
         {
             // For physics
-            if (!isLocalPlayer) return;
-            CmdMove(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen) return;
+            int horizontal = 0;
+            int vertical = 0;
+            if (InputManager.Instance.GetKeyPressed("Forward"))
+                vertical++;
+            if (InputManager.Instance.GetKeyPressed("Backward"))
+                vertical--;
+            if (InputManager.Instance.GetKeyPressed("Left"))
+                horizontal--;
+            if (InputManager.Instance.GetKeyPressed("Right"))
+                horizontal++;
+            CmdMove(horizontal, vertical);
         }
 
         [ClientCallback]
         private void Update()
         {
             // For inputs
-            if (!isLocalPlayer) return;
-            CmdAttack(Input.GetButtonDown("Fire1"), Input.GetButtonDown("Fire2"));
+            if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen) return;
             
+            if (InputManager.Instance.GetKeyDown("OpenMenu"))
+            {
+                MenuSettingsManager.Instance.OpenMenu();
+                return;
+            }
+            
+            CmdAttack(InputManager.Instance.GetKeyDown("DefaultAttack"), 
+                InputManager.Instance.GetKeyDown("SpecialAttack"));
+
             // Change class (for testing)
             if (Input.GetKeyDown(KeyCode.C))
                 CmdSwitchPlayerClass(playerClass == PlayerClasses.Archer ? PlayerClasses.Mage : PlayerClasses.Archer);

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a1c745319fadc34d91e6cc213356c68, type: 3}
+  m_Name: InputManager
+  m_EditorClassIdentifier: 
+  entries:
+  - actionName: Forward
+    keyEntry: 122
+  - actionName: Backward
+    keyEntry: 115
+  - actionName: Left
+    keyEntry: 97
+  - actionName: Right
+    keyEntry: 100
+  - actionName: DefaultAttack
+    keyEntry: 323
+  - actionName: SpecialAttack
+    keyEntry: 324
+  - actionName: OpenInventory
+    keyEntry: 9
+  - actionName: OpenMenu
+    keyEntry: 32
+  - actionName: Interact
+    keyEntry: 101

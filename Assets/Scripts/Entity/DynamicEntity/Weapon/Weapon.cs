@@ -19,6 +19,7 @@ namespace Entity.DynamicEntity.Weapon
         [SyncVar] public bool equipped;
         [SyncVar] public bool isGrounded;
         [SyncVar] protected float LastAttackTime; // For cooldown purposes
+        [SyncVar] protected bool PlayerFound; // Has the player collected the item?
 
         [SerializeField] protected int defaultDamage;
         [SerializeField] protected int specialAttackCost;
@@ -33,6 +34,7 @@ namespace Entity.DynamicEntity.Weapon
             writer.WriteBoolean(equipped);
             writer.WriteBoolean(isGrounded);
             writer.WriteSingle(LastAttackTime);
+            writer.WriteBoolean(PlayerFound);
             return true;
         }
 
@@ -44,6 +46,7 @@ namespace Entity.DynamicEntity.Weapon
             equipped = reader.ReadBoolean();
             isGrounded = reader.ReadBoolean();
             LastAttackTime = reader.ReadSingle();
+            PlayerFound = reader.ReadBoolean();
         }
 
         protected void InstantiateWeapon()
@@ -51,6 +54,7 @@ namespace Entity.DynamicEntity.Weapon
             if (isServer)
             {
                 isGrounded = true; // By default, weapon on the ground !
+                PlayerFound = false;
                 LastAttackTime = -1f;
             }
             _filter = new ContactFilter2D();
@@ -81,7 +85,7 @@ namespace Entity.DynamicEntity.Weapon
         protected abstract void SpecialAttack();
 
         [ServerCallback]
-        protected bool CheckForCompatibleNearbyPlayers(out Player compatiblePlayer)
+        private bool CheckForCompatibleNearbyPlayers(out Player compatiblePlayer)
         {
             List<Collider2D> results = new List<Collider2D>();
             Physics2D.OverlapCircle(transform.position, 2f, _filter.NoFilter(), results);
@@ -96,6 +100,14 @@ namespace Entity.DynamicEntity.Weapon
 
             compatiblePlayer = null;
             return false;
+        }
+        
+        [ServerCallback]
+        protected void GroundedLogic()
+        {
+            if (!isGrounded || !CheckForCompatibleNearbyPlayers(out Player target)) return;
+            PlayerFound = true;
+            StartCoroutine(Collectibles.Collectibles.OnTargetDetected(this, target));
         }
         
         // Validation checks before attacking

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Entity.DynamicEntity.Projectile
 {
+    [RequireComponent(typeof(Rigidbody2D))]
     public class Arrow : Projectile
     {
         private void Start()

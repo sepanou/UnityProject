@@ -6,21 +6,6 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
 {
     public class Bow : RangedWeapon
     {
-        [SyncVar] private bool _playerFound;
-
-        public override bool OnSerialize(NetworkWriter writer, bool initialState)
-        {
-            base.OnSerialize(writer, initialState);
-            writer.WriteBoolean(_playerFound);
-            return true;
-        }
-
-        public override void OnDeserialize(NetworkReader reader, bool initialState)
-        {
-            base.OnDeserialize(reader, initialState);
-            _playerFound = reader.ReadBoolean();
-        }
-        
         private void OrientateBow(Vector3 bowOrientation)
         {
             if (!hasAuthority) return;
@@ -30,17 +15,10 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
             CmdUpdateOrientation(bowOrientation);
         }
 
-        private void Start()
-        {
-            InstantiateRangeWeapon();
-            if (isServer)
-                _playerFound = false;
-        }
-        
         private void FixedUpdate()
         {
             // Only run by server
-            if (isServer && isGrounded && !_playerFound) GroundedLogic();
+            if (isServer && isGrounded && !PlayerFound) GroundedLogic();
             if (!hasAuthority|| !equipped || isGrounded) return;
             // Only run by the weapon's owner (client)
             Vector3 direction = Input.mousePosition - holder.WorldToScreenPoint(transform.position);
@@ -62,14 +40,6 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
             Projectile.Projectile.SpawnProjectile(this, launchPoint.position);
             holder.ReduceEnergy(specialAttackCost);
             LastAttackTime = Time.time;
-        }
-        
-        [ServerCallback]
-        private void GroundedLogic()
-        {
-            if (!isGrounded || !CheckForCompatibleNearbyPlayers(out Player target)) return;
-            _playerFound = true;
-            StartCoroutine(Collectibles.Collectibles.OnTargetDetected(this, target));
         }
 
         [ClientRpc] // By default, attack anims are slow -> no need for persistent NetworkAnimator

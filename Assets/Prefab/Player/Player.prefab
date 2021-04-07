@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1302193367
 Transform:
   m_ObjectHideFlags: 0
@@ -273,7 +273,7 @@ MonoBehaviour:
   mainCamera: {fileID: 1302193366}
   classAnimators: {fileID: 11400000, guid: 2882da12331e80542b3b5aceabe162e4, type: 2}
   playerName: PlayerA
-  playerClass: 1
+  playerClass: 0
   weapon: {fileID: 0}
   energy: 100
 --- !u!95 &8972541332924031235

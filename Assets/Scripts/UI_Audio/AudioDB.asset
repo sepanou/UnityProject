@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81b5d0774df71054992330a5e31f0e0c, type: 3}
+  m_Name: AudioDB
+  m_EditorClassIdentifier: 
+  sounds:
+  - mixerGroup: {fileID: 4601027167205513221, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: d7ecbe0928fac07bea70f197f360e203, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 1
+    key: HubMusic
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: b531cb6109450ee4c98f27b54c0d5c56, type: 3}
+    maxVolume: 1
+    maxDistance: 10
+    loop: 0
+    key: Button1
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: acd5be215cbf91d448d38e5bf41fd94c, type: 3}
+    maxVolume: 1
+    maxDistance: 10
+    loop: 0
+    key: Button2
+  - mixerGroup: {fileID: 4601027167205513221, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: ae2cb6c9aad08404392f7d0ef3f44067, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 1
+    key: MainMenuMusic
