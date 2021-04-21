@@ -137,6 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  Renderer: {fileID: -8419967646815761865}
   speed: 5
 --- !u!114 &2388094846923333019
 MonoBehaviour:

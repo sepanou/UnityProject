@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI_Audio
@@ -11,6 +12,7 @@ namespace UI_Audio
         
         [SerializeField] private Image slotImage;
         [SerializeField] private RectTransform hoveringCanvas;
+        [SerializeField] private RectTransform infoDisplay;
 
         [Header("Transitions")]
         [SerializeField] private Image targetGraphic;
@@ -19,9 +21,12 @@ namespace UI_Audio
         [SerializeField] private Sprite normalSprite;
         
         [SerializeField] private Button.ButtonClickedEvent clickEvent = new Button.ButtonClickedEvent();
+        [SerializeField] private Toggle.ToggleEvent containsItemEvent = new Toggle.ToggleEvent();
 
+        [NonSerialized] public bool IsOccupied;
         private bool _isMouseOver;
         private readonly Vector3[] _worldCorners = new Vector3[4];
+        private IInventoryItem _item;
 
         private void Start()
         {
@@ -34,26 +39,42 @@ namespace UI_Audio
             _isMouseOver = false;
             hoveringCanvas.GetWorldCorners(_worldCorners);
             targetGraphic.sprite = normalSprite;
+            infoDisplay.gameObject.SetActive(false);
         }
 
-        public void SetSlotItem(Sprite sprite)
+        public void SetSlotItem(IInventoryItem item)
         {
-            if (!sprite)
-            {
-                ClearItem();
-                return;
-            }
-
-            slotImage.sprite = sprite;
+            slotImage.sprite = item.GetSpriteRenderer().sprite;
             slotImage.color = Visible;
+            _item = item;
+            if (!IsOccupied)
+                containsItemEvent?.Invoke(true);
+            IsOccupied = true;
         }
 
+        public IInventoryItem GetSlotItem() => _item;
+        
         public void ClearItem()
         {
             slotImage.sprite = null;
             slotImage.color = Invisible;
+            _item = null;
+            if (IsOccupied)
+                containsItemEvent?.Invoke(false);
+            IsOccupied = false;
         }
-        
+
+        private void SetInfoDisplayActive(bool state)
+        {
+            if (state)
+            {
+                RectTransform info = _item.GetInformationPopup();
+                if (info)
+                    info.transform.parent = infoDisplay;
+            }
+            infoDisplay.gameObject.SetActive(state);
+        }
+
         private void Update()
         {
             if (!MouseCursor.Instance || _previouslySelected == this) return;
@@ -66,6 +87,7 @@ namespace UI_Audio
             }
             else if (_isMouseOver && !isOver)
             {
+                SetInfoDisplayActive(false);
                 _isMouseOver = false;
                 targetGraphic.sprite = normalSprite;
             }
@@ -75,6 +97,9 @@ namespace UI_Audio
             if (_previouslySelected)
                 _previouslySelected.targetGraphic.sprite = _previouslySelected.normalSprite;
                 
+            if (_isMouseOver && _item != null)
+                SetInfoDisplayActive(true);
+            
             _previouslySelected = this;
             targetGraphic.sprite = selectedSprite;
                 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;

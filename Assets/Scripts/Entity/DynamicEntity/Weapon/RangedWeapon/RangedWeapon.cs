@@ -1,11 +1,38 @@
+using System;
 using System.Collections.Generic;
 using Mirror;
+using UI_Audio;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Weapon.RangedWeapon
 {
+    public class RangedWeaponData
+    {
+        public float ProjectileSpeedMultiplier, ProjectileSizeMultiplier;
+        public int ProjectileNumber;
+        public float DefaultDamageMultiplier, SpecialDamageMultiplier;
+        public String Name;
+
+        public static RangedWeaponData operator *(RangedWeaponData other, int nbr)
+        {
+            if (other == null || nbr == 0)
+                return null;
+            if (nbr == 1)
+                return other;
+            return new RangedWeaponData
+            {
+                ProjectileSpeedMultiplier = other.ProjectileSpeedMultiplier * nbr,
+                ProjectileSizeMultiplier = other.ProjectileSizeMultiplier * nbr,
+                ProjectileNumber = other.ProjectileNumber * nbr,
+                DefaultDamageMultiplier = other.DefaultDamageMultiplier * nbr,
+                SpecialDamageMultiplier = other.SpecialDamageMultiplier * nbr
+            };
+        }
+    }
+    
     public abstract class RangedWeapon : Weapon
     {
+        [NonSerialized] public RangedWeaponData RangeData;
         [SerializeField] protected Transform launchPoint;
         [SerializeField] private Projectile.Projectile projectile;
         
@@ -22,6 +49,14 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
         {
             base.OnDeserialize(reader, initialState);
             orientation = reader.ReadVector2();
+        }
+        
+        public override RectTransform GetInformationPopup()
+        {
+            if (!MenuSettingsManager.Instance || !MenuSettingsManager.Instance.rangedWeaponDescription)
+                return null;
+            MenuSettingsManager.Instance.rangedWeaponDescription.SetData(RangeData);
+            return MenuSettingsManager.Instance.rangedWeaponDescription.rectTransform;
         }
         
         protected void InstantiateRangeWeapon()

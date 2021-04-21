@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: -5727337771764513854}
   - component: {fileID: 572109878211023939}
   - component: {fileID: 5890061017820911818}
-  - component: {fileID: 4490330234373391441}
   - component: {fileID: -6064306282551117732}
   - component: {fileID: 5900744793733015568}
   m_Layer: 0
@@ -102,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  Renderer: {fileID: 0}
   speed: 0
   holder: {fileID: 0}
   compatibleClass: 2
@@ -111,7 +111,6 @@ MonoBehaviour:
   specialAttackCost: 10
   weaponGenerator: {fileID: 11400000, guid: e5e5295fd017fc64e83b09cabc106492, type: 2}
   defaultCoordsWhenLikedToPlayer: {x: 0, y: 0.25, z: 0}
-  sprite: {fileID: -8828886737162667788, guid: 3c8a34e21f8816e4f97988951d4d7615, type: 3}
   launchPoint: {fileID: 8642561507799599230}
   projectile: {fileID: -3282971848471082322, guid: f253105defb28994f8f1ab558d129c39,
     type: 3}
@@ -135,22 +134,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!70 &4490330234373391441
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2017461150231793244}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.5, y: 0}
-  m_Size: {x: 0.5, y: 1.38}
-  m_Direction: 0
 --- !u!114 &-6064306282551117732
 MonoBehaviour:
   m_ObjectHideFlags: 0

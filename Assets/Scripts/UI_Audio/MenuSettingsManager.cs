@@ -24,6 +24,9 @@ namespace UI_Audio
         [Header("Others")]
         [SerializeField] private Dropdown languageDropdown;
         [SerializeField] private LanguageManager languageManager;
+        public RangedWeaponDescription rangedWeaponDescription;
+        public MeleeWeaponDescription meleeWeaponDescription;
+        public CharmDescription charmDescription;
 
         [Header("Cameras")]
         [SerializeField] private Camera defaultCamera;
@@ -64,6 +67,11 @@ namespace UI_Audio
             LoadSettings();
             controlsMenu.gameObject.SetActive(false);
             CloseMenu();
+            
+            // Descriptive Menus
+            rangedWeaponDescription.gameObject.SetActive(false);
+            meleeWeaponDescription.gameObject.SetActive(false);
+            charmDescription.gameObject.SetActive(false);
             
             audioDB.PlayMusic("MainMenuMusic");
         }

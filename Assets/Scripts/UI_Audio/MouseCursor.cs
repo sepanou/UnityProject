@@ -43,6 +43,15 @@ namespace UI_Audio
             return !(mousePos.y < worldCorners[0].y) && !(mousePos.y > worldCorners[2].y);
         }
 
+        public Vector3 GetWorldCoords() => transform.position;
+
+        public Quaternion OrientateObjectTowardsMouse(Vector3 worldPosition, Vector3 referenceDirection)
+        {
+            Vector2 orientation = transform.position - worldPosition;
+            orientation.Normalize();
+            return Quaternion.Euler(new Vector3(0, 0, Vector2.SignedAngle(referenceDirection, orientation)));
+        }
+
         private Vector2 ClampCoords(Vector2 viewportPoint)
         {
             float x = viewportPoint.x;

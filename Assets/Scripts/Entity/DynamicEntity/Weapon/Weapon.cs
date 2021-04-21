@@ -1,17 +1,15 @@
-using System;
 using Entity.DynamicEntity.LivingEntity.Player;
 using System.Collections.Generic;
 using DataBanks;
 using Mirror;
+using UI_Audio;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 
 namespace Entity.DynamicEntity.Weapon
 {
-    public abstract class Weapon : DynamicEntity
+    public abstract class Weapon : DynamicEntity, IInventoryItem
     {
-        private string _name;
         private ContactFilter2D _filter;
         
         [SyncVar] public Player holder;
@@ -83,6 +81,7 @@ namespace Entity.DynamicEntity.Weapon
         
         protected abstract void DefaultAttack();
         protected abstract void SpecialAttack();
+        public abstract RectTransform GetInformationPopup();
 
         [ServerCallback]
         private bool CheckForCompatibleNearbyPlayers(out Player compatiblePlayer)

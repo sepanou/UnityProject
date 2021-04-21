@@ -12,12 +12,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25a26eeaae264bb4d8521f30e46b3dd6, type: 3}
   m_Name: PlayerClassData
   m_EditorClassIdentifier: 
-  archerAnimator: {fileID: 9100000, guid: 61fe12a42220e5742978018cf64a47c6, type: 2}
-  warriorAnimator: {fileID: 9100000, guid: d99c96c122bbe1b45a696b4a290c9aec, type: 2}
-  mageAnimator: {fileID: 9100000, guid: 3272c77f5407c9348a43e2182b5598be, type: 2}
-  archerSprite: {fileID: 5731584507761909605, guid: 78dc08da4150f0e44adfcc12611a29fe,
-    type: 3}
-  warriorSprite: {fileID: 3944610533857416082, guid: 3ba0f4a7f254281868a4418109d0998c,
-    type: 3}
-  mageSprite: {fileID: 3551177970790899033, guid: 4e7b44d13ec20b54e8e0b95735760646,
-    type: 3}
+  archer:
+    playerClass: 2
+    defaultSprite: {fileID: 5731584507761909605, guid: 78dc08da4150f0e44adfcc12611a29fe,
+      type: 3}
+    healthBar: {fileID: 21300000, guid: 7ff9cb275541945488b957b73a97d7e4, type: 3}
+    powerBar: {fileID: 0}
+    classIcon: {fileID: 0}
+    defaultAttackIcon: {fileID: 21300000, guid: 703fd73ec331004478a7a7ff7e7625f3,
+      type: 3}
+    specialAttackIcon: {fileID: 21300000, guid: 09a0bb04e73ad8d4da6df7a1ee34cab8,
+      type: 3}
+    animatorController: {fileID: 9100000, guid: 61fe12a42220e5742978018cf64a47c6,
+      type: 2}
+  warrior:
+    playerClass: 1
+    defaultSprite: {fileID: 3944610533857416082, guid: 3ba0f4a7f254281868a4418109d0998c,
+      type: 3}
+    healthBar: {fileID: 21300000, guid: c691a10ab7f179c469bf26e34e44e29f, type: 3}
+    powerBar: {fileID: 0}
+    classIcon: {fileID: 0}
+    defaultAttackIcon: {fileID: 21300000, guid: 4d7331b074b549d458ab92fcb6bcaddd,
+      type: 3}
+    specialAttackIcon: {fileID: 21300000, guid: 19e59a878b70df4439e1bc428edf77b1,
+      type: 3}
+    animatorController: {fileID: 9100000, guid: d99c96c122bbe1b45a696b4a290c9aec,
+      type: 2}
+  mage:
+    playerClass: 0
+    defaultSprite: {fileID: 2971653748508199937, guid: 4e7b44d13ec20b54e8e0b95735760646,
+      type: 3}
+    healthBar: {fileID: 21300000, guid: b7eced2b026aaa843a71e8a8012895f6, type: 3}
+    powerBar: {fileID: 21300000, guid: 8292d9ee7d3926149a08e55cb5a2171a, type: 3}
+    classIcon: {fileID: 0}
+    defaultAttackIcon: {fileID: 21300000, guid: d5a6bd7a5ffa50e43b4d70035ae56307,
+      type: 3}
+    specialAttackIcon: {fileID: 21300000, guid: d0e50f410c65e5446a5e695c56b86ab6,
+      type: 3}
+    animatorController: {fileID: 9100000, guid: 3272c77f5407c9348a43e2182b5598be,
+      type: 2}

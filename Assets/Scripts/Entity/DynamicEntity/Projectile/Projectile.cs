@@ -29,6 +29,7 @@ namespace Entity.DynamicEntity.Projectile
             projectile.FromWeapon = source;
             projectile.FacingDirection = source.orientation;
             projectile.InstantiateProjectile();
+            SetSameRenderingParameters(source, projectile);
             NetworkServer.Spawn(projectile.gameObject);
         }
 
