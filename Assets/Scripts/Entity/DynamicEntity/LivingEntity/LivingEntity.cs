@@ -29,8 +29,9 @@ namespace Entity.DynamicEntity.LivingEntity
         {
             // Physics only simulated on the server
             // On client, no collision managed but triggers still work
-            if (TryGetComponent(out Rigibody)) Rigibody.bodyType = netIdentity.isServer
-                ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
+            //if (TryGetComponent(out Rigibody)) Rigibody.bodyType = netIdentity.isServer
+            //    ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
+            if (TryGetComponent(out Rigibody)) Rigibody.bodyType = RigidbodyType2D.Dynamic;
             InstantiateDynamicEntity();
         }
         

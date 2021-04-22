@@ -130,15 +130,16 @@ namespace UI_Audio
         
         // Warning Box
         
-        public void SetButtonActions(UnityAction cancelFunction, UnityAction continueFunction)
+        public void SetWarningButtonActions(UnityAction cancelFunction, UnityAction continueFunction)
         {
+            RemoveWarningButtonActions();
             _warningPrevCancel = cancelFunction;
             _warningPrevContinue = continueFunction;
             warningCancelButton.onClick.AddListener(_warningPrevCancel);
             warningContinueButton.onClick.AddListener(_warningPrevContinue);
         }
 
-        public void RemoveButtonActions()
+        private void RemoveWarningButtonActions()
         {
             if (_warningPrevCancel != null)
                 warningCancelButton.onClick.RemoveListener(_warningPrevCancel);
