@@ -168,7 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -242,5 +242,8 @@ MonoBehaviour:
   selectedSprite: {fileID: 21300000, guid: b473b1208388a2948bb25c7feacbb4e4, type: 3}
   normalSprite: {fileID: 21300000, guid: c882b740d3986ef498b0da2222405ca1, type: 3}
   clickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  containsItemEvent:
     m_PersistentCalls:
       m_Calls: []

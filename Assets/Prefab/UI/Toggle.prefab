@@ -440,6 +440,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fieldKey: resume
+  formatText: 
+  upperCase: 0
+  lowerCase: 0
 --- !u!114 &677490103566853508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -454,7 +457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -487,7 +490,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
+  m_fontSize: 49.8
   m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 1

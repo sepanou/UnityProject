@@ -17,7 +17,7 @@ MonoBehaviour:
     defaultSprite: {fileID: 5731584507761909605, guid: 78dc08da4150f0e44adfcc12611a29fe,
       type: 3}
     healthBar: {fileID: 21300000, guid: 7ff9cb275541945488b957b73a97d7e4, type: 3}
-    powerBar: {fileID: 0}
+    powerBar: {fileID: 21300000, guid: b365079ef6a84224d802a3650b522f77, type: 3}
     classIcon: {fileID: 0}
     defaultAttackIcon: {fileID: 21300000, guid: 703fd73ec331004478a7a7ff7e7625f3,
       type: 3}
@@ -30,7 +30,7 @@ MonoBehaviour:
     defaultSprite: {fileID: 3944610533857416082, guid: 3ba0f4a7f254281868a4418109d0998c,
       type: 3}
     healthBar: {fileID: 21300000, guid: c691a10ab7f179c469bf26e34e44e29f, type: 3}
-    powerBar: {fileID: 0}
+    powerBar: {fileID: 21300000, guid: b365079ef6a84224d802a3650b522f77, type: 3}
     classIcon: {fileID: 0}
     defaultAttackIcon: {fileID: 21300000, guid: 4d7331b074b549d458ab92fcb6bcaddd,
       type: 3}

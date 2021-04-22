@@ -25,7 +25,6 @@ namespace UI_Audio
 
         [NonSerialized] public bool IsOccupied;
         private bool _isMouseOver;
-        private readonly Vector3[] _worldCorners = new Vector3[4];
         private IInventoryItem _item;
 
         private void Start()
@@ -37,7 +36,6 @@ namespace UI_Audio
             }
 
             _isMouseOver = false;
-            hoveringCanvas.GetWorldCorners(_worldCorners);
             targetGraphic.sprite = normalSprite;
             infoDisplay.gameObject.SetActive(false);
         }
@@ -79,7 +77,7 @@ namespace UI_Audio
         {
             if (!MouseCursor.Instance || _previouslySelected == this) return;
             
-            bool isOver = MouseCursor.Instance.IsMouseOver(_worldCorners);
+            bool isOver = MouseCursor.Instance.IsMouseOver(hoveringCanvas);
             if (!_isMouseOver && isOver)
             {
                 _isMouseOver = true;

@@ -27,8 +27,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         public delegate void LocalPlayerClassChanged(ClassData data);
 
         public delegate void RemotePlayerClassChanged(ClassData data);
-
-        [SerializeField] private Camera mainCamera;
+        
         [SerializeField] private PlayerClassData classData;
 
         [SyncVar] public string playerName;
@@ -36,6 +35,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         [SyncVar] [SerializeField] protected Weapon.Weapon weapon;
         [SyncVar] private int _money;
         [SyncVar] [SerializeField] private int energy;
+
+        private Camera _mainCamera;
 
         private List<Charm> _charms; // Could use targetRpc -> no need for others to see our charms !
         // serialization of Weapon objects, but it does for GameObject !
@@ -73,7 +74,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             OnLocalPlayerClassChange += ChangeAnimator;
             OnRemotePlayerClassChange += ChangeAnimator;
             if (!isLocalPlayer) return;
-            MenuSettingsManager.Instance.SwitchToCamera(mainCamera);
+            MenuSettingsManager.Instance.SetMainCameraToPlayer(this);
             _weapons.Callback += OnWeaponsUpdated;
         }
 
@@ -82,7 +83,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         public bool HasEnoughMoney(int amount) => _money >= amount;
 
         public Vector3 WorldToScreenPoint(Vector3 position)
-            => mainCamera ? mainCamera.WorldToScreenPoint(position) : Vector3.zero;
+            => _mainCamera ? _mainCamera.WorldToScreenPoint(position) : Vector3.zero;
 
         private void ChangeAnimator(ClassData data)
         {

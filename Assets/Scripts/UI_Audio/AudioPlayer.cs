@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.WSA.Input;
 
 namespace UI_Audio
 {
@@ -62,7 +61,7 @@ namespace UI_Audio
         public void Start()
         {
             _adjustingVolume = false;
-            _listener = MenuSettingsManager.CurrentCamera.gameObject.GetComponent<AudioListener>();
+            _listener = MenuSettingsManager.Instance.worldCamera.gameObject.GetComponent<AudioListener>();
             foreach (string soundKey in soundsKeys)
                 AddSound(soundKey);
         }

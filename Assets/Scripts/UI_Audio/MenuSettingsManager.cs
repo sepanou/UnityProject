@@ -1,5 +1,6 @@
 ﻿using System;
 using DataBanks;
+using Entity.DynamicEntity.LivingEntity.Player;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
@@ -29,7 +30,9 @@ namespace UI_Audio
         public CharmDescription charmDescription;
 
         [Header("Cameras")]
-        [SerializeField] private Camera defaultCamera;
+        public Camera mouseAndParticlesCamera;
+        public Camera overlayCamera;
+        public Camera worldCamera; // = player's camera when he enters the game
 
         [Header("Menus logic")]
         [SerializeField] private EventSystem eventSystem;
@@ -37,13 +40,10 @@ namespace UI_Audio
         [SerializeField] private RectTransform controlsMenu;
 
         public static MenuSettingsManager Instance;
-        public static Camera CurrentCamera;
 
         public bool isOpen;
         private FullScreenMode _fullScreenMode;
         private bool _modified;
-
-        private void Awake() => SwitchToUICamera();
 
         private void OnEnable()
         {
@@ -75,16 +75,6 @@ namespace UI_Audio
             
             audioDB.PlayMusic("MainMenuMusic");
         }
-
-        public void SwitchToCamera(Camera newCamera)
-        {
-            if (CurrentCamera)
-                CurrentCamera.gameObject.SetActive(false);
-            CurrentCamera = newCamera;
-            newCamera.gameObject.SetActive(true);
-        }
-
-        public void SwitchToUICamera() => SwitchToCamera(defaultCamera);
 
         // Load a float setting and returns the current setting value
         private float TryLoadFloatSetting(string key, float defaultValue, Action<float> action)
@@ -142,6 +132,14 @@ namespace UI_Audio
             PlayerPrefs.SetFloat("SoundVolume", soundSlider.value);
             // Others
             PlayerPrefs.SetInt("LanguageIndex", languageDropdown.value);
+        }
+
+        public void SetMainCameraToPlayer(Player player)
+        {
+            Transform camTransform = worldCamera.transform;
+            worldCamera.gameObject.SetActive(true);
+            camTransform.parent = player.transform;
+            camTransform.localPosition = new Vector3(0, 0, -10);
         }
 
         public void OpenMenu()
