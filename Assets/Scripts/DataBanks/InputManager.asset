@@ -28,6 +28,6 @@ MonoBehaviour:
   - actionName: OpenInventory
     keyEntry: 9
   - actionName: OpenMenu
-    keyEntry: 32
+    keyEntry: 27
   - actionName: Interact
     keyEntry: 101

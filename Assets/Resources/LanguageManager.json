@@ -118,6 +118,30 @@
                 {
                     "fieldKey": "inventory",
                     "translation": "Inventory"
+                },
+                {
+                    "fieldKey": "solo",
+                    "translation": "Solo"
+                },
+                {
+                    "fieldKey": "multiplayer",
+                    "translation": "Multiplayer"
+                },
+                {
+                    "fieldKey": "proceed",
+                    "translation": "Proceed"
+                },
+                {
+                    "fieldKey": "pseudo",
+                    "translation": "Pseudo"
+                },
+                {
+                    "fieldKey": "start",
+                    "translation": "Start"
+                },
+                {
+                    "fieldKey": "ip-address",
+                    "translation": "IP Address"
                 }
             ]
         },
@@ -239,6 +263,30 @@
                 {
                     "fieldKey": "inventory",
                     "translation": "Inventaire"
+                },
+                {
+                    "fieldKey": "solo",
+                    "translation": "Solo"
+                },
+                {
+                    "fieldKey": "multiplayer",
+                    "translation": "Multijoueur"
+                },
+                {
+                    "fieldKey": "proceed",
+                    "translation": "Continuer"
+                },
+                {
+                    "fieldKey": "pseudo",
+                    "translation": "Pseudo"
+                },
+                {
+                    "fieldKey": "start",
+                    "translation": "Commencer"
+                },
+                {
+                    "fieldKey": "ip-address",
+                    "translation": "Adresse IP"
                 }
             ]
         }

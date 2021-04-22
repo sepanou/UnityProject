@@ -117,8 +117,10 @@ namespace UI_Audio
             }
         }
 
-        public void QuitApplication()
+        public void StopServerAndOrClient()
         {
+            if (MenuSettingsManager.Instance.worldCamera)
+                MenuSettingsManager.Instance.worldCamera.transform.parent = manager.transform;
             // Client + Server
             if (NetworkServer.active && NetworkClient.isConnected)
                 manager.StopHost();
@@ -128,6 +130,16 @@ namespace UI_Audio
             // Server only
             else if (NetworkServer.active)
                 manager.StopServer();
+        }
+        
+        public void QuitApplication()
+        {
+            StopServerAndOrClient();
+            #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+            #else
+            Application.Quit();
+            #endif
         }
     }
 }
