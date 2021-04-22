@@ -22,15 +22,21 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         
         private static readonly string[] IdleAnims = {"IdleN", "IdleW", "IdleS", "IdleE"};
         private static readonly string[] WalkAnims = {"WalkN", "WalkW", "WalkS", "WalkE"};
+        public static event LocalPlayerClassChanged OnLocalPlayerClassChange;
+        public static event RemotePlayerClassChanged OnRemotePlayerClassChange;
+        public delegate void LocalPlayerClassChanged(ClassData data);
 
-        [SerializeField] private Camera mainCamera;
-        [SerializeField] private PlayerClassAnimators classAnimators;
+        public delegate void RemotePlayerClassChanged(ClassData data);
+        
+        [SerializeField] private PlayerClassData classData;
 
         [SyncVar] public string playerName;
         [SyncVar] public PlayerClasses playerClass;
         [SyncVar] [SerializeField] protected Weapon.Weapon weapon;
         [SyncVar] private int _money;
         [SyncVar] [SerializeField] private int energy;
+
+        private Camera _mainCamera;
 
         private List<Charm> _charms; // Could use targetRpc -> no need for others to see our charms !
         // serialization of Weapon objects, but it does for GameObject !
@@ -65,10 +71,10 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             InstantiateLivingEntity();
             _charms = new List<Charm>();
             _lastAnimationStateIndex = 0;
-            SwitchClass(playerClass);
-
+            OnLocalPlayerClassChange += ChangeAnimator;
+            OnRemotePlayerClassChange += ChangeAnimator;
             if (!isLocalPlayer) return;
-            MenuSettingsManager.Instance.SwitchToCamera(mainCamera);
+            MenuSettingsManager.Instance.SetMainCameraToPlayer(this);
             _weapons.Callback += OnWeaponsUpdated;
         }
 
@@ -77,33 +83,24 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         public bool HasEnoughMoney(int amount) => _money >= amount;
 
         public Vector3 WorldToScreenPoint(Vector3 position)
-            => mainCamera ? mainCamera.WorldToScreenPoint(position) : Vector3.zero;
+            => _mainCamera ? _mainCamera.WorldToScreenPoint(position) : Vector3.zero;
 
+        private void ChangeAnimator(ClassData data)
+        {
+            if (Animator) Animator.runtimeAnimatorController = data.animatorController;
+            if (Renderer) Renderer.sprite = data.defaultSprite;
+            playerClass = data.playerClass;
+        }
+        
         private void SwitchClass(PlayerClasses @class)
         {
-            switch (@class)
-            {
-                case PlayerClasses.Archer:
-                    if (Animator) Animator.runtimeAnimatorController = classAnimators.archerAnimator;
-                    if (Renderer) Renderer.sprite = classAnimators.archerSprite;
-                    playerClass = PlayerClasses.Archer;
-                    break;
-                case PlayerClasses.Warrior:
-                    if (Animator) Animator.runtimeAnimatorController = classAnimators.warriorAnimator;
-                    if (Renderer) Renderer.sprite = classAnimators.warriorSprite;
-                    playerClass = PlayerClasses.Warrior;
-                    break;
-                case PlayerClasses.Mage:
-                    if (Animator) Animator.runtimeAnimatorController = classAnimators.mageAnimator;
-                    if (Renderer) Renderer.sprite = classAnimators.mageSprite;
-                    playerClass = PlayerClasses.Mage;
-                    break;
-                default:
-                    if (Animator) Animator.runtimeAnimatorController = classAnimators.archerAnimator;
-                    if (Renderer) Renderer.sprite = classAnimators.archerSprite;
-                    playerClass = PlayerClasses.Archer;
-                    break;
-            }
+            ClassData data = @class == PlayerClasses.Warrior ? classData.warrior :
+                @class == PlayerClasses.Mage ? classData.mage : classData.archer;
+
+            if (isLocalPlayer)
+                OnLocalPlayerClassChange?.Invoke(data);
+            else
+                OnRemotePlayerClassChange?.Invoke(data);
         }
 
         private void OnWeaponsUpdated(SyncList<Weapon.Weapon>.Operation op, int itemIndex, Weapon.Weapon oldItem, Weapon.Weapon newItem)
@@ -248,7 +245,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player
 
             // Change class (for testing)
             if (Input.GetKeyDown(KeyCode.C))
-                CmdSwitchPlayerClass(playerClass == PlayerClasses.Archer ? PlayerClasses.Mage : PlayerClasses.Archer);
+                CmdSwitchPlayerClass(playerClass == PlayerClasses.Archer ? PlayerClasses.Mage :
+                    playerClass == PlayerClasses.Mage ? PlayerClasses.Warrior : PlayerClasses.Archer);
 
             if (netIdentity.isServer && toSpawn && Input.GetKeyDown(KeyCode.K))
             {

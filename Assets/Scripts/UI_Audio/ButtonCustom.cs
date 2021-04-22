@@ -44,7 +44,7 @@ namespace UI_Audio
         {
             if (!MouseCursor.Instance || !MenuSettingsManager.Instance || MenuSettingsManager.Instance.isOpen) return;
             
-            bool isOver = MouseCursor.Instance.IsMouseOver(_worldCorners);
+            bool isOver = MouseCursor.Instance.IsMouseOver(hoveringCanvas);
             if (!_isMouseOver && isOver)
             {
                 _isMouseOver = true;

@@ -1,26 +1,54 @@
-﻿using Mirror;
+﻿using System;
+using Mirror;
+using UI_Audio;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Weapon.MeleeWeapon
 {
+    public class MeleeWeaponData
+    {
+        public float KnockbackMultiplier, WeaponSizeMultiplier;
+        public float DefaultDamageMultiplier, SpecialDamageMultiplier;
+        public string Name;
+        
+        public static MeleeWeaponData operator *(MeleeWeaponData other, int nbr)
+        {
+            if (other == null || nbr == 0)
+                return null;
+            if (nbr == 1)
+                return other;
+            return new MeleeWeaponData
+            {
+                KnockbackMultiplier = other.KnockbackMultiplier * nbr,
+                WeaponSizeMultiplier = other.WeaponSizeMultiplier * nbr,
+                DefaultDamageMultiplier = other.DefaultDamageMultiplier * nbr,
+                SpecialDamageMultiplier = other.SpecialDamageMultiplier * nbr
+            };
+        }
+    }
+    
     public class MeleeWeapon : Weapon
     {
-        private void OrientateBow(Vector3 bowOrientation)
-        {
-            if (!hasAuthority) return;
-            bowOrientation.Normalize();
-            gameObject.transform.localRotation = Quaternion.Euler(
-                new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, bowOrientation)));
-        }
+        [NonSerialized] public MeleeWeaponData MeleeData;
+        
+        private void Start() => InstantiateWeapon();
 
+        public override RectTransform GetInformationPopup()
+        {
+            if (!MenuSettingsManager.Instance || !MenuSettingsManager.Instance.meleeWeaponDescription)
+                return null;
+            MenuSettingsManager.Instance.meleeWeaponDescription.SetData(MeleeData);
+            return MenuSettingsManager.Instance.meleeWeaponDescription.rectTransform;
+        }
+        
         private void FixedUpdate()
         {
             // Only run by server
             if (isServer && isGrounded && !PlayerFound) GroundedLogic();
-            if (!hasAuthority|| !equipped || isGrounded) return;
+            if (!hasAuthority|| !equipped || isGrounded || !MouseCursor.Instance) return;
             // Only run by the weapon's owner (client)
-            Vector3 direction = Input.mousePosition - holder.WorldToScreenPoint(transform.position);
-            OrientateBow(direction);
+            gameObject.transform.localRotation =
+                MouseCursor.Instance.OrientateObjectTowardsMouse(transform.position, Vector2.up);
         }
 
         [ServerCallback]

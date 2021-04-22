@@ -16,12 +16,10 @@ public class StairsLayerTrigger : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         GameObject colliderObject = other.gameObject;
-
+        
         if (colliderObject.layer == _layerMaskId)
             return;
         
-        colliderObject.layer = _layerMaskId;
-        if (colliderObject.TryGetComponent(out SpriteRenderer otherRenderer))
-            otherRenderer.sortingLayerID = _sortingLayerId;
+        Entity.Entity.SetRenderingLayersInChildren(_sortingLayerId, destinationSortingLayer, _layerMaskId, colliderObject);
     }
 }

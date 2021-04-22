@@ -1,28 +1,23 @@
-﻿using Entity.DynamicEntity.LivingEntity.Player;
-using Mirror;
+﻿using Mirror;
+using UI_Audio;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Weapon.RangedWeapon
 {
     public class Bow : RangedWeapon
     {
-        private void OrientateBow(Vector3 bowOrientation)
-        {
-            if (!hasAuthority) return;
-            bowOrientation.Normalize();
-            gameObject.transform.localRotation = Quaternion.Euler(
-                new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, bowOrientation)));
-            CmdUpdateOrientation(bowOrientation);
-        }
+        private void Start() => InstantiateRangeWeapon();
 
         private void FixedUpdate()
         {
             // Only run by server
             if (isServer && isGrounded && !PlayerFound) GroundedLogic();
-            if (!hasAuthority|| !equipped || isGrounded) return;
+            if (!hasAuthority|| !equipped || isGrounded || !MouseCursor.Instance) return;
             // Only run by the weapon's owner (client)
-            Vector3 direction = Input.mousePosition - holder.WorldToScreenPoint(transform.position);
-            OrientateBow(direction);
+            Vector3 position = transform.position;
+            gameObject.transform.localRotation =
+                MouseCursor.Instance.OrientateObjectTowardsMouse(position, Vector2.right);
+            CmdUpdateOrientation(MouseCursor.Instance.transform.position - position);
         }
 
         [ServerCallback]

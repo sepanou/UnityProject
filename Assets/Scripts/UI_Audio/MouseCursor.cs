@@ -9,10 +9,15 @@ namespace UI_Audio
     public class MouseCursor : MonoBehaviour
     {
         public static MouseCursor Instance;
-        
-        private Vector2 _lastPos, _lastCameraPos;
+
+        [SerializeField] private RenderTexture renderTexture;
+        private Vector2 _lastPos; // Screen coords (px)
+        private Vector2 _lastCameraPos; // World coords
+        private Vector2 _lastViewportPos; // Viewport coords
+        private Vector2Int _windowResolution;
         private Animator _animator;
         private bool _isIdling;
+        private Camera _mouseCamera, _overlayCamera;
 
         private void Start()
         {
@@ -24,27 +29,44 @@ namespace UI_Audio
                 return;
             }
             
+            _windowResolution = new Vector2Int(Screen.width, Screen.height);
+            _mouseCamera = MenuSettingsManager.Instance.mouseAndParticlesCamera;
+            _overlayCamera = MenuSettingsManager.Instance.overlayCamera;
+            
+            ResetRenderTexture();
+            
             _lastPos = Input.mousePosition;
-            Camera current = MenuSettingsManager.CurrentCamera;
-            transform.position = current.ViewportToWorldPoint(
-                ClampCoords(current.ScreenToViewportPoint(_lastPos))
-            );
-            _lastCameraPos = current.transform.position;
+            _lastViewportPos = ClampCoords(_mouseCamera.ScreenToViewportPoint(_lastPos));
+            transform.position = _mouseCamera.ViewportToWorldPoint(_lastViewportPos);
+            _lastCameraPos = _mouseCamera.transform.position;
             Cursor.visible = false;
             TryGetComponent(out _animator);
             _isIdling = false;
         }
 
-        public bool IsMouseOver(Vector3[] worldCorners)
+        public bool IsMouseOver(RectTransform rect)
+            => RectTransformUtility.RectangleContainsScreenPoint(rect, _lastPos);
+
+        public Vector3 GetLocalViewWorldCoords() => transform.position;
+
+        public Quaternion OrientateObjectTowardsMouse(Vector3 worldPosition, Vector3 referenceDirection)
         {
-            Vector3 mousePos = transform.position;
-            if (mousePos.x < worldCorners[1].x || mousePos.x > worldCorners[3].x)
-                return false;
-            return !(mousePos.y < worldCorners[0].y) && !(mousePos.y > worldCorners[2].y);
+            Vector2 orientation = transform.position - worldPosition;
+            orientation.Normalize();
+            return Quaternion.Euler(new Vector3(0, 0, Vector2.SignedAngle(referenceDirection, orientation)));
         }
 
+        private void ResetRenderTexture()
+        {
+            renderTexture.Release();
+            renderTexture.width = _windowResolution.x;
+            renderTexture.height = _windowResolution.y;
+            renderTexture.Create();
+        }
+        
         private Vector2 ClampCoords(Vector2 viewportPoint)
         {
+            // Viewport coords => between 0 and 1 if inside the game window
             float x = viewportPoint.x;
             float y = viewportPoint.y;
             return new Vector2(
@@ -55,19 +77,18 @@ namespace UI_Audio
 
         private bool TryGetElementFromRayCast<T>(out T result)
         {
-            PointerEventData pointerData = new PointerEventData(EventSystem.current) 
-                {position = Input.mousePosition};
-            List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerData, results);
-            
-            foreach (RaycastResult rayCast in results)
-            {
-                if (rayCast.gameObject.TryGetComponent(out result))
-                    return true;
-            }
-
             result = default;
-            return false;
+            
+            EventSystem system = EventSystem.current;
+            PointerEventData pointerData = new PointerEventData(system)
+            {
+                position = Input.mousePosition
+            };
+            List<RaycastResult> results = new List<RaycastResult>();
+            system.RaycastAll(pointerData, results);
+            // The first object is the "closest" to the pointer, the others are "behind".
+
+            return results.Count != 0 && results[0].gameObject.TryGetComponent(out result);
         }
 
         private IEnumerator CheckHovering(Selectable selectable)
@@ -81,12 +102,11 @@ namespace UI_Audio
             
             _isIdling = true;
             _animator.Play("Idle");
-            Vector3[] corners = new Vector3[4];
-            selectable.targetGraphic.rectTransform.GetWorldCorners(corners);
+            RectTransform rectTransform = selectable.targetGraphic.rectTransform;
 
             while (selectable && selectable.enabled)
             {
-                if (!IsMouseOver(corners)) break;
+                if (!IsMouseOver(rectTransform)) break;
                 yield return new WaitForSeconds(0.1f);
             }
 
@@ -105,14 +125,24 @@ namespace UI_Audio
 
         private void Update()
         {
+            int width = Screen.width;
+            int height = Screen.height;
+            
+            if (_windowResolution.x != width || _windowResolution.y != height)
+            {
+                // Window size has changed!
+                _windowResolution.Set(width, height);
+                ResetRenderTexture();
+            }
+
             SetAnimation();
             Vector2 newPos = Input.mousePosition;
-            Vector2 newCameraPos = MenuSettingsManager.CurrentCamera.transform.position;
+            Vector2 newCameraPos = _mouseCamera.transform.position;
             if (newPos == _lastPos && _lastCameraPos == newCameraPos) return;
             _lastPos = newPos;
             _lastCameraPos = newCameraPos;
-            newPos = ClampCoords(MenuSettingsManager.CurrentCamera.ScreenToViewportPoint(newPos));
-            transform.position = (Vector2) MenuSettingsManager.CurrentCamera.ViewportToWorldPoint(newPos);
+            _lastViewportPos = ClampCoords(_mouseCamera.ScreenToViewportPoint(_lastPos));
+            transform.position = (Vector2) _mouseCamera.ViewportToWorldPoint(_lastViewportPos);
         }
     }
 }

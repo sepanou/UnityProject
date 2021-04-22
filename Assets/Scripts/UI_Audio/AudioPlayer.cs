@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +14,8 @@ namespace UI_Audio
         private static readonly GameObject MusicHandler = new GameObject("MusicPlayer");
         private static AudioSource _currentMusic;
 
-        private List<Sound> _sounds;
+        [SerializeField] private string[] soundsKeys;
+        private readonly List<Sound> _sounds = new List<Sound>();
         private bool _adjustingVolume;
         private AudioListener _listener;
 
@@ -58,14 +58,19 @@ namespace UI_Audio
             PlaySoundOnObject(OneTimeSoundsHandler, OneTimeSounds, soundKey);
         }
         
-        public void Initialize()
+        public void Start()
         {
-            _sounds = new List<Sound>();
             _adjustingVolume = false;
-            _listener = MenuSettingsManager.CurrentCamera.gameObject.GetComponent<AudioListener>();
+            _listener = MenuSettingsManager.Instance.worldCamera.gameObject.GetComponent<AudioListener>();
+            foreach (string soundKey in soundsKeys)
+                AddSound(soundKey);
         }
 
-        private bool ContainsSound(string key) => GetSound(key) != Sound.None;
+        private bool ContainsSound(string key, out Sound sound)
+        {
+            sound = GetSound(key);
+            return sound != Sound.None;
+        }
 
         private Sound GetSound(string key)
         {
@@ -79,28 +84,36 @@ namespace UI_Audio
             return Sound.None;
         }
 
-        public Sound? AddSound(string key, float maxVolume = float.NaN, float maxDistance = float.NaN)
+        public void ModifySoundSettings(string key, float maxVolume = float.NaN, float maxDistance = float.NaN)
         {
-            if (!AudioDB.Instance || ContainsSound(key) || !AudioDB.Instance.TryGetSound(key, out Sound sound))
-                return null;
-
-            AudioSource source = gameObject.AddComponent<AudioSource>();
-            sound.SetAudioSource(source);
+            if (!ContainsSound(key, out Sound sound))
+                return;
+            
             if (!float.IsNaN(maxDistance))
                 sound.SetMaxDistance(maxDistance);
             if (!float.IsNaN(maxVolume))
                 sound.SetMaxVolume(maxDistance);
             
             sound.InitSource();
-            _sounds.Add(sound);
-            return sound;
+        }
+
+        public void SetLooping(string key, bool state)
+        {
+            if (!ContainsSound(key, out Sound sound))
+                return;
+            sound.SetLoop(state);
+            sound.InitSource();
         }
         
-        public Sound? AddSound(string key, bool loop, float maxVolume = float.NaN, float maxDistance = float.NaN)
+        public void AddSound(string key)
         {
-            Sound? sound = AddSound(key, maxVolume, maxDistance);
-            sound?.SetLoop(loop);
-            return sound;
+            if (!AudioDB.Instance || !ContainsSound(key, out Sound s) || !AudioDB.Instance.TryGetSound(key, out Sound sound))
+                return;
+
+            AudioSource source = gameObject.AddComponent<AudioSource>();
+            sound.SetAudioSource(source);
+            sound.InitSource();
+            _sounds.Add(sound);
         }
 
         public void RemoveSound(string key)
@@ -118,28 +131,6 @@ namespace UI_Audio
             if (sound.IsNone()) return;
 
             sound.GetAudioSource().Play();
-            ApplyVolumeReduction(sound);
-            if (!_adjustingVolume)
-                StartCoroutine(AdjustVolume());
-        }
-        
-        public void PlaySoundDelay(string key, float delay)
-        {
-            Sound sound = GetSound(key);
-            if (sound.IsNone()) return;
-
-            sound.GetAudioSource().PlayDelayed(delay);
-            ApplyVolumeReduction(sound);
-            if (!_adjustingVolume)
-                StartCoroutine(AdjustVolume());
-        }
-        
-        public void PlaySoundScheduled(string key, double time)
-        {
-            Sound sound = GetSound(key);
-            if (sound.IsNone()) return;
-            
-            sound.GetAudioSource().PlayScheduled(time);
             ApplyVolumeReduction(sound);
             if (!_adjustingVolume)
                 StartCoroutine(AdjustVolume());

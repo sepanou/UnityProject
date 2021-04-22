@@ -1,8 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 
 namespace UI_Audio
 {
@@ -40,11 +38,11 @@ namespace UI_Audio
         }
     }
 
-    [Serializable]
+    [Serializable] 
 #pragma warning disable 660,661
-    public struct Sound
+    public struct Sound 
 #pragma warning restore 660,661
-    {
+    { 
         public static Sound None = new Sound {key = "None"};
         
         public AudioMixerGroup mixerGroup;
@@ -94,5 +92,7 @@ namespace UI_Audio
         public static bool operator ==(Sound s1, Sound s2) => s1.key == s2.key;
 
         public static bool operator !=(Sound s1, Sound s2) => !(s1 == s2);
+        
+        
     }
 }
