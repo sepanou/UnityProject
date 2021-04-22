@@ -1,13 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace UI_Audio
 {
     public class StartMenuManager : MonoBehaviour
     {
-        // This class should deal with everything related to the start menu and notably the
-        // start of a game (goal = player prefab instantiated if everything goes right).
-
         [Header("Fields")]
         [SerializeField] private RectTransform defaultFields;
         [SerializeField] private RectTransform gameModeFields;
