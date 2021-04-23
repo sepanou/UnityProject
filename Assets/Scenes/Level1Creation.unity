@@ -25976,8 +25976,11 @@ MonoBehaviour:
   gameModeFields: {fileID: 869581925}
   multiPlayerFields: {fileID: 1910858291}
   pseudoFields: {fileID: 1023215105}
+  pseudoInput: {fileID: 0}
   manager: {fileID: 0}
   ipAddressField: {fileID: 0}
+  worldParticles: {fileID: 0}
+  startMenuCanvas: {fileID: 0}
 --- !u!114 &1690048004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33565,6 +33568,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: 16x16eT1StdL1R1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467143785644476330, guid: ebc4e7191d93f0f4c89ab3e6bc6c03b4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5990479771929193248, guid: ebc4e7191d93f0f4c89ab3e6bc6c03b4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7105870033218859744, guid: ebc4e7191d93f0f4c89ab3e6bc6c03b4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7105870034021263833, guid: ebc4e7191d93f0f4c89ab3e6bc6c03b4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7105870034793900061, guid: ebc4e7191d93f0f4c89ab3e6bc6c03b4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebc4e7191d93f0f4c89ab3e6bc6c03b4, type: 3}
