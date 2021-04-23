@@ -256,7 +256,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
 
             if (netIdentity.isServer && Input.GetKeyDown(KeyCode.P))
             {
-                NetworkManager.singleton.ServerChangeScene("TestBow");
+                NetworkManager.singleton.ServerChangeScene("Level1Creation");
                 Debug.Log("Changed scene !");
             }
 
