@@ -57,6 +57,12 @@ namespace DataBanks
             LoadData();
         }
 
+        private void OnEnable()
+        {
+            if (_currentLanguage != null)
+                OnLanguageChange?.Invoke();
+        }
+
         private void LoadData()
         {
             TextAsset jsonFile = Resources.Load<TextAsset>("LanguageManager");

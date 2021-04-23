@@ -19,8 +19,6 @@ namespace UI_Audio
             LanguageManager.OnLanguageChange += OnLanguageChange;
             TryGetComponent(out _tmpText);
             TryGetComponent(out _text);
-            if (LanguageManager.Instance)
-                OnLanguageChange();
         }
 
         private string Format(string word) => formatText.Replace("%s", word);
@@ -31,6 +29,7 @@ namespace UI_Audio
                 return;
             
             string translation = LanguageManager.Instance[fieldKey];
+            
             if (lowerCase)
                 translation = translation.ToLower();
             else if (upperCase)
