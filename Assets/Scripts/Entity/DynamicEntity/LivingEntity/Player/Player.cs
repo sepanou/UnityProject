@@ -74,7 +74,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             OnLocalPlayerClassChange += ChangeAnimator;
             OnRemotePlayerClassChange += ChangeAnimator;
             if (!isLocalPlayer) return;
-            MenuSettingsManager.Instance.SetMainCameraToPlayer(this);
+            _mainCamera = MenuSettingsManager.Instance.SetMainCameraToPlayer(this);
             _weapons.Callback += OnWeaponsUpdated;
         }
 
