@@ -134,12 +134,13 @@ namespace UI_Audio
             PlayerPrefs.SetInt("LanguageIndex", languageDropdown.value);
         }
 
-        public void SetMainCameraToPlayer(Player player)
+        public Camera SetMainCameraToPlayer(Player player)
         {
             Transform camTransform = worldCamera.transform;
             worldCamera.gameObject.SetActive(true);
             camTransform.parent = player.transform;
             camTransform.localPosition = new Vector3(0, 0, -10);
+            return worldCamera;
         }
 
         public void OpenMenu()

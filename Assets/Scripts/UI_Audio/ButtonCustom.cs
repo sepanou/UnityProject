@@ -11,15 +11,6 @@ namespace UI_Audio
         
         private readonly Vector3[] _worldCorners = new Vector3[4];
         private bool _isMouseOver;
-
-        public void QuitApplication()
-        {
-            #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-            #else
-            Application.Quit();
-            #endif
-        }
         
         private new void Start()
         {

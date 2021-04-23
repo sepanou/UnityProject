@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Hub.unity
     guid: 20a25243b3bf6ad4bb086ff879119ca6
   - enabled: 1
-    path: Assets/Scenes/TestWeapon.unity
-    guid: 07c843f259d25ef448c1b9e64edef0aa
+    path: Assets/Scenes/Level1Creation.unity
+    guid: 8795de4b5c51531a29970b96fd2b2983
   m_configObjects: {}

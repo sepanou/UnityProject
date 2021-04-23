@@ -74,7 +74,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             OnLocalPlayerClassChange += ChangeAnimator;
             OnRemotePlayerClassChange += ChangeAnimator;
             if (!isLocalPlayer) return;
-            MenuSettingsManager.Instance.SetMainCameraToPlayer(this);
+            _mainCamera = MenuSettingsManager.Instance.SetMainCameraToPlayer(this);
             _weapons.Callback += OnWeaponsUpdated;
         }
 
@@ -256,7 +256,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
 
             if (netIdentity.isServer && Input.GetKeyDown(KeyCode.P))
             {
-                NetworkManager.singleton.ServerChangeScene("TestBow");
+                NetworkManager.singleton.ServerChangeScene("Level1Creation");
                 Debug.Log("Changed scene !");
             }
 
