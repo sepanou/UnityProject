@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Mirror;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace UI_Audio
 {
@@ -13,10 +14,15 @@ namespace UI_Audio
         [SerializeField] private RectTransform gameModeFields;
         [SerializeField] private RectTransform multiPlayerFields;
         [SerializeField] private RectTransform pseudoFields;
+        [SerializeField] private TMP_InputField pseudoInput;
 
         [Header("Server related GameObjects")]
         [SerializeField] private NetworkManager manager;
         [SerializeField] private TMP_InputField ipAddressField;
+
+        [Header("Start Menu")]
+        [SerializeField] private RectTransform worldParticles;
+        [SerializeField] private RectTransform startMenuCanvas;
 
         private PlayerInfoManager _infoManager;
 
@@ -35,10 +41,24 @@ namespace UI_Audio
 
         private void Start()
         {
+            CloseSubFields();
+            _infoManager = PlayerInfoManager.Instance;
+        }
+
+        private void CloseSubFields()
+        {
             gameModeFields.gameObject.SetActive(false);
             multiPlayerFields.gameObject.SetActive(false);
             pseudoFields.gameObject.SetActive(false);
-            _infoManager = PlayerInfoManager.Instance;
+        }
+
+        private void EnterGame()
+        {
+            AudioDB.Instance.PlayMusic("HubMusic");
+            worldParticles.gameObject.SetActive(false);
+            defaultFields.gameObject.SetActive(true);
+            CloseSubFields();
+            startMenuCanvas.gameObject.SetActive(false);
         }
 
         private bool ValidateIPAddressInput(string input)
@@ -48,18 +68,35 @@ namespace UI_Audio
             Regex regex = new Regex(RegexPatternIPAddress);
             return regex.IsMatch(input);
         }
-
-        private IEnumerator ClientConnectionProcedure(RectTransform toActivate, RectTransform toDeactivate)
+        
+        public void ValidatePseudo()
         {
-            if (toDeactivate)
-                toDeactivate.gameObject.SetActive(false);
+            pseudoFields.gameObject.SetActive(false);
+            
+            if (pseudoInput.text.Length >= 4)
+            {
+                gameModeFields.gameObject.SetActive(true);
+                return;
+            }
+            
+            void Activate() => pseudoFields.gameObject.SetActive(true);
+            _infoManager.SetWarningButtonActions(Activate, Activate);
+            _infoManager.SetWarningText("Pseudo length must be greater or equal to four...");
+            _infoManager.OpenWarningBox();
+        }
+
+        private IEnumerator ClientConnectionProcedure(RectTransform currentFields)
+        {
+            if (currentFields)
+                currentFields.gameObject.SetActive(false);
+            
             while (!NetworkClient.isConnected)
             {
                 if (!NetworkClient.active)
                 {
-                    if (toDeactivate)
+                    if (currentFields)
                     {
-                        void Activate() => toDeactivate.gameObject.SetActive(true);
+                        void Activate() => currentFields.gameObject.SetActive(true);
                         _infoManager.SetWarningButtonActions(Activate, Activate);
                     }
                     _infoManager.SetWarningText("Timed out after not receiving any message...\n" +
@@ -70,20 +107,20 @@ namespace UI_Audio
                 yield return null;
             }
 
-            if (toActivate)
-                toActivate.gameObject.SetActive(true);
+            EnterGame();
         }
         
-        private IEnumerator ServerLaunchProcedure(RectTransform toActivate, RectTransform toDeactivate)
+        private IEnumerator ServerLaunchProcedure(RectTransform currentFields)
         {
-            if (toDeactivate)
-                toDeactivate.gameObject.SetActive(false);
+            if (currentFields)
+                currentFields.gameObject.SetActive(false);
+            
             while (!NetworkServer.active)
                 yield return null;
-            if (toActivate)
-                toActivate.gameObject.SetActive(true);
+            
+            EnterGame();
         }
-        
+
         public void HostServerAndClient()
         {
             if (NetworkClient.active)
@@ -93,7 +130,7 @@ namespace UI_Audio
             }
             manager.StartHost();
             StopAllCoroutines();
-            StartCoroutine(ServerLaunchProcedure(pseudoFields, gameModeFields));
+            StartCoroutine(ServerLaunchProcedure(gameModeFields));
         }
 
         public void ConnectToServer()
@@ -108,11 +145,11 @@ namespace UI_Audio
                 manager.StartClient();
                 manager.networkAddress = ipAddressField.text;
                 StopAllCoroutines();
-                StartCoroutine(ClientConnectionProcedure(pseudoFields, multiPlayerFields));
+                StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
             }
             else
             {
-                PlayerInfoManager.Instance.SetWarningText("Invalid IP address!");
+                PlayerInfoManager.Instance.SetWarningText("Invalid IP address format!");
                 PlayerInfoManager.Instance.OpenWarningBox();
             }
         }
