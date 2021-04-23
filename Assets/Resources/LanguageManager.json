@@ -142,6 +142,14 @@
                 {
                     "fieldKey": "ip-address",
                     "translation": "IP Address"
+                },
+                {
+                    "fieldKey": "validate",
+                    "translation": "Validate"
+                },
+                {
+                    "fieldKey": "connect",
+                    "translation": "Connect"
                 }
             ]
         },
@@ -287,6 +295,14 @@
                 {
                     "fieldKey": "ip-address",
                     "translation": "Adresse IP"
+                },
+                {
+                    "fieldKey": "validate",
+                    "translation": "Valider"
+                },
+                {
+                    "fieldKey": "connect",
+                    "translation": "Se connecter"
                 }
             ]
         }
