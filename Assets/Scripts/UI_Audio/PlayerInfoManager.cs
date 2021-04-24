@@ -11,6 +11,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace UI_Audio
 {
@@ -26,8 +27,8 @@ namespace UI_Audio
         private Coroutine _dialogWriter;
         [SerializeField] private RectTransform warningBox;
         [SerializeField] private TMP_Text warningText;
-        [SerializeField] private Button warningCancelButton, warningContinueButton;
-        private UnityAction _warningPrevCancel, _warningPrevContinue;
+        [SerializeField] private Button warningButton;
+        private UnityAction _warningButtonAction;
 
         [Header("Current Weapon & Money Fields")]
         [SerializeField] private RectTransform weaponMoneyCanvas;
@@ -58,7 +59,7 @@ namespace UI_Audio
                 Destroy(this);
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             NPC.InfoManager = this;
             StartMenuManager.InfoManger = this;
@@ -84,8 +85,6 @@ namespace UI_Audio
             // Player Class UI
             Player.OnLocalPlayerClassChange += ChangeLocalPlayerClassInfo;
             Weapon.OnWeaponChange += UpdateCurrentWeapon;
-            
-            return true;
         }
 
         private IEnumerator WriteDialog(string[] dialogKeys, UnityAction callback, float delay = 0.02f)
@@ -184,21 +183,17 @@ namespace UI_Audio
         
         // Warning Box
         
-        public void SetWarningButtonActions(UnityAction cancelFunction, UnityAction continueFunction)
+        public void SetWarningButtonActions(UnityAction ackFunction)
         {
             RemoveWarningButtonActions();
-            _warningPrevCancel = cancelFunction;
-            _warningPrevContinue = continueFunction;
-            warningCancelButton.onClick.AddListener(_warningPrevCancel);
-            warningContinueButton.onClick.AddListener(_warningPrevContinue);
+            _warningButtonAction = ackFunction;
+            warningButton.onClick.AddListener(_warningButtonAction);
         }
 
         private void RemoveWarningButtonActions()
         {
-            if (_warningPrevCancel != null)
-                warningCancelButton.onClick.RemoveListener(_warningPrevCancel);
-            if (_warningPrevContinue != null)
-                warningContinueButton.onClick.RemoveListener(_warningPrevContinue);
+            if (_warningButtonAction != null)
+                warningButton.onClick.RemoveListener(_warningButtonAction);
         }
         
         public void SetWarningText(string text) => warningText.text = text;

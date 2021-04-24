@@ -21,11 +21,10 @@ namespace UI_Audio
                 Destroy(this);
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             NPC.InventoryManager = this;
             CloseAllInventories();
-            return true;
         }
 
         private void CloseAllInventories()

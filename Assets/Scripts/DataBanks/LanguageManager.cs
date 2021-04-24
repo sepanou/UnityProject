@@ -43,7 +43,7 @@ namespace DataBanks
             public string translation;
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             NPC.LanguageManager = this;
             TextTranslator.LanguageManager = this;
@@ -52,7 +52,6 @@ namespace DataBanks
             _currentLanguageKey = "English-UK";
             _currentLanguage = null;
             LoadData();
-            return true;
         }
 
         public void InitLanguage() => OnLanguageChange?.Invoke();

@@ -22,17 +22,17 @@ namespace DataBanks
         private bool _modified;
         private string _path;
 
-        public bool Initialize()
+        public void Initialize()
         {
             NPC.InputManager = this;
             Player.InputManager = this;
             ModifyControls.InputManager = this;
             PlayerInfoManager.InputManager = this;
+            Door.InputManager = this;
 
             _modified = false;
             _path = Path.Combine(Application.persistentDataPath, "InputManager.json");
             LoadData();
-            return true;
         }
 
         private void LoadData()

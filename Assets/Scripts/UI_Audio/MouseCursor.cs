@@ -27,7 +27,7 @@ namespace UI_Audio
                 Destroy(this);
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             _windowResolution = new Vector2Int(Screen.width, Screen.height);
             _mouseCamera = LocalGameManager.Instance.mouseAndParticlesCamera;
@@ -42,8 +42,6 @@ namespace UI_Audio
             _isIdling = false;
             
             gameObject.SetActive(true);
-            
-            return true;
         }
 
         public bool IsMouseOver(RectTransform rect)
