@@ -85,88 +85,30 @@ namespace Generation {
 			return true;
 		}
 
+		private bool SubFunction(int nbDir, int a, int b, Room room, int desiredDir, bool isX) {
+			if (a != nbDir) return true;
+			if (b < 0) return false;
+			if (room == null) return true;
+			Room neighbour = room;
+			(int nX, int nY) = neighbour.Dimensions;
+			desiredDir -= isX ? nX : nY;
+			foreach ((char nDir, int nNbDir) in neighbour.GetExits()) {
+				if (nDir != 'T' || nNbDir != desiredDir) continue;
+				return true;
+			}
+			return false;
+		}
+
 		private bool CheckForExits(Room[,] rMap, Room room, int x, int y, int i, int j) {
 			foreach ((char direction, int nbDir) in room.GetExits()) {
-				switch (direction) {
-					case 'B':
-						if (j - x + 1 == nbDir) {
-							if (i - 1 < 0) return false;
-							if (rMap[i - 1, j] != null) {
-								Room neighbour = rMap[i - 1, j];
-								(int nX, _) = neighbour.Dimensions;
-								int desiredDir = j - nX + 1;
-								bool compatibleExit = false;
-								foreach ((char nDir, int nNbDir) in neighbour.GetExits()) {
-									if (nDir != 'T' || nNbDir != desiredDir) continue;
-									compatibleExit = true;
-									break;
-								}
-								if (!compatibleExit)
-									return false;
-							}
-						}
-						break;
-					
-					case 'T':
-						if (j - x + 1 == nbDir) {
-							if (i + 1 >= rMap.GetLength(0)) return false;
-							if (rMap[i + 1, j] != null) {
-								Room neighbour = rMap[i + 1, j];
-								(int nX, _) = neighbour.Dimensions;
-								int desiredDir = j - nX + 1;
-								bool compatibleExit = false;
-								foreach ((char nDir, int nNbDir) in neighbour.GetExits()) {
-									if (nDir != 'B' || nNbDir != desiredDir) continue;
-									compatibleExit = true;
-									break;
-								}
-								if (!compatibleExit)
-									return false;
-							}
-						}
-						break;
-					
-					case 'L':
-						if (i - y + 1 == nbDir) {
-							if (j - 1 < 0) return false;
-							if (rMap[i, j - 1] != null) {
-								Room neighbour = rMap[i, j-1];
-								(_, int nY) = neighbour.Dimensions;
-								int desiredDir = i - nY + 1;
-								bool compatibleExit = false;
-								foreach ((char nDir, int nNbDir) in neighbour.GetExits()) {
-									if (nDir != 'R' || nNbDir != desiredDir) continue;
-									compatibleExit = true;
-									break;
-								}
-								if (!compatibleExit)
-									return false;
-							}
-						}
-						break;
-					
-					case 'R':
-						if (i - y + 1 == nbDir) {
-							if (j + 1 >= rMap.GetLength(1)) return false;
-
-							if (rMap[i, j + 1] != null) {
-								Room neighbour = rMap[i, j + 1];
-								(_, int nY) = neighbour.Dimensions;
-								int desiredDir = i - nY + 1;
-								bool compatibleExit = false;
-								foreach ((char nDir, int nNbDir) in neighbour.GetExits()) {
-									if (nDir != 'L' || nNbDir != desiredDir) continue;
-									compatibleExit = true;
-									break;
-								}
-								if (!compatibleExit)
-									return false;
-							}
-						}
-						break;
-				}
+				if (!(direction switch {
+					'B' => SubFunction(nbDir, j - x + 1, i - 1, rMap[i - 1, j], j + 1, true),
+					'T' => SubFunction(nbDir, j - x + 1, i + 1, rMap[i + 1, j], j + 1, true),
+					'L' => SubFunction(nbDir, i - y + 1, j - 1, rMap[i, j - 1], i + 1, false),
+					'R' => SubFunction(nbDir, i - y + 1, j + 1, rMap[i, j - 1], i + 1, false),
+					_ => throw new ArgumentException("invalid letter")
+				})) return false;
 			}
-			
 			return true;
 		}
 
