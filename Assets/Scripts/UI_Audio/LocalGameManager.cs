@@ -48,7 +48,7 @@ namespace UI_Audio
             }
 
             // Find a way to define when it is server-only => no need to load UI stuff
-
+            
             StartCoroutine(LoadGameDependencies(true));
         }
 
