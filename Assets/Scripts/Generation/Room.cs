@@ -3,8 +3,7 @@ using System.Linq;
 using Mirror;
 using UnityEngine;
 
-namespace Generation
-{
+namespace Generation {
 	public enum RoomType { Standard, Chest, Shop, Start, Exit, Boss, PreBoss, DeadEnd, Other }
 
 	public class Room: NetworkBehaviour {
@@ -53,17 +52,16 @@ namespace Generation
 			for (int i = 1; i < 4; ++i)
 				type += Name[dimensions.Length + exits.Length + i];
 
-			Type = type switch {
-				"Std" => RoomType.Standard,
-				"Cst" => RoomType.Chest,
-				"Shp" => RoomType.Shop,
-				"Stt" => RoomType.Start,
-				"Nxt" => RoomType.Exit,
-				"Fbo" => RoomType.Boss,
-				"Pfb" => RoomType.PreBoss,
-				"Den" => RoomType.DeadEnd,
-				_ => RoomType.Other
-			};
+			Type = type == "Std" ? RoomType.Standard
+				: type == "Cst" ? RoomType.Chest
+				: type == "Shp" ? RoomType.Shop
+				: type == "Stt" ? RoomType.Start
+				: type == "Nxt" ? RoomType.Exit
+				: type == "Fbo" ? RoomType.Boss
+				: type == "Pfb" ? RoomType.PreBoss
+				: type == "Den" ? RoomType.DeadEnd
+				: RoomType.Other
+			;
 
 			string levelAndId = "";
 			for (int i = exits.Length + dimensions.Length + 4; i < Name.Length; i++)

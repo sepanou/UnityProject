@@ -45,7 +45,7 @@ namespace DataBanks
 
         public void Initialize()
         {
-            NPC.LanguageManager = this;
+            Npc.LanguageManager = this;
             TextTranslator.LanguageManager = this;
             PlayerInfoManager.LanguageManager = this;
 
