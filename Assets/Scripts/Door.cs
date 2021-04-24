@@ -79,7 +79,6 @@ public class Door: NetworkBehaviour {
 	[Command(requiresAuthority = false)]
 	private void ToggleDoor()
 	{
-		if (!_canInteract) return;
 		_doorCollider[0].enabled = isOpen;
 		ToggleSprite(isOpen);
 		isOpen = !isOpen;
