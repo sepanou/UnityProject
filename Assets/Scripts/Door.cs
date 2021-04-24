@@ -20,8 +20,7 @@ public class Door: NetworkBehaviour {
 	[NonSerialized] public static PlayerInfoManager InfoManager;
 	
 
-	private void Start()
-	{
+	private void Start() {
 		_doorCollider = GetComponents<Collider2D>();
 		_spriteRenderer = GetComponent<SpriteRenderer>();
 		_playerPool = new Dictionary<Player, bool>();
@@ -34,25 +33,23 @@ public class Door: NetworkBehaviour {
 			ToggleDoor();
 	}*/
 	
-	private void OnTriggerEnter2D(Collider2D other)
-	{
+	private void OnTriggerEnter2D(Collider2D other) {
 		if (!other.gameObject.TryGetComponent(out Player player))
 			return;
-            
+			
 		if (isServer)
 			_playerPool[player] = false;
 
 		if (!player.isLocalPlayer) return;
-            
+			
 		_canInteract = true;
 		StartCoroutine(CheckInteraction(player));
 	}
-        
-	private void OnTriggerExit2D(Collider2D other)
-	{
+		
+	private void OnTriggerExit2D(Collider2D other) {
 		if (!other.gameObject.TryGetComponent(out Player player))
 			return;
-            
+			
 		if (isServer)
 			_playerPool.Remove(player);
 
@@ -61,13 +58,10 @@ public class Door: NetworkBehaviour {
 	}
 	
 	[ClientCallback]
-	private IEnumerator CheckInteraction(Player player)
-	{
-		while (_canInteract)
-		{
-			if (InputManager.GetKeyDown("Interact"))
-			{
-				Debug.Log("bientot");
+	private IEnumerator CheckInteraction(Player player) {
+		while (_canInteract) {
+			if (InputManager.GetKeyDown("Interact")) {
+				Debug.Log("bientôt");
 				ToggleDoor();
 				yield return null;
 			}
@@ -77,8 +71,7 @@ public class Door: NetworkBehaviour {
 	}
 	
 	[Command(requiresAuthority = false)]
-	private void ToggleDoor()
-	{
+	private void ToggleDoor() {
 		if (!_canInteract) return;
 		_doorCollider[0].enabled = isOpen;
 		ToggleSprite(isOpen);
@@ -86,8 +79,7 @@ public class Door: NetworkBehaviour {
 	}
 
 	[ClientRpc]
-	private void ToggleSprite(bool isOpen2)
-	{
+	private void ToggleSprite(bool isOpen2) {
 		_spriteRenderer.sprite = isOpen2 ? closed : opened;
 	}
 }
