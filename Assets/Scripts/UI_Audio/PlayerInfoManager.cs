@@ -46,6 +46,7 @@ namespace UI_Audio
         [Header("Player Class Fields")]
         [SerializeField] private RectTransform playerClassCanvas;
         [SerializeField] private Image classIcon, powerBar, healthBar;
+        [SerializeField] public DisplayKey _displayKey;
 
         [NonSerialized] public static LanguageManager LanguageManager;
         [NonSerialized] public static InputManager InputManager;
