@@ -23,7 +23,7 @@ namespace UI_Audio
 
         public bool Initialize()
         {
-            NPC.InventoryManager = this;
+            Npc.InventoryManager = this;
             CloseAllInventories();
             return true;
         }

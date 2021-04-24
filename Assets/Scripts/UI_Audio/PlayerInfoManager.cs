@@ -60,7 +60,7 @@ namespace UI_Audio
 
         public bool Initialize()
         {
-            NPC.InfoManager = this;
+            Npc.InfoManager = this;
             StartMenuManager.InfoManger = this;
             
             // Info box
