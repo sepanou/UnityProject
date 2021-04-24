@@ -14,10 +14,9 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
             if (isServer && isGrounded && !PlayerFound) GroundedLogic();
             if (!hasAuthority|| !equipped || isGrounded || !MouseCursor.Instance) return;
             // Only run by the weapon's owner (client)
-            Vector3 position = transform.position;
             gameObject.transform.localRotation =
-                MouseCursor.Instance.OrientateObjectTowardsMouse(position, Vector2.right);
-            CmdUpdateOrientation(MouseCursor.Instance.transform.position - position);
+                MouseCursor.Instance.OrientateObjectTowardsMouse(Vector2.right, out Vector2 orient);
+            CmdUpdateOrientation(orient);
         }
 
         [ServerCallback]

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Entity.DynamicEntity;
+using UI_Audio;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +10,6 @@ namespace DataBanks
     [CreateAssetMenu(fileName = "LanguageManager", menuName = "DataBanks/LanguageManager", order = 5)]
     public class LanguageManager : ScriptableObject
     {
-        public static LanguageManager Instance;
         public static event LanguageChanged OnLanguageChange;
 
         public delegate void LanguageChanged();
@@ -41,27 +42,20 @@ namespace DataBanks
             public string fieldKey;
             public string translation;
         }
-        
-        public void Awake()
+
+        public bool Initialize()
         {
-            if (!Instance)
-                Instance = this;
-            else
-            {
-                Destroy(this);
-                return;
-            }
+            NPC.LanguageManager = this;
+            TextTranslator.LanguageManager = this;
+            PlayerInfoManager.LanguageManager = this;
 
             _currentLanguageKey = "English-UK";
             _currentLanguage = null;
             LoadData();
+            return true;
         }
 
-        private void OnEnable()
-        {
-            if (_currentLanguage != null)
-                OnLanguageChange?.Invoke();
-        }
+        public void InitLanguage() => OnLanguageChange?.Invoke();
 
         private void LoadData()
         {

@@ -7,18 +7,14 @@ namespace UI_Audio
     [CreateAssetMenu(fileName = "AudioDB", menuName = "DataBanks/AudioDB", order = 4)]
     public class AudioDB : ScriptableObject
     {
-        public static AudioDB Instance;
-
         [SerializeField] private Sound[] sounds;
 
-        public void Awake()
+        public bool Initialize()
         {
-            if (!Instance)
-                Instance = this;
-            else
-                Destroy(this);
+            AudioPlayer.AudioManager = this;
+            return true;
         }
-
+        
         public void PlayUISound(string soundKey) => AudioPlayer.PlaySoundNoDistance(soundKey);
         
         public void PlayMusic(string musicKey) => AudioPlayer.PlayMusic(musicKey);

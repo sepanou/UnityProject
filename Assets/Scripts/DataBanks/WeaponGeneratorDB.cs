@@ -10,8 +10,6 @@ namespace DataBanks
     [CreateAssetMenu(fileName = "WeaponGeneratorDB", menuName = "DataBanks/WeaponGenerator", order = 2)]
     public class WeaponGeneratorDB : ScriptableObject
     {
-        public static WeaponGeneratorDB Instance;
-
         // Charms
         [SerializeField] private GameObject charmModel;
         [SerializeField] private Sprite[] charmSprites;
@@ -123,14 +121,6 @@ namespace DataBanks
                 {41, "de Slaneesh"},
                 {42, "de Nurgle"}
             };
-
-        private void OnEnable()
-        {
-            if (!Instance)
-                Instance = this;
-            else
-                Destroy(this);
-        }
 
         public string GenerateName(Dictionary<int, (int, string)> weaponType)
         {

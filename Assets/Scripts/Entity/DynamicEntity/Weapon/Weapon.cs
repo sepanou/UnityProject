@@ -23,6 +23,9 @@ namespace Entity.DynamicEntity.Weapon
         [SerializeField] protected int specialAttackCost;
         [SerializeField] protected WeaponGeneratorDB weaponGenerator;
         [SerializeField] protected Vector3 defaultCoordsWhenLikedToPlayer;
+        
+        public static event ChangedWeapon OnWeaponChange;
+        public delegate void ChangedWeapon(Weapon weapon);
 
         public override bool OnSerialize(NetworkWriter writer, bool initialState)
         {
@@ -72,7 +75,7 @@ namespace Entity.DynamicEntity.Weapon
         
         public int GetDamage() => defaultDamage;
         public int GetSpecialAttackCost() => specialAttackCost;
-        
+
         public bool CanAttack()
         {
             return holder && equipped &&
@@ -82,6 +85,7 @@ namespace Entity.DynamicEntity.Weapon
         protected abstract void DefaultAttack();
         protected abstract void SpecialAttack();
         public abstract RectTransform GetInformationPopup();
+        public abstract string GetName();
 
         [ServerCallback]
         private bool CheckForCompatibleNearbyPlayers(out Player compatiblePlayer)
@@ -138,6 +142,8 @@ namespace Entity.DynamicEntity.Weapon
         {
             transform.localPosition = defaultCoordsWhenLikedToPlayer;
             SetActive(true);
+            if (holder.isLocalPlayer)
+                OnWeaponChange?.Invoke(this);
         }
 
         [ClientRpc] private void RpcUnEquip() => SetActive(false);

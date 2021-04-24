@@ -54,10 +54,9 @@ namespace Entity.Collectibles
 
         public RectTransform GetInformationPopup()
         {
-            if (!MenuSettingsManager.Instance || !MenuSettingsManager.Instance.charmDescription)
-                return null;
-            MenuSettingsManager.Instance.charmDescription.SetData(Bonuses);
-            return MenuSettingsManager.Instance.charmDescription.rectTransform;
+            return !PlayerInfoManager.Instance 
+                ? null 
+                : PlayerInfoManager.Instance.ShowCharmDescription(Bonuses);
         }
     }
 }

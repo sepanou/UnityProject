@@ -7,6 +7,7 @@ namespace UI_Audio
     public class RangedWeaponDescription : MonoBehaviour
     {
         public RectTransform rectTransform;
+        
         [SerializeField] private TMP_Text projectileSpeedMultiplier,
             projectileSizeMultiplier,
             projectileNumber,

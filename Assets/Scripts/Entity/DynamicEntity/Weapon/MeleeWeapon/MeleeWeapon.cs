@@ -35,12 +35,13 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon
 
         public override RectTransform GetInformationPopup()
         {
-            if (!MenuSettingsManager.Instance || !MenuSettingsManager.Instance.meleeWeaponDescription)
-                return null;
-            MenuSettingsManager.Instance.meleeWeaponDescription.SetData(MeleeData);
-            return MenuSettingsManager.Instance.meleeWeaponDescription.rectTransform;
+            return !PlayerInfoManager.Instance 
+                ? null 
+                : PlayerInfoManager.Instance.ShowMeleeWeaponDescription(MeleeData);
         }
-        
+
+        public override string GetName() => MeleeData.Name;
+
         private void FixedUpdate()
         {
             // Only run by server
@@ -48,7 +49,7 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon
             if (!hasAuthority|| !equipped || isGrounded || !MouseCursor.Instance) return;
             // Only run by the weapon's owner (client)
             gameObject.transform.localRotation =
-                MouseCursor.Instance.OrientateObjectTowardsMouse(transform.position, Vector2.up);
+                MouseCursor.Instance.OrientateObjectTowardsMouse(Vector2.up, out _);
         }
 
         [ServerCallback]

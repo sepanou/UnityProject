@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,40 +9,41 @@ namespace UI_Audio
 {
     public class MouseCursor : MonoBehaviour
     {
-        public static MouseCursor Instance;
+        [NonSerialized] public static MouseCursor Instance;
 
         [SerializeField] private RenderTexture renderTexture;
         private Vector2 _lastPos; // Screen coords (px)
-        private Vector2 _lastCameraPos; // World coords
         private Vector2 _lastViewportPos; // Viewport coords
         private Vector2Int _windowResolution;
         private Animator _animator;
         private bool _isIdling;
-        private Camera _mouseCamera, _overlayCamera;
+        private Camera _mouseCamera;
 
-        private void Start()
+        private void Awake()
         {
             if (!Instance)
                 Instance = this;
             else
-            {
                 Destroy(this);
-                return;
-            }
-            
+        }
+
+        public bool Initialize()
+        {
             _windowResolution = new Vector2Int(Screen.width, Screen.height);
-            _mouseCamera = MenuSettingsManager.Instance.mouseAndParticlesCamera;
-            _overlayCamera = MenuSettingsManager.Instance.overlayCamera;
-            
+            _mouseCamera = LocalGameManager.Instance.mouseAndParticlesCamera;
+
             ResetRenderTexture();
             
             _lastPos = Input.mousePosition;
             _lastViewportPos = ClampCoords(_mouseCamera.ScreenToViewportPoint(_lastPos));
             transform.position = _mouseCamera.ViewportToWorldPoint(_lastViewportPos);
-            _lastCameraPos = _mouseCamera.transform.position;
             Cursor.visible = false;
             TryGetComponent(out _animator);
             _isIdling = false;
+            
+            gameObject.SetActive(true);
+            
+            return true;
         }
 
         public bool IsMouseOver(RectTransform rect)
@@ -49,9 +51,9 @@ namespace UI_Audio
 
         public Vector3 GetLocalViewWorldCoords() => transform.position;
 
-        public Quaternion OrientateObjectTowardsMouse(Vector3 worldPosition, Vector3 referenceDirection)
+        public Quaternion OrientateObjectTowardsMouse(Vector3 referenceDirection, out Vector2 orientation)
         {
-            Vector2 orientation = transform.position - worldPosition;
+            orientation = transform.position - _mouseCamera.transform.position;
             orientation.Normalize();
             return Quaternion.Euler(new Vector3(0, 0, Vector2.SignedAngle(referenceDirection, orientation)));
         }
@@ -134,13 +136,11 @@ namespace UI_Audio
                 _windowResolution.Set(width, height);
                 ResetRenderTexture();
             }
-
+            
             SetAnimation();
             Vector2 newPos = Input.mousePosition;
-            Vector2 newCameraPos = _mouseCamera.transform.position;
-            if (newPos == _lastPos && _lastCameraPos == newCameraPos) return;
+            if (newPos == _lastPos) return;
             _lastPos = newPos;
-            _lastCameraPos = newCameraPos;
             _lastViewportPos = ClampCoords(_mouseCamera.ScreenToViewportPoint(_lastPos));
             transform.position = (Vector2) _mouseCamera.ViewportToWorldPoint(_lastViewportPos);
         }

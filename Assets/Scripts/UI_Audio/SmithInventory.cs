@@ -1,5 +1,4 @@
-﻿using DataBanks;
-using Entity.Collectibles;
+﻿using Entity.Collectibles;
 
 namespace UI_Audio
 {
@@ -25,7 +24,7 @@ namespace UI_Audio
         public void MergeCharms()
         {
             ClearInventory();
-            Charm result = WeaponGeneratorDB.Instance.GenerateCharm(_previewData);
+            Charm result = LocalGameManager.Instance.weaponGenerator.GenerateCharm(_previewData);
             resultSlot.SetSlotItem(result);
         }
     }

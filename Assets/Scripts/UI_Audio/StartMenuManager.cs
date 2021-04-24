@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Text.RegularExpressions;
 using Mirror;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace UI_Audio
 {
@@ -23,28 +23,21 @@ namespace UI_Audio
         [Header("Start Menu")]
         [SerializeField] private RectTransform worldParticles;
         [SerializeField] private RectTransform startMenuCanvas;
-
-        private PlayerInfoManager _infoManager;
-
-        public static StartMenuManager Instance;
+        
+        [NonSerialized] public static StartMenuManager Instance;
+        [NonSerialized] public static PlayerInfoManager InfoManger;
 
         private const string RegexPatternIPAddress =
             @"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$";
 
-        private void OnEnable()
+        private void Awake()
         {
             if (!Instance)
                 Instance = this;
             else
                 Destroy(this);
         }
-
-        private void Start()
-        {
-            CloseSubFields();
-            _infoManager = PlayerInfoManager.Instance;
-        }
-
+        
         private void CloseSubFields()
         {
             gameModeFields.gameObject.SetActive(false);
@@ -52,13 +45,18 @@ namespace UI_Audio
             pseudoFields.gameObject.SetActive(false);
         }
 
-        private void EnterGame()
+        public void CloseStartMenu()
         {
-            AudioDB.Instance.PlayMusic("HubMusic");
             worldParticles.gameObject.SetActive(false);
+            startMenuCanvas.gameObject.SetActive(false);
+        }
+
+        public void OpenStartMenu()
+        {
+            worldParticles.gameObject.SetActive(true);
             defaultFields.gameObject.SetActive(true);
             CloseSubFields();
-            startMenuCanvas.gameObject.SetActive(false);
+            startMenuCanvas.gameObject.SetActive(true);
         }
 
         private bool ValidateIPAddressInput(string input)
@@ -80,9 +78,9 @@ namespace UI_Audio
             }
             
             void Activate() => pseudoFields.gameObject.SetActive(true);
-            _infoManager.SetWarningButtonActions(Activate, Activate);
-            _infoManager.SetWarningText("Pseudo length must be greater or equal to four...");
-            _infoManager.OpenWarningBox();
+            InfoManger.SetWarningButtonActions(Activate, Activate);
+            InfoManger.SetWarningText("Pseudo length must be greater or equal to four...");
+            InfoManger.OpenWarningBox();
         }
 
         private IEnumerator ClientConnectionProcedure(RectTransform currentFields)
@@ -97,17 +95,17 @@ namespace UI_Audio
                     if (currentFields)
                     {
                         void Activate() => currentFields.gameObject.SetActive(true);
-                        _infoManager.SetWarningButtonActions(Activate, Activate);
+                        InfoManger.SetWarningButtonActions(Activate, Activate);
                     }
-                    _infoManager.SetWarningText("Timed out after not receiving any message...\n" +
-                                                    "Connection Failed!");
-                    _infoManager.OpenWarningBox();
+                    InfoManger.SetWarningText("Timed out after not receiving any message...\n" +
+                                              "Connection Failed!");
+                    InfoManger.OpenWarningBox();
                     yield break;
                 }
                 yield return null;
             }
 
-            EnterGame();
+            LocalGameManager.Instance.SetLocalGameState(LocalGameStates.InGame);
         }
         
         private IEnumerator ServerLaunchProcedure(RectTransform currentFields)
@@ -118,7 +116,7 @@ namespace UI_Audio
             while (!NetworkServer.active)
                 yield return null;
             
-            EnterGame();
+            LocalGameManager.Instance.SetLocalGameState(LocalGameStates.InGame);
         }
 
         public void HostServerAndClient()
@@ -156,8 +154,7 @@ namespace UI_Audio
 
         public void StopServerAndOrClient()
         {
-            if (MenuSettingsManager.Instance.worldCamera)
-                MenuSettingsManager.Instance.worldCamera.transform.parent = manager.transform;
+            LocalGameManager.Instance.worldCamera.transform.parent = manager.transform;
             // Client + Server
             if (NetworkServer.active && NetworkClient.isConnected)
                 manager.StopHost();
@@ -172,11 +169,11 @@ namespace UI_Audio
         public void QuitApplication()
         {
             StopServerAndOrClient();
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
-            #else
+#else
             Application.Quit();
-            #endif
+#endif
         }
     }
 }
