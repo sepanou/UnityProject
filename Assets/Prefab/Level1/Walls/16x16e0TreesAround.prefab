@@ -25270,7 +25270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3868455697366158234}
   m_Layer: 0
-  m_Name: 16x0TreesAround
+  m_Name: 16x16e0TreesAround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25283,7 +25283,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7711552094134413181}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.787686, y: -4.2503934, z: -19.28125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
