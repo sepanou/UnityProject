@@ -1,4 +1,7 @@
+using System;
+using DataBanks;
 using Mirror;
+using UI_Audio;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -6,6 +9,21 @@ namespace Entity {
 	public abstract class Entity: NetworkBehaviour {
 		[FormerlySerializedAs("Renderer")]
 		[SerializeField] protected SpriteRenderer spriteRenderer;
+
+		[NonSerialized] protected static LocalGameManager Manager;
+		[NonSerialized] protected static LanguageManager LanguageManager;
+		[NonSerialized] protected static InputManager InputManager;
+		[NonSerialized] protected static PlayerInfoManager PlayerInfoManager;
+		[NonSerialized] protected static InventoryManager InventoryManager;
+
+		public static void InitClass(LocalGameManager manager) {
+			if (!(Manager is null)) throw new Exception("InitClass called multiple times");
+			Manager = manager;
+			LanguageManager = Manager.languageManager;
+			PlayerInfoManager = Manager.playerInfoManager;
+			InventoryManager = Manager.inventoryManager;
+			InventoryManager = Manager.inventoryManager;
+		}
 
 		public static void SetRenderingLayersInChildren(int sortingLayerID, string sortingLayerName, int layerMask, GameObject gameObject) {
 			if (!gameObject.activeInHierarchy) return;
