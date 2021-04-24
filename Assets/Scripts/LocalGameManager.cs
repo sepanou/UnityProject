@@ -3,101 +3,85 @@ using Entity.DynamicEntity.LivingEntity.Player;
 using UI_Audio;
 using UnityEngine;
 
-public enum LocalGameStates
-{
-    Start,
-    InGame,
-    Quit,
-    None
-}
-    
-public class LocalGameManager : MonoBehaviour
-{
-    [Header("DataBanks")] public InputManager inputManager;
-    public LanguageManager languageManager;
-    public WeaponGeneratorDB weaponGenerator;
-    public AudioDB audioManager;
+public enum LocalGameStates { Start, InGame, Quit, None }
 
-    [Header("User Interface")] public StartMenuManager startMenuManager;
-    public MenuSettingsManager menuSettingsManager;
-    public PlayerInfoManager playerInfoManager;
-    public InventoryManager inventoryManager;
-    public MouseCursor mouseCursor;
+public class LocalGameManager: MonoBehaviour {
+	[Header("DataBanks")] public InputManager inputManager;
+	public LanguageManager languageManager;
+	public WeaponGeneratorDB weaponGenerator;
+	public AudioDB audioManager;
 
-    [Header("Cameras")] public Camera mouseAndParticlesCamera;
-    public Camera overlayCamera;
-    public Camera worldCamera; // = player's camera when he enters the game
-        
-    private LocalGameStates _localState;
-    public LocalGameStates LocalState => _localState;
+	[Header("User Interface")] public StartMenuManager startMenuManager;
+	public MenuSettingsManager menuSettingsManager;
+	public PlayerInfoManager playerInfoManager;
+	public InventoryManager inventoryManager;
+	public MouseCursor mouseCursor;
 
-    public static LocalGameManager Instance;
+	[Header("Cameras")] public Camera mouseAndParticlesCamera;
+	public Camera overlayCamera;
+	public Camera worldCamera; // = player's camera when he enters the game
 
-    private void Awake()
-    {
-        if (!Instance)
-            Instance = this;
-        else
-        {
-            Destroy(this);
-            return;
-        }
+	public LocalGameStates LocalState { get; private set; }
 
-        // Find a way to define when it is server-only => no need to load UI stuff
+	public static LocalGameManager Instance;
 
-        LoadGameDependencies(true);
-    }
+	private void Awake() {
+		if (Instance is null)
+			Instance = this;
+		else {
+			Destroy(this);
+			return;
+		}
 
-    private void Start()
-    {
-        _localState = LocalGameStates.None;
-        SetLocalGameState(LocalGameStates.Start);
-    }
+		// Find a way to define when it is server-only => no need to load UI stuff
+		LoadGameDependencies(true);
+	}
 
-    private void LoadGameDependencies(bool loadUI = false)
-    {
-        languageManager.Initialize();
-        audioManager.Initialize();
-        inputManager.Initialize();
-        languageManager.InitLanguage();
-        if (!loadUI) return;
-        mouseCursor.Initialize();
-        menuSettingsManager.Initialize();
-        playerInfoManager.Initialize();
-        inventoryManager.Initialize();
-    }
+	private void Start() {
+		LocalState = LocalGameStates.None;
+		SetLocalGameState(LocalGameStates.Start);
+	}
 
-    public void SetLocalGameState(LocalGameStates state)
-    {
-        if (state == _localState) return;
-        Debug.Log("Changed Local State to " + state);
-        _localState = state;
+	private void LoadGameDependencies(bool loadUI = false) {
+		languageManager.Initialize();
+		audioManager.Initialize();
+		inputManager.Initialize();
+		languageManager.InitLanguage();
+		if (!loadUI) return;
+		mouseCursor.Initialize();
+		menuSettingsManager.Initialize();
+		playerInfoManager.Initialize();
+		inventoryManager.Initialize();
+	}
 
-        switch (_localState)
-        {
-            case LocalGameStates.Start:
-                audioManager.PlayMusic("MainMenuMusic");
-                menuSettingsManager.CloseMenu();
-                startMenuManager.OpenStartMenu();
-                playerInfoManager.HidePlayerClassUI();
-                break;
-            case LocalGameStates.InGame:
-                audioManager.PlayMusic("HubMusic");
-                menuSettingsManager.CloseMenu();
-                startMenuManager.CloseStartMenu();
-                playerInfoManager.ShowPlayerClassUI();
-                break;
-            case LocalGameStates.Quit:
-                break;
-        }
-    }
+	public void SetLocalGameState(LocalGameStates state) {
+		if (state == LocalState) return;
+		Debug.Log("Changed Local State to " + state);
+		LocalState = state;
 
-    public Camera SetMainCameraToPlayer(Player player)
-    {
-        Transform camTransform = worldCamera.transform;
-        worldCamera.gameObject.SetActive(true);
-        camTransform.parent = player.transform;
-        camTransform.localPosition = new Vector3(0, 0, -10);
-        return worldCamera;
-    }
+		switch (LocalState) {
+			case LocalGameStates.Start:
+				audioManager.PlayMusic("MainMenuMusic");
+				menuSettingsManager.CloseMenu();
+				startMenuManager.OpenStartMenu();
+				playerInfoManager.HidePlayerClassUI();
+				break;
+			case LocalGameStates.InGame:
+				audioManager.PlayMusic("HubMusic");
+				menuSettingsManager.CloseMenu();
+				startMenuManager.CloseStartMenu();
+				playerInfoManager.ShowPlayerClassUI();
+				break;
+			case LocalGameStates.Quit:
+				break;
+		}
+	}
+
+	public Camera SetMainCameraToPlayer(Player player) {
+		Transform camTransform = worldCamera.transform;
+		worldCamera.gameObject.SetActive(true);
+		camTransform.parent = player.transform;
+		camTransform.localPosition = new Vector3(0, 0, -10);
+		return worldCamera;
+	}
 }
