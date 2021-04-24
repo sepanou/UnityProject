@@ -1,46 +1,26 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using DataBanks;
-using UnityEngine;
-using UI_Audio;
+﻿using UnityEngine;
 
-public class Door : MonoBehaviour
-{
-    private Collider2D[] doorCollider;
-    private SpriteRenderer spriteRenderer;
+public class Door: MonoBehaviour {
+	private Collider2D[] _doorCollider;
+	private SpriteRenderer _spriteRenderer;
 
-    [SerializeField] private bool isOpen;
-    [SerializeField] private Sprite closed;
-    [SerializeField] private Sprite opened;
+	[SerializeField] private bool isOpen;
+	[SerializeField] private Sprite closed;
+	[SerializeField] private Sprite opened;
 
-    private void Start()
-    {
-        doorCollider = GetComponents<Collider2D>();
-        spriteRenderer = this.GetComponent<SpriteRenderer>();
-    }
+	private void Start() {
+		_doorCollider = GetComponents<Collider2D>();
+		_spriteRenderer = GetComponent<SpriteRenderer>();
+	}
 
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (LocalGameManager.Instance.inputManager.GetKeyDown("Interact"))
-        {
-            ToggleDoor();
-        }
-    }
+	private void OnTriggerStay2D(Collider2D other) {
+		if (LocalGameManager.Instance.inputManager.GetKeyDown("Interact"))
+			ToggleDoor();
+	}
 
-    private void ToggleDoor()
-    {
-        if (isOpen)
-        {
-            doorCollider[0].enabled = true;
-            spriteRenderer.sprite = closed;
-            isOpen = false;
-        }
-        else
-        {
-            doorCollider[0].enabled = false;
-            spriteRenderer.sprite = opened;
-            isOpen = true;
-        }
-    }
+	private void ToggleDoor() {
+		_doorCollider[0].enabled = isOpen;
+		_spriteRenderer.sprite = isOpen ? closed : opened;
+		isOpen = !isOpen;
+	}
 }
