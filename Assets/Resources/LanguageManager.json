@@ -157,11 +157,15 @@
                 },
                 {
                     "fieldKey": "#mage-selector",
-                    "translation": "Mastering the arcane arts is anything but easy!\nWill you be strong enough to subdue this knowledge?"
+                    "translation": "Mastering the Arcane Arts is anything but easy!\nWill you be strong enough to subdue this knowledge?"
                 },
                 {
                     "fieldKey": "#archer-selector",
                     "translation": "Our accuracy and our semi-rapid movements is what qualifies us the best!\nYou can give it a try - after all, all you risk is death..."
+                },
+                {
+                    "fieldKey": "main-menu",
+                    "translation": "Main menu"
                 }
             ]
         },
@@ -327,6 +331,10 @@
                 {
                     "fieldKey": "#archer-selector",
                     "translation": "Notre précision et nos mouvements semi-rapides est ce qui nous caractérise le mieux !\nBien sûr, tu peux t'y essayer ; après tout, tout ce que tu risques est la mort..."
+                },
+                {
+                    "fieldKey": "main-menu",
+                    "translation": "Ecran titre"
                 }
             ]
         }

@@ -20,6 +20,7 @@ namespace UI_Audio
         [Header("Others")]
         [SerializeField] private Dropdown languageDropdown;
         [SerializeField] private LanguageManager languageManager;
+        [SerializeField] private RectTransform backMainMenuCanvas, resumeButtonCanvas;
 
         [Header("Menus logic")]
         [SerializeField] private EventSystem eventSystem;
@@ -40,13 +41,12 @@ namespace UI_Audio
                 Destroy(this);
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             _fullScreenMode = FullScreenMode.Windowed;
             _modified = false;
             LoadSettings();
             controlsMenu.gameObject.SetActive(false);
-            return true;
         }
 
         // Load a float setting and returns the current setting value
@@ -109,6 +109,8 @@ namespace UI_Audio
 
         public void OpenMenu()
         {
+            backMainMenuCanvas.gameObject.SetActive(!StartMenuManager.Instance.IsOpen());
+            resumeButtonCanvas.gameObject.SetActive(StartMenuManager.Instance.IsOpen());
             isOpen = true;
             defaultMenu.gameObject.SetActive(true);
         }
@@ -184,5 +186,7 @@ namespace UI_Audio
                 return;
             languageDropdown.options = languageManager.GetAllLanguages();
         }
+
+        public void BackToMainMenu() => LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Start);
     }
 }
