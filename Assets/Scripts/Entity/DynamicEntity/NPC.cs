@@ -39,13 +39,10 @@ namespace Entity.DynamicEntity {
 
         [ClientCallback]
         private IEnumerator CheckInteraction(Player player) {
-            InfoManager.SetInfoText(LanguageManager["interact"]);
-            InfoManager.OpenInfoBox();
             
             while (_canInteract) {
                 while (!InputManager.GetKeyDown("Interact")) {
                     if (!_canInteract) {
-                        InfoManager.CloseInfoBox();
                         yield break;
                     }
 
@@ -74,6 +71,7 @@ namespace Entity.DynamicEntity {
             if (!player.isLocalPlayer) return;
             
             _canInteract = true;
+            LocalGameManager.Instance.playerInfoManager._displayKey.StartDisplay();
             StopAllCoroutines();
             StartCoroutine(CheckInteraction(player));
         }
@@ -85,8 +83,10 @@ namespace Entity.DynamicEntity {
             if (isServer)
                 _playerPool.Remove(player);
 
-            if (player.isLocalPlayer)
-                _canInteract = false;
+            if (!player.isLocalPlayer) return;
+            
+            _canInteract = false;
+            LocalGameManager.Instance.playerInfoManager._displayKey.StopDisplay();
         }
 
         [ServerCallback]
