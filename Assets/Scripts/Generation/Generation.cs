@@ -26,13 +26,12 @@ namespace Generation {
 					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
 						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, _random, lMap);
-						if (!(dir switch {
-							'T' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1),
-							'B' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1),
-							'L' => TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1),
-							'R' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1),
-							_ => throw new Exception("invalid letter")
-						})) continue;
+						if (!(dir == 'T' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
+							: dir == 'B' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1)
+							: dir == 'L' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1)
+							: dir == 'R' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1)
+							: throw new Exception("invalid letter")
+						)) continue;
 						if (roomToAdd.Type == RoomType.Chest)
 							level.Chests += 1;
 						if (roomToAdd.Type == RoomType.Shop)
@@ -45,13 +44,12 @@ namespace Generation {
 					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
 						Room roomToAdd = _availableRooms[RoomType.PreBoss][_random.Next(_availableRooms[RoomType.PreBoss].Count)];
-						if (dir switch {
-								'T' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1),
-								'B' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1),
-								'L' => TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1),
-								'R' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1),
-								_ => throw new Exception("invalid letter")
-						}) placedLastRoom = true;
+						if (dir == 'T' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
+							: dir == 'B' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1)
+							: dir == 'L' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1)
+							: dir == 'R' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1)
+							: throw new Exception("invalid letter")
+						) placedLastRoom = true;
 					} 
 				}
 			}
@@ -101,13 +99,12 @@ namespace Generation {
 
 		private bool CheckForExits(Room[,] rMap, Room room, int x, int y, int i, int j) {
 			foreach ((char direction, int nbDir) in room.Exits) {
-				if (!(direction switch {
-					'B' => SubFunction(nbDir, j - x + 1, i - 1, rMap[i - 1, j], j + 1, true),
-					'T' => SubFunction(nbDir, j - x + 1, i + 1, rMap[i + 1, j], j + 1, true),
-					'L' => SubFunction(nbDir, i - y + 1, j - 1, rMap[i, j - 1], i + 1, false),
-					'R' => SubFunction(nbDir, i - y + 1, j + 1, rMap[i, j - 1], i + 1, false),
-					_ => throw new ArgumentException("invalid letter")
-				})) return false;
+				if (!(direction == 'B' ? SubFunction(nbDir, j - x + 1, i - 1, rMap[i - 1, j], j + 1, true)
+					: direction == 'T' ? SubFunction(nbDir, j - x + 1, i + 1, rMap[i + 1, j], j + 1, true)
+					: direction == 'L' ? SubFunction(nbDir, i - y + 1, j - 1, rMap[i, j - 1], i + 1, false)
+					: direction == 'R' ? SubFunction(nbDir, i - y + 1, j + 1, rMap[i, j - 1], i + 1, false)
+					: throw new ArgumentException("invalid letter")
+				)) return false;
 			}
 			return true;
 		}

@@ -7,20 +7,11 @@ using Mirror;
 using UI_Audio;
 using UnityEngine;
 
-namespace Entity.DynamicEntity
-{
+namespace Entity.DynamicEntity {
     
     [RequireComponent(typeof(Collider2D))]
-    public class NPC : DynamicEntity
-    {
-        private enum NPC_Type
-        {
-            Smith,
-            Seller,
-            Buyer,
-            ClassSelector,
-            StoryTeller
-        }
+    public class Npc: DynamicEntity {
+        private enum NpcType { Smith, Seller, Buyer, ClassSelector, StoryTeller }
         
         // A NPC is interactive !
         private Rigidbody2D _rigidBody; // For movements
@@ -31,16 +22,14 @@ namespace Entity.DynamicEntity
         private bool _canInteract, _isInteracting; // Client only
 
         [SerializeField] private PlayerClasses classType;
-        [SerializeField] private NPC_Type npcType;
+        [SerializeField] private NpcType npcType;
 
         [NonSerialized] public static PlayerInfoManager InfoManager;
         [NonSerialized] public static InventoryManager InventoryManager;
         [NonSerialized] public static LanguageManager LanguageManager;
         [NonSerialized] public static InputManager InputManager;
-        
 
-        private void Start()
-        {
+        private void Start() {
             TryGetComponent(out _rigidBody);
             TryGetComponent(out _collider);
             _collider.isTrigger = true;
@@ -49,17 +38,13 @@ namespace Entity.DynamicEntity
         }
 
         [ClientCallback]
-        private IEnumerator CheckInteraction(Player player)
-        {
+        private IEnumerator CheckInteraction(Player player) {
             InfoManager.SetInfoText(LanguageManager["interact"]);
             InfoManager.OpenInfoBox();
             
-            while (_canInteract)
-            {
-                while (!InputManager.GetKeyDown("Interact"))
-                {
-                    if (!_canInteract)
-                    {
+            while (_canInteract) {
+                while (!InputManager.GetKeyDown("Interact")) {
+                    if (!_canInteract) {
                         InfoManager.CloseInfoBox();
                         yield break;
                     }
@@ -79,8 +64,7 @@ namespace Entity.DynamicEntity
         [ClientCallback]
         private void StopInteracting() => _isInteracting = false;
         
-        private void OnTriggerEnter2D(Collider2D other)
-        {
+        private void OnTriggerEnter2D(Collider2D other) {
             if (!other.gameObject.TryGetComponent(out Player player))
                 return;
             
@@ -94,8 +78,7 @@ namespace Entity.DynamicEntity
             StartCoroutine(CheckInteraction(player));
         }
         
-        private void OnTriggerExit2D(Collider2D other)
-        {
+        private void OnTriggerExit2D(Collider2D other) {
             if (!other.gameObject.TryGetComponent(out Player player))
                 return;
             
@@ -107,65 +90,57 @@ namespace Entity.DynamicEntity
         }
 
         [ServerCallback]
-        private bool CanPlayerInteractWithNPC(Player player) => _playerPool.ContainsKey(player);
+        private bool CanPlayerInteractWithNpc(Player player) => _playerPool.ContainsKey(player);
 
         [Command(requiresAuthority = false)]
-        private void CmdInteract(Player player)
-        {
-            if (!CanPlayerInteractWithNPC(player))
+        private void CmdInteract(Player player) {
+            if (!CanPlayerInteractWithNpc(player))
                 return;
 
-            switch (npcType)
-            {
-                case NPC_Type.Smith:
+            switch (npcType) {
+                case NpcType.Smith:
                     InteractSmith(player.connectionToClient, player);
                     break;
-                case NPC_Type.Seller:
+                case NpcType.Seller:
                     InteractSeller(player.connectionToClient, player);
                     break;
-                case NPC_Type.Buyer:
+                case NpcType.Buyer:
                     InteractBuyer(player.connectionToClient, player);
                     break;
-                case NPC_Type.ClassSelector:
+                case NpcType.ClassSelector:
                     InteractClassSelector(player.connectionToClient, player);
                     break;
-                case NPC_Type.StoryTeller:
+                case NpcType.StoryTeller:
                     InteractStoryTeller(player.connectionToClient, player);
                     break;
             }
         }
 
         [TargetRpc]
-        private void InteractSmith(NetworkConnection target, Player player)
-        {
+        private void InteractSmith(NetworkConnection target, Player player) {
             InventoryManager.smithInventory.Open();
             // TODO
         }
         
         [TargetRpc]
-        private void InteractBuyer(NetworkConnection target, Player player)
-        {
+        private void InteractBuyer(NetworkConnection target, Player player) {
             // TODO
         }
         
         [TargetRpc]
-        private void InteractSeller(NetworkConnection target, Player player)
-        {
+        private void InteractSeller(NetworkConnection target, Player player) {
             // TODO
         }
         
         [TargetRpc]
-        private void InteractStoryTeller(NetworkConnection target, Player player)
-        {
+        private void InteractStoryTeller(NetworkConnection target, Player player) {
             // TODO
         }
         
         [TargetRpc]
-        private void InteractClassSelector(NetworkConnection target, Player player)
-        {
+        private void InteractClassSelector(NetworkConnection target, Player player) {
             _isInteracting = true;
-            switch (classType)
-            {
+            switch (classType) {
                 case PlayerClasses.Archer:
                     InfoManager.PrintDialog(new [] {"#archer-selector"}, StopInteracting);
                     player.CmdSwitchPlayerClass(PlayerClasses.Archer);
@@ -174,6 +149,8 @@ namespace Entity.DynamicEntity
                     InfoManager.PrintDialog(new [] {"#mage-selector"}, StopInteracting);
                     player.CmdSwitchPlayerClass(PlayerClasses.Mage);
                     break;
+                case PlayerClasses.Warrior:
+                    throw new NotImplementedException();
                 default:
                     InfoManager.PrintDialog(new [] {"#warrior-selector"}, StopInteracting);
                     player.CmdSwitchPlayerClass(PlayerClasses.Warrior);
