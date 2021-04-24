@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -86,6 +87,13 @@ namespace Mirror
             animationHash = new int[animator.layerCount];
             transitionHash = new int[animator.layerCount];
             layerWeight = new float[animator.layerCount];
+        }
+
+        public IEnumerator Reload()
+        {
+            Awake();
+            yield return new WaitForSeconds(0.1f);
+            if (animator) enabled = true;
         }
 
         void FixedUpdate()

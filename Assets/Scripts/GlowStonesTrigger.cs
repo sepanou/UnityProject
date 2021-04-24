@@ -7,8 +7,6 @@ public class GlowStonesTrigger : MonoBehaviour
     [SerializeField] private GameObject[] glowingSymbols;
     [SerializeField] private float delay;
     private List<SpriteRenderer> _renderers;
-    private IEnumerator _appearCoroutine, _disappearCoroutine;
-    private bool _isAppearAlive, _isDisappearAlive;
 
     void Start()
     {
@@ -19,9 +17,6 @@ public class GlowStonesTrigger : MonoBehaviour
             if (symbol.TryGetComponent(out SpriteRenderer spriteRenderer))
                 _renderers.Add(spriteRenderer);
         }
-        
-        _isAppearAlive = false;
-        _isDisappearAlive = false;
     }
 
     private void SetColors(float alpha)
@@ -47,8 +42,6 @@ public class GlowStonesTrigger : MonoBehaviour
         {
             SetColors(a);
             yield return new WaitForSeconds(delay);
-            if (!_isAppearAlive)
-                yield break;
         }
     }
 
@@ -61,24 +54,18 @@ public class GlowStonesTrigger : MonoBehaviour
         {
             SetColors(a);
             yield return new WaitForSeconds(delay);
-            if (!_isDisappearAlive)
-                yield break;
         }
     }
     
     private void OnTriggerEnter2D(Collider2D other)
     {
-        _isAppearAlive = true;
-        _isDisappearAlive = false;
-        _appearCoroutine = Appear();
-        StartCoroutine(_appearCoroutine);
+        StopAllCoroutines();
+        StartCoroutine(Appear());
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        _isAppearAlive = false;
-        _isDisappearAlive = true;
-        _disappearCoroutine = Disappear();
-        StartCoroutine(_disappearCoroutine);
+        StopAllCoroutines();
+        StartCoroutine(Disappear());
     }
 }
