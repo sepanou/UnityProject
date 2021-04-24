@@ -120453,6 +120453,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: IPF Props Wooden Gate
       objectReference: {fileID: 0}
+    - target: {fileID: 8861837535799849516, guid: e7cd3ed01a62cca48b0fc636ccd3b07b,
+        type: 3}
+      propertyPath: sceneId
+      value: 3905022265
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7cd3ed01a62cca48b0fc636ccd3b07b, type: 3}
 --- !u!1001 &626869950647745656

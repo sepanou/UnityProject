@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
-public class Door: MonoBehaviour {
+public class Door: NetworkBehaviour {
 	private Collider2D[] _doorCollider;
 	private SpriteRenderer _spriteRenderer;
 
@@ -17,10 +18,17 @@ public class Door: MonoBehaviour {
 		if (LocalGameManager.Instance.inputManager.GetKeyDown("Interact"))
 			ToggleDoor();
 	}
-
+	
+	[Command(requiresAuthority = false)]
 	private void ToggleDoor() {
 		_doorCollider[0].enabled = isOpen;
-		_spriteRenderer.sprite = isOpen ? closed : opened;
+		ToggleSprite(isOpen);
 		isOpen = !isOpen;
+	}
+
+	[ClientRpc]
+	private void ToggleSprite(bool isOpen2)
+	{
+		_spriteRenderer.sprite = isOpen2 ? closed : opened;
 	}
 }
