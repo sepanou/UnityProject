@@ -1,81 +1,180 @@
 using Entity.DynamicEntity.LivingEntity.Player;
-using System;
-using Entity.DynamicEntity.LivingEntity;
+using System.Collections.Generic;
+using DataBanks;
+using Mirror;
+using UI_Audio;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Entity.DynamicEntity.Weapon
 {
-    public abstract class Weapon : DynamicEntity
+    public abstract class Weapon : DynamicEntity, IInventoryItem
     {
-        public Player holder;
-        public bool equipped;
-        public int defaultDamage;
-        // For cooldown purposes
-        protected float LastAttackTime;
-        protected int specialAttackCost;
-        private string _name;
-        private Sprite _displayedSprite;
-        [SerializeField] protected Vector3 defaultCoordsWhenLikedToPlayer;
-
-        public string Name { get; private set; }
-        public Sprite DisplayedSprite { get; private set; }
+        private ContactFilter2D _filter;
         
-        public void OnSelect<T>(T source)
+        [SyncVar] public Player holder;
+        [SyncVar] public PlayerClasses compatibleClass;
+        [SyncVar] public bool equipped;
+        [SyncVar] public bool isGrounded;
+        [SyncVar] protected float LastAttackTime; // For cooldown purposes
+        [SyncVar] protected bool PlayerFound; // Has the player collected the item?
+
+        [SerializeField] protected int defaultDamage;
+        [SerializeField] protected int specialAttackCost;
+        [SerializeField] protected WeaponGeneratorDB weaponGenerator;
+        [SerializeField] protected Vector3 defaultCoordsWhenLikedToPlayer;
+        
+        public static event ChangedWeapon OnWeaponChange;
+        public delegate void ChangedWeapon(Weapon weapon);
+
+        public override bool OnSerialize(NetworkWriter writer, bool initialState)
         {
-            if (source is Player player)
-                holder = player;
-            else
-                return;
-            transform.parent = holder.transform;
-            transform.localPosition = defaultCoordsWhenLikedToPlayer;
-            equipped = true;
-            gameObject.SetActive(true);
+            base.OnSerialize(writer, initialState);
+            writer.WritePlayer(holder);
+            writer.WriteByte((byte) compatibleClass);
+            writer.WriteBoolean(equipped);
+            writer.WriteBoolean(isGrounded);
+            writer.WriteSingle(LastAttackTime);
+            writer.WriteBoolean(PlayerFound);
+            return true;
         }
 
-        public void OnUse<T>(T source)
+        public override void OnDeserialize(NetworkReader reader, bool initialState)
         {
-            if (source is Player player && player == holder && !CanAttack())
-                return;
-            // Can't run the default & special attack simultaneously !
-            if (Input.GetButtonDown("Fire1"))
-                DefaultAttack();
-            else if (holder.HasEnoughEnergy(specialAttackCost) && Input.GetButtonDown("Fire2"))
-                SpecialAttack();
+            base.OnDeserialize(reader, initialState);
+            holder = reader.ReadPlayer();
+            compatibleClass = (PlayerClasses) reader.ReadByte();
+            equipped = reader.ReadBoolean();
+            isGrounded = reader.ReadBoolean();
+            LastAttackTime = reader.ReadSingle();
+            PlayerFound = reader.ReadBoolean();
         }
 
-        public void OnDeselect<T>(T source)
+        protected void InstantiateWeapon()
         {
-            equipped = false;
-            gameObject.SetActive(false);
+            if (isServer)
+            {
+                isGrounded = true; // By default, weapon on the ground !
+                PlayerFound = false;
+                LastAttackTime = -1f;
+            }
+            _filter = new ContactFilter2D();
+
+            InstantiateDynamicEntity();
+            
+            if (holder) SetActive(equipped);
+
+            SceneManager.sceneLoaded += (scene, mode) => SetActive(equipped);
         }
 
-        public void OnDrop<T>(T source)
+        private void SetActive(bool state)
         {
-            holder = null;
-            equipped = false;
-            gameObject.transform.parent = null;
-            // source == mob or player or NPC
-            if (source is LivingEntity.LivingEntity livingEntity)
-                gameObject.transform.position = livingEntity.transform.position;
-            gameObject.SetActive(true);
+            Renderer.color = new Color(255, 255, 255, state ? 255 : 0);
+            enabled = state;
         }
+        
+        public int GetDamage() => defaultDamage;
+        public int GetSpecialAttackCost() => specialAttackCost;
 
+        public bool CanAttack()
+        {
+            return holder && equipped &&
+                   (LastAttackTime < 0 || !(Time.time - LastAttackTime < GetSpeed()));
+        }
+        
         protected abstract void DefaultAttack();
         protected abstract void SpecialAttack();
+        public abstract RectTransform GetInformationPopup();
+        public abstract string GetName();
 
-        private bool CanAttack()
+        [ServerCallback]
+        private bool CheckForCompatibleNearbyPlayers(out Player compatiblePlayer)
         {
-            return holder &&
-                   equipped &&
-                   (float.IsNaN(LastAttackTime) || !(Time.fixedTime - LastAttackTime < GetSpeed()));
+            List<Collider2D> results = new List<Collider2D>();
+            Physics2D.OverlapCircle(transform.position, 2f, _filter.NoFilter(), results);
+            
+            foreach (Collider2D obj in results)
+            {
+                if (!obj.gameObject.TryGetComponent(out Player player) ||
+                    player.playerClass != compatibleClass) continue;
+                compatiblePlayer = player;
+                return true;
+            }
+
+            compatiblePlayer = null;
+            return false;
+        }
+        
+        [ServerCallback]
+        protected void GroundedLogic()
+        {
+            if (!isGrounded || !CheckForCompatibleNearbyPlayers(out Player target)) return;
+            PlayerFound = true;
+            StartCoroutine(Collectibles.Collectibles.OnTargetDetected(this, target));
+        }
+        
+        // Validation checks before attacking
+        // Only the player with authority on the object can call this method
+        [ServerCallback]
+        public void UseWeapon(bool fireOneButton, bool fireTwoButton)
+        {
+            if (fireOneButton) DefaultAttack();
+            else if (fireTwoButton && holder.HasEnoughEnergy(specialAttackCost)) SpecialAttack();
         }
 
-        protected void InitialiseWeapon()
+        [ServerCallback]
+        public void Equip(Player source)
         {
-            Name = _name;
-            DisplayedSprite = _displayedSprite;
-            LastAttackTime = float.NaN;
-            InstantiateDynamicEntity();
+            holder = source;
+            equipped = true;
+            RpcEquip();
+        }
+        
+        [ServerCallback]
+        public void UnEquip()
+        {
+            equipped = false;
+            RpcUnEquip();
+        }
+
+        [ClientRpc]
+        private void RpcEquip()
+        {
+            transform.localPosition = defaultCoordsWhenLikedToPlayer;
+            SetActive(true);
+            if (holder.isLocalPlayer)
+                OnWeaponChange?.Invoke(this);
+        }
+
+        [ClientRpc] private void RpcUnEquip() => SetActive(false);
+
+        [ClientRpc] public void RpcSetWeaponParent(Transform parent) => transform.parent = parent;
+
+        // Called on client every time this object is spawned (especially when new players join)
+        [ClientCallback]
+        public override void OnStartClient()
+        {
+            if (!holder) return;
+            var transfo = transform;
+            transfo.parent = holder.transform;
+            transfo.position = defaultCoordsWhenLikedToPlayer;
+        }
+    }
+    
+    public static class WeaponSerialization
+    {
+        public static void WriteWeapon(this NetworkWriter writer, Weapon weapon)
+        {
+            writer.WriteBoolean(weapon);
+            if (weapon && weapon.netIdentity)
+                writer.WriteNetworkIdentity(weapon.netIdentity);
+        }
+
+        public static Weapon ReadWeapon(this NetworkReader reader)
+        {
+            if (!reader.ReadBoolean()) return null;
+            NetworkIdentity identity = reader.ReadNetworkIdentity();
+            return !identity ? null : identity.GetComponent<Weapon>();
         }
     }
 }

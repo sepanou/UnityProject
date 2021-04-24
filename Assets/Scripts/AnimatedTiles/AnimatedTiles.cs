@@ -1,9 +1,6 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-#if UNITY_EDITOR
-
-#endif
 
 namespace AnimatedTiles
 {

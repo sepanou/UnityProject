@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141685926c21913468251d6f225f952b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destinationSortingLayer: HubLayer1
-  destinationLayerMask: LAYER1
+  destinationSortingLayer: 
+  destinationLayerMask: 
 --- !u!68 &6295016638095607784
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -440,8 +440,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141685926c21913468251d6f225f952b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destinationSortingLayer: HubLayer2
-  destinationLayerMask: LAYER2
+  destinationSortingLayer: 
+  destinationLayerMask: 
 --- !u!68 &4020305838961901639
 EdgeCollider2D:
   m_ObjectHideFlags: 0

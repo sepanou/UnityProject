@@ -16,7 +16,7 @@ TagManager:
   - LAYER1
   - LAYER2
   - LAYER3
-  - 
+  - Cursor&Particles
   - 
   - 
   - 
@@ -49,4 +49,7 @@ TagManager:
     locked: 0
   - name: HubLayer3
     uniqueID: 117434105
+    locked: 0
+  - name: UI-SortingLayer
+    uniqueID: 3210828231
     locked: 0

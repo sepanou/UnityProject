@@ -1,38 +1,45 @@
-﻿using System;
+﻿using Mirror;
+using UI_Audio;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Weapon.RangedWeapon
 {
     public class Bow : RangedWeapon
     {
-        private void Start()
+        private void Start() => InstantiateRangeWeapon();
+
+        private void FixedUpdate()
         {
-            InitialiseWeapon();
+            // Only run by server
+            if (isServer && isGrounded && !PlayerFound) GroundedLogic();
+            if (!hasAuthority|| !equipped || isGrounded || !MouseCursor.Instance) return;
+            // Only run by the weapon's owner (client)
+            gameObject.transform.localRotation =
+                MouseCursor.Instance.OrientateObjectTowardsMouse(Vector2.right, out Vector2 orient);
+            CmdUpdateOrientation(orient);
         }
 
+        [ServerCallback]
         protected override void DefaultAttack()
         {
-            Animator.Play("DefaultAttack");
+            RpcAttackAnimation();
             Projectile.Projectile.SpawnProjectile(this, launchPoint.position);
-            LastAttackTime = Time.fixedTime;
+            LastAttackTime = Time.time;
         }
 
+        [ServerCallback]
         protected override void SpecialAttack()
         {
-            Animator.Play("SpecialAttack");
+            RpcAttackAnimation();
             Projectile.Projectile.SpawnProjectile(this, launchPoint.position);
             holder.ReduceEnergy(specialAttackCost);
-            LastAttackTime = Time.fixedTime;
+            LastAttackTime = Time.time;
         }
+
+        [ClientRpc] // By default, attack anims are slow -> no need for persistent NetworkAnimator
+        private void RpcAttackAnimation() => Animator.Play("DefaultAttack");
         
-        private void Update()
-        {
-            // Orients correctly the bow
-            orientation = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
-            orientation.Normalize();
-            gameObject.transform.localRotation = Quaternion.Euler(
-                new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, orientation))
-            );
-        }
+        [Command] // Authority does not change the fact that sync vars must be updated on the server
+        private void CmdUpdateOrientation(Vector2 bowOrientation) => orientation = bowOrientation;
     }
 }
