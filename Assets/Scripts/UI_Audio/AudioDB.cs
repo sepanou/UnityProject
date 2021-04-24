@@ -9,12 +9,8 @@ namespace UI_Audio
     {
         [SerializeField] private Sound[] sounds;
 
-        public bool Initialize()
-        {
-            AudioPlayer.AudioManager = this;
-            return true;
-        }
-        
+        public void Initialize() => AudioPlayer.AudioManager = this;
+
         public void PlayUISound(string soundKey) => AudioPlayer.PlaySoundNoDistance(soundKey);
         
         public void PlayMusic(string musicKey) => AudioPlayer.PlayMusic(musicKey);

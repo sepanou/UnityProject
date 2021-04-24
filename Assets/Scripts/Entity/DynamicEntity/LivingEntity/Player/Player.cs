@@ -256,11 +256,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         private void Update()
         {
             // For inputs
-            if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen) return;
+            if (!isLocalPlayer) return;
             
             if (InputManager.GetKeyDown("OpenMenu"))
             {
-                MenuSettingsManager.Instance.OpenMenu();
+                if (!MenuSettingsManager.Instance.isOpen)
+                    MenuSettingsManager.Instance.OpenMenu();
+                else
+                    MenuSettingsManager.Instance.CloseMenu();
                 return;
             }
 
