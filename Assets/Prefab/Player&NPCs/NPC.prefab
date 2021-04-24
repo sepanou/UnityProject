@@ -82,7 +82,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  Renderer: {fileID: 0}
+  Renderer: {fileID: 8619780199017869692}
   speed: 2
   classType: 0
   npcType: 3

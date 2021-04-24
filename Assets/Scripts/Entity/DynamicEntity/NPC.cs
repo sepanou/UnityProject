@@ -149,8 +149,6 @@ namespace Entity.DynamicEntity {
                     InfoManager.PrintDialog(new [] {"#mage-selector"}, StopInteracting);
                     player.CmdSwitchPlayerClass(PlayerClasses.Mage);
                     break;
-                case PlayerClasses.Warrior:
-                    break;
                 default:
                     InfoManager.PrintDialog(new [] {"#warrior-selector"}, StopInteracting);
                     player.CmdSwitchPlayerClass(PlayerClasses.Warrior);
