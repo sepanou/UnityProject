@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Entity.DynamicEntity {
     
     [RequireComponent(typeof(Collider2D))]
-    public class Npc: DynamicEntity {
+    public class NPC: DynamicEntity {
         private enum NpcType { Smith, Seller, Buyer, ClassSelector, StoryTeller }
         
         // A NPC is interactive !
@@ -150,7 +150,7 @@ namespace Entity.DynamicEntity {
                     player.CmdSwitchPlayerClass(PlayerClasses.Mage);
                     break;
                 case PlayerClasses.Warrior:
-                    throw new NotImplementedException();
+                    break;
                 default:
                     InfoManager.PrintDialog(new [] {"#warrior-selector"}, StopInteracting);
                     player.CmdSwitchPlayerClass(PlayerClasses.Warrior);

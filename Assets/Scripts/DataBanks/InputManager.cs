@@ -20,7 +20,7 @@ namespace DataBanks {
 		private string _path;
 
 		public void Initialize() {
-			Npc.InputManager = this;
+			NPC.InputManager = this;
 			Player.InputManager = this;
 			ModifyControls.InputManager = this;
 			PlayerInfoManager.InputManager = this;
