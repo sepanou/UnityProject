@@ -23,6 +23,8 @@ namespace UI_Audio
         [Header("Start Menu")]
         [SerializeField] private RectTransform worldParticles;
         [SerializeField] private RectTransform startMenuCanvas;
+        private bool _isOpen;
+        public bool IsOpen() => _isOpen;
         
         [NonSerialized] public static StartMenuManager Instance;
         [NonSerialized] public static PlayerInfoManager InfoManger;
@@ -47,12 +49,14 @@ namespace UI_Audio
 
         public void CloseStartMenu()
         {
+            _isOpen = false;
             worldParticles.gameObject.SetActive(false);
             startMenuCanvas.gameObject.SetActive(false);
         }
 
         public void OpenStartMenu()
         {
+            _isOpen = true;
             worldParticles.gameObject.SetActive(true);
             defaultFields.gameObject.SetActive(true);
             CloseSubFields();

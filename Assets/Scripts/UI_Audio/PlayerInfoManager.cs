@@ -59,7 +59,7 @@ namespace UI_Audio
                 Destroy(this);
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             NPC.InfoManager = this;
             StartMenuManager.InfoManger = this;
@@ -85,8 +85,6 @@ namespace UI_Audio
             // Player Class UI
             Player.OnLocalPlayerClassChange += ChangeLocalPlayerClassInfo;
             Weapon.OnWeaponChange += UpdateCurrentWeapon;
-            
-            return true;
         }
 
         private IEnumerator WriteDialog(string[] dialogKeys, UnityAction callback, float delay = 0.02f)
