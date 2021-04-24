@@ -47,7 +47,7 @@ namespace UI_Audio
         public static void PlayMusic(string musicKey)
         {
             DontDestroyOnLoad(MusicHandler);
-            
+
             if (_currentMusic)
                 _currentMusic.Stop();
             

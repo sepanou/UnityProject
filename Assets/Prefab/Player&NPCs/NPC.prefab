@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8619780199017869692}
   - component: {fileID: 4964651069413724654}
   m_Layer: 0
-  m_Name: MageSelector
+  m_Name: NPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,7 +50,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.55
 --- !u!114 &2038624312625453820
 MonoBehaviour:
   m_ObjectHideFlags: 0
