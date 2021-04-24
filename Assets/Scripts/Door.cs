@@ -22,10 +22,8 @@ public class Door : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        Debug.Log("yeet");
         if (LocalGameManager.Instance.inputManager.GetKeyDown("Interact"))
         {
-            Debug.Log("Salut");
             ToggleDoor();
         }
     }
