@@ -78,7 +78,7 @@ namespace UI_Audio
             }
             
             void Activate() => pseudoFields.gameObject.SetActive(true);
-            InfoManger.SetWarningButtonActions(Activate, Activate);
+            InfoManger.SetWarningButtonActions(Activate);
             InfoManger.SetWarningText("Pseudo length must be greater or equal to four...");
             InfoManger.OpenWarningBox();
         }
@@ -95,7 +95,7 @@ namespace UI_Audio
                     if (currentFields)
                     {
                         void Activate() => currentFields.gameObject.SetActive(true);
-                        InfoManger.SetWarningButtonActions(Activate, Activate);
+                        InfoManger.SetWarningButtonActions(Activate);
                     }
                     InfoManger.SetWarningText("Timed out after not receiving any message...\n" +
                                               "Connection Failed!");
