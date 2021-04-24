@@ -14,7 +14,7 @@ public class Door: NetworkBehaviour {
 	[SerializeField] private bool isOpen;
 	[SerializeField] private Sprite closed;
 	[SerializeField] private Sprite opened;
-	private Dictionary<Player, bool> _playerPool;
+	private HashSet<Player> _playerPool;
 	private bool _canInteract;
 	[NonSerialized] public static InputManager InputManager;
 	[NonSerialized] public static PlayerInfoManager InfoManager;
@@ -24,23 +24,17 @@ public class Door: NetworkBehaviour {
 	{
 		_doorCollider = GetComponents<Collider2D>();
 		_spriteRenderer = GetComponent<SpriteRenderer>();
-		_playerPool = new Dictionary<Player, bool>();
+		_playerPool = new HashSet<Player>();
 		_canInteract = false;
 	}
 
-	/*
-	private void OnTriggerStay2D(Collider2D other) {
-		if (LocalGameManager.Instance.inputManager.GetKeyDown("Interact"))
-			ToggleDoor();
-	}*/
-	
 	private void OnTriggerEnter2D(Collider2D other)
 	{
 		if (!other.gameObject.TryGetComponent(out Player player))
 			return;
             
 		if (isServer)
-			_playerPool[player] = false;
+			_playerPool.Add(player);
 
 		if (!player.isLocalPlayer) return;
             
@@ -67,8 +61,7 @@ public class Door: NetworkBehaviour {
 		{
 			if (InputManager.GetKeyDown("Interact"))
 			{
-				Debug.Log("bientot");
-				ToggleDoor();
+				ToggleDoor(player);
 				yield return null;
 			}
 
@@ -77,9 +70,9 @@ public class Door: NetworkBehaviour {
 	}
 	
 	[Command(requiresAuthority = false)]
-	private void ToggleDoor()
+	private void ToggleDoor(Player player)
 	{
-		if (!_canInteract) return;
+		if (!_playerPool.Contains(player)) return;
 		_doorCollider[0].enabled = isOpen;
 		ToggleSprite(isOpen);
 		isOpen = !isOpen;
