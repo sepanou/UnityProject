@@ -45,6 +45,7 @@ public class Door: NetworkBehaviour {
 		if (!player.isLocalPlayer) return;
             
 		_canInteract = true;
+		LocalGameManager.Instance.playerInfoManager._displayKey.StartDisplay();
 		StartCoroutine(CheckInteraction(player));
 	}
         
@@ -56,8 +57,10 @@ public class Door: NetworkBehaviour {
 		if (isServer)
 			_playerPool.Remove(player);
 
-		if (player.isLocalPlayer)
-			_canInteract = false;
+		if (!player.isLocalPlayer) return;
+		
+		_canInteract = false;
+		LocalGameManager.Instance.playerInfoManager._displayKey.StopDisplay();
 	}
 	
 	[ClientCallback]
