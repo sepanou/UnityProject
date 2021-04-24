@@ -23,7 +23,7 @@ namespace Generation {
 			bool placedLastRoom = false;
 			while (!placedLastRoom) {
 				foreach (Room roomToCheckOn in lMap) {
-					foreach ((char dir, int nbDir) in roomToCheckOn.GetExits()) {
+					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
 						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, _random, lMap);
 						if (!(dir switch {
@@ -33,16 +33,16 @@ namespace Generation {
 							'R' => TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1),
 							_ => throw new Exception("invalid letter")
 						})) continue;
-						if (roomToAdd.GetRoomType() == RoomType.Chest)
+						if (roomToAdd.Type == RoomType.Chest)
 							level.Chests += 1;
-						if (roomToAdd.GetRoomType() == RoomType.Shop)
+						if (roomToAdd.Type == RoomType.Shop)
 							level.Shop = true;
 					}
 				}
 				int prob = _random.Next(100);
 				if (level.RoomsList.Count > 15 && prob < level.RoomsList.Count) return;
 				foreach (Room roomToCheckOn in lMap) {
-					foreach ((char dir, int nbDir) in roomToCheckOn.GetExits()) {
+					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
 						Room roomToAdd = _availableRooms[RoomType.PreBoss][_random.Next(_availableRooms[RoomType.PreBoss].Count)];
 						if (dir switch {
@@ -69,7 +69,7 @@ namespace Generation {
 		}
 		
 		private bool TryAddRoom(ICollection<Room> lMap, Room[,] rMap, Room room, int x, int y) {
-			(int roomWidth, int roomHeight) = room.GetDimensions();
+			(int roomWidth, int roomHeight) = room.Dimensions;
 			if (x < 0 || y < 0 || x >= rMap.GetLength(1) || y >= rMap.GetLength(0))
 				return false;
 			for (int i = y; i < roomHeight / 16 + y; ++i)
@@ -92,7 +92,7 @@ namespace Generation {
 			Room neighbour = room;
 			(int nX, int nY) = neighbour.Dimensions;
 			desiredDir -= isX ? nX : nY;
-			foreach ((char nDir, int nNbDir) in neighbour.GetExits()) {
+			foreach ((char nDir, int nNbDir) in neighbour.Exits) {
 				if (nDir != 'T' || nNbDir != desiredDir) continue;
 				return true;
 			}
@@ -100,7 +100,7 @@ namespace Generation {
 		}
 
 		private bool CheckForExits(Room[,] rMap, Room room, int x, int y, int i, int j) {
-			foreach ((char direction, int nbDir) in room.GetExits()) {
+			foreach ((char direction, int nbDir) in room.Exits) {
 				if (!(direction switch {
 					'B' => SubFunction(nbDir, j - x + 1, i - 1, rMap[i - 1, j], j + 1, true),
 					'T' => SubFunction(nbDir, j - x + 1, i + 1, rMap[i + 1, j], j + 1, true),
