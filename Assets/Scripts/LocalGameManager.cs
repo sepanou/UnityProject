@@ -61,6 +61,7 @@ public class LocalGameManager: MonoBehaviour {
 
 		switch (LocalState) {
 			case LocalGameStates.Start:
+				startMenuManager.StopServerAndOrClient();
 				audioManager.PlayMusic("MainMenuMusic");
 				menuSettingsManager.CloseMenu();
 				startMenuManager.OpenStartMenu();
