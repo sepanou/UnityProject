@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Entity.DynamicEntity;
-using Entity.DynamicEntity.LivingEntity.Player;
 using UI_Audio;
 using UnityEngine;
 
@@ -20,8 +18,6 @@ namespace DataBanks {
 		private string _path;
 
 		public void Initialize() {
-			Npc.InputManager = this;
-			Player.InputManager = this;
 			ModifyControls.InputManager = this;
 			PlayerInfoManager.InputManager = this;
 			Door.InputManager = this;
