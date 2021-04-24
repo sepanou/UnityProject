@@ -28,6 +28,7 @@ namespace DataBanks
             Player.InputManager = this;
             ModifyControls.InputManager = this;
             PlayerInfoManager.InputManager = this;
+            Door.InputManager = this;
 
             _modified = false;
             _path = Path.Combine(Application.persistentDataPath, "InputManager.json");
