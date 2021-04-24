@@ -9,13 +9,15 @@ namespace UI_Audio
 {
     public class ModifyControls : MonoBehaviour
     {
+        [NonSerialized] public static InputManager InputManager;
+        
         [SerializeField] private TMP_Text keyLabel;
         [SerializeField] private Button button;
         [SerializeField] private string actionName;
 
         private void Start()
         {
-            if (!InputManager.Instance || !InputManager.Instance.TryGetKeyFromAction(actionName, out KeyCode key)) return;
+            if (!InputManager || !InputManager.TryGetKeyFromAction(actionName, out KeyCode key)) return;
             if (keyLabel)
                 keyLabel.text = key.ToString();
         }
@@ -34,7 +36,7 @@ namespace UI_Audio
             {
                 if (!Input.GetKey(keyCode)) continue;
                 keyLabel.text = keyCode.ToString();
-                InputManager.Instance.ChangeKeyEntry(actionName, keyCode);
+                InputManager.ChangeKeyEntry(actionName, keyCode);
                 break;
             }
 

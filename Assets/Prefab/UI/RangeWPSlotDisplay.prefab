@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b33ce523cee31684e9cd749c7b614f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectTransform: {fileID: 0}
+  rectTransform: {fileID: 6899202111344129174}
   projectileSpeedMultiplier: {fileID: 4280415816047781323}
   projectileSizeMultiplier: {fileID: 4280415816615299197}
   projectileNumber: {fileID: 4280415816464792804}

@@ -1,6 +1,5 @@
 ﻿using System;
 using DataBanks;
-using Entity.DynamicEntity.LivingEntity.Player;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
@@ -15,65 +14,39 @@ namespace UI_Audio
         [SerializeField] private Dropdown resolutionDropdown, screenModeDropdown;
         
         [Header("Sound Settings")]
-        [SerializeField] private AudioDB audioDB;
         [SerializeField] private AudioMixer audioManager;
         [SerializeField] private Slider musicSlider, soundSlider;
-
-        [Header("Input Settings")]
-        [SerializeField] private InputManager inputManager;
 
         [Header("Others")]
         [SerializeField] private Dropdown languageDropdown;
         [SerializeField] private LanguageManager languageManager;
-        public RangedWeaponDescription rangedWeaponDescription;
-        public MeleeWeaponDescription meleeWeaponDescription;
-        public CharmDescription charmDescription;
-
-        [Header("Cameras")]
-        public Camera mouseAndParticlesCamera;
-        public Camera overlayCamera;
-        public Camera worldCamera; // = player's camera when he enters the game
 
         [Header("Menus logic")]
         [SerializeField] private EventSystem eventSystem;
         [SerializeField] private RectTransform defaultMenu;
         [SerializeField] private RectTransform controlsMenu;
 
-        public static MenuSettingsManager Instance;
+        [NonSerialized] public static MenuSettingsManager Instance;
 
         public bool isOpen;
         private FullScreenMode _fullScreenMode;
         private bool _modified;
 
-        private void OnEnable()
+        private void Awake()
         {
-            if (!InputManager.Instance)
-                inputManager.Awake();
-            if (!AudioDB.Instance)
-                audioDB.Awake();
-            if (!LanguageManager.Instance)
-                languageManager.Awake();
-        
             if (!Instance)
                 Instance = this;
-            else
-            {
+            else 
                 Destroy(this);
-                return;
-            }
-            
+        }
+
+        public bool Initialize()
+        {
             _fullScreenMode = FullScreenMode.Windowed;
             _modified = false;
             LoadSettings();
             controlsMenu.gameObject.SetActive(false);
-            CloseMenu();
-            
-            // Descriptive Menus
-            rangedWeaponDescription.gameObject.SetActive(false);
-            meleeWeaponDescription.gameObject.SetActive(false);
-            charmDescription.gameObject.SetActive(false);
-            
-            audioDB.PlayMusic("MainMenuMusic");
+            return true;
         }
 
         // Load a float setting and returns the current setting value
@@ -134,15 +107,6 @@ namespace UI_Audio
             PlayerPrefs.SetInt("LanguageIndex", languageDropdown.value);
         }
 
-        public Camera SetMainCameraToPlayer(Player player)
-        {
-            Transform camTransform = worldCamera.transform;
-            worldCamera.gameObject.SetActive(true);
-            camTransform.parent = player.transform;
-            camTransform.localPosition = new Vector3(0, 0, -10);
-            return worldCamera;
-        }
-
         public void OpenMenu()
         {
             isOpen = true;
@@ -156,7 +120,7 @@ namespace UI_Audio
             defaultMenu.gameObject.SetActive(false);
         }
 
-        public void SaveInputManager() => InputManager.Instance.SaveData();
+        public void SaveInputManager() => LocalGameManager.Instance.inputManager.SaveData();
     
         public void SetEventSystemActive(bool state)
         {

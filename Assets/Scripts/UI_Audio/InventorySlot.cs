@@ -67,8 +67,7 @@ namespace UI_Audio
             if (state)
             {
                 RectTransform info = _item.GetInformationPopup();
-                if (info)
-                    info.transform.parent = infoDisplay;
+                info.gameObject.transform.SetParent(infoDisplay.transform, false);
             }
             infoDisplay.gameObject.SetActive(state);
         }

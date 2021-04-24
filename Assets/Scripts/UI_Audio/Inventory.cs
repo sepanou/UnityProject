@@ -10,10 +10,13 @@ namespace UI_Audio
     
     public class Inventory : MonoBehaviour
     {
-        [SerializeField] private InventorySlot[] slots;
-        private int _count, _size;
 
-        private void Start()
+        [SerializeField] private InventorySlot[] slots;
+        
+        private int _count, _size;
+        public bool IsOpen => gameObject.activeSelf;
+
+        private void Awake()
         {
             if (slots.Length == 0)
                 slots = transform.GetComponentsInChildren<InventorySlot>();
@@ -42,16 +45,16 @@ namespace UI_Audio
         public bool TryAddItem(IInventoryItem item)
         {
             if (_count >= _size || Contains(item)) return false;
-
+            
             foreach (InventorySlot slot in slots)
             {
                 if (slot.IsOccupied) continue;
                 slot.SetSlotItem(item);
-                break;
+                _count++;
+                return true;
             }
             
-            _size++;
-            return true;
+            return false;
         }
 
         public bool TryRemoveItem(IInventoryItem item)
@@ -66,5 +69,9 @@ namespace UI_Audio
 
             return false;
         }
+
+        public void Open() => gameObject.SetActive(true);
+
+        public void Close() => gameObject.SetActive(false);
     }
 }

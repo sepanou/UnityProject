@@ -150,6 +150,18 @@
                 {
                     "fieldKey": "connect",
                     "translation": "Connect"
+                },
+                {
+                    "fieldKey": "#warrior-selector",
+                    "translation": "So you'd like to be a warrior, ehh?\nGood choice!\nNothing better than a mighty sword and a metal shield!"
+                },
+                {
+                    "fieldKey": "#mage-selector",
+                    "translation": "Mastering the arcane arts is anything but easy!\nWill you be strong enough to subdue this knowledge?"
+                },
+                {
+                    "fieldKey": "#archer-selector",
+                    "translation": "Our accuracy and our semi-rapid movements is what qualifies us the best!\nYou can give it a try - after all, all you risk is death..."
                 }
             ]
         },
@@ -303,6 +315,18 @@
                 {
                     "fieldKey": "connect",
                     "translation": "Se connecter"
+                },
+                {
+                    "fieldKey": "#warrior-selector",
+                    "translation": "Mmhh... Tu voudrais devenir un guerrier, pas vrai ?\nC'est un bon choix !\nRien de mieux qu'une puissante épée et qu'un large bouclier !"
+                },
+                {
+                    "fieldKey": "#mage-selector",
+                    "translation": "La maîtrise des forces magiques est tout sauf facile !\nSeras-tu assez fort pour embrasser cette connaissance ?"
+                },
+                {
+                    "fieldKey": "#archer-selector",
+                    "translation": "Notre précision et nos mouvements semi-rapides est ce qui nous caractérise le mieux !\nBien sûr, tu peux t'y essayer ; après tout, tout ce que tu risques est la mort..."
                 }
             ]
         }

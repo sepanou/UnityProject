@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DataBanks;
 using Entity.Collectibles;
@@ -17,13 +18,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player
     
     public class Player : LivingEntity
     {
-        public Weapon.Weapon toSpawn;
-        public Vector3 toCoords;
-        
         private static readonly string[] IdleAnims = {"IdleN", "IdleW", "IdleS", "IdleE"};
         private static readonly string[] WalkAnims = {"WalkN", "WalkW", "WalkS", "WalkE"};
         public static event LocalPlayerClassChanged OnLocalPlayerClassChange;
         public static event RemotePlayerClassChanged OnRemotePlayerClassChange;
+        [NonSerialized] public static InputManager InputManager;
         public delegate void LocalPlayerClassChanged(ClassData data);
 
         public delegate void RemotePlayerClassChanged(ClassData data);
@@ -33,7 +32,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         [SyncVar] public string playerName;
         [SyncVar] public PlayerClasses playerClass;
         [SyncVar] [SerializeField] protected Weapon.Weapon weapon;
-        [SyncVar] private int _money;
+        [SyncVar] private int _kibrient;
+        [SyncVar] private int _orchid;
         [SyncVar] [SerializeField] private int energy;
 
         private Camera _mainCamera;
@@ -42,13 +42,18 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         // serialization of Weapon objects, but it does for GameObject !
         [ShowInInspector]
         private readonly SyncList<Weapon.Weapon> _weapons = new SyncList<Weapon.Weapon>();
+        private Inventory _inventory;
         private int _lastAnimationStateIndex;
+
+        public int Kibrient => _kibrient;
+        public int Orchid => _orchid;
 
         public override bool OnSerialize(NetworkWriter writer, bool initialState)
         {
             base.OnSerialize(writer, initialState);
             writer.WriteInt32(energy);
-            writer.WriteInt32(_money);
+            writer.WriteInt32(_kibrient);
+            writer.WriteInt32(_orchid);
             writer.WriteByte((byte) playerClass);
             writer.WriteString(playerName);
             writer.WriteWeapon(weapon);
@@ -59,7 +64,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         {
             base.OnDeserialize(reader, initialState);
             energy = reader.ReadInt32();
-            _money = reader.ReadInt32();
+            _kibrient = reader.ReadInt32();
+            _orchid = reader.ReadInt32();
             playerClass = (PlayerClasses) reader.ReadByte();
             playerName = reader.ReadString();
             weapon = reader.ReadWeapon();
@@ -74,13 +80,19 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             OnLocalPlayerClassChange += ChangeAnimator;
             OnRemotePlayerClassChange += ChangeAnimator;
             if (!isLocalPlayer) return;
-            _mainCamera = MenuSettingsManager.Instance.SetMainCameraToPlayer(this);
+            _inventory = InventoryManager.Instance.playerInventory;
+            _mainCamera = LocalGameManager.Instance.SetMainCameraToPlayer(this);
             _weapons.Callback += OnWeaponsUpdated;
+            PlayerInfoManager.Instance.UpdateMoneyAmount(this);
+            SwitchClass(playerClass);
         }
 
         // Can be executed by both client & server (Synced data analysis) -> double check
         public bool HasEnoughEnergy(int amount) => energy >= amount;
-        public bool HasEnoughMoney(int amount) => _money >= amount;
+        
+        public bool HasEnoughKibrient(int amount) => _kibrient >= amount;
+        
+        public bool HasEnoughOrchid(int amount) => _orchid >= amount;
 
         public Vector3 WorldToScreenPoint(Vector3 position)
             => _mainCamera ? _mainCamera.WorldToScreenPoint(position) : Vector3.zero;
@@ -105,10 +117,22 @@ namespace Entity.DynamicEntity.LivingEntity.Player
 
         private void OnWeaponsUpdated(SyncList<Weapon.Weapon>.Operation op, int itemIndex, Weapon.Weapon oldItem, Weapon.Weapon newItem)
         {
-            if (op != SyncList<Weapon.Weapon>.Operation.OP_ADD) return;
-            Debug.Log("New weapon added !");
+            if (!isLocalPlayer) return;
             
-            // Modify inventory HERE
+            switch (op)
+            {
+                case SyncList<Weapon.Weapon>.Operation.OP_ADD:
+                    _inventory.TryAddItem(newItem);
+                    break;
+                case SyncList<Weapon.Weapon>.Operation.OP_CLEAR:
+                    _inventory.ClearInventory();
+                    break;
+                case SyncList<Weapon.Weapon>.Operation.OP_REMOVEAT:
+                    _inventory.TryRemoveItem(oldItem);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(op), op, null);
+            }
         }
         
         [ServerCallback] public void ReduceEnergy(int amount) => energy = amount >= energy ? 0 : energy - amount;
@@ -185,7 +209,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         }
         
         [Command]
-        private void CmdSwitchPlayerClass(PlayerClasses @class)
+        public void CmdSwitchPlayerClass(PlayerClasses @class)
         {
             if (@class == playerClass) return;
             RpcSwitchPlayerClass(@class);
@@ -217,13 +241,13 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen) return;
             int horizontal = 0;
             int vertical = 0;
-            if (InputManager.Instance.GetKeyPressed("Forward"))
+            if (InputManager.GetKeyPressed("Forward"))
                 vertical++;
-            if (InputManager.Instance.GetKeyPressed("Backward"))
+            if (InputManager.GetKeyPressed("Backward"))
                 vertical--;
-            if (InputManager.Instance.GetKeyPressed("Left"))
+            if (InputManager.GetKeyPressed("Left"))
                 horizontal--;
-            if (InputManager.Instance.GetKeyPressed("Right"))
+            if (InputManager.GetKeyPressed("Right"))
                 horizontal++;
             CmdMove(horizontal, vertical);
         }
@@ -234,23 +258,34 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             // For inputs
             if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen) return;
             
-            if (InputManager.Instance.GetKeyDown("OpenMenu"))
+            if (InputManager.GetKeyDown("OpenMenu"))
             {
                 MenuSettingsManager.Instance.OpenMenu();
                 return;
             }
+
+            if (InputManager.GetKeyDown("OpenInventory"))
+            {
+                if (!_inventory.IsOpen)
+                    _inventory.Open();
+                else
+                    _inventory.Close();
+                return;
+            }
             
-            CmdAttack(InputManager.Instance.GetKeyDown("DefaultAttack"), 
-                InputManager.Instance.GetKeyDown("SpecialAttack"));
+            if (_inventory.IsOpen) return;
+
+            CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
+                InputManager.GetKeyDown("SpecialAttack"));
 
             // Change class (for testing)
             if (Input.GetKeyDown(KeyCode.C))
                 CmdSwitchPlayerClass(playerClass == PlayerClasses.Archer ? PlayerClasses.Mage :
                     playerClass == PlayerClasses.Mage ? PlayerClasses.Warrior : PlayerClasses.Archer);
 
-            if (netIdentity.isServer && toSpawn && Input.GetKeyDown(KeyCode.K))
+            if (netIdentity.isServer && Input.GetKeyDown(KeyCode.K))
             {
-                NetworkServer.Spawn(Instantiate(toSpawn, toCoords, Quaternion.identity).gameObject);
+                NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateBow().gameObject);
                 Debug.Log("Spawned !");
             }
 

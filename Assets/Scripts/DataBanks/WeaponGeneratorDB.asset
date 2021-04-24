@@ -12,3 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b37469e85f809d49b7b857e84be6f55, type: 3}
   m_Name: WeaponGeneratorDB
   m_EditorClassIdentifier: 
+  charmModel: {fileID: 0}
+  charmSprites: []
+  bowModel: {fileID: 2017461150231793244, guid: 9c948cbb36b86df43b6f88a7aefa7a87,
+    type: 3}
+  bowSprites:
+  - {fileID: -8828886737162667788, guid: 3c8a34e21f8816e4f97988951d4d7615, type: 3}
+  staffModel: {fileID: 7279687285391168874, guid: 2d4d8f8747bd7384ab280dd034ffcf2f,
+    type: 3}
+  staffSprites:
+  - {fileID: 21300000, guid: cbab688443865d048814ae2cae7b4c7f, type: 3}
+  swordModel: {fileID: 3427838936398561976, guid: 982a241209a47f04cb5a7e825a1f3fdd,
+    type: 3}
+  swordSprites:
+  - {fileID: 21300000, guid: a17f6f67ce0185a48acb7e46affc123e, type: 3}

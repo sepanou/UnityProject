@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 994c3615e101ddf4d818fafbafe20943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectTransform: {fileID: 0}
+  rectTransform: {fileID: 4928122436269126383}
   defaultAttackBonus: {fileID: 2359254515728165850}
   specialAttackBonus: {fileID: 2359254515640781214}
   healthBonus: {fileID: 2359254514241708641}

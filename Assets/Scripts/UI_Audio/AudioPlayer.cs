@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace UI_Audio
         private static readonly HashSet<Sound> OneTimeSounds = new HashSet<Sound>();
         private static readonly GameObject OneTimeSoundsHandler = new GameObject("OneTimeSoundsHandler");
 
+        [NonSerialized] public static AudioDB AudioManager;
         private static readonly HashSet<Sound> Musics = new HashSet<Sound>();
         private static readonly GameObject MusicHandler = new GameObject("MusicPlayer");
         private static AudioSource _currentMusic;
@@ -31,7 +33,7 @@ namespace UI_Audio
                 return source;
             }
             
-            if (!AudioDB.Instance || !AudioDB.Instance.TryGetSound(soundKey, out Sound newSound))
+            if (!AudioManager || !AudioManager.TryGetSound(soundKey, out Sound newSound))
                 return null;
             
             newSound.SetAudioSource(target.AddComponent<AudioSource>());
@@ -61,7 +63,7 @@ namespace UI_Audio
         public void Start()
         {
             _adjustingVolume = false;
-            _listener = MenuSettingsManager.Instance.worldCamera.gameObject.GetComponent<AudioListener>();
+            _listener = LocalGameManager.Instance.worldCamera.gameObject.GetComponent<AudioListener>();
             foreach (string soundKey in soundsKeys)
                 AddSound(soundKey);
         }
@@ -107,7 +109,7 @@ namespace UI_Audio
         
         public void AddSound(string key)
         {
-            if (!AudioDB.Instance || !ContainsSound(key, out Sound s) || !AudioDB.Instance.TryGetSound(key, out Sound sound))
+            if (!AudioManager || !ContainsSound(key, out Sound s) || !AudioManager.TryGetSound(key, out Sound sound))
                 return;
 
             AudioSource source = gameObject.AddComponent<AudioSource>();

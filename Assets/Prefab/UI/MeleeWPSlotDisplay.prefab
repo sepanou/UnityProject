@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 450e8f75b69e5224bb2b3120da558d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectTransform: {fileID: 0}
+  rectTransform: {fileID: 5976715924126044759}
   knockBackMultiplier: {fileID: 2935983303324426624}
   weaponSizeMultiplier: {fileID: 3902504532012110652}
   defaultDamageMultiplier: {fileID: 3902504533287502793}

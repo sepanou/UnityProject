@@ -1,4 +1,5 @@
-﻿using DataBanks;
+﻿using System;
+using DataBanks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,8 @@ namespace UI_Audio
         private Text _text;
         private TMP_Text _tmpText;
 
+        [NonSerialized] public static LanguageManager LanguageManager;
+
         void Awake()
         {
             LanguageManager.OnLanguageChange += OnLanguageChange;
@@ -28,7 +31,7 @@ namespace UI_Audio
             if (!_text && !_tmpText)
                 return;
             
-            string translation = LanguageManager.Instance[fieldKey];
+            string translation = LanguageManager[fieldKey];
             
             if (lowerCase)
                 translation = translation.ToLower();

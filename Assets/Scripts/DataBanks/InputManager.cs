@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Entity.DynamicEntity;
+using Entity.DynamicEntity.LivingEntity.Player;
+using UI_Audio;
 using UnityEngine;
 
 namespace DataBanks
@@ -14,25 +17,22 @@ namespace DataBanks
             public string actionName;
             public KeyCode keyEntry;
         }
-        
-        public static InputManager Instance;
 
         [SerializeField] private InputEntry[] entries;
         private bool _modified;
         private string _path;
 
-        public void Awake()
+        public bool Initialize()
         {
-            if (!Instance)
-                Instance = this;
-            else
-            {
-                Destroy(this);
-                return;
-            }
+            NPC.InputManager = this;
+            Player.InputManager = this;
+            ModifyControls.InputManager = this;
+            PlayerInfoManager.InputManager = this;
+
             _modified = false;
             _path = Path.Combine(Application.persistentDataPath, "InputManager.json");
             LoadData();
+            return true;
         }
 
         private void LoadData()

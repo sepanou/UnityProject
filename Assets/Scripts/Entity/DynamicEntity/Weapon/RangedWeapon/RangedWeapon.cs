@@ -53,10 +53,9 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
         
         public override RectTransform GetInformationPopup()
         {
-            if (!MenuSettingsManager.Instance || !MenuSettingsManager.Instance.rangedWeaponDescription)
-                return null;
-            MenuSettingsManager.Instance.rangedWeaponDescription.SetData(RangeData);
-            return MenuSettingsManager.Instance.rangedWeaponDescription.rectTransform;
+            return !PlayerInfoManager.Instance 
+                ? null 
+                : PlayerInfoManager.Instance.ShowRangedWeaponDescription(RangeData);
         }
         
         protected void InstantiateRangeWeapon()
@@ -68,7 +67,9 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon
         }
 
         public Projectile.Projectile GetProjectile() => projectile;
-        
+
+        public override string GetName() => RangeData.Name;
+
         // Used for name generation
         public Dictionary<int, (int, string)> weaponName=
             new Dictionary<int,(int, string)>
