@@ -100,7 +100,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         private void ChangeAnimator(ClassData data)
         {
             if (Animator) Animator.runtimeAnimatorController = data.animatorController;
-            if (Renderer) Renderer.sprite = data.defaultSprite;
+            if (spriteRenderer) spriteRenderer.sprite = data.defaultSprite;
             playerClass = data.playerClass;
         }
         
