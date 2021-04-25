@@ -33,7 +33,11 @@ namespace UI_Audio {
 		private void Awake() {
 			if (!Instance)
 				Instance = this;
-			else throw new Exception("created two instances of StartMenuManager");
+			else {
+				// Duplicates
+				Destroy(this);
+				return;
+			}
 		}
 		
 		private void CloseSubFields() {

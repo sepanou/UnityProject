@@ -16,7 +16,7 @@ namespace SwitchLevels {
 			// Verifying the collider is a player
 			if (other.gameObject.GetComponent<Player>() == null) return;
 			NetworkManager.singleton.ServerChangeScene(sceneToGo);
-			LocalGameManager.Instance.audioManager.PlayMusic(musicToPlay);
+			AudioDB.PlayMusic(musicToPlay);
 			Debug.Log("Changed scene !");
 		}
 	}
