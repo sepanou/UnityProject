@@ -1,0 +1,31 @@
+name: Create a release
+on: 
+  push:
+    tags:
+      - "v*"
+jobs:
+  build-and-release:
+    name: "Git tag Release"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Build the game"
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: WebGL
+      - name: Extract tag name
+        id: tag
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+      - name: Echo
+        run: echo ${{ steps.tag.outputs.result }}
+      # - name: "Create a release"
+      #   uses: "marvinpinto/action-automatic-releases@latest"
+      #   with:
+      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      #     prerelease: false
+      #     files: |
+      #       VERSION.txt
+      #       Build.zip
