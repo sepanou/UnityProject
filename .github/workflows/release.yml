@@ -19,8 +19,8 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
-          automatic_release_tag: ${{ steps.tag.outputs.VERSION }}
-          title: Release ${{ steps.tag.outputs.VERSION }}
+          automatic_release_tag: latest
+          title: Release v${{ steps.tag.outputs.VERSION }}
           files: |
             VERSION.txt
   build-and-release:
@@ -65,5 +65,5 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ matrix.platform }}-${{ steps.tag.outputs.VERSION }}.zip
-          asset_name: ${{ matrix.platform }}-${{ steps.tag.outputs.VERSION }}
-          tag: ${{ steps.tag.outputs.VERSION }}
+          asset_name: ${{ matrix.platform }}.zip
+          tag: latest
