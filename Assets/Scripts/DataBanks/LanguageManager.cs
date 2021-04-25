@@ -66,8 +66,7 @@ namespace DataBanks {
 			}
 		}
 
-		private bool TryGetLanguage(string languageKey, out Language result)
-		{
+		private bool TryGetLanguage(string languageKey, out Language result) {
 			foreach (Language language in _languages.Where(language => language.languageKey == languageKey)) {
 				result = language;
 				return true;

@@ -34,7 +34,11 @@ namespace UI_Audio {
 		private void Awake() {
 			if (!Instance)
 				Instance = this;
-			else throw new Exception("created two instances of MenuSettingsManager");
+			else {
+				// Duplicates
+				Destroy(this);
+				return;
+			}
 		}
 
 		public void Initialize() {
