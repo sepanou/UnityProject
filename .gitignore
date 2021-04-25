@@ -39,6 +39,7 @@ ExportedObj/
 .consulo/
 *.csproj
 *.unityproj
+*.renderTexture
 *.sln
 *.suo
 *.tmp
