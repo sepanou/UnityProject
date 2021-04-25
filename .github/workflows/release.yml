@@ -10,8 +10,12 @@ jobs:
     steps:
       - name: Checkout dev Git branch
         uses: actions/checkout@v2
-      - run: |
+      - name: Tests and Debug
+        env: 
+          EMAIL: ${{ secrets.UNITY_EMAIL }}
+        run: |
           ls -lsa
+          cat "$EMAIL"
       - name: Build the game
         uses: game-ci/unity-builder@v2
         env:
@@ -19,7 +23,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          targetPlatform: WebGL
+          targetPlatform: StandaloneWindows
       - name: Extract tag name
         id: tag
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
