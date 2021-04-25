@@ -19,7 +19,7 @@ namespace DataBanks {
 		}
 
 		[SerializeField] private InputEntry[] entries;
-		private Dictionary<string, KeyCode> _actionToKey = new Dictionary<string, KeyCode>();
+		private readonly Dictionary<string, KeyCode> _actionToKey = new Dictionary<string, KeyCode>();
 		private bool _modified;
 		private string _path;
 
