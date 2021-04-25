@@ -15,7 +15,7 @@ jobs:
           EMAIL: ${{ secrets.UNITY_EMAIL }}
         run: |
           ls -lsa
-          cat "$EMAIL"
+          env
       - name: Build the game
         uses: game-ci/unity-builder@v2
         env:
