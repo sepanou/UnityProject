@@ -54,26 +54,12 @@ jobs:
           targetPlatform: ${{ matrix.platform }}
       - name: Extract tag name
         id: tag
-        run: |
-          echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-          echo ${GITHUB_REF/refs\/tags\/v/} > VERSION.txt
-          ls -lsa
-          cat VERSION.txt
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
       - name: Zip
         uses: papeloto/action-zip@v1
         with:
           files: build/
           dest: ${{ matrix.platform }}-${{ steps.tag.outputs.VERSION }}.zip
-      - name: Create Release
-        id: create_release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          automatic_release_tag: latest
-          title: Release ${{ steps.tag.outputs.VERSION }}
-          files: |
-            VERSION.txt
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
