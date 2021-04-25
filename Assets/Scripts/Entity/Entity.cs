@@ -22,7 +22,7 @@ namespace Entity {
 			LanguageManager = Manager.languageManager;
 			PlayerInfoManager = Manager.playerInfoManager;
 			InventoryManager = Manager.inventoryManager;
-			InventoryManager = Manager.inventoryManager;
+			InputManager = Manager.inputManager;
 		}
 
 		public static void SetRenderingLayersInChildren(int sortingLayerID, string sortingLayerName, int layerMask, GameObject gameObject) {
