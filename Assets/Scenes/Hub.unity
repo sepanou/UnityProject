@@ -64058,7 +64058,7 @@ MonoBehaviour:
   classIcon: {fileID: 1887312172}
   powerBar: {fileID: 1535887937}
   healthBar: {fileID: 1973605741}
-  _displayKey: {fileID: 0}
+  _displayKey: {fileID: 1808074336}
 --- !u!114 &827564808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108645,8 +108645,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc1e568f280f34e4090b5167c9990825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spr1: {fileID: 4439487012608987514, guid: 41c2648b31a9395418b05e4e74ab7ee4, type: 3}
-  spr2: {fileID: -7078314704822784351, guid: 41c2648b31a9395418b05e4e74ab7ee4, type: 3}
+  spr1: {fileID: -8987218071075685888, guid: 7c7a0d5d746086242b64cc8897094ebb, type: 3}
+  spr2: {fileID: 7217947235006876599, guid: 7c7a0d5d746086242b64cc8897094ebb, type: 3}
 --- !u!114 &1808074337
 MonoBehaviour:
   m_ObjectHideFlags: 0
