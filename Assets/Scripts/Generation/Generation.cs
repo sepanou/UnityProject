@@ -23,6 +23,7 @@ namespace Generation {
 			bool placedLastRoom = false;
 			while (!placedLastRoom) {
 				foreach (Room roomToCheckOn in lMap) {
+					if (roomToCheckOn.Type == RoomType.DeadEnd) continue;
 					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
 						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, _random, lMap);
@@ -42,6 +43,7 @@ namespace Generation {
 				if (level.RoomsList.Count > 15 && prob < level.RoomsList.Count) return;
 				foreach (Room roomToCheckOn in lMap) {
 					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
+						if (roomToCheckOn.Type == RoomType.Start) continue;
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
 						Room roomToAdd = _availableRooms[RoomType.PreBoss][_random.Next(_availableRooms[RoomType.PreBoss].Count)];
 						if (dir == 'T' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
@@ -83,7 +85,7 @@ namespace Generation {
 			return true;
 		}
 
-		private bool SubFunction(int nbDir, int a, int b, Room room, int desiredDir, bool isX) {
+		private bool SubFunction(int nbDir, int a, int b, Room room, int desiredDir, bool isX, char opposite) {
 			if (a != nbDir) return true;
 			if (b < 0) return false;
 			if (room == null) return true;
@@ -91,7 +93,7 @@ namespace Generation {
 			(int nX, int nY) = neighbour.Dimensions;
 			desiredDir -= isX ? nX : nY;
 			foreach ((char nDir, int nNbDir) in neighbour.Exits) {
-				if (nDir != 'T' || nNbDir != desiredDir) continue;
+				if (nDir != opposite || nNbDir != desiredDir) continue;
 				return true;
 			}
 			return false;
@@ -99,10 +101,10 @@ namespace Generation {
 
 		private bool CheckForExits(Room[,] rMap, Room room, int x, int y, int i, int j) {
 			foreach ((char direction, int nbDir) in room.Exits) {
-				if (!(direction == 'B' ? SubFunction(nbDir, j - x + 1, i - 1, rMap[i - 1, j], j + 1, true)
-					: direction == 'T' ? SubFunction(nbDir, j - x + 1, i + 1, rMap[i + 1, j], j + 1, true)
-					: direction == 'L' ? SubFunction(nbDir, i - y + 1, j - 1, rMap[i, j - 1], i + 1, false)
-					: direction == 'R' ? SubFunction(nbDir, i - y + 1, j + 1, rMap[i, j - 1], i + 1, false)
+				if (!(direction == 'B' ? SubFunction(nbDir, j - x + 1, i - 1, rMap[i - 1, j], j + 1, true, 'T')
+					: direction == 'T' ? SubFunction(nbDir, j - x + 1, i + 1, rMap[i + 1, j], j + 1, true, 'B')
+					: direction == 'L' ? SubFunction(nbDir, i - y + 1, j - 1, rMap[i, j - 1], i + 1, false, 'R')
+					: direction == 'R' ? SubFunction(nbDir, i - y + 1, j + 1, rMap[i, j - 1], i + 1, false, 'L')
 					: throw new ArgumentException("invalid letter")
 				)) return false;
 			}
