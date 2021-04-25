@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UI_Audio;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace DataBanks {
@@ -45,11 +46,19 @@ namespace DataBanks {
 		private void LoadData() {
 			try {
 				InputEntry[] temp = JsonSerializer.FromJsonArray<InputEntry>(File.ReadAllText(_path));
-				if (temp.Length == 0)
+				if (temp.Length == 0) {
+					// By default, entries already contains the default keymap!
+					// Thus, if there is no file -> SetEntries(entries) then SaveData() to create the file
+					_modified = true;
+					SetEntries(entries);
 					SaveData();
+				}
 				else
 					SetEntries(temp);
 			} catch (Exception) {
+				// Same reason as before
+				_modified = true;
+				SetEntries(entries);
 				SaveData();
 			}
 		}
@@ -87,6 +96,7 @@ namespace DataBanks {
 			if (!_modified) return;
 			_modified = false;
 			UpdateEntries();
+			Debug.Log("Saving entries");
 			string data = JsonSerializer.ToJsonArray(entries);
 			File.WriteAllText(_path, data);
 		}
