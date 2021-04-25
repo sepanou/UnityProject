@@ -15,7 +15,7 @@ namespace UI_Audio {
 
 		[NonSerialized] public static LanguageManager LanguageManager;
 
-		void Awake() {
+		private void Awake() {
 			LanguageManager.OnLanguageChange += OnLanguageChange;
 			TryGetComponent(out _tmpText);
 			TryGetComponent(out _text);

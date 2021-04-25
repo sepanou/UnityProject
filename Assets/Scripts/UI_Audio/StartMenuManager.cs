@@ -33,7 +33,11 @@ namespace UI_Audio {
 		private void Awake() {
 			if (!Instance)
 				Instance = this;
-			else throw new Exception("created two instances of StartMenuManager");
+			else {
+				// Duplicates
+				Destroy(this);
+				return;
+			}
 		}
 		
 		private void CloseSubFields() {
@@ -109,13 +113,24 @@ namespace UI_Audio {
 		}
     
 		public void HostServerAndClient() {
-			if (NetworkClient.active) {
-				Debug.LogWarning("Already trying to connect to address" + manager.networkAddress + "...");
+			if (NetworkServer.active || NetworkClient.active) {
+				PlayerInfoManager.Instance.SetWarningText("Client or Server already started...");
+				PlayerInfoManager.Instance.OpenWarningBox();
 				return;
 			}
-			manager.StartHost();
-			StopAllCoroutines();
-			StartCoroutine(ServerLaunchProcedure(gameModeFields));
+
+			try {
+				manager.StartHost();
+				StopAllCoroutines();
+				StartCoroutine(ServerLaunchProcedure(gameModeFields));
+			}
+			catch (Exception e) {
+				StopServerAndOrClient();
+				PlayerInfoManager.Instance.SetWarningText("Unable to launch the server...\n" +
+				                                          "Are you sure a server is not already launched?");
+				PlayerInfoManager.Instance.OpenWarningBox();
+				Debug.LogWarning(e.Message);
+			}
 		}
 
 		public void ConnectToServer() {
@@ -124,11 +139,20 @@ namespace UI_Audio {
 				return;
 			}
 			if (ipAddressField && ValidateIPAddressInput(ipAddressField.text)) {
-				manager.StartClient();
-				manager.networkAddress = ipAddressField.text;
-				StopAllCoroutines();
-				StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
-			} else {
+				try {
+					manager.StartClient();
+					manager.networkAddress = ipAddressField.text;
+					StopAllCoroutines();
+					StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
+				}
+				catch (Exception e) {
+					StopServerAndOrClient();
+					PlayerInfoManager.Instance.SetWarningText("Unable to join the server...");
+					PlayerInfoManager.Instance.OpenWarningBox();
+					Debug.LogWarning(e.Message);
+				}
+			}
+			else {
 				PlayerInfoManager.Instance.SetWarningText("Invalid IP address format!");
 				PlayerInfoManager.Instance.OpenWarningBox();
 			}

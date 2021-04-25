@@ -27,9 +27,13 @@ public class LocalGameManager: MonoBehaviour {
 	public static LocalGameManager Instance;
 
 	private void Awake() {
-		if (Instance is null)
+		if (!Instance)
 			Instance = this;
-		else throw new Exception("created two game managers");
+		else {
+			// Duplicates
+			Destroy(this);
+			return;
+		}
 		// Find a way to define when it is server-only => no need to load UI stuff
 		LoadGameDependencies(true);
 		Entity.Entity.InitClass(Instance);
@@ -60,13 +64,13 @@ public class LocalGameManager: MonoBehaviour {
 		switch (LocalState) {
 			case LocalGameStates.Start:
 				startMenuManager.StopServerAndOrClient();
-				audioManager.PlayMusic("MainMenuMusic");
+				AudioDB.PlayMusic("MainMenuMusic");
 				menuSettingsManager.CloseMenu();
 				startMenuManager.OpenStartMenu();
 				playerInfoManager.HidePlayerClassUI();
 				break;
 			case LocalGameStates.InGame:
-				audioManager.PlayMusic("HubMusic");
+				AudioDB.PlayMusic("HubMusic");
 				menuSettingsManager.CloseMenu();
 				startMenuManager.CloseStartMenu();
 				playerInfoManager.ShowPlayerClassUI();
