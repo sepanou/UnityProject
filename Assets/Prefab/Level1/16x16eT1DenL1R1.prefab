@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1467143784056585424}
   m_Layer: 0
-  m_Name: 16x16eT1StdL1R1
+  m_Name: 16x16eT1DenL1R1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5921,12 +5921,12 @@ PrefabInstance:
     - target: {fileID: 2055102311959635368, guid: 5c635e5bc09c93043a53ee0e17e89d0f,
         type: 3}
       propertyPath: m_SortingLayer
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2055102311959635368, guid: 5c635e5bc09c93043a53ee0e17e89d0f,
         type: 3}
       propertyPath: m_SortingLayerID
-      value: 1768251095
+      value: -1281448579
       objectReference: {fileID: 0}
     - target: {fileID: 2055102311959635369, guid: 5c635e5bc09c93043a53ee0e17e89d0f,
         type: 3}

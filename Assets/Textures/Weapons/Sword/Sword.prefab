@@ -167,7 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  Renderer: {fileID: 3427838935283703077}
+  spriteRenderer: {fileID: 3427838935283703077}
   speed: 0
   holder: {fileID: 0}
   compatibleClass: 1

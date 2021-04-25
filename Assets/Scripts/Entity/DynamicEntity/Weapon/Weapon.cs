@@ -69,7 +69,7 @@ namespace Entity.DynamicEntity.Weapon
 
         private void SetActive(bool state)
         {
-            Renderer.color = new Color(255, 255, 255, state ? 255 : 0);
+            spriteRenderer.color = new Color(255, 255, 255, state ? 255 : 0);
             enabled = state;
         }
         

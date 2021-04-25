@@ -6,8 +6,12 @@ namespace Entity.DynamicEntity.LivingEntity
 {
     public abstract class LivingEntity : DynamicEntity
     {
+        private static readonly string[] IdleAnims = {"IdleN", "IdleW", "IdleS", "IdleE"};
+        private static readonly string[] WalkAnims = {"WalkN", "WalkW", "WalkS", "WalkE"};
+        
         [SyncVar] private float _health;
         private bool _isAlive = true;
+        private int _lastAnimationStateIndex;
         protected Rigidbody2D Rigibody;
 
         public override bool OnSerialize(NetworkWriter writer, bool initialState)
@@ -32,12 +36,34 @@ namespace Entity.DynamicEntity.LivingEntity
             //if (TryGetComponent(out Rigibody)) Rigibody.bodyType = netIdentity.isServer
             //    ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
             if (TryGetComponent(out Rigibody)) Rigibody.bodyType = RigidbodyType2D.Dynamic;
+            _lastAnimationStateIndex = 0;
             InstantiateDynamicEntity();
         }
         
         public void TakeKnockback()
         {
             throw new NotImplementedException();
+        }
+        
+        [ClientRpc]
+        protected void RpcApplyForceToRigidBody(float x, float y)
+        {
+            if (!Rigibody) return;
+            Vector2 direction = new Vector2(x, y);
+            
+            if (direction == Vector2.zero)
+            {
+                // Idle animations
+                Rigibody.velocity = Vector2.zero;
+                Animator.Play(IdleAnims[_lastAnimationStateIndex]);
+                return;
+            }
+            // Circle divided in 4 parts -> angle measurement based on Vector2.up
+            direction.Normalize();
+            _lastAnimationStateIndex = (int) Vector2.SignedAngle(Vector2.up, direction) + 360;
+            _lastAnimationStateIndex = _lastAnimationStateIndex / 90 % 4;
+            Rigibody.velocity = GetSpeed() * direction;
+            Animator.Play(WalkAnims[_lastAnimationStateIndex]);
         }
 
         [ServerCallback]

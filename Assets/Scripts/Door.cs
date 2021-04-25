@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
-using UI_Audio;
 using UnityEngine;
 
 public class Door: NetworkBehaviour {
@@ -14,60 +13,51 @@ public class Door: NetworkBehaviour {
 	[SerializeField] private bool isOpen;
 	[SerializeField] private Sprite closed;
 	[SerializeField] private Sprite opened;
-	private Dictionary<Player, bool> _playerPool;
+	private HashSet<Player> _playerPool;
 	private bool _canInteract;
 	[NonSerialized] public static InputManager InputManager;
-	[NonSerialized] public static PlayerInfoManager InfoManager;
-	
 
-	private void Start()
-	{
+
+	private void Start() {
 		_doorCollider = GetComponents<Collider2D>();
 		_spriteRenderer = GetComponent<SpriteRenderer>();
-		_playerPool = new Dictionary<Player, bool>();
+		_playerPool = new HashSet<Player>();
 		_canInteract = false;
 	}
 
-	/*
-	private void OnTriggerStay2D(Collider2D other) {
-		if (LocalGameManager.Instance.inputManager.GetKeyDown("Interact"))
-			ToggleDoor();
-	}*/
-	
-	private void OnTriggerEnter2D(Collider2D other)
-	{
+
+	private void OnTriggerEnter2D(Collider2D other) {
 		if (!other.gameObject.TryGetComponent(out Player player))
 			return;
-            
+			
 		if (isServer)
-			_playerPool[player] = false;
+			_playerPool.Add(player);
 
 		if (!player.isLocalPlayer) return;
-            
+			
 		_canInteract = true;
+		LocalGameManager.Instance.playerInfoManager._displayKey.StartDisplay();
 		StartCoroutine(CheckInteraction(player));
 	}
-        
-	private void OnTriggerExit2D(Collider2D other)
-	{
+		
+	private void OnTriggerExit2D(Collider2D other) {
 		if (!other.gameObject.TryGetComponent(out Player player))
 			return;
-            
+			
 		if (isServer)
 			_playerPool.Remove(player);
 
-		if (player.isLocalPlayer)
-			_canInteract = false;
+		if (!player.isLocalPlayer) return;
+		
+		_canInteract = false;
+		LocalGameManager.Instance.playerInfoManager._displayKey.StopDisplay();
 	}
 	
 	[ClientCallback]
-	private IEnumerator CheckInteraction(Player player)
-	{
-		while (_canInteract)
-		{
-			if (InputManager.GetKeyDown("Interact"))
-			{
-				Debug.Log("bientot");
+	private IEnumerator CheckInteraction(Player player) {
+		while (_canInteract) {
+			if (InputManager.GetKeyDown("Interact")) {
+				Debug.Log("bientôt");
 				ToggleDoor();
 				yield return null;
 			}
@@ -76,9 +66,8 @@ public class Door: NetworkBehaviour {
 		}
 	}
 	
-	[Command(requiresAuthority = false)]
-	private void ToggleDoor()
-	{
+	[Command(requiresAuthority = false)] 
+	private void ToggleDoor() {
 		if (!_canInteract) return;
 		_doorCollider[0].enabled = isOpen;
 		ToggleSprite(isOpen);
@@ -86,8 +75,8 @@ public class Door: NetworkBehaviour {
 	}
 
 	[ClientRpc]
-	private void ToggleSprite(bool isOpen2)
-	{
+	private void ToggleSprite(bool isOpen2) {
+		LocalGameManager.Instance.audioManager.PlayUISound("WoodenDoor");
 		_spriteRenderer.sprite = isOpen2 ? closed : opened;
 	}
 }

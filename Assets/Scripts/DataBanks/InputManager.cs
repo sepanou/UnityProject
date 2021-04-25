@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Entity.DynamicEntity;
-using Entity.DynamicEntity.LivingEntity.Player;
+using System.Linq;
 using UI_Audio;
 using UnityEngine;
 
@@ -11,17 +10,20 @@ namespace DataBanks {
 	public class InputManager: ScriptableObject {
 		[Serializable]
 		private class InputEntry {
+			public InputEntry(string actionName, KeyCode keyEntry) {
+				this.actionName = actionName;
+				this.keyEntry = keyEntry;
+			}
 			public string actionName;
 			public KeyCode keyEntry;
 		}
 
 		[SerializeField] private InputEntry[] entries;
+		private readonly Dictionary<string, KeyCode> _actionToKey = new Dictionary<string, KeyCode>();
 		private bool _modified;
 		private string _path;
 
 		public void Initialize() {
-			NPC.InputManager = this;
-			Player.InputManager = this;
 			ModifyControls.InputManager = this;
 			PlayerInfoManager.InputManager = this;
 			Door.InputManager = this;
@@ -31,60 +33,69 @@ namespace DataBanks {
 			LoadData();
 		}
 
+		private void SetEntries(InputEntry[] temp) {
+			entries = temp;
+			foreach (InputEntry entry in entries)
+				_actionToKey[entry.actionName] = entry.keyEntry;
+		}
+
+		private void UpdateEntries()
+			=> entries = _actionToKey.Select(entry => new InputEntry(entry.Key, entry.Value)).ToArray();
+
 		private void LoadData() {
 			try {
-				string data = File.ReadAllText(_path);
-				InputEntry[] temp = JsonSerializer.FromJsonArray<InputEntry>(data);
-				if (temp.Length == 0)
+				InputEntry[] temp = JsonSerializer.FromJsonArray<InputEntry>(File.ReadAllText(_path));
+				if (temp.Length == 0) {
+					// By default, entries already contains the default keymap!
+					// Thus, if there is no file -> SetEntries(entries) then SaveData() to create the file
+					_modified = true;
+					SetEntries(entries);
 					SaveData();
+				}
 				else
-					entries = temp;
+					SetEntries(temp);
 			} catch (Exception) {
+				// Same reason as before
+				_modified = true;
+				SetEntries(entries);
 				SaveData();
 			}
 		}
 
 		public bool GetKeyDown(string action) {
-			foreach (InputEntry entry in entries) {
-				if (entry.actionName != action) continue;
-				return Input.GetKeyDown(entry.keyEntry);
+			if (!_actionToKey.ContainsKey(action)) {
+				Debug.LogWarning("The specified action name is unknown...");
+				return false;
 			}
-			Debug.LogWarning("The specified action name is unknown...");
-			return false;
+			return Input.GetKeyDown(_actionToKey[action]);
 		}
 		
 		public bool GetKeyPressed(string action) {
-			foreach (InputEntry entry in entries) {
-				if (entry.actionName != action) continue;
-				return Input.GetKey(entry.keyEntry);
+			if (!_actionToKey.ContainsKey(action)) {
+				Debug.LogWarning("The specified action name is unknown...");
+				return false;
 			}
-			Debug.LogWarning("The specified action name is unknown...");
-			return false;
+			return Input.GetKey(_actionToKey[action]);
 		}
 
-		public bool TryGetKeyFromAction(string action, out KeyCode keyCode) {
-			foreach (InputEntry entry in entries) {
-				if (entry.actionName != action) continue;
-				keyCode = entry.keyEntry;
-				return true;
-			}
-			keyCode = KeyCode.None;
-			return false;
-		}
+		public bool TryGetKeyFromAction(string action, out KeyCode keyCode)
+			=> _actionToKey.TryGetValue(action, out keyCode);
 
 		public void ChangeKeyEntry(string action, KeyCode key) {
-			foreach (InputEntry entry in entries) {
-				if (entry.actionName != action) continue;
-				_modified = entry.keyEntry != key;
-				entry.keyEntry = key;
+			if (!_actionToKey.ContainsKey(action)) {
+				Debug.LogWarning("The specified action name is unknown...");
 				return;
 			}
-			Debug.LogWarning("The specified action name is unknown...");
+			if (_actionToKey[action] == key) return;
+			_modified = true;
+			_actionToKey[action] = key;
 		}
 
 		public void SaveData() {
 			if (!_modified) return;
 			_modified = false;
+			UpdateEntries();
+			Debug.Log("Saving entries");
 			string data = JsonSerializer.ToJsonArray(entries);
 			File.WriteAllText(_path, data);
 		}
