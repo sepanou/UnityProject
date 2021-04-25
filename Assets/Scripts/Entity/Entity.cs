@@ -7,7 +7,6 @@ using UnityEngine.Serialization;
 
 namespace Entity {
 	public abstract class Entity: NetworkBehaviour {
-		[FormerlySerializedAs("Renderer")]
 		[SerializeField] protected SpriteRenderer spriteRenderer;
 
 		[NonSerialized] protected static LocalGameManager Manager;
