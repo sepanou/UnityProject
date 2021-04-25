@@ -40,10 +40,7 @@ jobs:
         with:
           path: Library
           key: Library-Game-${{ matrix.platform }}
-          restore-keys: |
-            Library-Game-${{ matrix.platform }}
-            Library-Game-
-            Library-
+          restore-keys: Library-
       - name: Build the game
         uses: game-ci/unity-builder@v2
         env:
