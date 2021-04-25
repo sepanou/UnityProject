@@ -28,7 +28,7 @@ namespace UI_Audio {
 
 		private void Update() {
 			if (!MouseCursor.Instance || !MenuSettingsManager.Instance || MenuSettingsManager.Instance.isOpen) return;
-			bool isOn = MouseCursor.Instance.IsMouseOver(hoveringCanvas);
+			bool isOn = MouseCursor.Instance.IsMouseOn(this);
 			if (!_isMouseOn && isOn) {
 				_isMouseOn = true;
 				SetTargetsActive(true);
