@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
-using UI_Audio;
 using UnityEngine;
 
 public class Door: NetworkBehaviour {
@@ -17,8 +16,7 @@ public class Door: NetworkBehaviour {
 	private HashSet<Player> _playerPool;
 	private bool _canInteract;
 	[NonSerialized] public static InputManager InputManager;
-	[NonSerialized] public static PlayerInfoManager InfoManager;
-	
+
 
 	private void Start()
 	{

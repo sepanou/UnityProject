@@ -10,7 +10,7 @@ namespace UI_Audio
         [SerializeField] private Button.ButtonClickedEvent onClick = new Button.ButtonClickedEvent();
         
         private readonly Vector3[] _worldCorners = new Vector3[4];
-        private bool _isMouseOver;
+        private bool _isMouseOn;
         
         private new void Start()
         {
@@ -20,7 +20,7 @@ namespace UI_Audio
                 return;
             }
 
-            _isMouseOver = false;
+            _isMouseOn = false;
             hoveringCanvas.GetWorldCorners(_worldCorners);
             SetTargetsActive(false);
         }
@@ -35,19 +35,19 @@ namespace UI_Audio
         {
             if (!MouseCursor.Instance || !MenuSettingsManager.Instance || MenuSettingsManager.Instance.isOpen) return;
             
-            bool isOver = MouseCursor.Instance.IsMouseOver(hoveringCanvas);
-            if (!_isMouseOver && isOver)
+            bool isOn = MouseCursor.Instance.IsMouseOn(this);
+            if (!_isMouseOn && isOn)
             {
-                _isMouseOver = true;
+                _isMouseOn = true;
                 SetTargetsActive(true);
             }
-            else if (_isMouseOver && !isOver)
+            else if (_isMouseOn && !isOn)
             {
-                _isMouseOver = false;
+                _isMouseOn = false;
                 SetTargetsActive(false);
             }
             
-            if (_isMouseOver && Input.GetMouseButtonDown(0))
+            if (_isMouseOn && Input.GetMouseButtonDown(0))
                 onClick?.Invoke();
         }
     }

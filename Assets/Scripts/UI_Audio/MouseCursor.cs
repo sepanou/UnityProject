@@ -47,6 +47,9 @@ namespace UI_Audio
         public bool IsMouseOver(RectTransform rect)
             => RectTransformUtility.RectangleContainsScreenPoint(rect, _lastPos);
 
+        public bool IsMouseOn(Selectable selectable) 
+            => TryGetElementFromRayCast(out Selectable result) && result == selectable;
+
         public Vector3 GetLocalViewWorldCoords() => transform.position;
 
         public Quaternion OrientateObjectTowardsMouse(Vector3 referenceDirection, out Vector2 orientation)

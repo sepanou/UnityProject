@@ -263,7 +263,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
 
             if (netIdentity.isServer && Input.GetKeyDown(KeyCode.K))
             {
-                NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateBow().gameObject);
+                NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateSword().gameObject);
                 Debug.Log("Spawned !");
             }
 

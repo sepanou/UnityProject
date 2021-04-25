@@ -97,10 +97,7 @@ namespace UI_Audio
                 if (!NetworkClient.active)
                 {
                     if (currentFields)
-                    {
-                        void Activate() => currentFields.gameObject.SetActive(true);
-                        InfoManger.SetWarningButtonActions(Activate);
-                    }
+                        InfoManger.SetWarningButtonActions(() => currentFields.gameObject.SetActive(true));
                     InfoManger.SetWarningText("Timed out after not receiving any message...\n" +
                                               "Connection Failed!");
                     InfoManger.OpenWarningBox();
@@ -125,14 +122,27 @@ namespace UI_Audio
 
         public void HostServerAndClient()
         {
-            if (NetworkClient.active)
+            if (NetworkServer.active || NetworkClient.active)
             {
-                Debug.LogWarning("Already trying to connect to address" + manager.networkAddress + "...");
+                PlayerInfoManager.Instance.SetWarningText("Client or Server already started...");
+                PlayerInfoManager.Instance.OpenWarningBox();
                 return;
             }
-            manager.StartHost();
-            StopAllCoroutines();
-            StartCoroutine(ServerLaunchProcedure(gameModeFields));
+
+            try
+            {
+                manager.StartHost();
+                StopAllCoroutines();
+                StartCoroutine(ServerLaunchProcedure(gameModeFields));
+            }
+            catch (Exception e)
+            {
+                StopServerAndOrClient();
+                PlayerInfoManager.Instance.SetWarningText("Unable to launch the server...\n" +
+                                                          "Are you sure a server is not already launched?");
+                PlayerInfoManager.Instance.OpenWarningBox();
+                Debug.LogWarning(e.Message);
+            }
         }
 
         public void ConnectToServer()
@@ -144,10 +154,20 @@ namespace UI_Audio
             }
             if (ipAddressField && ValidateIPAddressInput(ipAddressField.text))
             {
-                manager.StartClient();
-                manager.networkAddress = ipAddressField.text;
-                StopAllCoroutines();
-                StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
+                try
+                {
+                    manager.StartClient();
+                    manager.networkAddress = ipAddressField.text;
+                    StopAllCoroutines();
+                    StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
+                }
+                catch (Exception e)
+                {
+                    StopServerAndOrClient();
+                    PlayerInfoManager.Instance.SetWarningText("Unable to join the server...");
+                    PlayerInfoManager.Instance.OpenWarningBox();
+                    Debug.LogWarning(e.Message);
+                }
             }
             else
             {
