@@ -78,6 +78,7 @@ public class Door: NetworkBehaviour {
 
 	[ClientRpc]
 	private void ToggleSprite(bool isOpen2) {
+		LocalGameManager.Instance.audioManager.PlayUISound("WoodenDoor");
 		_spriteRenderer.sprite = isOpen2 ? closed : opened;
 	}
 }
