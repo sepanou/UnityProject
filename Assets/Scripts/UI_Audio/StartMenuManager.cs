@@ -107,7 +107,7 @@ namespace UI_Audio {
 			
 			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.InGame);
 		}
-
+    
 		public void HostServerAndClient() {
 			if (NetworkClient.active) {
 				Debug.LogWarning("Already trying to connect to address" + manager.networkAddress + "...");
