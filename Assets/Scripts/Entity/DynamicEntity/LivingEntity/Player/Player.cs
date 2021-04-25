@@ -22,7 +22,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         private static readonly string[] WalkAnims = {"WalkN", "WalkW", "WalkS", "WalkE"};
         public static event LocalPlayerClassChanged OnLocalPlayerClassChange;
         public static event RemotePlayerClassChanged OnRemotePlayerClassChange;
-        [NonSerialized] public static InputManager InputManager;
         public delegate void LocalPlayerClassChanged(ClassData data);
 
         public delegate void RemotePlayerClassChanged(ClassData data);
@@ -100,7 +99,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         private void ChangeAnimator(ClassData data)
         {
             if (Animator) Animator.runtimeAnimatorController = data.animatorController;
-            if (Renderer) Renderer.sprite = data.defaultSprite;
+            if (spriteRenderer) spriteRenderer.sprite = data.defaultSprite;
             playerClass = data.playerClass;
         }
         
