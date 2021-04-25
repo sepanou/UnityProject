@@ -140,11 +140,11 @@ namespace Entity.DynamicEntity {
 					player.CmdSwitchPlayerClass(PlayerClasses.Mage);
 					break;
 				case PlayerClasses.Warrior:
-					throw new NotImplementedException();
-				default:
 					PlayerInfoManager.PrintDialog(new [] {"#warrior-selector"}, StopInteracting);
 					player.CmdSwitchPlayerClass(PlayerClasses.Warrior);
 					break;
+				default:
+					throw new ArgumentException("InteractClassSelector");
 			}
 		}
 	}
