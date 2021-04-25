@@ -36,7 +36,7 @@ namespace DataBanks {
 			public string fieldKey;
 			public string translation;
 		}
-
+		
 		public void Initialize() {
 			TextTranslator.LanguageManager = this;
 			PlayerInfoManager.LanguageManager = this;

@@ -19570,8 +19570,7 @@ MonoBehaviour:
   dialogText: {fileID: 2022665602}
   warningBox: {fileID: 230362507}
   warningText: {fileID: 578452259}
-  warningCancelButton: {fileID: 1107636179}
-  warningContinueButton: {fileID: 1678428250}
+  warningButton: {fileID: 0}
   weaponMoneyCanvas: {fileID: 99397761}
   currentWeapon: {fileID: 1096072754}
   currentWeaponName: {fileID: 1531796458}
@@ -19612,6 +19611,8 @@ MonoBehaviour:
   soundSlider: {fileID: 1920347189}
   languageDropdown: {fileID: 1901634517}
   languageManager: {fileID: 11400000, guid: 447576c189fcca04c90d5bcd60368906, type: 2}
+  backMainMenuCanvas: {fileID: 0}
+  resumeButtonCanvas: {fileID: 0}
   eventSystem: {fileID: 1339915706}
   defaultMenu: {fileID: 1343418162}
   controlsMenu: {fileID: 679837932}
@@ -19926,18 +19927,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c5bd0f275dcac943897d124275794be, type: 3}
---- !u!114 &1107636179 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4176063960112521341, guid: 8155bcf1837ab8b419da0ef50f4fa512,
-    type: 3}
-  m_PrefabInstance: {fileID: 1655491048}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1107665068
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28723,18 +28712,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8155bcf1837ab8b419da0ef50f4fa512, type: 3}
---- !u!114 &1678428250 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4306213434177031179, guid: 8155bcf1837ab8b419da0ef50f4fa512,
-    type: 3}
-  m_PrefabInstance: {fileID: 1655491048}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1680809259
 GameObject:
   m_ObjectHideFlags: 0
@@ -34024,6 +34001,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 637654990190783546, guid: ebc4e7191d93f0f4c89ab3e6bc6c03b4,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 637654990190783546, guid: ebc4e7191d93f0f4c89ab3e6bc6c03b4,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1281448579
+      objectReference: {fileID: 0}
     - target: {fileID: 1467143784056585424, guid: ebc4e7191d93f0f4c89ab3e6bc6c03b4,
         type: 3}
       propertyPath: m_RootOrder
@@ -34192,6 +34179,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2626143876806493170, guid: 8e1a066e68add8845ab68f1e1a3a70db,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2626143877236688492, guid: 8e1a066e68add8845ab68f1e1a3a70db,
         type: 3}
       propertyPath: m_Name
@@ -34266,6 +34258,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7263529758365819323, guid: 171696fda2f925946a4d2fb90f6ea3d3,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7263529758365819324, guid: 171696fda2f925946a4d2fb90f6ea3d3,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.6
+      objectReference: {fileID: 0}
     - target: {fileID: 7263529758465571998, guid: 171696fda2f925946a4d2fb90f6ea3d3,
         type: 3}
       propertyPath: m_RootOrder
@@ -34329,6 +34331,11 @@ PrefabInstance:
     - target: {fileID: 7263529758465572001, guid: 171696fda2f925946a4d2fb90f6ea3d3,
         type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7263529758758151837, guid: 171696fda2f925946a4d2fb90f6ea3d3,
+        type: 3}
+      propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

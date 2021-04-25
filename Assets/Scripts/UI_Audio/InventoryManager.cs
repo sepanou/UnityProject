@@ -15,7 +15,7 @@ namespace UI_Audio {
 				Instance = this;
 			else throw new Exception("created two instances of InventoryManager");
 		}
-
+		
 		public void Initialize() {
 			CloseAllInventories();
 		}

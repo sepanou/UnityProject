@@ -40,10 +40,12 @@ namespace UI_Audio {
 		public MeleeWeaponDescription meleeWeaponDescription;
 		public CharmDescription charmDescription;
 
-		[Header("Player Class Fields")]
-		[SerializeField] private RectTransform playerClassCanvas;
-		[SerializeField] private Image classIcon, powerBar, healthBar;
 
+        [Header("Player Class Fields")]
+        [SerializeField] private RectTransform playerClassCanvas;
+        [SerializeField] private Image classIcon, powerBar, healthBar;
+        [SerializeField] public DisplayKey _displayKey;
+        
 		[NonSerialized] public static LanguageManager LanguageManager;
 		[NonSerialized] public static InputManager InputManager;
 		[NonSerialized] public static PlayerInfoManager Instance;

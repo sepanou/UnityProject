@@ -18,8 +18,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player
     
     public class Player : LivingEntity
     {
-        private static readonly string[] IdleAnims = {"IdleN", "IdleW", "IdleS", "IdleE"};
-        private static readonly string[] WalkAnims = {"WalkN", "WalkW", "WalkS", "WalkE"};
         public static event LocalPlayerClassChanged OnLocalPlayerClassChange;
         public static event RemotePlayerClassChanged OnRemotePlayerClassChange;
         public delegate void LocalPlayerClassChanged(ClassData data);
@@ -42,7 +40,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player
         [ShowInInspector]
         private readonly SyncList<Weapon.Weapon> _weapons = new SyncList<Weapon.Weapon>();
         private Inventory _inventory;
-        private int _lastAnimationStateIndex;
 
         public int Kibrient => _kibrient;
         public int Orchid => _orchid;
@@ -75,7 +72,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             DontDestroyOnLoad(this);
             InstantiateLivingEntity();
             _charms = new List<Charm>();
-            _lastAnimationStateIndex = 0;
             OnLocalPlayerClassChange += ChangeAnimator;
             OnRemotePlayerClassChange += ChangeAnimator;
             if (!isLocalPlayer) return;
@@ -155,27 +151,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player
             else
                 SwitchWeapon(wp);
             _weapons.Add(wp);
-        }
-        
-        [ClientRpc]
-        private void RpcApplyForceToRigidBody(float x, float y)
-        {
-            if (!Rigibody) return;
-            Vector2 direction = new Vector2(x, y);
-            
-            if (direction == Vector2.zero)
-            {
-                // Idle animations
-                Rigibody.velocity = Vector2.zero;
-                Animator.Play(IdleAnims[_lastAnimationStateIndex]);
-                return;
-            }
-            // Circle divided in 4 parts -> angle measurement based on Vector2.up
-            direction.Normalize();
-            _lastAnimationStateIndex = (int) Vector2.SignedAngle(Vector2.up, direction) + 360;
-            _lastAnimationStateIndex = _lastAnimationStateIndex / 90 % 4;
-            Rigibody.velocity = GetSpeed() * direction;
-            Animator.Play(WalkAnims[_lastAnimationStateIndex]);
         }
 
         [ClientRpc] private void RpcSwitchPlayerClass(PlayerClasses @class) => SwitchClass(@class);
@@ -287,7 +262,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player
 
             if (netIdentity.isServer && Input.GetKeyDown(KeyCode.K))
             {
-                NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateBow().gameObject);
+                NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateSword().gameObject);
                 Debug.Log("Spawned !");
             }
 
