@@ -10,7 +10,7 @@ jobs:
     environment: Release
     strategy:
       matrix:
-        plateform: [StandaloneWindows, StandaloneWindows64, StandaloneLinux64]
+        platform: [StandaloneWindows, StandaloneWindows64, StandaloneLinux64]
     steps:
       - name: Checkout dev Git branch
         uses: actions/checkout@v2
@@ -20,7 +20,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: Library
-          key: Library-Game-${{ matrix.plateform }}
+          key: Library-Game-${{ matrix.platform }}
           restore-keys: |
             Library-MyProjectName-
             Library-
@@ -31,19 +31,24 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          targetPlatform: ${{ matrix.plateform }}
+          targetPlatform: ${{ matrix.platform }}
       - name: Extract tag name
         id: tag
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-      - name: Echo
         run: |
-          echo ${{ steps.tag.outputs.VERSION }}
+          echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+          echo ${GITHUB_REF/refs\/tags\/v/} > VERSION.TXT
           ls -lsa
-      # - name: "Create a release"
-      #   uses: "marvinpinto/action-automatic-releases@latest"
-      #   with:
-      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
-      #     prerelease: false
-      #     files: |
-      #       VERSION.txt
-      #       Build.zip
+          cat VERSION.TXT
+      - name: Zip
+        uses: papeloto/action-zip@v1
+        with:
+          files: build/
+          dest: ${{ matrix.platform }}-${{ steps.tag.outputs.VERSION }}.zip
+      - name: "Create a release"
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            VERSION.txt
+            ${{ matrix.platform }}-${{ steps.tag.outputs.VERSION }}.zip
