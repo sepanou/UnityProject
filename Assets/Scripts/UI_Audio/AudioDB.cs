@@ -11,7 +11,7 @@ namespace UI_Audio {
 
 		public void PlayUISound(string soundKey) => AudioPlayer.PlaySoundNoDistance(soundKey);
 		
-		public void PlayMusic(string musicKey) => AudioPlayer.PlayMusic(musicKey);
+		public static void PlayMusic(string musicKey) => AudioPlayer.PlayMusic(musicKey);
 
 		public bool TryGetSound(string keyName, out Sound sound) {
 			foreach (Sound sample in sounds) {
