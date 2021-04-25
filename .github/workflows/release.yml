@@ -22,7 +22,8 @@ jobs:
           path: Library
           key: Library-Game-${{ matrix.platform }}
           restore-keys: |
-            Library-MyProjectName-
+            Library-Game-${{ matrix.platform }}
+            Library-Game-
             Library-
       - name: Build the game
         uses: game-ci/unity-builder@v2
@@ -49,6 +50,8 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
+          automatic_release_tag: latest
+          title: Release ${{ steps.tag.outputs.VERSION }}
           files: |
             VERSION.txt
             ${{ matrix.platform }}-${{ steps.tag.outputs.VERSION }}.zip
