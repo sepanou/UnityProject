@@ -11,7 +11,7 @@ jobs:
       - name: Checkout dev Git branch
         uses: actions/checkout@v2
       - run: |
-        ls -lsa
+          ls -lsa
       - name: Build the game
         uses: game-ci/unity-builder@v2
         env:
