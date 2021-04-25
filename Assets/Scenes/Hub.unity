@@ -8223,7 +8223,7 @@ PrefabInstance:
     - target: {fileID: 114546234437306542, guid: 46a84c550a2054af88948ccfcffde9e2,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: BackToMainMenu
+      value: CloseMenu
       objectReference: {fileID: 0}
     - target: {fileID: 114546234437306542, guid: 46a84c550a2054af88948ccfcffde9e2,
         type: 3}

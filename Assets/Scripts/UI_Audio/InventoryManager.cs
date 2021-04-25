@@ -24,7 +24,7 @@ namespace UI_Audio {
 			CloseAllInventories();
 		}
 
-		private void CloseAllInventories() {
+		public void CloseAllInventories() {
 			playerInventory.Close();
 			smithInventory.Close();
 		}
