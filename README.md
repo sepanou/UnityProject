@@ -1,3 +1,6 @@
 # Terres de l'exil
 
-### Sépanou
+### Par Sépanou
+
+[Lien du Launcher](https://github.com/sepanou/Launcher)
+
