@@ -16,7 +16,7 @@ namespace Entity {
 		[NonSerialized] protected static InventoryManager InventoryManager;
 
 		public static void InitClass(LocalGameManager manager) {
-			if (!(Manager is null)) throw new Exception("InitClass called multiple times");
+			if (Manager) throw new Exception("InitClass called multiple times");
 			Manager = manager;
 			LanguageManager = Manager.languageManager;
 			PlayerInfoManager = Manager.playerInfoManager;

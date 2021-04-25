@@ -50,6 +50,10 @@ public class LocalGameManager: MonoBehaviour {
 		inputManager.Initialize();
 		languageManager.InitLanguage();
 		if (!loadUI) return;
+		LoadUI();
+	}
+
+	private void LoadUI() {
 		mouseCursor.Initialize();
 		menuSettingsManager.Initialize();
 		playerInfoManager.Initialize();
@@ -64,6 +68,7 @@ public class LocalGameManager: MonoBehaviour {
 		switch (LocalState) {
 			case LocalGameStates.Start:
 				startMenuManager.StopServerAndOrClient();
+				inventoryManager.CloseAllInventories();
 				AudioDB.PlayMusic("MainMenuMusic");
 				menuSettingsManager.CloseMenu();
 				startMenuManager.OpenStartMenu();
