@@ -4,8 +4,27 @@ on:
     tags:
       - "v*"
 jobs:
+  create-release:
+    name: Create the release
+    runs-on: "ubuntu-latest"
+    steps: 
+      - name: Create VERSION.txt
+        id: tag
+        run: |
+          echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+          echo ${GITHUB_REF/refs\/tags\/v/} > VERSION.txt
+          cat VERSION.txt
+      - name: Create Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          automatic_release_tag: ${{ steps.tag.outputs.VERSION }}
+          title: Release ${{ steps.tag.outputs.VERSION }}
+          files: |
+            VERSION.txt
   build-and-release:
-    name: "Git tag Release"
+    name: Build the Game and upload the files
     runs-on: "ubuntu-latest"
     environment: Release
     strategy:
@@ -37,15 +56,16 @@ jobs:
         id: tag
         run: |
           echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-          echo ${GITHUB_REF/refs\/tags\/v/} > VERSION.TXT
+          echo ${GITHUB_REF/refs\/tags\/v/} > VERSION.txt
           ls -lsa
-          cat VERSION.TXT
+          cat VERSION.txt
       - name: Zip
         uses: papeloto/action-zip@v1
         with:
           files: build/
           dest: ${{ matrix.platform }}-${{ steps.tag.outputs.VERSION }}.zip
-      - name: "Create a release"
+      - name: Create Release
+        id: create_release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -54,4 +74,10 @@ jobs:
           title: Release ${{ steps.tag.outputs.VERSION }}
           files: |
             VERSION.txt
-            ${{ matrix.platform }}-${{ steps.tag.outputs.VERSION }}.zip
+      - name: Upload Release Asset
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ matrix.platform }}-${{ steps.tag.outputs.VERSION }}.zip
+          asset_name: ${{ matrix.platform }}-${{ steps.tag.outputs.VERSION }}
+          tag: ${{ steps.tag.outputs.VERSION }}
