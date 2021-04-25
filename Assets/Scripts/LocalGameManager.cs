@@ -1,4 +1,5 @@
-﻿using DataBanks;
+﻿using System;
+using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using UI_Audio;
 using UnityEngine;
@@ -28,13 +29,10 @@ public class LocalGameManager: MonoBehaviour {
 	private void Awake() {
 		if (Instance is null)
 			Instance = this;
-		else {
-			Destroy(this);
-			return;
-		}
-
+		else throw new Exception("created two game managers");
 		// Find a way to define when it is server-only => no need to load UI stuff
 		LoadGameDependencies(true);
+		Entity.Entity.InitClass(Instance);
 	}
 
 	private void Start() {
@@ -72,8 +70,6 @@ public class LocalGameManager: MonoBehaviour {
 				menuSettingsManager.CloseMenu();
 				startMenuManager.CloseStartMenu();
 				playerInfoManager.ShowPlayerClassUI();
-				break;
-			case LocalGameStates.Quit:
 				break;
 		}
 	}

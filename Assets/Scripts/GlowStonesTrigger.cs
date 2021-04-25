@@ -7,7 +7,7 @@ public class GlowStonesTrigger: MonoBehaviour {
 	[SerializeField] private float delay;
 	private List<SpriteRenderer> _renderers;
 
-	void Start() {
+	private void Start() {
 		_renderers = new List<SpriteRenderer>();
 		foreach (GameObject symbol in glowingSymbols)
 			if (symbol.TryGetComponent(out SpriteRenderer spriteRenderer))
