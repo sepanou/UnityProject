@@ -201,7 +201,7 @@ namespace DataBanks {
 			MeleeWeapon result = obj.GetComponent<MeleeWeapon>();
 			result.MeleeData = GenerateMeleeData();
 			result.MeleeData.Name = "Mighty Sword";
-			result.GetSpriteRenderer().sprite = GetRandomInArray(swordSprites);
+			result.GetSpriteRenderer().sprite = swordSprites[0]/*GetRandomInArray(swordSprites)*/;
 			return result;
 		}
 	}

@@ -56,8 +56,8 @@ namespace Entity {
 		}
 		
 		protected void InstantiateEntity() {
-			if (spriteRenderer is null) return;
-			spriteRenderer = GetComponent<SpriteRenderer>();
+			if (!spriteRenderer)
+				spriteRenderer = GetComponent<SpriteRenderer>();
 		}
 
 		public Vector2 GetPosition2D() => transform.position;
