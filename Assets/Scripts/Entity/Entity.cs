@@ -8,8 +8,7 @@ using UI_Audio;
 using UnityEngine;
 
 namespace Entity {
-	public interface IInteractiveEntity
-	{
+	public interface IInteractiveEntity {
 		[Command(requiresAuthority = false)]
 		void CmdInteract(Player player);
 	}
@@ -18,11 +17,11 @@ namespace Entity {
 		[SerializeField] protected SpriteRenderer spriteRenderer;
 		[SerializeField] private Collider2D interactionCollider;
 
-		protected bool AutoStopInteracting;
-		protected Func<Player, bool> InteractionCondition;
+		protected bool AutoStopInteracting = false;
+		protected Func<Player, bool> InteractionCondition = null;
 		// <Player, bool : is he currently interacting with the object>
-		private Dictionary<Player, bool> _playerPool;
-		private bool _canInteract;
+		private Dictionary<Player, bool> _playerPool = new Dictionary<Player, bool>();
+		private bool _canInteract = false;
 		private IEnumerator _checkInteractionCoroutine;
 		private IInteractiveEntity _interactive;
 
@@ -75,12 +74,7 @@ namespace Entity {
 		protected void Instantiate() {
 			if (!spriteRenderer)
 				spriteRenderer = GetComponent<SpriteRenderer>();
-
 			CmdApplyLayers();
-			InteractionCondition = null;
-			AutoStopInteracting = false;
-			_canInteract = false;
-			_playerPool = new Dictionary<Player, bool>();
 			_interactive = interactionCollider && this is IInteractiveEntity interactive ? interactive : null;
 		}
 		
