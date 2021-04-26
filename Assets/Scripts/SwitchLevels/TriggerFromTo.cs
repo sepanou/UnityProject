@@ -1,6 +1,5 @@
 ﻿using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
-using UI_Audio;
 using UnityEngine;
 
 namespace SwitchLevels {
@@ -8,11 +7,13 @@ namespace SwitchLevels {
 		[Header("To destination")]
 		[SerializeField] private string sceneToGo;
 
-
+		[ClientCallback]
 		private void OnTriggerEnter2D(Collider2D other) {
 			// Verifying the collider is a player
-			if (other.gameObject.GetComponent<Player>() == null) return;
-			Switch();
+			if (!other.TryGetComponent(out Player player)) return;
+			CustomNetworkManager.singleton.StartSceneTransition();
+			if (player.isLocalPlayer)
+				Switch();
 		}
 
 		[Command(requiresAuthority = false)]

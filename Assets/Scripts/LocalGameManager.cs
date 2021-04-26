@@ -19,7 +19,6 @@ public class LocalGameManager: MonoBehaviour {
 	public MouseCursor mouseCursor;
 
 	[Header("Cameras")] public Camera mouseAndParticlesCamera;
-	public Camera overlayCamera;
 	public Camera worldCamera; // = player's camera when he enters the game
 
 	[NonSerialized] public Player LocalPlayer;
