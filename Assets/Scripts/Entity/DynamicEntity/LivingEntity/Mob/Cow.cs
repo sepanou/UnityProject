@@ -9,8 +9,6 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 
 		private void Start() {
 			Instantiate();
-			if (!isServer) return;
-			Behaviour = new Idle();
 		}
 
 		private void Update() {

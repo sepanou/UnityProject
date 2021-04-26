@@ -1,17 +1,12 @@
-﻿using Mirror;
+﻿using Behaviour;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public abstract class Mob: LivingEntity {
-		protected Behaviour.IBehaviour Behaviour = null;
-		
-		protected new void Instantiate() {
-			base.Instantiate();
-		}
+		protected IBehaviour Behaviour = new Idle();
 
-		[ServerCallback]
 		private void FixedUpdate() {
-			if (Behaviour is null) return;
+			if (!isServer || Behaviour is null) return;
 			Vector2 direction = Behaviour.NextDirection();
 			RpcApplyForceToRigidBody(direction.x, direction.y);
 		}
