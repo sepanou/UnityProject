@@ -118,11 +118,10 @@ namespace DataBanks {
 				"de Nurgle"
 			};
 
-		public static string GenerateName(List<string> weaponType) {
-			int adjType = Random.Range(0, weaponType.Count);
-			string weaponName = weaponType[adjType];
+		public static string GenerateName(List<(bool, string)> weaponType) {
+			(bool adjType, string weaponName) = weaponType[Random.Range(0, weaponType.Count)];
 			(string, string) adjs = Adjectives[Random.Range(0, Adjectives.Count)];
-			string adj = adjType == 0 ? adjs.Item1 : adjs.Item2;
+			string adj = !adjType ? adjs.Item1 : adjs.Item2;
 			string comp = NameComplements[Random.Range(0, NameComplements.Count)];
 			return weaponName + " " + adj + " " + comp;
 		}

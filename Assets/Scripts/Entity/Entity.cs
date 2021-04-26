@@ -3,7 +3,6 @@ using DataBanks;
 using Mirror;
 using UI_Audio;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Entity {
 	public abstract class Entity: NetworkBehaviour {
@@ -55,16 +54,20 @@ namespace Entity {
 				reference.gameObject.layer, toChange.gameObject);
 		}
 		
-		protected void InstantiateEntity() {
+		protected void Instantiate() {
 			if (!spriteRenderer)
 				spriteRenderer = GetComponent<SpriteRenderer>();
 		}
-
-		public Vector2 GetPosition2D() => transform.position;
 		
 		public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
-
-		[ServerCallback]
-		public void SetPosition2D(Vector2 newPos) => transform.position = newPos;
+		public Vector2 Position {
+			get => transform.position;
+			
+			[ServerCallback]
+			set {
+				Transform tempTransform = transform;
+				tempTransform.position = new Vector3(value.x, value.y, tempTransform.position.z);
+			}
+		}
 	}
 }
