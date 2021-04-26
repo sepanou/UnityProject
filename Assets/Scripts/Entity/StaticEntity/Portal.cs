@@ -21,13 +21,25 @@ public class Portal : Entity.Entity, IInteractiveEntity
         base.OnTriggerEnter2D(other);
         if (!isServer) return;
         _nbOfPlayers++;
-        Opening();
+        CmdOpen();
     }
 
     protected override void OnTriggerExit2D(Collider2D other) {
         base.OnTriggerExit2D(other);
         if (!isServer) return;
         _nbOfPlayers--;
+        CmdClose();
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdOpen()
+    {
+        Opening();
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdClose()
+    {
         Closing();
     }
 
