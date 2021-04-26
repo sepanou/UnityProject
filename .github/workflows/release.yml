@@ -11,6 +11,19 @@ jobs:
           pattern: 'v\d+\.\d+\.\d+\.?\d*'
           flags: 'gm'
           error: 'Your commit message shpud contain "vX.X.X" to trigger a deploy.'
+      - name: Extract version number
+        id: version
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          text: ${{ github.event.head_commit.message }}
+          regex: 'v(\d+\.\d+\.\d+)\.?\d*'
+      - name: Create Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          automatic_release_tag: ${{ steps.version.outputs.group1 }}
+          title: Version v${{ steps.version.outputs.group1 }}
   build-and-release:
     name: Build the Game and upload the files
     runs-on: ubuntu-latest
