@@ -81,7 +81,7 @@ namespace UI_Audio {
 			InfoManger.OpenWarningBox();
 		}
 
-		private IEnumerator ClientConnectionProcedure(RectTransform currentFields) {
+		private static IEnumerator ClientConnectionProcedure(RectTransform currentFields) {
 			if (currentFields)
 				currentFields.gameObject.SetActive(false);
 			
@@ -102,7 +102,7 @@ namespace UI_Audio {
 			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.InGame);
 		}
 		
-		private IEnumerator ServerLaunchProcedure(RectTransform currentFields) {
+		private static IEnumerator ServerLaunchProcedure(RectTransform currentFields) {
 			if (currentFields)
 				currentFields.gameObject.SetActive(false);
 			
@@ -123,8 +123,7 @@ namespace UI_Audio {
 				manager.StartHost();
 				StopAllCoroutines();
 				StartCoroutine(ServerLaunchProcedure(gameModeFields));
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				StopServerAndOrClient();
 				PlayerInfoManager.Instance.SetWarningText("Unable to launch the server...\n" +
 				                                          "Are you sure a server is not already launched?");
@@ -144,8 +143,7 @@ namespace UI_Audio {
 					manager.networkAddress = ipAddressField.text;
 					StopAllCoroutines();
 					StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					StopServerAndOrClient();
 					PlayerInfoManager.Instance.SetWarningText("Unable to join the server...");
 					PlayerInfoManager.Instance.OpenWarningBox();
@@ -159,7 +157,6 @@ namespace UI_Audio {
 		}
 
 		public void StopServerAndOrClient() {
-			LocalGameManager.Instance.worldCamera.transform.parent = manager.transform;
 			// Client + Server
 			if (NetworkServer.active && NetworkClient.isConnected)
 				manager.StopHost();

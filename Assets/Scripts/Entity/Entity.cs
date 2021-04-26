@@ -8,7 +8,8 @@ using UI_Audio;
 using UnityEngine;
 
 namespace Entity {
-	public interface IInteractiveEntity {
+	public interface IInteractiveEntity
+	{
 		[Command(requiresAuthority = false)]
 		void CmdInteract(Player player);
 	}
@@ -17,11 +18,11 @@ namespace Entity {
 		[SerializeField] protected SpriteRenderer spriteRenderer;
 		[SerializeField] private Collider2D interactionCollider;
 
-		protected bool AutoStopInteracting = false;
-		protected Func<Player, bool> InteractionCondition = null;
+		protected bool AutoStopInteracting;
+		protected Func<Player, bool> InteractionCondition;
 		// <Player, bool : is he currently interacting with the object>
-		private Dictionary<Player, bool> _playerPool = new Dictionary<Player, bool>();
-		private bool _canInteract = false;
+		private Dictionary<Player, bool> _playerPool;
+		private bool _canInteract;
 		private IEnumerator _checkInteractionCoroutine;
 		private IInteractiveEntity _interactive;
 
@@ -74,7 +75,13 @@ namespace Entity {
 		protected void Instantiate() {
 			if (!spriteRenderer)
 				spriteRenderer = GetComponent<SpriteRenderer>();
-			CmdApplyLayers();
+
+			if (!isServer)
+				CmdApplyLayers();
+			InteractionCondition = null;
+			AutoStopInteracting = false;
+			_canInteract = false;
+			_playerPool = new Dictionary<Player, bool>();
 			_interactive = interactionCollider && this is IInteractiveEntity interactive ? interactive : null;
 		}
 		
@@ -166,7 +173,7 @@ namespace Entity {
 
 		public void EnableInteraction() => interactionCollider.enabled = true;
 
-		private void OnTriggerEnter2D(Collider2D other) {
+		protected virtual void OnTriggerEnter2D(Collider2D other) {
 			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))
 				return;
 			if (InteractionCondition != null && !InteractionCondition(player))
@@ -181,7 +188,7 @@ namespace Entity {
 			StartCoroutine(_checkInteractionCoroutine);
 		}
 		
-		private void OnTriggerExit2D(Collider2D other) {
+		protected virtual void OnTriggerExit2D(Collider2D other) {
 			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))
 				return;
 			if (InteractionCondition != null && !InteractionCondition(player))

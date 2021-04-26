@@ -1,5 +1,6 @@
 ﻿using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
+using UI_Audio;
 using UnityEngine;
 
 namespace Entity.StaticEntity
@@ -22,7 +23,7 @@ namespace Entity.StaticEntity
 
 		[ClientRpc]
 		private void RpcToggleSprite(bool isOpen2) {
-			LocalGameManager.Instance.audioManager.PlayUISound("WoodenDoor");
+			AudioDB.PlayUISound("WoodenDoor");
 			_spriteRenderer.sprite = isOpen2 ? closed : opened;
 		}
 
@@ -32,5 +33,9 @@ namespace Entity.StaticEntity
 			RpcToggleSprite(isOpen);
 			isOpen = !isOpen;
 		}
+
+		public void ToDoOnEntering(Player player){}
+
+		public void ToDoOnExiting(Player player){}
 	}
 }

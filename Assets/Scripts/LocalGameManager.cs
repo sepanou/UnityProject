@@ -19,7 +19,6 @@ public class LocalGameManager: MonoBehaviour {
 	public MouseCursor mouseCursor;
 
 	[Header("Cameras")] public Camera mouseAndParticlesCamera;
-	public Camera overlayCamera;
 	public Camera worldCamera; // = player's camera when he enters the game
 
 	[NonSerialized] public Player LocalPlayer;
@@ -36,14 +35,13 @@ public class LocalGameManager: MonoBehaviour {
 			Destroy(this);
 			return;
 		}
-		// Find a way to define when it is server-only => no need to load UI stuff
-		LoadGameDependencies(true);
+		LoadGameDependencies(!Application.isBatchMode);
 		Entity.Entity.InitClass(Instance);
 	}
 
 	private void Start() {
 		LocalState = LocalGameStates.None;
-		SetLocalGameState(LocalGameStates.Start);
+		SetLocalGameState(Application.isBatchMode ? LocalGameStates.InGame : LocalGameStates.Start);
 	}
 
 	private void LoadGameDependencies(bool loadUI = false) {
@@ -69,6 +67,7 @@ public class LocalGameManager: MonoBehaviour {
 
 		switch (LocalState) {
 			case LocalGameStates.Start:
+				worldCamera.transform.SetParent(transform);
 				startMenuManager.StopServerAndOrClient();
 				inventoryManager.CloseAllInventories();
 				AudioDB.PlayMusic("MainMenuMusic");

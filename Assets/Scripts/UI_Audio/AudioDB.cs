@@ -9,7 +9,7 @@ namespace UI_Audio {
 
 		public void Initialize() => AudioPlayer.AudioManager = this;
 
-		public void PlayUISound(string soundKey) => AudioPlayer.PlaySoundNoDistance(soundKey);
+		public static void PlayUISound(string soundKey) => AudioPlayer.PlaySoundNoDistance(soundKey);
 		
 		public static void PlayMusic(string musicKey) => AudioPlayer.PlayMusic(musicKey);
 
