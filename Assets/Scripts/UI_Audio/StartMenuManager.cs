@@ -159,7 +159,6 @@ namespace UI_Audio {
 		}
 
 		public void StopServerAndOrClient() {
-			LocalGameManager.Instance.worldCamera.transform.parent = manager.transform;
 			// Client + Server
 			if (NetworkServer.active && NetworkClient.isConnected)
 				manager.StopHost();
