@@ -5,18 +5,15 @@ jobs:
     name:  Check If commit is deploy trigger
     runs-on: ubuntu-latest
     steps: 
-      - name: Check Commit Type
-        uses: gsactions/commit-message-checker@v1
-        with:
-          pattern: 'v\d+\.\d+\.\d+\.?\d*'
-          flags: 'gm'
-          error: 'Your commit message shpud contain "vX.X.X" to trigger a deploy.'
       - name: Extract version number
         id: version
         uses: actions-ecosystem/action-regex-match@v2
         with:
           text: ${{ github.event.head_commit.message }}
-          regex: '.*(v\d+\.\d+\.\d+)\.?\d*.*'
+          regex: '.*(v\d+\.\d+\.\d+).*'
+      - name: Check Commit contains version
+        if: ${{ steps.version.outputs.match == '' }}
+        uses: andymckay/cancel-action@0.2
       - name: Create Release
         uses: marvinpinto/action-automatic-releases@latest
         with:
@@ -56,7 +53,7 @@ jobs:
         uses: actions-ecosystem/action-regex-match@v2
         with:
           text: ${{ github.event.head_commit.message }}
-          regex: '.*(v\d+\.\d+\.\d+)\.?\d*.*'
+          regex: '.*(v\d+\.\d+\.\d+).*'
       - name: Zip
         uses: papeloto/action-zip@v1
         with:
