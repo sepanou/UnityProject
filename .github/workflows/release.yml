@@ -2,7 +2,7 @@ name: Create a release
 on: [push]
 jobs:
   check-commit:
-    name:  Check If commit is deploy trigger
+    name: Deploy Check
     runs-on: ubuntu-latest
     steps: 
       - name: Extract version number
