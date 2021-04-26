@@ -1,26 +1,26 @@
 name: Create a release
 on: [push]
 jobs:
-  create-release:
-    name: Create the release
-    runs-on: "ubuntu-latest"
-    if: startsWith(github.ref, 'refs/tags/')
-    steps: 
-      - name: Create VERSION.txt
-        id: tag
-        run: |
-          echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-          echo ${GITHUB_REF/refs\/tags\/v/} > VERSION.txt
-          cat VERSION.txt
-      - name: Create Release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          automatic_release_tag: latest
-          title: Release v${{ steps.tag.outputs.VERSION }}
-          files: |
-            VERSION.txt
+  # create-release:
+  #   name: Create the release
+  #   runs-on: "ubuntu-latest"
+  #   if: startsWith(github.ref, 'refs/tags/')
+  #   steps: 
+  #     - name: Create VERSION.txt
+  #       id: tag
+  #       run: |
+  #         echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+  #         echo ${GITHUB_REF/refs\/tags\/v/} > VERSION.txt
+  #         cat VERSION.txt
+  #     - name: Create Release
+  #       uses: "marvinpinto/action-automatic-releases@latest"
+  #       with:
+  #         repo_token: "${{ secrets.GITHUB_TOKEN }}"
+  #         prerelease: false
+  #         automatic_release_tag: v${{ steps.tag.outputs.VERSION }}
+  #         title: Release v${{ steps.tag.outputs.VERSION }}
+  #         files: |
+  #           VERSION.txt
   build-and-release:
     name: Build the Game and upload the files
     runs-on: "ubuntu-latest"
@@ -50,7 +50,7 @@ jobs:
           targetPlatform: ${{ matrix.platform }}
       - name: Extract tag name
         id: tag
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Zip
         uses: papeloto/action-zip@v1
         with:
@@ -62,4 +62,4 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: Build.zip
           asset_name: ${{ matrix.platform }}.zip
-          tag: latest
+          tag: ${{ steps.tag.outputs.VERSION }}
