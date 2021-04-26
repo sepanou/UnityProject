@@ -1,5 +1,5 @@
-﻿using Behaviour;
-using UnityEngine;
+﻿using UnityEngine;
+using Behaviour;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public abstract class Mob: LivingEntity {

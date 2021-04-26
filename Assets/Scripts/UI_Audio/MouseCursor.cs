@@ -89,10 +89,9 @@ namespace UI_Audio {
 			
 			_isIdling = true;
 			_animator.Play("Idle");
-			RectTransform rectTransform = selectable.targetGraphic.rectTransform;
-
+			
 			while (selectable && selectable.enabled) {
-				if (!IsMouseOver(rectTransform)) break;
+				if (!IsMouseOn(selectable)) break;
 				yield return new WaitForSeconds(0.1f);
 			}
 
