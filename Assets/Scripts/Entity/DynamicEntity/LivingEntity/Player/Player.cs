@@ -69,6 +69,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				_inventory = InventoryManager.Instance.playerInventory;
 				_mainCamera = LocalGameManager.Instance.SetMainCameraToPlayer(this);
 				_weapons.Callback += OnWeaponsUpdated;
+				LocalGameManager.Instance.LocalPlayer = this;
 				PlayerInfoManager.Instance.UpdateMoneyAmount(this);
 			}
 			SwitchClass(playerClass);
