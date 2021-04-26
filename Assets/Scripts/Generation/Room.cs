@@ -21,7 +21,7 @@ namespace Generation {
 		public int GetId() => _id;
 		public (int, int) Coordinates; // Left of the Room
 
-		public void Start() {
+		public void Start() { // Should be changed to generate on server side so when we get them form the game files we generate their specs
 			_exits = new List<(char, int)>();
 			Name = this.name;
 			Debug.Log(Name);
@@ -62,8 +62,10 @@ namespace Generation {
 			;
 
 			string levelAndId = "";
-			for (int i = exits.Length + dimensions.Length + 4; i < Name.Length; i++)
+			for (int i = exits.Length + dimensions.Length + 4; i < Name.Length; i++) {
+				if (Name[i] == ' ' || Name[i] == '(') break;//When you place 2 times the same room you get "[Name] (x)"
 				levelAndId += Name[i];
+			}
 
 			string nb = "";
 			for (int i = 1; i < levelAndId.Length; i++) {
