@@ -53,7 +53,7 @@ jobs:
           targetPlatform: ${{ matrix.platform }}
       - name: Extract version number
         id: version
-        uses: actions-ecosystem/action-add-labels@v1
+        uses: actions-ecosystem/action-regex-match@v2
         with:
           text: ${{ github.event.head_commit.message }}
           regex: '(v\d+\.\d+\.\d+)\.?\d*'
