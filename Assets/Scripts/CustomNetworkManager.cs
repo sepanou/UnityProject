@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class CustomNetworkManager : NetworkManager
 {
+    public new static CustomNetworkManager singleton;
+    
     [Header("Scene transition")] 
     [SerializeField] private Animator sceneAnimator;
     
@@ -18,7 +20,10 @@ public class CustomNetworkManager : NetworkManager
     public override void Start() {
         _playerPrefabs = new List<Player>();
         base.Start();
+        singleton = this;
     }
+
+    public void StartSceneTransition() => sceneAnimator.Play("StartTransition");
 
     private void SetPlayerSpawnPoints(Vector3[] spawnPoints) {
         for (int i = 0; i < _playerPrefabs.Count; i++)
@@ -28,13 +33,6 @@ public class CustomNetworkManager : NetworkManager
     public override void OnServerAddPlayer(NetworkConnection conn) {
         base.OnServerAddPlayer(conn);
         _playerPrefabs.Add(conn.identity.gameObject.GetComponent<Player>());
-    }
-
-    public override void OnServerChangeScene(string newSceneName) {
-        if (newSceneName != forestSceneName) return;
-        if (sceneAnimator)
-            sceneAnimator.Play("StartTransition");
-        base.OnServerChangeScene(newSceneName);
     }
 
     public override void OnServerSceneChanged(string sceneName) {
@@ -47,12 +45,6 @@ public class CustomNetworkManager : NetworkManager
             
     }
 
-    public override void OnClientChangeScene(string newSceneName, SceneOperation sceneOperation, bool customHandling) {
-        if (sceneAnimator)
-            sceneAnimator.Play("StartTransition");
-        base.OnClientChangeScene(newSceneName, sceneOperation, customHandling);
-    }
-    
     public override void OnClientSceneChanged(NetworkConnection conn) {
         base.OnClientSceneChanged(conn);
         if (sceneAnimator)
