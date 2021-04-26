@@ -11,10 +11,11 @@ jobs:
         with:
           text: ${{ github.event.head_commit.message }}
           regex: '.*(v\d+\.\d+\.\d+).*'
-      - name: Check Commit contains version
+      - name: Stop CI if not release
         if: ${{ steps.version.outputs.match == '' }}
-        uses: andymckay/cancel-action@0.2
+        run: exit 1
       - name: Create Release
+        if: ${{ steps.version.outputs.match != '' }}
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
