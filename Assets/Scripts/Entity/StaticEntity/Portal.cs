@@ -9,41 +9,42 @@ using UnityEngine;
 public class Portal : Entity.Entity, IInteractiveEntity
 {
     private Animator _animator;
+
+    private int _nbOfPlayers;
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
+        _nbOfPlayers = 0;
         _animator = GetComponent<Animator>();
         Instantiate();
     }
-    protected override void OnTriggerEnter2D(Collider2D other)
-    {
+    protected override void OnTriggerEnter2D(Collider2D other) {
         base.OnTriggerEnter2D(other);
         if (!isServer) return;
+        _nbOfPlayers++;
         Opening();
     }
 
-    protected override void OnTriggerExit2D(Collider2D other)
-    {
+    protected override void OnTriggerExit2D(Collider2D other) {
         base.OnTriggerExit2D(other);
         if (!isServer) return;
+        _nbOfPlayers--;
         Closing();
     }
 
     [ClientRpc]
-    private void Opening()
-    {
+    private void Opening() {
+        if (_nbOfPlayers != 1) return;
         _animator.Play("Opening");
         _animator.SetBool("IsPlayerHere", true);
     }
     
     [ClientRpc]
-    private void Closing()
-    {
+    private void Closing() {
+        if (_nbOfPlayers != 0) return;
         _animator.SetBool("IsPlayerHere", false);
     }
 
-    public void CmdInteract(Player player)
-    {
+    public void CmdInteract(Player player) {
         Debug.Log("salut les salopes");
     }
 }
