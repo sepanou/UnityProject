@@ -10,7 +10,7 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 
 		private void Start() {
 			Instantiate();
-			Behaviour = new PlayerStraightFollower(this, new PlayerTargeter(this));
+			Behaviour = new NearestPlayerStraightFollower(this, new NearestPlayerTargeter(this));
 		}
 	}
 }

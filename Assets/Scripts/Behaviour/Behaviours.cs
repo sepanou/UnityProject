@@ -32,8 +32,4 @@ namespace Behaviour {
 	public abstract class EntityTargetedBehaviour<TTargeter>: TargetedBehaviour<Entity.Entity, TTargeter> where TTargeter: ITargeter {
 		protected EntityTargetedBehaviour(Entity.Entity entity, TTargeter targeter): base(entity, targeter) { }
 	}
-	
-	public abstract class EntityPlayerTargetedBehaviour: EntityTargetedBehaviour<PlayerTargeter> {
-		protected EntityPlayerTargetedBehaviour(Entity.Entity entity, PlayerTargeter targeter): base(entity, targeter) { }
-	}
 }
