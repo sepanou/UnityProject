@@ -4,84 +4,74 @@ using Mirror;
 using UI_Audio;
 using UnityEngine;
 
-namespace Entity.DynamicEntity.Weapon.RangedWeapon
-{
-    public class RangedWeaponData
-    {
-        public float ProjectileSpeedMultiplier, ProjectileSizeMultiplier;
-        public int ProjectileNumber;
-        public float DefaultDamageMultiplier, SpecialDamageMultiplier;
-        public String Name;
+namespace Entity.DynamicEntity.Weapon.RangedWeapon {
+	public class RangedWeaponData {
+		public float ProjectileSpeedMultiplier, ProjectileSizeMultiplier;
+		public int ProjectileNumber;
+		public float DefaultDamageMultiplier, SpecialDamageMultiplier;
+		public string Name;
 
-        public static RangedWeaponData operator *(RangedWeaponData other, int nbr)
-        {
-            if (other == null || nbr == 0)
-                return null;
-            if (nbr == 1)
-                return other;
-            return new RangedWeaponData
-            {
-                ProjectileSpeedMultiplier = other.ProjectileSpeedMultiplier * nbr,
-                ProjectileSizeMultiplier = other.ProjectileSizeMultiplier * nbr,
-                ProjectileNumber = other.ProjectileNumber * nbr,
-                DefaultDamageMultiplier = other.DefaultDamageMultiplier * nbr,
-                SpecialDamageMultiplier = other.SpecialDamageMultiplier * nbr
-            };
-        }
-    }
-    
-    public abstract class RangedWeapon : Weapon
-    {
-        [NonSerialized] public RangedWeaponData RangeData;
-        [SerializeField] protected Transform launchPoint;
-        [SerializeField] private Projectile.Projectile projectile;
-        
-        [SyncVar] [HideInInspector] public Vector2 orientation;
+		public static RangedWeaponData operator *(RangedWeaponData other, int nbr) {
+			if (other == null || nbr == 0)
+				return null;
+			if (nbr == 1)
+				return other;
+			return new RangedWeaponData {
+				ProjectileSpeedMultiplier = other.ProjectileSpeedMultiplier * nbr,
+				ProjectileSizeMultiplier = other.ProjectileSizeMultiplier * nbr,
+				ProjectileNumber = other.ProjectileNumber * nbr,
+				DefaultDamageMultiplier = other.DefaultDamageMultiplier * nbr,
+				SpecialDamageMultiplier = other.SpecialDamageMultiplier * nbr
+			};
+		}
+	}
+	
+	public abstract class RangedWeapon: Weapon {
+		[NonSerialized] public RangedWeaponData RangeData;
+		[SerializeField] protected Transform launchPoint;
+		[SerializeField] private Projectile.Projectile projectile;
+		
+		[SyncVar] [HideInInspector] public Vector2 orientation;
 
-        public override bool OnSerialize(NetworkWriter writer, bool initialState)
-        {
-            base.OnSerialize(writer, initialState);
-            writer.WriteVector2(orientation);
-            return true;
-        }
+		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
+			base.OnSerialize(writer, initialState);
+			writer.WriteVector2(orientation);
+			return true;
+		}
 
-        public override void OnDeserialize(NetworkReader reader, bool initialState)
-        {
-            base.OnDeserialize(reader, initialState);
-            orientation = reader.ReadVector2();
-        }
-        
-        public override RectTransform GetInformationPopup()
-        {
-            return !PlayerInfoManager.Instance 
-                ? null 
-                : PlayerInfoManager.Instance.ShowRangedWeaponDescription(RangeData);
-        }
-        
-        protected void InstantiateRangeWeapon()
-        {
-            if (isServer)
-                orientation = Vector2.up;
-            projectile.InstantiateProjectile();
-            InstantiateWeapon();
-        }
+		public override void OnDeserialize(NetworkReader reader, bool initialState) {
+			base.OnDeserialize(reader, initialState);
+			orientation = reader.ReadVector2();
+		}
+		
+		public override RectTransform GetInformationPopup() {
+			return !PlayerInfoManager.Instance 
+				? null 
+				: PlayerInfoManager.Instance.ShowRangedWeaponDescription(RangeData);
+		}
+		
+		protected new void Instantiate() {
+			if (isServer)
+				orientation = Vector2.up;
+			projectile.Instantiate();
+			base.Instantiate();
+		}
 
-        public Projectile.Projectile GetProjectile() => projectile;
+		public Projectile.Projectile GetProjectile() => projectile;
 
-        public override string GetName() => RangeData.Name;
+		public override string GetName() => RangeData.Name;
 
-        // Used for name generation
-        public Dictionary<int, (int, string)> weaponName=
-            new Dictionary<int,(int, string)>
-            {
-                {0, (0, "L'arc")},                // 0 == masculine adjective, feminine otherwise.
-                {1, (0, "L'arc court")},
-                {2, (0, "L'arc long")},
-                {3, (0, "L'arc monobloc")},
-                {4, (0, "L'arc à poulies")},
-                {5, (0, "L'arc droit")},
-                {6, (0, "L'arc de chasse")},
-                {7, (0, "L'arc Yumi")}
-            };
-    }
+		// Used for name generation
+		public readonly IReadOnlyList<(bool, string)> WeaponName =
+			new List<(bool, string)> {
+				(false, "L'arc"),				// false == masculine adjective, feminine otherwise.
+				(false, "L'arc court"),
+				(false, "L'arc long"),
+				(false, "L'arc monobloc"),
+				(false, "L'arc à poulies"),
+				(false, "L'arc droit"),
+				(false, "L'arc de chasse"),
+				(false, "L'arc Yumi")
+			}.AsReadOnly();
+	}
 }

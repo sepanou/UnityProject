@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Entity.Collectibles;
 using Entity.DynamicEntity.Weapon.MeleeWeapon;
 using Entity.DynamicEntity.Weapon.RangedWeapon;
@@ -118,11 +119,10 @@ namespace DataBanks {
 				"de Nurgle"
 			};
 
-		public static string GenerateName(List<string> weaponType) {
-			int adjType = Random.Range(0, weaponType.Count);
-			string weaponName = weaponType[adjType];
+		public static string GenerateName(List<(bool, string)> weaponType) {
+			(bool adjType, string weaponName) = weaponType[Random.Range(0, weaponType.Count)];
 			(string, string) adjs = Adjectives[Random.Range(0, Adjectives.Count)];
-			string adj = adjType == 0 ? adjs.Item1 : adjs.Item2;
+			string adj = !adjType ? adjs.Item1 : adjs.Item2;
 			string comp = NameComplements[Random.Range(0, NameComplements.Count)];
 			return weaponName + " " + adj + " " + comp;
 		}
@@ -130,30 +130,33 @@ namespace DataBanks {
 		private static T GetRandomInArray<T>(IReadOnlyList<T> array)
 			=> array.Count == 0 ? default : array[Random.Range(0, array.Count)];
 
+		private static float RoundRandomFloat(float min, float max, int tolerance = 3)
+			=> (float) Math.Round((decimal) Random.Range(min, max), tolerance);
+
 		private static CharmData GenerateCharmData() {
 			CharmData result = new CharmData();
 			if (Random.Range(0, 2) == 1)
-				result.DefaultAttackDamageBonus = Random.Range(0f, 0.05f);
+				result.DefaultAttackDamageBonus = RoundRandomFloat(0f, 0.05f);
 			if (Random.Range(0, 2) == 1)
-				result.SpecialAttackDamageBonus = Random.Range(0f, 0.025f);
+				result.SpecialAttackDamageBonus = RoundRandomFloat(0f, 0.025f);
 			if (Random.Range(0, 2) == 1)
 				result.HealthBonus = Random.Range(0, 10);
 			if (Random.Range(0, 2) == 1)
 				result.PowerBonus = Random.Range(0, 5);
 			if (Random.Range(0, 2) == 1)
-				result.SpeedBonus = Random.Range(0f, 0.025f);
+				result.SpeedBonus = RoundRandomFloat(0f, 0.025f);
 			if (Random.Range(0, 2) == 1)
-				result.CooldownReduction = Random.Range(0f, 0.025f);
+				result.CooldownReduction = RoundRandomFloat(0f, 0.025f);
 			return result;
 		}
 
 		private static RangedWeaponData GenerateRangeData(bool epic = false) {
 			RangedWeaponData result = new RangedWeaponData();
-			result.DefaultDamageMultiplier = Random.Range(0.5f, 2f);
-			result.SpecialDamageMultiplier = Random.Range(0.75f, 1.25f);
+			result.DefaultDamageMultiplier = RoundRandomFloat(0.5f, 2f);
+			result.SpecialDamageMultiplier = RoundRandomFloat(0.75f, 1.25f);
 			result.ProjectileNumber = Random.Range(1, 7);
-			result.ProjectileSpeedMultiplier = Random.Range(0.5f, 2f);
-			result.ProjectileSizeMultiplier = Random.Range(0.5f, 2f);
+			result.ProjectileSpeedMultiplier = RoundRandomFloat(0.5f, 2f);
+			result.ProjectileSizeMultiplier = RoundRandomFloat(0.5f, 2f);
 			if (epic)
 				result *= 2;
 			return result;
@@ -161,10 +164,10 @@ namespace DataBanks {
 
 		private static MeleeWeaponData GenerateMeleeData(bool epic = false) {
 			MeleeWeaponData result = new MeleeWeaponData();
-			result.DefaultDamageMultiplier = Random.Range(0.5f, 3f);
-			result.SpecialDamageMultiplier = Random.Range(0.75f, 1.5f);
-			result.WeaponSizeMultiplier = Random.Range(0.75f, 2f);
-			result.KnockbackMultiplier = Random.Range(0.75f, 3f);
+			result.DefaultDamageMultiplier = RoundRandomFloat(0.5f, 3f);
+			result.SpecialDamageMultiplier = RoundRandomFloat(0.75f, 1.5f);
+			result.WeaponSizeMultiplier = RoundRandomFloat(0.75f, 2f);
+			result.KnockbackMultiplier = RoundRandomFloat(0.75f, 3f);
 			if (epic)
 				result *= 2;
 			return result;

@@ -1,19 +1,14 @@
 ﻿using UnityEngine;
+using Behaviour;
 
-namespace Entity.DynamicEntity.LivingEntity.Mob
-{
-    public abstract class Mob : LivingEntity
-    {
-        protected Vector2 LastPos;
-        
-        protected void InstantiateMob()
-        {
-            LastPos = transform.position;
-            InstantiateLivingEntity();
-        }
+namespace Entity.DynamicEntity.LivingEntity.Mob {
+	public abstract class Mob: LivingEntity {
+		protected IBehaviour Behaviour = new Idle();
 
-        protected abstract void MobPathFinding(); // Maxence au Boulot
-        // Pour les mouvements, tu as la ClientRpc ApplyForceToRigidBody(x, y)
-        // -> ça va update les animations sur les clients :)
-    }
+		private void FixedUpdate() {
+			if (!isServer || Behaviour is null) return;
+			Vector2 direction = Behaviour.NextDirection();
+			RpcApplyForceToRigidBody(direction.x, direction.y);
+		}
+	}
 }
