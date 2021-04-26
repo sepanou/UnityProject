@@ -17,7 +17,7 @@ namespace Entity.StaticEntity
 			_doorCollider = GetComponents<Collider2D>();
 			_spriteRenderer = GetComponent<SpriteRenderer>();
 			Instantiate();
-			autoStopInteracting = true;
+			AutoStopInteracting = true;
 		}
 
 		[ClientRpc]

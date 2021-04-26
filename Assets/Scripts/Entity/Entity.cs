@@ -16,8 +16,10 @@ namespace Entity {
 	
 	public abstract class Entity: NetworkBehaviour {
 		[SerializeField] protected SpriteRenderer spriteRenderer;
+		[SerializeField] private Collider2D interactionCollider;
 
-		protected bool autoStopInteracting;
+		protected bool AutoStopInteracting;
+		protected Func<Player, bool> InteractionCondition;
 		// <Player, bool : is he currently interacting with the object>
 		private Dictionary<Player, bool> _playerPool;
 		private bool _canInteract;
@@ -73,10 +75,11 @@ namespace Entity {
 		protected void Instantiate() {
 			if (!spriteRenderer)
 				spriteRenderer = GetComponent<SpriteRenderer>();
-			autoStopInteracting = false;
+			InteractionCondition = null;
+			AutoStopInteracting = false;
 			_canInteract = false;
 			_playerPool = new Dictionary<Player, bool>();
-			_interactive = this is IInteractiveEntity interactive ? interactive : null;
+			_interactive = interactionCollider && this is IInteractiveEntity interactive ? interactive : null;
 		}
 		
 		public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
@@ -101,7 +104,7 @@ namespace Entity {
 					yield return null;
 				}
 
-				if (!_playerPool[player] || autoStopInteracting)
+				if (!_playerPool[player] || AutoStopInteracting)
 					CmdTryInteract(player);
 
 				yield return null;
@@ -122,7 +125,9 @@ namespace Entity {
 
 		[Command(requiresAuthority = false)]
 		private void CmdTryInteract(Player player) {
-			if (autoStopInteracting) {
+			if (InteractionCondition != null && !InteractionCondition(player))
+				return;
+			if (AutoStopInteracting) {
 				_interactive.CmdInteract(player);
 				return;
 			}
@@ -140,8 +145,22 @@ namespace Entity {
 			_playerPool[player] = state;
 		}
 
+		public void DisableInteraction(Player player) {
+			interactionCollider.enabled = false;
+			if (_checkInteractionCoroutine != null)
+				StopCoroutine(_checkInteractionCoroutine);
+			_playerPool.Clear();
+			if (!player.isLocalPlayer) return;
+			_canInteract = false;
+			LocalGameManager.Instance.playerInfoManager._displayKey.StopDisplay();
+		}
+
+		public void EnableInteraction() => interactionCollider.enabled = true;
+
 		private void OnTriggerEnter2D(Collider2D other) {
 			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))
+				return;
+			if (InteractionCondition != null && !InteractionCondition(player))
 				return;
 			_playerPool[player] = false;
 			if (!player.isLocalPlayer) return;
@@ -155,6 +174,8 @@ namespace Entity {
 		
 		private void OnTriggerExit2D(Collider2D other) {
 			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))
+				return;
+			if (InteractionCondition != null && !InteractionCondition(player))
 				return;
 			_playerPool.Remove(player);
 			if (!player.isLocalPlayer) return;

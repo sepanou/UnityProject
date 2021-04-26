@@ -41,6 +41,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   spriteRenderer: {fileID: 2261218723381114381}
+  interactionCollider: {fileID: 1230758081}
   isOpen: 0
   closed: {fileID: 21300158, guid: 29c9cded5e558164aaf8c9bf08aa1510, type: 3}
   opened: {fileID: 21300160, guid: 29c9cded5e558164aaf8c9bf08aa1510, type: 3}

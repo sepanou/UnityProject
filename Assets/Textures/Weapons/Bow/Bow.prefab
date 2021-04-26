@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5890061017820911818}
   - component: {fileID: -6064306282551117732}
   - component: {fileID: 5900744793733015568}
+  - component: {fileID: 7887381192874093965}
   m_Layer: 0
   m_Name: Bow
   m_TagString: Untagged
@@ -101,7 +102,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  Renderer: {fileID: -5727337771764513854}
+  spriteRenderer: {fileID: 0}
+  interactionCollider: {fileID: 7887381192874093965}
   speed: 0
   holder: {fileID: 0}
   compatibleClass: 2
@@ -169,6 +171,22 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 5
   localScaleSensitivity: 0.01
+--- !u!58 &7887381192874093965
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017461150231793244}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.5, y: 0}
+  serializedVersion: 2
+  m_Radius: 1
 --- !u!1 &7922785146855789578
 GameObject:
   m_ObjectHideFlags: 0
