@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Entity.StaticEntity;
 using UI_Audio;
 using UnityEngine;
 
@@ -26,7 +27,6 @@ namespace DataBanks {
 		public void Initialize() {
 			ModifyControls.InputManager = this;
 			PlayerInfoManager.InputManager = this;
-			Door.InputManager = this;
 
 			_modified = false;
 			_path = Path.Combine(Application.persistentDataPath, "InputManager.json");
@@ -68,6 +68,14 @@ namespace DataBanks {
 				return false;
 			}
 			return Input.GetKeyDown(_actionToKey[action]);
+		}
+		
+		public bool GetKeyUp(string action) {
+			if (!_actionToKey.ContainsKey(action)) {
+				Debug.LogWarning("The specified action name is unknown...");
+				return false;
+			}
+			return Input.GetKeyUp(_actionToKey[action]);
 		}
 		
 		public bool GetKeyPressed(string action) {

@@ -62,13 +62,15 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private void Start() {
 			DontDestroyOnLoad(this);
 			Instantiate();
-			OnLocalPlayerClassChange += ChangeAnimator;
-			OnRemotePlayerClassChange += ChangeAnimator;
-			if (!isLocalPlayer) return;
-			_inventory = InventoryManager.Instance.playerInventory;
-			_mainCamera = LocalGameManager.Instance.SetMainCameraToPlayer(this);
-			_weapons.Callback += OnWeaponsUpdated;
-			PlayerInfoManager.Instance.UpdateMoneyAmount(this);
+			if (!isLocalPlayer)
+				OnRemotePlayerClassChange += ChangeAnimator;
+			else {
+				OnLocalPlayerClassChange += ChangeAnimator;
+				_inventory = InventoryManager.Instance.playerInventory;
+				_mainCamera = LocalGameManager.Instance.SetMainCameraToPlayer(this);
+				_weapons.Callback += OnWeaponsUpdated;
+				PlayerInfoManager.Instance.UpdateMoneyAmount(this);
+			}
 			SwitchClass(playerClass);
 		}
 

@@ -128,7 +128,7 @@ namespace Entity.DynamicEntity.Weapon {
 		private void RpcEquip() {
 			transform.localPosition = defaultCoordsWhenLikedToPlayer;
 			SetActive(true);
-			if (holder.isLocalPlayer)
+			if (holder && holder.isLocalPlayer)
 				OnWeaponChange?.Invoke(this);
 		}
 

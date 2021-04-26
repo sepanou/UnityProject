@@ -38,6 +38,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f7f781fe46b654b9aec6186f5fc085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  spriteRenderer: {fileID: 2261218723381114381}
   isOpen: 0
   closed: {fileID: 21300158, guid: 29c9cded5e558164aaf8c9bf08aa1510, type: 3}
   opened: {fileID: 21300160, guid: 29c9cded5e558164aaf8c9bf08aa1510, type: 3}
@@ -151,6 +154,12 @@ PrefabInstance:
 --- !u!1 &2261218723381114380 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2055102311959635369, guid: 6a057178eb028e94fb93bf39262ea3e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 280426974087205797}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &2261218723381114381 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 2055102311959635368, guid: 6a057178eb028e94fb93bf39262ea3e8,
     type: 3}
   m_PrefabInstance: {fileID: 280426974087205797}
   m_PrefabAsset: {fileID: 0}

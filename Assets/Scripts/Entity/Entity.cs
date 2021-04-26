@@ -1,12 +1,28 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using DataBanks;
+using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UI_Audio;
 using UnityEngine;
 
 namespace Entity {
+	public interface IInteractiveEntity
+	{
+		[Command(requiresAuthority = false)]
+		void CmdInteract(Player player);
+	}
+	
 	public abstract class Entity: NetworkBehaviour {
 		[SerializeField] protected SpriteRenderer spriteRenderer;
+
+		protected bool autoStopInteracting;
+		// <Player, bool : is he currently interacting with the object>
+		private Dictionary<Player, bool> _playerPool;
+		private bool _canInteract;
+		private IEnumerator _checkInteractionCoroutine;
+		private IInteractiveEntity _interactive;
 
 		[NonSerialized] protected static LocalGameManager Manager;
 		[NonSerialized] protected static LanguageManager LanguageManager;
@@ -57,6 +73,10 @@ namespace Entity {
 		protected void Instantiate() {
 			if (!spriteRenderer)
 				spriteRenderer = GetComponent<SpriteRenderer>();
+			autoStopInteracting = false;
+			_canInteract = false;
+			_playerPool = new Dictionary<Player, bool>();
+			_interactive = this is IInteractiveEntity interactive ? interactive : null;
 		}
 		
 		public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
@@ -68,6 +88,78 @@ namespace Entity {
 				Transform tempTransform = transform;
 				tempTransform.position = new Vector3(value.x, value.y, tempTransform.position.z);
 			}
+		}
+		
+		// *-*-*-*-*- For interactive objects (NPC / Doors / ...) -*-*-*-*-*
+		
+		[ClientCallback]
+		private IEnumerator CheckInteraction(Player player) {
+			while (_canInteract) {
+				while (!InputManager.GetKeyDown("Interact")) {
+					if (!_canInteract)
+						yield break;
+					yield return null;
+				}
+
+				if (!_playerPool[player] || autoStopInteracting)
+					CmdTryInteract(player);
+
+				yield return null;
+			}
+		}
+
+		[ClientCallback]
+		protected void StopInteracting(Player player) {
+			// For callbacks from client (player) 
+			SetIsInteractive(player, false);
+			// Tell it to the server
+			CmdStopInteracting(player);
+		}
+
+		[TargetRpc]
+		private void RpcSetIsInteractive(NetworkConnection target, Player player, bool state) 
+			=> SetIsInteractive(player, state);
+
+		[Command(requiresAuthority = false)]
+		private void CmdTryInteract(Player player) {
+			if (autoStopInteracting) {
+				_interactive.CmdInteract(player);
+				return;
+			}
+			if (!_playerPool.ContainsKey(player) || _playerPool[player]) return;
+			SetIsInteractive(player, true);
+			RpcSetIsInteractive(player.connectionToClient, player, true);
+			_interactive.CmdInteract(player);
+		}
+
+		[Command(requiresAuthority = false)]
+		private void CmdStopInteracting(Player player) => SetIsInteractive(player, false);
+
+		private void SetIsInteractive(Player player, bool state) {
+			if (!_playerPool.ContainsKey(player)) return;
+			_playerPool[player] = state;
+		}
+
+		private void OnTriggerEnter2D(Collider2D other) {
+			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))
+				return;
+			_playerPool[player] = false;
+			if (!player.isLocalPlayer) return;
+			_canInteract = true;
+			LocalGameManager.Instance.playerInfoManager._displayKey.StartDisplay();
+			if (_checkInteractionCoroutine != null)
+				StopCoroutine(_checkInteractionCoroutine);
+			_checkInteractionCoroutine = CheckInteraction(player);
+			StartCoroutine(_checkInteractionCoroutine);
+		}
+		
+		private void OnTriggerExit2D(Collider2D other) {
+			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))
+				return;
+			_playerPool.Remove(player);
+			if (!player.isLocalPlayer) return;
+			_canInteract = false;
+			LocalGameManager.Instance.playerInfoManager._displayKey.StopDisplay();
 		}
 	}
 }
