@@ -52,4 +52,9 @@ public class CustomNetworkManager : NetworkManager
         if (networkSceneName == forestSceneName)
             AudioDB.PlayMusic("ForestMusic");
     }
+
+    public override void OnStopClient() {
+        LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Start);
+        base.OnStopClient();
+    }
 }

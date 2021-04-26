@@ -68,6 +68,7 @@ public class LocalGameManager: MonoBehaviour {
 
 		switch (LocalState) {
 			case LocalGameStates.Start:
+				worldCamera.transform.SetParent(transform);
 				startMenuManager.StopServerAndOrClient();
 				inventoryManager.CloseAllInventories();
 				AudioDB.PlayMusic("MainMenuMusic");
