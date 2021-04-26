@@ -86,7 +86,7 @@ namespace Entity.DynamicEntity.Weapon {
 			PlayerFound = true;
 			StartCoroutine(Collectibles.Collectibles.OnTargetDetected(this, player));
 		}
-		
+
 		// Validation checks before attacking
 		// Only the player with authority on the object can call this method
 		[ServerCallback]

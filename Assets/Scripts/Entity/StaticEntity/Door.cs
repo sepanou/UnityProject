@@ -33,5 +33,9 @@ namespace Entity.StaticEntity
 			RpcToggleSprite(isOpen);
 			isOpen = !isOpen;
 		}
+
+		public void ToDoOnEntering(Player player){}
+
+		public void ToDoOnExiting(Player player){}
 	}
 }
