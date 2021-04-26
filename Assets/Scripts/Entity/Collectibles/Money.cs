@@ -1,7 +1,5 @@
-﻿namespace Entity.Collectibles
-{
-    public class Money : Collectibles
-    {
-        
-    }
+﻿namespace Entity.Collectibles {
+	public class Money: Collectibles {
+		
+	}
 }

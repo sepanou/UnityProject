@@ -48,7 +48,7 @@ public class LocalGameManager: MonoBehaviour {
 		languageManager.Initialize();
 		audioManager.Initialize();
 		inputManager.Initialize();
-		languageManager.InitLanguage();
+		LanguageManager.InitLanguage();
 		if (!loadUI) return;
 		LoadUI();
 	}

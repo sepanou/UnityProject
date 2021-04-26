@@ -1,19 +1,19 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
-namespace Entity.DynamicEntity.LivingEntity.Mob
-{
-    public abstract class Mob : LivingEntity
-    {
-        protected Vector2 LastPos;
-        
-        protected void InstantiateMob()
-        {
-            LastPos = transform.position;
-            InstantiateLivingEntity();
-        }
+namespace Entity.DynamicEntity.LivingEntity.Mob {
+	public abstract class Mob: LivingEntity {
+		protected Behaviour.IBehaviour Behaviour = null;
+		
+		protected new void Instantiate() {
+			base.Instantiate();
+		}
 
-        protected abstract void MobPathFinding(); // Maxence au Boulot
-        // Pour les mouvements, tu as la ClientRpc ApplyForceToRigidBody(x, y)
-        // -> ça va update les animations sur les clients :)
-    }
+		[ServerCallback]
+		private void FixedUpdate() {
+			if (Behaviour is null) return;
+			Vector2 direction = Behaviour.NextDirection();
+			RpcApplyForceToRigidBody(direction.x, direction.y);
+		}
+	}
 }
