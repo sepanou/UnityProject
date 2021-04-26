@@ -7,9 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Entity.DynamicEntity.Weapon {
-	public abstract class Weapon: DynamicEntity, IInventoryItem {
-		private ContactFilter2D _filter;
-		
+	public abstract class Weapon: DynamicEntity, IInventoryItem, IInteractiveEntity {
 		[SyncVar] public Player holder;
 		[SyncVar] public PlayerClasses compatibleClass;
 		[SyncVar] public bool equipped;
@@ -52,13 +50,17 @@ namespace Entity.DynamicEntity.Weapon {
 				PlayerFound = false;
 				LastAttackTime = -1f;
 			}
-			_filter = new ContactFilter2D();
 
 			base.Instantiate();
 			
 			if (holder) SetActive(equipped);
 
 			SceneManager.sceneLoaded += (scene, module) => SetActive(equipped);
+			AutoStopInteracting = true;
+			InteractionCondition = player => !PlayerFound 
+			                                 && isGrounded
+			                                 && player.playerClass == compatibleClass
+			                                 && !player.IsFullInventory();
 		}
 
 		private void SetActive(bool state) {
@@ -78,29 +80,11 @@ namespace Entity.DynamicEntity.Weapon {
 		protected abstract void SpecialAttack();
 		public abstract RectTransform GetInformationPopup();
 		public abstract string GetName();
-
-		[ServerCallback]
-		private bool CheckForCompatibleNearbyPlayers(out Player compatiblePlayer) {
-			List<Collider2D> results = new List<Collider2D>();
-			Physics2D.OverlapCircle(transform.position, 2f, _filter.NoFilter(), results);
-			
-			foreach (Collider2D obj in results) {
-				if (!obj.gameObject.TryGetComponent(out Player player)
-				    || player.playerClass != compatibleClass
-				    || player.IsFullInventory()) continue;
-				compatiblePlayer = player;
-				return true;
-			}
-
-			compatiblePlayer = null;
-			return false;
-		}
 		
-		[ServerCallback]
-		protected void GroundedLogic() {
-			if (!isGrounded || !CheckForCompatibleNearbyPlayers(out Player target)) return;
+		[Command(requiresAuthority = false)]
+		public void CmdInteract(Player player) {
 			PlayerFound = true;
-			StartCoroutine(Collectibles.Collectibles.OnTargetDetected(this, target));
+			StartCoroutine(Collectibles.Collectibles.OnTargetDetected(this, player));
 		}
 		
 		// Validation checks before attacking
@@ -128,7 +112,7 @@ namespace Entity.DynamicEntity.Weapon {
 		private void RpcEquip() {
 			transform.localPosition = defaultCoordsWhenLikedToPlayer;
 			SetActive(true);
-			if (holder.isLocalPlayer)
+			if (holder && holder.isLocalPlayer)
 				OnWeaponChange?.Invoke(this);
 		}
 

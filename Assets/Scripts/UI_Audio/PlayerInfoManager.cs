@@ -91,7 +91,9 @@ namespace UI_Audio {
 				yield break;
 			
 			dialogText.text = "";
-			
+			yield return new WaitUntil(() => InputManager.GetKeyUp("Interact"));
+			dialogBox.gameObject.SetActive(true);
+
 			foreach (string dialogKey in dialogKeys) {
 				string toPrint = LanguageManager[dialogKey];
 				
@@ -99,14 +101,13 @@ namespace UI_Audio {
 					dialogText.text += chr;
 					yield return new WaitForSeconds(delay);
 					
-					if (!InputManager.GetKeyDown("Interact")) continue;
+					if (!InputManager.GetKeyPressed("Interact")) continue;
 					dialogText.text = toPrint;
 					yield return new WaitForSeconds(delay);
 					break;
 				}
 
-				while (!InputManager.GetKeyDown("Interact"))
-					yield return null;
+				yield return new WaitUntil(() => InputManager.GetKeyDown("Interact"));
 			}
 			
 			while (!InputManager.GetKeyDown("Interact"))
@@ -119,7 +120,6 @@ namespace UI_Audio {
 		// Dialog box
 		public void PrintDialog(string[] dialogKeys, UnityAction callback) { // in order of appearance
 			if (!dialogBox || !dialogText) return;
-			dialogBox.gameObject.SetActive(true);
 			if (_dialogWriter != null)
 				StopCoroutine(_dialogWriter);
 			_dialogWriter = StartCoroutine(WriteDialog(dialogKeys, callback));

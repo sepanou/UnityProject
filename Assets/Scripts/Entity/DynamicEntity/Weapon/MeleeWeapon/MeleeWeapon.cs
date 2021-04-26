@@ -37,8 +37,6 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 		public override string GetName() => MeleeData.Name;
 
 		private void FixedUpdate() {
-			// Only run by server
-			if (isServer && isGrounded && !PlayerFound) GroundedLogic();
 			if (!hasAuthority|| !equipped || isGrounded || !MouseCursor.Instance) return;
 			// Only run by the weapon's owner (client)
 			gameObject.transform.localRotation =
