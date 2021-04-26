@@ -96,7 +96,7 @@ namespace Entity.DynamicEntity.Weapon
             foreach (Collider2D obj in results)
             {
                 if (!obj.gameObject.TryGetComponent(out Player player) ||
-                    player.playerClass != compatibleClass) continue;
+                    player.playerClass != compatibleClass || player.IsFullInventory()) continue;
                 compatiblePlayer = player;
                 return true;
             }

@@ -57,8 +57,7 @@ public class Door: NetworkBehaviour {
 	private IEnumerator CheckInteraction(Player player) {
 		while (_canInteract) {
 			if (InputManager.GetKeyDown("Interact")) {
-				Debug.Log("bientôt");
-				ToggleDoor();
+				CmdToggleDoor(player);
 				yield return null;
 			}
 
@@ -67,15 +66,15 @@ public class Door: NetworkBehaviour {
 	}
 	
 	[Command(requiresAuthority = false)] 
-	private void ToggleDoor() {
-		if (!_canInteract) return;
+	private void CmdToggleDoor(Player player) {
+		if (!_playerPool.Contains(player)) return;
 		_doorCollider[0].enabled = isOpen;
-		ToggleSprite(isOpen);
+		RpcToggleSprite(isOpen);
 		isOpen = !isOpen;
 	}
 
 	[ClientRpc]
-	private void ToggleSprite(bool isOpen2) {
+	private void RpcToggleSprite(bool isOpen2) {
 		LocalGameManager.Instance.audioManager.PlayUISound("WoodenDoor");
 		_spriteRenderer.sprite = isOpen2 ? closed : opened;
 	}
