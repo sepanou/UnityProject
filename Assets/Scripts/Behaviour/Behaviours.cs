@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Targeter;
+using UnityEngine;
 
 namespace Behaviour {
 	public interface IBehaviour {
@@ -19,15 +20,15 @@ namespace Behaviour {
 		protected EntityBehaviour(Entity.Entity entity): base(entity) { }
 	}
 	
-	public abstract class TargetedBehaviour<TEntity, TTarget>: Behaviour<TEntity> where TEntity: Entity.Entity where TTarget: Entity.Entity {
-		protected readonly TTarget Target;
+	public abstract class TargetedBehaviour<TEntity, TTargeter>: Behaviour<TEntity> where TEntity: Entity.Entity where TTargeter: ITargeter {
+		protected readonly TTargeter Targeter;
 
-		protected TargetedBehaviour(TEntity entity, TTarget target): base(entity) {
-			Target = target;
+		protected TargetedBehaviour(TEntity entity, TTargeter targeter): base(entity) {
+			Targeter = targeter;
 		}
 	}
 	
-	public abstract class EntityTargetedBehaviour: TargetedBehaviour<Entity.Entity, Entity.Entity> {
-		protected EntityTargetedBehaviour(Entity.Entity entity, Entity.Entity target): base(entity, target) { }
+	public abstract class EntityTargetedBehaviour<TTargeter>: TargetedBehaviour<Entity.Entity, TTargeter> where TTargeter: ITargeter {
+		protected EntityTargetedBehaviour(Entity.Entity entity, TTargeter targeter): base(entity, targeter) { }
 	}
 }
