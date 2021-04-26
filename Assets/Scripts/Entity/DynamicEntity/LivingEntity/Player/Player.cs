@@ -11,7 +11,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 	public enum PlayerClasses: byte { Mage, Warrior, Archer }
 	
 	public class Player: LivingEntity {
-    public static int MaxItemInInventory = 20;
+		private const int MaxItemInInventory = 20;
 		public static event LocalPlayerClassChanged OnLocalPlayerClassChange;
 		public static event RemotePlayerClassChanged OnRemotePlayerClassChange;
 		public delegate void LocalPlayerClassChanged(ClassData data);
@@ -79,9 +79,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		
 		public bool HasEnoughOrchid(int amount) => _orchid >= amount;
     
-    public bool IsFullInventory() => _weapons.Count == MaxItemInInventory;
+		public bool IsFullInventory() => _weapons.Count >= MaxItemInInventory;
 
-    public Vector3 WorldToScreenPoint(Vector3 position)
+		public Vector3 WorldToScreenPoint(Vector3 position)
             => _mainCamera ? _mainCamera.WorldToScreenPoint(position) : Vector3.zero;
 
 		private void ChangeAnimator(ClassData data) {

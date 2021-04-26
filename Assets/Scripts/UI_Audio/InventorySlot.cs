@@ -73,12 +73,11 @@ namespace UI_Audio {
 				SetInfoDisplayActive(false);
 				_isMouseOver = false;
 				targetGraphic.sprite = normalSprite;
-			}
+			} else if (_isMouseOver && _item != null)
+				SetInfoDisplayActive(true);
 			if (!_isMouseOver || !Input.GetMouseButtonDown(0)) return;
 			if (_previouslySelected)
 				_previouslySelected.targetGraphic.sprite = _previouslySelected.normalSprite;
-			if (_isMouseOver && _item != null)
-				SetInfoDisplayActive(true);
 			_previouslySelected = this;
 			targetGraphic.sprite = selectedSprite;
 			clickEvent?.Invoke();
