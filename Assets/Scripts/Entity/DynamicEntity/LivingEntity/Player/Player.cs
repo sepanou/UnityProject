@@ -72,6 +72,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				LocalGameManager.Instance.LocalPlayer = this;
 				PlayerInfoManager.Instance.UpdateMoneyAmount(this);
 			}
+			Debug.Log(playerName);
 			SwitchClass(playerClass);
 		}
 
