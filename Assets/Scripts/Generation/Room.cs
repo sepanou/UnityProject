@@ -23,29 +23,27 @@ namespace Generation {
 
 		public void Start() {
 			_exits = new List<(char, int)>();
-			Name = "16x16eB1T2L4R2StdL1R1";
+			Name = this.name;
+			Debug.Log(Name);
 			string dimensions = Name.TakeWhile(c => c != 'e').Aggregate("", (current, c) => current + c);
 			string[] tmp = dimensions.Split('x');
 			Dimensions = (int.Parse(tmp[0]), int.Parse(tmp[1]));
 			string exits = "";
-			char[] tmp2 = new[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'B', 'R', 'L'};
+			char[] tmp2 = new[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'B', 'R', 'L',','};
 			for (int i = dimensions.Length + 1; i < Name.Length; i++) {
 				if (!tmp2.Contains(Name[i])) break;
 				exits += Name[i];
 			}
 
-			char way = exits[0];
-			string nbExit = "";
-			for (int i = 1; i <= exits.Length; i++) {
-				if (i == exits.Length) {
-					_exits.Add((way, int.Parse(nbExit)));
-					break;
+			char dir = '\0';
+			foreach (char c in exits) {
+				if (c == 'T' || c == 'B' || c == 'L' || c == 'R') {
+					dir = c;
+					continue;
 				}
-				if (!('0' <= exits[i] && exits[i] <= '9')) {
-					_exits.Add((way, int.Parse(nbExit)));
-					way = exits[i];
-					nbExit = "";
-				} else nbExit += exits[i];
+				if (c == ',') continue;
+				//Is a number here
+				_exits.Add((dir, c));
 			}
 
 			string type = "";
