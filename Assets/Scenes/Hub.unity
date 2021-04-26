@@ -2498,7 +2498,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 7d5b211ef55cbb6479f3979c9e4bd585, type: 2}
+      objectReference: {fileID: 22100000, guid: 059f44d01e05e2a43bdf0dfe8092b241,
+        type: 2}
     - target: {fileID: 6908914794162927955, guid: fd6dd86d309c51e43b3a9275f8a95990,
         type: 3}
       propertyPath: m_Name
@@ -4745,7 +4746,6 @@ MonoBehaviour:
   inventoryManager: {fileID: 73266863}
   mouseCursor: {fileID: 8616060846193702690}
   mouseAndParticlesCamera: {fileID: 1807969961}
-  overlayCamera: {fileID: 0}
   worldCamera: {fileID: 711440083}
 --- !u!4 &166225833
 Transform:
@@ -11155,7 +11155,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.8
+  m_fontSize: 22.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -18357,6 +18357,12 @@ PrefabInstance:
       propertyPath: Renderer
       value: 
       objectReference: {fileID: 407111609}
+    - target: {fileID: 4964651069413724654, guid: fd6dd86d309c51e43b3a9275f8a95990,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: e4a5270dcbee289499cdf3dbdf2d8c22,
+        type: 2}
     - target: {fileID: 6908914794162927955, guid: fd6dd86d309c51e43b3a9275f8a95990,
         type: 3}
       propertyPath: m_Name
@@ -89189,7 +89195,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.8
+  m_fontSize: 22.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -107575,7 +107581,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 1e9a22268d13d2b42908b1ee4a40e2ec, type: 2}
+      objectReference: {fileID: 22100000, guid: 6a0a0f2ad2610c043ba5b887b3eeed3e,
+        type: 2}
     - target: {fileID: 6908914794162927955, guid: fd6dd86d309c51e43b3a9275f8a95990,
         type: 3}
       propertyPath: m_Name
@@ -115260,7 +115267,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 26.8
+  m_fontSize: 26.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -122040,7 +122047,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 146.9
+  m_fontSize: 146.8
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1
