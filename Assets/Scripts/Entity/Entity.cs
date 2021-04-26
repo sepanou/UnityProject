@@ -76,7 +76,8 @@ namespace Entity {
 			if (!spriteRenderer)
 				spriteRenderer = GetComponent<SpriteRenderer>();
 
-			CmdApplyLayers();
+			if (!isServer)
+				CmdApplyLayers();
 			InteractionCondition = null;
 			AutoStopInteracting = false;
 			_canInteract = false;
