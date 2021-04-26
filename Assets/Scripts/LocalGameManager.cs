@@ -22,6 +22,8 @@ public class LocalGameManager: MonoBehaviour {
 	public Camera overlayCamera;
 	public Camera worldCamera; // = player's camera when he enters the game
 
+	[NonSerialized] public Player LocalPlayer;
+
 	public LocalGameStates LocalState { get; private set; }
 
 	public static LocalGameManager Instance;
