@@ -1,5 +1,4 @@
-﻿using Entity.DynamicEntity.LivingEntity.Player;
-using Targeter;
+﻿using Targeter;
 using UnityEngine;
 
 namespace Behaviour {
