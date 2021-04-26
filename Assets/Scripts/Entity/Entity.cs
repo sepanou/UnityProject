@@ -75,6 +75,8 @@ namespace Entity {
 		protected void Instantiate() {
 			if (!spriteRenderer)
 				spriteRenderer = GetComponent<SpriteRenderer>();
+
+			CmdApplyLayers();
 			InteractionCondition = null;
 			AutoStopInteracting = false;
 			_canInteract = false;
@@ -91,6 +93,19 @@ namespace Entity {
 				Transform tempTransform = transform;
 				tempTransform.position = new Vector3(value.x, value.y, tempTransform.position.z);
 			}
+		}
+
+		[Command(requiresAuthority = false)]
+		private void CmdApplyLayers(NetworkConnectionToClient target = null) {
+			if (spriteRenderer)
+				RpcSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer);
+		}
+
+		[TargetRpc]
+		private void RpcSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId) {
+			if (spriteRenderer)
+				spriteRenderer.sortingLayerID = sortingLayerId;
+			gameObject.layer = layerMaskId;
 		}
 		
 		// *-*-*-*-*- For interactive objects (NPC / Doors / ...) -*-*-*-*-*
