@@ -7,8 +7,6 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 		private void Start() => Instantiate();
 
 		private void FixedUpdate() {
-			// Only run by server
-			if (isServer && isGrounded && !PlayerFound) GroundedLogic();
 			if (!hasAuthority|| !equipped || isGrounded || !MouseCursor.Instance) return;
 			// Only run by the weapon's owner (client)
 			gameObject.transform.localRotation =

@@ -73,6 +73,7 @@ namespace UI_Audio {
 		private bool TryGetElementFromRayCast<T>(out T result) {
 			result = default;
 			EventSystem system = EventSystem.current;
+			if (!system) return false;
 			PointerEventData pointerData = new PointerEventData(system) { position = Input.mousePosition };
 			List<RaycastResult> results = new List<RaycastResult>();
 			system.RaycastAll(pointerData, results);

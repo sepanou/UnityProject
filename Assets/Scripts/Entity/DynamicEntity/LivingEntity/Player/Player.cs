@@ -62,13 +62,15 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private void Start() {
 			DontDestroyOnLoad(this);
 			Instantiate();
-			OnLocalPlayerClassChange += ChangeAnimator;
-			OnRemotePlayerClassChange += ChangeAnimator;
-			if (!isLocalPlayer) return;
-			_inventory = InventoryManager.Instance.playerInventory;
-			_mainCamera = LocalGameManager.Instance.SetMainCameraToPlayer(this);
-			_weapons.Callback += OnWeaponsUpdated;
-			PlayerInfoManager.Instance.UpdateMoneyAmount(this);
+			if (!isLocalPlayer)
+				OnRemotePlayerClassChange += ChangeAnimator;
+			else {
+				OnLocalPlayerClassChange += ChangeAnimator;
+				_inventory = InventoryManager.Instance.playerInventory;
+				_mainCamera = LocalGameManager.Instance.SetMainCameraToPlayer(this);
+				_weapons.Callback += OnWeaponsUpdated;
+				PlayerInfoManager.Instance.UpdateMoneyAmount(this);
+			}
 			SwitchClass(playerClass);
 		}
 
@@ -131,6 +133,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private void CollectWeapon(Weapon.Weapon wp) {
 			wp.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
 			wp.holder = this;
+			wp.DisableInteraction(this);
 			wp.RpcSetWeaponParent(transform);
 			if (weapon)
 				wp.UnEquip();
@@ -150,6 +153,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				case Weapon.Weapon wp:
 					wp.isGrounded = false;
 					CollectWeapon(wp);
+					wp.DisableInteraction(this);
 					if (wp.TryGetComponent(out NetworkTransform netTransform))
 						netTransform.clientAuthority = true;
 					break;
