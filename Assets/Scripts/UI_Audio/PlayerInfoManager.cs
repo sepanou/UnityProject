@@ -2,7 +2,6 @@
 using System.Collections;
 using DataBanks;
 using Entity.Collectibles;
-using Entity.DynamicEntity;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Entity.DynamicEntity.Weapon;
 using Entity.DynamicEntity.Weapon.MeleeWeapon;
@@ -10,7 +9,8 @@ using Entity.DynamicEntity.Weapon.RangedWeapon;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
+
 using UnityEngine.UI;
 
 namespace UI_Audio {
@@ -45,7 +45,7 @@ namespace UI_Audio {
         [Header("Player Class Fields")]
         [SerializeField] private RectTransform playerClassCanvas;
         [SerializeField] private Image classIcon, powerBar, healthBar;
-        [SerializeField] public DisplayKey _displayKey;
+        [FormerlySerializedAs("_displayKey")] [SerializeField] public DisplayKey displayKey;
         
 		[NonSerialized] public static LanguageManager LanguageManager;
 		[NonSerialized] public static InputManager InputManager;
@@ -57,6 +57,7 @@ namespace UI_Audio {
 			else {
 				// Duplicates
 				Destroy(this);
+				// ReSharper disable once RedundantJumpStatement
 				return;
 			}
 		}

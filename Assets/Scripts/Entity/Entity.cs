@@ -168,7 +168,7 @@ namespace Entity {
 			_playerPool.Clear();
 			if (!player.isLocalPlayer) return;
 			_canInteract = false;
-			LocalGameManager.Instance.playerInfoManager._displayKey.StopDisplay();
+			LocalGameManager.Instance.playerInfoManager.displayKey.StopDisplay();
 		}
 
 		public void EnableInteraction() => interactionCollider.enabled = true;
@@ -181,7 +181,7 @@ namespace Entity {
 			_playerPool[player] = false;
 			if (!player.isLocalPlayer) return;
 			_canInteract = true;
-			LocalGameManager.Instance.playerInfoManager._displayKey.StartDisplay();
+			LocalGameManager.Instance.playerInfoManager.displayKey.StartDisplay();
 			if (_checkInteractionCoroutine != null)
 				StopCoroutine(_checkInteractionCoroutine);
 			_checkInteractionCoroutine = CheckInteraction(player);
@@ -196,7 +196,7 @@ namespace Entity {
 			_playerPool.Remove(player);
 			if (!player.isLocalPlayer) return;
 			_canInteract = false;
-			LocalGameManager.Instance.playerInfoManager._displayKey.StopDisplay();
+			LocalGameManager.Instance.playerInfoManager.displayKey.StopDisplay();
 		}
 	}
 }

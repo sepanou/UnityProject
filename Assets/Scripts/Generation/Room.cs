@@ -20,6 +20,7 @@ namespace Generation {
 		public int GetId() => _id;
 		public (int, int) Coordinates; // Left of the Room
 
+		// ReSharper disable once UnusedMember.Local
 		private void Start() {
 			IsDiscovered = false;
 		}

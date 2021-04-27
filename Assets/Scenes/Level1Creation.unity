@@ -5828,7 +5828,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!114 &455078637
 MonoBehaviour:
@@ -5844,6 +5844,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
+  LevelId: 1
+  lvlName: zda
   alreadyGenerated: 0
 --- !u!114 &455078638
 MonoBehaviour:
@@ -13403,50 +13405,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 973865729}
   m_CullTransparentMesh: 0
---- !u!1 &974993183 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1935697939217014977, guid: c4bede4bbeb0d8345857c7b0051d9707,
-    type: 3}
-  m_PrefabInstance: {fileID: 1935697940003655999}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &974993185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 974993183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51aec433530fecc5d948aec775bcce8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lastSyncTime: 0
-  syncMode: 0
-  syncInterval: 0.1
-  netIdentityCache: {fileID: 0}
-  <IsDiscovered>k__BackingField: 0
-  <Name>k__BackingField: 
-  <Type>k__BackingField: 0
-  _level: 0
-  _id: 0
---- !u!114 &974993186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 974993183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 3968391643
-  serverOnly: 0
-  visible: 0
-  m_AssetId: c4bede4bbeb0d8345857c7b0051d9707
-  hasSpawned: 0
 --- !u!1 &981308637
 GameObject:
   m_ObjectHideFlags: 0

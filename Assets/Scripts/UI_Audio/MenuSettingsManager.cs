@@ -37,6 +37,7 @@ namespace UI_Audio {
 			else {
 				// Duplicates
 				Destroy(this);
+				// ReSharper disable once RedundantJumpStatement
 				return;
 			}
 		}

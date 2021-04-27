@@ -27,7 +27,8 @@ namespace UI_Audio {
 		[NonSerialized] public static StartMenuManager Instance;
 		[NonSerialized] public static PlayerInfoManager InfoManger;
 
-		private readonly Regex _regexIPAddress = new Regex(@"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$");
+		private readonly Regex _regexIpv4Address = new Regex(@"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$");
+		private readonly Regex _regexIpv6Address = new Regex(@"(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))");
 		private readonly Regex _regexURL = new Regex(@"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)");
 
 		private void Awake() {
@@ -36,6 +37,7 @@ namespace UI_Audio {
 			else {
 				// Duplicates
 				Destroy(this);
+				// ReSharper disable once RedundantJumpStatement
 				return;
 			}
 		}
@@ -61,7 +63,7 @@ namespace UI_Audio {
 		}
 
 		private bool ValidateIPAddressInput(string input)
-			=> input == "localhost" || _regexIPAddress.IsMatch(input) || _regexURL.IsMatch(input);
+			=> input == "localhost" || _regexIpv4Address.IsMatch(input) || _regexIpv6Address.IsMatch(input) || _regexURL.IsMatch(input);
 
 		public void ValidatePseudo() {
 			pseudoFields.gameObject.SetActive(false);
