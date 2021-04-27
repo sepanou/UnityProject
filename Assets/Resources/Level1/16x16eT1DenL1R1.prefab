@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1467143784056585424}
   - component: {fileID: 9009268758813015204}
-  - component: {fileID: 110284243413492289}
+  - component: {fileID: 1180152832397309551}
   m_Layer: 0
   m_Name: 16x16eT1DenL1R1
   m_TagString: Untagged
@@ -50,7 +50,7 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &110284243413492289
+--- !u!114 &1180152832397309551
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,11 +59,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1467143784056585425}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51aec433530fecc5d948aec775bcce8d, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f14a54a5b084dd5b306673810bc752c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  hasBeenDiscovered: 0
+  hasBeenCleared: 0
 --- !u!1 &1467143784102121138
 GameObject:
   m_ObjectHideFlags: 0

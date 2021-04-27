@@ -24,7 +24,10 @@ namespace Entity.DynamicEntity {
 		}
 
 		[Command(requiresAuthority = false)]
-		public void CmdInteract(Player player) {
+		public void CmdInteract(Player player) => Interact(player);
+
+		[Server]
+		public void Interact(Player player) {
 			switch (npcType) {
 				case NpcType.Smith:
 					InteractSmith(player.connectionToClient, player);
