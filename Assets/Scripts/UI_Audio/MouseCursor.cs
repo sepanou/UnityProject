@@ -16,11 +16,16 @@ namespace UI_Audio {
 		private Animator _animator;
 		private bool _isIdling;
 		private Camera _mouseCamera;
+		private bool _initialized = false;
 
 		private void Awake() {
 			if (!Instance)
 				Instance = this;
-			else throw new Exception("created two instances of MouseCursor");
+			else {
+				Destroy(this);
+				// ReSharper disable once RedundantJumpStatement
+				return;
+			}
 		}
 
 		public void Initialize() {
@@ -37,6 +42,7 @@ namespace UI_Audio {
 			_isIdling = false;
 			
 			gameObject.SetActive(true);
+			_initialized = true;
 		}
 
 		public bool IsMouseOver(RectTransform rect)
@@ -60,7 +66,7 @@ namespace UI_Audio {
 			renderTexture.Create();
 		}
 		
-		private Vector2 ClampCoords(Vector2 viewportPoint) {
+		private static Vector2 ClampCoords(Vector2 viewportPoint) {
 			// Viewport coords => between 0 and 1 if inside the game window
 			float x = viewportPoint.x;
 			float y = viewportPoint.y;
@@ -70,7 +76,7 @@ namespace UI_Audio {
 			);
 		}
 
-		private bool TryGetElementFromRayCast<T>(out T result) {
+		private static bool TryGetElementFromRayCast<T>(out T result) {
 			result = default;
 			EventSystem system = EventSystem.current;
 			if (!system) return false;
@@ -109,6 +115,8 @@ namespace UI_Audio {
 		}
 
 		private void Update() {
+			if (!_initialized) return;
+			
 			int width = Screen.width;
 			int height = Screen.height;
 			

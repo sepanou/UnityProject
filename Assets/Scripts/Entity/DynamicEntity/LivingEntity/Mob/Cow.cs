@@ -1,5 +1,5 @@
 ﻿using Behaviour;
-using Targeter;
+using Behaviour.Targeter;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {

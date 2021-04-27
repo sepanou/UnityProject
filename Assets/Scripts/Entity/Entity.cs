@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
@@ -8,10 +9,8 @@ using UI_Audio;
 using UnityEngine;
 
 namespace Entity {
-	public interface IInteractiveEntity
-	{
-		[Command(requiresAuthority = false)]
-		void CmdInteract(Player player);
+	public interface IInteractiveEntity {
+		[Server] void Interact(Player player);
 	}
 	
 	public abstract class Entity: NetworkBehaviour {
@@ -75,7 +74,6 @@ namespace Entity {
 		protected void Instantiate() {
 			if (!spriteRenderer)
 				spriteRenderer = GetComponent<SpriteRenderer>();
-
 			if (!isServer)
 				CmdApplyLayers();
 			InteractionCondition = null;
@@ -102,6 +100,7 @@ namespace Entity {
 				RpcSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer);
 		}
 
+		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
 		private void RpcSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId) {
 			if (spriteRenderer)
@@ -135,6 +134,7 @@ namespace Entity {
 			CmdStopInteracting(player);
 		}
 
+		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
 		private void RpcSetIsInteractive(NetworkConnection target, Player player, bool state) 
 			=> SetIsInteractive(player, state);
@@ -144,13 +144,13 @@ namespace Entity {
 			if (InteractionCondition != null && !InteractionCondition(player))
 				return;
 			if (AutoStopInteracting) {
-				_interactive.CmdInteract(player);
+				_interactive.Interact(player);
 				return;
 			}
 			if (!_playerPool.ContainsKey(player) || _playerPool[player]) return;
 			SetIsInteractive(player, true);
 			RpcSetIsInteractive(player.connectionToClient, player, true);
-			_interactive.CmdInteract(player);
+			_interactive.Interact(player);
 		}
 
 		[Command(requiresAuthority = false)]
@@ -168,7 +168,7 @@ namespace Entity {
 			_playerPool.Clear();
 			if (!player.isLocalPlayer) return;
 			_canInteract = false;
-			LocalGameManager.Instance.playerInfoManager._displayKey.StopDisplay();
+			LocalGameManager.Instance.playerInfoManager.displayKey.StopDisplay();
 		}
 
 		public void EnableInteraction() => interactionCollider.enabled = true;
@@ -181,7 +181,7 @@ namespace Entity {
 			_playerPool[player] = false;
 			if (!player.isLocalPlayer) return;
 			_canInteract = true;
-			LocalGameManager.Instance.playerInfoManager._displayKey.StartDisplay();
+			LocalGameManager.Instance.playerInfoManager.displayKey.StartDisplay();
 			if (_checkInteractionCoroutine != null)
 				StopCoroutine(_checkInteractionCoroutine);
 			_checkInteractionCoroutine = CheckInteraction(player);
@@ -196,7 +196,7 @@ namespace Entity {
 			_playerPool.Remove(player);
 			if (!player.isLocalPlayer) return;
 			_canInteract = false;
-			LocalGameManager.Instance.playerInfoManager._displayKey.StopDisplay();
+			LocalGameManager.Instance.playerInfoManager.displayKey.StopDisplay();
 		}
 	}
 }
