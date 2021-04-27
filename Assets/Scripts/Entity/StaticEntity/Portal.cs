@@ -6,7 +6,7 @@ namespace Entity.StaticEntity {
 	public class Portal: Entity, IInteractiveEntity {
 		private Animator _animator;
 		private int _nbOfPlayers;
-		
+
 		private void Start() {
 			_nbOfPlayers = 0;
 			_animator = GetComponent<Animator>();

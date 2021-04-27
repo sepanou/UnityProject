@@ -65538,7 +65538,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7263529758465571998}
   - component: {fileID: 8307371179410982287}
-  - component: {fileID: 4055728214987854139}
+  - component: {fileID: 2264550308601144512}
   m_Layer: 0
   m_Name: 36x36eT1,2R1,2B1,2L1,2StdL1R1
   m_TagString: Untagged
@@ -65578,7 +65578,7 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &4055728214987854139
+--- !u!114 &2264550308601144512
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65587,11 +65587,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7263529758465572001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51aec433530fecc5d948aec775bcce8d, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f14a54a5b084dd5b306673810bc752c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  hasBeenDiscovered: 0
+  hasBeenCleared: 0
 --- !u!1 &7263529758466998573
 GameObject:
   m_ObjectHideFlags: 0

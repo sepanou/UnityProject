@@ -1,7 +1,7 @@
 ﻿using System;
 using Entity.DynamicEntity.LivingEntity.Player;
 
-namespace Targeter {
+namespace Behaviour.Targeter {
 	public class NearestTargeter<TEntity, TTarget>: ITargeter where TEntity: Entity.Entity where TTarget: Entity.Entity {
 		protected readonly TEntity Entity;
 		protected readonly Func<TEntity, TTarget, TTarget, bool> IsNearer;

@@ -29,6 +29,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		private Camera _mainCamera;
 
+		// ReSharper disable once UnusedMember.Local
 		private List<Charm> _charms = new List<Charm>(); // Could use targetRpc -> no need for others to see our charms !
 		// serialization of Weapon objects, but it does for GameObject !
 		[ShowInInspector]

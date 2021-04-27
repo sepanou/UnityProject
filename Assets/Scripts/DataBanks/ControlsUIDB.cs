@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "ControlsUIDB", menuName = "DataBanks/ControlsUIDB", order = 10)]
-public class ControlsUIBD : ScriptableObject
-{
+namespace DataBanks {
+	[CreateAssetMenu(fileName = "ControlsUIDB", menuName = "DataBanks/ControlsUIDB", order = 10)]
+	// ReSharper disable once InconsistentNaming
+	public class ControlsUIBD: ScriptableObject {
     
+	}
 }

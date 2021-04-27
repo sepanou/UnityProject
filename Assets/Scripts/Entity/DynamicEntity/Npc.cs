@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
@@ -12,6 +11,7 @@ namespace Entity.DynamicEntity {
 		private enum NpcType { Smith, Seller, Buyer, ClassSelector, StoryTeller }
 		
 		// A NPC is interactive !
+		// ReSharper disable once NotAccessedField.Local
 		private Rigidbody2D _rigidBody; // For movements
 		private Collider2D _collider;
 
@@ -41,30 +41,37 @@ namespace Entity.DynamicEntity {
 				case NpcType.StoryTeller:
 					InteractStoryTeller(player.connectionToClient, player);
 					break;
+				default:
+					throw new ArgumentException("Interact");
 			}
 		}
 
+		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
 		private void InteractSmith(NetworkConnection target, Player player) {
 			InventoryManager.smithInventory.Open();
 			// TODO
 		}
 		
+		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
 		private void InteractBuyer(NetworkConnection target, Player player) {
 			// TODO
 		}
 		
+		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
 		private void InteractSeller(NetworkConnection target, Player player) {
 			// TODO
 		}
 		
+		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
 		private void InteractStoryTeller(NetworkConnection target, Player player) {
 			// TODO
 		}
 		
+		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
 		private void InteractClassSelector(NetworkConnection target, Player player) {
 			switch (classType) {
