@@ -26,8 +26,11 @@ namespace Entity.StaticEntity {
 			_spriteRenderer.sprite = isOpen2 ? closed : opened;
 		}
 
-		[Command(requiresAuthority = false)] 
-		public void CmdInteract(Player player) {
+		[Command(requiresAuthority = false)]
+		public void CmdInteract(Player player) => Interact(player);
+
+		[Server]
+		public void Interact(Player player) {
 			_doorCollider[0].enabled = isOpen;
 			RpcToggleSprite(isOpen);
 			isOpen = !isOpen;

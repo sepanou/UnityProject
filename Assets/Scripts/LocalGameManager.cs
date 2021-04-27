@@ -2,6 +2,7 @@
 using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using UI_Audio;
+using Unity.Collections;
 using UnityEngine;
 
 public enum LocalGameStates { Start, InGame, Quit, None }
@@ -41,22 +42,27 @@ public class LocalGameManager: MonoBehaviour {
 
 	private void Start() {
 		LocalState = LocalGameStates.None;
-		SetLocalGameState(Application.isBatchMode ? LocalGameStates.InGame : LocalGameStates.Start);
+		if (!Application.isBatchMode)
+			SetLocalGameState(LocalGameStates.Start);
+		else {
+			LocalState = LocalGameStates.InGame;
+			worldCamera.transform.SetParent(transform);
+			inventoryManager.CloseAllInventories();
+			menuSettingsManager.CloseMenu();
+			startMenuManager.CloseStartMenu();
+			playerInfoManager.HidePlayerClassUI();
+		}
 	}
 
 	private void LoadGameDependencies(bool loadUI = false) {
 		languageManager.Initialize();
-		inputManager.Initialize();
+		playerInfoManager.Initialize();
 		LanguageManager.InitLanguage();
 		if (!loadUI) return;
-		LoadUI();
-	}
-
-	private void LoadUI() {
+		inputManager.Initialize();
 		audioManager.Initialize();
 		mouseCursor.Initialize();
 		menuSettingsManager.Initialize();
-		playerInfoManager.Initialize();
 		inventoryManager.Initialize();
 	}
 

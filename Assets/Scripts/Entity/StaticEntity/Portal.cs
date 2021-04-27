@@ -53,7 +53,11 @@ public class Portal: Entity.Entity, IInteractiveEntity {
 		_animator.SetBool("IsPlayerHere", false);
 	}
 
-	public void CmdInteract(Player player) {
+	[Command(requiresAuthority = false)]
+	public void CmdInteract(Player player) => Interact(player);
+
+	[Server]
+	public void Interact(Player player) {
 		Debug.Log("salut les salopes");
 	}
 }

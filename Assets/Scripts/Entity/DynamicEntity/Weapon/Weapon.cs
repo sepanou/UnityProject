@@ -80,9 +80,12 @@ namespace Entity.DynamicEntity.Weapon {
 		protected abstract void SpecialAttack();
 		public abstract RectTransform GetInformationPopup();
 		public abstract string GetName();
-		
+
 		[Command(requiresAuthority = false)]
-		public void CmdInteract(Player player) {
+		public void CmdInteract(Player player) => Interact(player);
+		
+		[Server]
+		public void Interact(Player player) {
 			PlayerFound = true;
 			StartCoroutine(Collectibles.Collectibles.OnTargetDetected(this, player));
 		}
