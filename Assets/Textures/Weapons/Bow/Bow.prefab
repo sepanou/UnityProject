@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: -5727337771764513854}
   interactionCollider: {fileID: 7887381192874093965}
   speed: 0
   holder: {fileID: 0}

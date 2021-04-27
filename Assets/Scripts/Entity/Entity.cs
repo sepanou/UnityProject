@@ -61,7 +61,7 @@ namespace Entity {
 			// Two GO with the same layer are assumed to share the same renderer parameters
 			if (toChange.gameObject.layer == reference.gameObject.layer)
 				return;
-			if (!(reference.spriteRenderer is null)) {
+			if (!reference.spriteRenderer) {
 				SetRenderingLayersInChildren(reference.spriteRenderer.sortingLayerID,
 					reference.spriteRenderer.sortingLayerName, reference.gameObject.layer, toChange.gameObject);
 				return;

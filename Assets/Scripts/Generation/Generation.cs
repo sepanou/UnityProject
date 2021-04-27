@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 using Random = System.Random;
 
 namespace Generation {
-	public static class Generation{
+	public static class Generation {
 		private static Dictionary<RoomType, List<Room>> _availableRooms;
 		private static readonly Random Random = new Random();
 

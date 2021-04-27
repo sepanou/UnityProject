@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8952dfadd7075a14fb85b4e27d68c335, type: 3}
-  m_Name: WaterTile
+  m_Name: WaterTile6
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 3991568953898065832, guid: e70774da90cc1d646be3f03da03d1121, type: 3}
+  m_Sprite: {fileID: 5426381111275626237, guid: 059c6a916a5f89948a1a022bc31104c4,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -37,7 +38,11 @@ MonoBehaviour:
   animationSpeed: 3
   startTime: 0
   animations:
-  - {fileID: 3991568953898065832, guid: e70774da90cc1d646be3f03da03d1121, type: 3}
-  - {fileID: -1544587663037173727, guid: e70774da90cc1d646be3f03da03d1121, type: 3}
-  - {fileID: -791584091045098441, guid: e70774da90cc1d646be3f03da03d1121, type: 3}
-  - {fileID: 3067914300574464226, guid: e70774da90cc1d646be3f03da03d1121, type: 3}
+  - {fileID: 5426381111275626237, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: -8519641552495346073, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: -4111557641996274706, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: -8146582056538221758, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: -2438652315583722033, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: -2305886220318654390, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: -2929609564788821017, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: 1972493390403176386, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}

@@ -31,6 +31,7 @@ namespace Entity.DynamicEntity.LivingEntity {
 			//if (TryGetComponent(out Rigibody)) Rigibody.bodyType = netIdentity.isServer
 			//	? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
 			if (TryGetComponent(out _rigidbody)) _rigidbody.bodyType = RigidbodyType2D.Dynamic;
+			_health = 20;
 			_lastAnimationStateIndex = 0;
 			base.Instantiate();
 		}

@@ -10,6 +10,7 @@ using Entity.DynamicEntity.Weapon.RangedWeapon;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI_Audio {

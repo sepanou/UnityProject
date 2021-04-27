@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8952dfadd7075a14fb85b4e27d68c335, type: 3}
-  m_Name: WaterFallSourceR
+  m_Name: WaterFallSourceZ
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 2169207815558180817, guid: 17f93c74aedad624b94a485ed76b3b49, type: 3}
+  m_Sprite: {fileID: 1116551642102851126, guid: 059c6a916a5f89948a1a022bc31104c4,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -37,7 +38,6 @@ MonoBehaviour:
   animationSpeed: 5
   startTime: 0
   animations:
-  - {fileID: 2169207815558180817, guid: 17f93c74aedad624b94a485ed76b3b49, type: 3}
-  - {fileID: 2169207815558180817, guid: 17f93c74aedad624b94a485ed76b3b49, type: 3}
-  - {fileID: 2169207815558180817, guid: 17f93c74aedad624b94a485ed76b3b49, type: 3}
-  - {fileID: 2169207815558180817, guid: 17f93c74aedad624b94a485ed76b3b49, type: 3}
+  - {fileID: 1116551642102851126, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: 5136445930333942037, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: -505488360509958828, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
