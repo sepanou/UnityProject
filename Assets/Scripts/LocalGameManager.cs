@@ -2,6 +2,7 @@
 using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using UI_Audio;
+using Unity.Collections;
 using UnityEngine;
 
 public enum LocalGameStates { Start, InGame, Quit, None }
@@ -35,29 +36,33 @@ public class LocalGameManager: MonoBehaviour {
 			Destroy(this);
 			return;
 		}
-		// Find a way to define when it is server-only => no need to load UI stuff
-		LoadGameDependencies(true);
+		LoadGameDependencies(!Application.isBatchMode);
 		Entity.Entity.InitClass(Instance);
 	}
 
 	private void Start() {
 		LocalState = LocalGameStates.None;
-		SetLocalGameState(LocalGameStates.Start);
+		if (!Application.isBatchMode)
+			SetLocalGameState(LocalGameStates.Start);
+		else {
+			LocalState = LocalGameStates.InGame;
+			worldCamera.transform.SetParent(transform);
+			inventoryManager.CloseAllInventories();
+			menuSettingsManager.CloseMenu();
+			startMenuManager.CloseStartMenu();
+			playerInfoManager.HidePlayerClassUI();
+		}
 	}
 
 	private void LoadGameDependencies(bool loadUI = false) {
 		languageManager.Initialize();
-		audioManager.Initialize();
-		inputManager.Initialize();
+		playerInfoManager.Initialize();
 		LanguageManager.InitLanguage();
 		if (!loadUI) return;
-		LoadUI();
-	}
-
-	private void LoadUI() {
+		inputManager.Initialize();
+		audioManager.Initialize();
 		mouseCursor.Initialize();
 		menuSettingsManager.Initialize();
-		playerInfoManager.Initialize();
 		inventoryManager.Initialize();
 	}
 

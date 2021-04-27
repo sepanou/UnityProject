@@ -200,7 +200,7 @@ namespace UI_Audio {
 			coroutine = StartCoroutine(FadeCooldown(duration, img));
 		}
 
-		private IEnumerator FadeCooldown(float duration, Image img, float delay = 0.05f) {
+		private static IEnumerator FadeCooldown(float duration, Image img, float delay = 0.05f) {
 			img.fillAmount = 1f;
 			yield return null;
 			
