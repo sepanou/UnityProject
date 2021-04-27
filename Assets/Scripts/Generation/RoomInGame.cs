@@ -1,6 +1,9 @@
 using System;
 using Mirror;
 using Unity;
+using Unity.Mathematics;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Generation{
     public class RoomInGame: NetworkBehaviour{

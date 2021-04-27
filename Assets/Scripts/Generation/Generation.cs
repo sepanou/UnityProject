@@ -10,7 +10,6 @@ namespace Generation {
 	public static class Generation{
 		private static Dictionary<RoomType, List<Room>> _availableRooms;
 		private static readonly Random _random = new Random();
-
 		[Command(requiresAuthority = false)]
 		static void GenerateLevel(Level level) {
 			if (level.alreadyGenerated) return;
@@ -88,6 +87,7 @@ namespace Generation {
 					rMap[y, x] = room;
 			room.Coordinates = (y, x);
 			lMap.Add(room);
+			AddPrefab(x,y, room.Name);
 			return true;
 		}
 
@@ -121,13 +121,22 @@ namespace Generation {
 			Dictionary<RoomType, List<Room>> ans = new Dictionary<RoomType, List<Room>>();
 			for (int i = 0; i < 9; i++)
 				ans.Add((RoomType) i, new List<Room>());
-			Object[] prefabs = Resources.LoadAll("Level", typeof(GameObject));
-			foreach (Object o in prefabs) {
+			foreach (Object o in Resources.LoadAll("Level", typeof(GameObject))) {
 				string roomName = o.name;
 				Room room = new Room(Room.Generate(roomName), roomName);
 				ans[room.Type].Add(room);
 			}
 			return ans;
+		}
+
+		public static void AddPrefab(int x, int y, string roomName) {
+			Object objectToAdd = null;
+			foreach (Object o in Resources.LoadAll("Level1", typeof(GameObject))) {
+				if (o.name != roomName) continue;
+				objectToAdd = o; break;
+			}
+			if (objectToAdd == null) throw new Exception("Room cannot be found");
+			Object.Instantiate(objectToAdd, new Vector3(x, y, 0), Quaternion.identity);
 		}
 	}
 }
