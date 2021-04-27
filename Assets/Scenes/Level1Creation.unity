@@ -5812,6 +5812,70 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 446277081}
   m_CullTransparentMesh: 0
+--- !u!1 &455078636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 455078639}
+  - component: {fileID: 455078638}
+  - component: {fileID: 455078637}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &455078637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455078636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7805ff28e096e221c943a84112b8ac48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0
+  alreadyGenerated: 0
+--- !u!114 &455078638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455078636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 2279522631
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
+--- !u!4 &455078639
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455078636}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.9008393, y: 7.700264, z: -51}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &456156571
 GameObject:
   m_ObjectHideFlags: 0
@@ -13339,6 +13403,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 973865729}
   m_CullTransparentMesh: 0
+--- !u!1 &974993183 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1935697939217014977, guid: c4bede4bbeb0d8345857c7b0051d9707,
+    type: 3}
+  m_PrefabInstance: {fileID: 1935697940003655999}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &974993185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 974993183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51aec433530fecc5d948aec775bcce8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lastSyncTime: 0
+  syncMode: 0
+  syncInterval: 0.1
+  netIdentityCache: {fileID: 0}
+  <IsDiscovered>k__BackingField: 0
+  <Name>k__BackingField: 
+  <Type>k__BackingField: 0
+  _level: 0
+  _id: 0
+--- !u!114 &974993186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 974993183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 3968391643
+  serverOnly: 0
+  visible: 0
+  m_AssetId: c4bede4bbeb0d8345857c7b0051d9707
+  hasSpawned: 0
 --- !u!1 &981308637
 GameObject:
   m_ObjectHideFlags: 0
@@ -33506,7 +33614,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 50.52002, y: 49.570007}
+  m_AnchoredPosition: {x: 50.52002, y: 49.57007}
   m_SizeDelta: {x: 101, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2095102992
@@ -34460,6 +34568,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1380755653170834144, guid: c4bede4bbeb0d8345857c7b0051d9707,
+        type: 3}
+      propertyPath: sceneId
+      value: 2880944656
+      objectReference: {fileID: 0}
     - target: {fileID: 1935697939217014976, guid: c4bede4bbeb0d8345857c7b0051d9707,
         type: 3}
       propertyPath: m_RootOrder
