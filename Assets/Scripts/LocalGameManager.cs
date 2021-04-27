@@ -46,7 +46,6 @@ public class LocalGameManager: MonoBehaviour {
 
 	private void LoadGameDependencies(bool loadUI = false) {
 		languageManager.Initialize();
-		audioManager.Initialize();
 		inputManager.Initialize();
 		LanguageManager.InitLanguage();
 		if (!loadUI) return;
@@ -54,6 +53,7 @@ public class LocalGameManager: MonoBehaviour {
 	}
 
 	private void LoadUI() {
+		audioManager.Initialize();
 		mouseCursor.Initialize();
 		menuSettingsManager.Initialize();
 		playerInfoManager.Initialize();

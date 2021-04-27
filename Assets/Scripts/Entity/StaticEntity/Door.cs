@@ -3,8 +3,7 @@ using Mirror;
 using UI_Audio;
 using UnityEngine;
 
-namespace Entity.StaticEntity
-{
+namespace Entity.StaticEntity {
 	public class Door: Entity, IInteractiveEntity {
 		private Collider2D[] _doorCollider;
 		private SpriteRenderer _spriteRenderer;
