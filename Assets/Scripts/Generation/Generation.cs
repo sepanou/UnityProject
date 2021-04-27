@@ -12,6 +12,7 @@ namespace Generation {
 		private static readonly Random Random = new Random();
 
 		[Command(requiresAuthority = false)]
+		// ReSharper disable once UnusedMember.Local
 		static void GenerateLevel(Level level) {
 			if (level.alreadyGenerated) return;
 			Room[,] rMap = level.RoomsMap;

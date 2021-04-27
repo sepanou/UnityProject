@@ -23,6 +23,7 @@ namespace UI_Audio {
 				Instance = this;
 			else {
 				Destroy(this);
+				// ReSharper disable once RedundantJumpStatement
 				return;
 			}
 		}
