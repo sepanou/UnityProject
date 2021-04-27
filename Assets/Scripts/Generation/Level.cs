@@ -9,12 +9,12 @@ namespace Generation {
 		public bool Shop { get; set; } = false;
 		[FormerlySerializedAs("LevelId")] [SerializeField] public int levelId;
 		[SerializeField] public string lvlName;
-		public Room[,] RoomsMap { get; } = new Room[20, 20];
+		public Room[,] RoomsMap { get; } = new Room[101, 101];
 		public List<Room> RoomsList { get; } = new List<Room>();
 		public bool alreadyGenerated = false;
 
 		private void Start() {
-			Generation.AddPrefab(100, 0, "16x16eB1NxtL1R1");
+			Generation.GenerateLevel(this);
 		}
 	}
 }
