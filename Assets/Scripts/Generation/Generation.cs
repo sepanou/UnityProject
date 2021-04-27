@@ -129,6 +129,7 @@ namespace Generation {
 			return ans;
 		}
 
+		[Command(requiresAuthority = false)]
 		public static void AddPrefab(int x, int y, string roomName) {
 			Object objectToAdd = null;
 			foreach (Object o in Resources.LoadAll("Level1", typeof(GameObject))) {
