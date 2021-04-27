@@ -6,6 +6,7 @@ namespace Entity.StaticEntity {
 	public class Portal: Entity, IInteractiveEntity {
 		private Animator _animator;
 		private int _nbOfPlayers;
+		private static readonly int IsPlayerHere = Animator.StringToHash("IsPlayerHere");
 
 		private void Start() {
 			_nbOfPlayers = 0;
@@ -15,7 +16,7 @@ namespace Entity.StaticEntity {
 		protected override void OnTriggerEnter2D(Collider2D other) {
 			if (_nbOfPlayers <= 0) {
 				_animator.Play("Opening");
-				_animator.SetBool("IsPlayerHere", true);
+				_animator.SetBool(IsPlayerHere, true);
 			}
 			_nbOfPlayers++;
 			base.OnTriggerEnter2D(other);
@@ -24,7 +25,7 @@ namespace Entity.StaticEntity {
 		protected override void OnTriggerExit2D(Collider2D other) {
 			_nbOfPlayers--;
 			if (_nbOfPlayers <= 0) 
-				_animator.SetBool("IsPlayerHere", false);
+				_animator.SetBool(IsPlayerHere, false);
 			base.OnTriggerExit2D(other);
 		}
 
