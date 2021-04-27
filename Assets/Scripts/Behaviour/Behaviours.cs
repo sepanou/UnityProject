@@ -1,4 +1,4 @@
-﻿using Targeter;
+﻿using Behaviour.Targeter;
 using UnityEngine;
 
 namespace Behaviour {

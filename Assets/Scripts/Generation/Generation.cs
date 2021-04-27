@@ -2,21 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using UnityEngine;
+using Object = UnityEngine.Object;
+using Random = System.Random;
 
 namespace Generation {
-	public class Generation: NetworkBehaviour {
-		private Dictionary<RoomType, List<Room>> _availableRooms;
-		private readonly Random _random = new Random();
-		
-		void GenerateLevel(Level level) {
+	public static class Generation{
+		private static Dictionary<RoomType, List<Room>> _availableRooms;
+		private static readonly Random Random = new Random();
+
+		[Command(requiresAuthority = false)]
+		static void GenerateLevel(Level level) {
+			if (level.alreadyGenerated) return;
 			Room[,] rMap = level.RoomsMap;
 			List<Room> lMap = level.RoomsList;
 			_availableRooms = GetLevels();
 			int rMaxY = rMap.GetLength(0);
 			int rMaxX = rMap.GetLength(1);
-			int x = _random.Next(rMaxX);
-			int y = _random.Next(rMaxY);
-			Room roomToPlace = _availableRooms[RoomType.Start][_random.Next(_availableRooms[RoomType.Start].Count)];
+			int x = Random.Next(rMaxX);
+			int y = Random.Next(rMaxY);
+			Room roomToPlace = _availableRooms[RoomType.Start][Random.Next(_availableRooms[RoomType.Start].Count)];
 			while (true)
 				if (TryAddRoom(lMap, rMap, roomToPlace, x, y))
 					break;
@@ -26,7 +31,7 @@ namespace Generation {
 					if (roomToCheckOn.Type == RoomType.DeadEnd) continue;
 					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
-						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, _random, lMap);
+						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap);
 						if (!(dir == 'T' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
 							: dir == 'B' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1)
 							: dir == 'L' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1)
@@ -39,13 +44,13 @@ namespace Generation {
 							level.Shop = true;
 					}
 				}
-				int prob = _random.Next(100);
+				int prob = Random.Next(100);
 				if (level.RoomsList.Count > 15 && prob < level.RoomsList.Count) return;
 				foreach (Room roomToCheckOn in lMap) {
 					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
 						if (roomToCheckOn.Type == RoomType.Start) continue;
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
-						Room roomToAdd = _availableRooms[RoomType.PreBoss][_random.Next(_availableRooms[RoomType.PreBoss].Count)];
+						Room roomToAdd = _availableRooms[RoomType.PreBoss][Random.Next(_availableRooms[RoomType.PreBoss].Count)];
 						if (dir == 'T' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
 							: dir == 'B' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1)
 							: dir == 'L' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1)
@@ -56,9 +61,10 @@ namespace Generation {
 				}
 			}
 			// TODO: Need to add Boss Room & Exit room.
+			level.alreadyGenerated = true;
 		}
 
-		private Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap) {
+		private static Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap) {
 			RoomType roomType = !isThereAShop && seed.Next(100) <= 10 + lMap.Count / 2
 				? RoomType.Shop
 				: seed.Next(100) <= 10 / (chests + 1)
@@ -68,7 +74,7 @@ namespace Generation {
 			return _availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)];
 		}
 		
-		private bool TryAddRoom(ICollection<Room> lMap, Room[,] rMap, Room room, int x, int y) {
+		private static bool TryAddRoom(ICollection<Room> lMap, Room[,] rMap, Room room, int x, int y) {
 			(int roomWidth, int roomHeight) = room.Dimensions;
 			if (x < 0 || y < 0 || x >= rMap.GetLength(1) || y >= rMap.GetLength(0))
 				return false;
@@ -85,7 +91,7 @@ namespace Generation {
 			return true;
 		}
 
-		private bool SubFunction(int nbDir, int a, int b, Room room, int desiredDir, bool isX, char opposite) {
+		private static bool SubFunction(int nbDir, int a, int b, Room room, int desiredDir, bool isX, char opposite) {
 			if (a != nbDir) return true;
 			if (b < 0) return false;
 			if (room == null) return true;
@@ -99,7 +105,7 @@ namespace Generation {
 			return false;
 		}
 
-		private bool CheckForExits(Room[,] rMap, Room room, int x, int y, int i, int j) {
+		private static bool CheckForExits(Room[,] rMap, Room room, int x, int y, int i, int j) {
 			foreach ((char direction, int nbDir) in room.Exits) {
 				if (!(direction == 'B' ? SubFunction(nbDir, j - x + 1, i - 1, rMap[i - 1, j], j + 1, true, 'T')
 					: direction == 'T' ? SubFunction(nbDir, j - x + 1, i + 1, rMap[i + 1, j], j + 1, true, 'B')
@@ -110,9 +116,18 @@ namespace Generation {
 			}
 			return true;
 		}
-
-		private Dictionary<RoomType, List<Room>> GetLevels() {
-			throw new NotImplementedException();
+		
+		public static Dictionary<RoomType, List<Room>> GetLevels() {
+			Dictionary<RoomType, List<Room>> ans = new Dictionary<RoomType, List<Room>>();
+			for (int i = 0; i < 9; i++)
+				ans.Add((RoomType) i, new List<Room>());
+			Object[] prefabs = Resources.LoadAll("Level", typeof(GameObject));
+			foreach (Object o in prefabs) {
+				string roomName = o.name;
+				Room room = new Room(Room.Generate(roomName), roomName);
+				ans[room.Type].Add(room);
+			}
+			return ans;
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Mirror;
 
 namespace Generation {
@@ -13,5 +14,6 @@ namespace Generation {
 		public string LevelName { get; }
 		public Room[,] RoomsMap { get; } = new Room[20, 20];
 		public List<Room> RoomsList { get; } = new List<Room>();
+		public bool alreadyGenerated = false;
 	}
 }
