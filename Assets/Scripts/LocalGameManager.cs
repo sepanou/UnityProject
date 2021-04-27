@@ -35,14 +35,13 @@ public class LocalGameManager: MonoBehaviour {
 			Destroy(this);
 			return;
 		}
-		// Find a way to define when it is server-only => no need to load UI stuff
-		LoadGameDependencies(true);
+		LoadGameDependencies(!Application.isBatchMode);
 		Entity.Entity.InitClass(Instance);
 	}
 
 	private void Start() {
 		LocalState = LocalGameStates.None;
-		SetLocalGameState(LocalGameStates.Start);
+		SetLocalGameState(Application.isBatchMode ? LocalGameStates.InGame : LocalGameStates.Start);
 	}
 
 	private void LoadGameDependencies(bool loadUI = false) {
