@@ -1,5 +1,5 @@
-﻿using Entity;
-using Targeter;
+﻿using Behaviour.Targeter;
+using Entity;
 using UnityEngine;
 
 namespace Behaviour {

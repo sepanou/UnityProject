@@ -1,7 +1,7 @@
 ﻿using Entity;
 using Entity.DynamicEntity.LivingEntity.Player;
 
-namespace Targeter {
+namespace Behaviour.Targeter {
 	public class SpecificTargeter<TEntity>: ITargeter where TEntity: Entity.Entity {
 		private readonly TEntity _entity;
 		public SpecificTargeter(TEntity entity) { _entity = entity; }
