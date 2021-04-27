@@ -1,5 +1,5 @@
-﻿using Entity;
-using Targeter;
+﻿using Behaviour.Targeter;
+using Entity;
 using UnityEngine;
 
 namespace Behaviour {
@@ -13,7 +13,7 @@ namespace Behaviour {
 	}
 	
 	public class NearestPlayerStraightFollower: StraightFollower<NearestPlayerTargeter> {
-		public NearestPlayerStraightFollower(Entity.Entity source, NearestPlayerTargeter targeter): base(source, targeter) { }
+		public NearestPlayerStraightFollower(Entity.Entity source): base(source, new NearestPlayerTargeter(source)) { }
 	}
 	
 	public class SpecificStraightFollower<TEntity>: StraightFollower<SpecificTargeter<TEntity>> where TEntity: Entity.Entity {

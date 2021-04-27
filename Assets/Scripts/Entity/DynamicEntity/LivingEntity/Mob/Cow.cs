@@ -1,5 +1,4 @@
 ﻿using Behaviour;
-using Targeter;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
@@ -10,7 +9,7 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 
 		private void Start() {
 			Instantiate();
-			Behaviour = new NearestPlayerStraightFollower(this, new NearestPlayerTargeter(this));
+			Behaviour = new NearestPlayerStraightFollower(this);
 		}
 	}
 }

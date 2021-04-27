@@ -61,10 +61,11 @@ namespace Entity.DynamicEntity.LivingEntity {
 
 		[ServerCallback]
 		public void GetAttacked(int atk) {
+			if (!_isAlive) return;
 			_health -= atk;
 			// TakeKnockback(); Needs to be implemented
 			_isAlive = _health > 0;
-			RpcDying();
+			if (!_isAlive) RpcDying();
 		}
 
 		[ServerCallback]
