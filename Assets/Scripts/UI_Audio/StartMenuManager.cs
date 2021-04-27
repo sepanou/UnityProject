@@ -27,8 +27,8 @@ namespace UI_Audio {
 		[NonSerialized] public static StartMenuManager Instance;
 		[NonSerialized] public static PlayerInfoManager InfoManger;
 
-		private const string RegexPatternIPAddress =
-			@"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$";
+		private readonly Regex _regexIPAddress = new Regex(@"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$");
+		private readonly Regex _regexURL = new Regex(@"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)");
 
 		private void Awake() {
 			if (!Instance)
@@ -60,13 +60,9 @@ namespace UI_Audio {
 			startMenuCanvas.gameObject.SetActive(true);
 		}
 
-		private bool ValidateIPAddressInput(string input) {
-			if (input.ToLower() == "localhost")
-				return true;
-			Regex regex = new Regex(RegexPatternIPAddress);
-			return regex.IsMatch(input);
-		}
-		
+		private bool ValidateIPAddressInput(string input)
+			=> input == "localhost" || _regexIPAddress.IsMatch(input) || _regexURL.IsMatch(input);
+
 		public void ValidatePseudo() {
 			pseudoFields.gameObject.SetActive(false);
 			
@@ -137,22 +133,30 @@ namespace UI_Audio {
 				Debug.LogWarning("Already trying to connect to address" + manager.networkAddress + "...");
 				return;
 			}
-			if (ipAddressField && ValidateIPAddressInput(ipAddressField.text)) {
-				try {
-					manager.StartClient();
-					manager.networkAddress = ipAddressField.text;
-					StopAllCoroutines();
-					StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
-				} catch (Exception e) {
-					StopServerAndOrClient();
-					PlayerInfoManager.Instance.SetWarningText("Unable to join the server...");
-					PlayerInfoManager.Instance.OpenWarningBox();
-					Debug.LogWarning(e.Message);
-				}
+
+			if (!ipAddressField) {
+				PlayerInfoManager.Instance.SetWarningText("No address field found!");
+				PlayerInfoManager.Instance.OpenWarningBox();
+				return;
 			}
-			else {
+
+			string address = ipAddressField.text.ToLower().Replace(" ", "").Replace("\n", "");
+			if (!ValidateIPAddressInput(address)) {
 				PlayerInfoManager.Instance.SetWarningText("Invalid IP address format!");
 				PlayerInfoManager.Instance.OpenWarningBox();
+				return;
+			}
+			
+			try {
+				manager.StartClient();
+				manager.networkAddress = address;
+				StopAllCoroutines();
+				StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
+			} catch (Exception e) {
+				StopServerAndOrClient();
+				PlayerInfoManager.Instance.SetWarningText("Unable to join the server...");
+				PlayerInfoManager.Instance.OpenWarningBox();
+				Debug.LogWarning(e.Message);
 			}
 		}
 
