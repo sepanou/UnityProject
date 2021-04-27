@@ -81,7 +81,7 @@ namespace Entity.DynamicEntity.Weapon {
 		protected abstract void SpecialAttack();
 		public abstract RectTransform GetInformationPopup();
 		public abstract string GetName();
-		
+
 		[Server]
 		public void Interact(Player player) {
 			PlayerFound = true;
