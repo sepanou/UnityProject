@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI_Audio {
@@ -6,10 +7,10 @@ namespace UI_Audio {
 		[SerializeField] private GameObject[] toActivate;
 		[SerializeField] private RectTransform hoveringCanvas;
 		[SerializeField] private Button.ButtonClickedEvent onClick = new Button.ButtonClickedEvent();
-		
+
 		private readonly Vector3[] _worldCorners = new Vector3[4];
-		private bool _isMouseOn;
-		
+		private bool _isMouseOn, _isSelected;
+
 		private new void Start() {
 			if (hoveringCanvas is null) {
 				Destroy(this);
@@ -20,23 +21,44 @@ namespace UI_Audio {
 			hoveringCanvas.GetWorldCorners(_worldCorners);
 			SetTargetsActive(false);
 		}
-
+		
 		private void SetTargetsActive(bool state) {
 			foreach (GameObject obj in toActivate)
 				obj.SetActive(state);
+		}
+
+		public void OnSelect() {
+			if (EventSystem.current)
+				EventSystem.current.SetSelectedGameObject(gameObject);
+		}
+		
+		public override void OnSelect(BaseEventData data) {
+			_isSelected = true;
+			SetTargetsActive(true);
+			base.OnSelect(data);
+		}
+
+		public void OnDeselect() {
+			if (EventSystem.current)
+				OnDeselect(new BaseEventData(EventSystem.current));
+		}
+
+		public override void OnDeselect(BaseEventData data) {
+			_isSelected = false;
+			SetTargetsActive(false);
+			base.OnDeselect(data);
 		}
 
 		private void Update() {
 			if (!MouseCursor.Instance || !MenuSettingsManager.Instance || MenuSettingsManager.Instance.isOpen) return;
 			bool isOn = MouseCursor.Instance.IsMouseOn(this);
 			if (!_isMouseOn && isOn) {
+				EventSystem.current.SetSelectedGameObject(gameObject);
 				_isMouseOn = true;
-				SetTargetsActive(true);
-			} else if (_isMouseOn && !isOn) {
+			} else if (_isMouseOn && !isOn)
 				_isMouseOn = false;
-				SetTargetsActive(false);
-			}
-			if (_isMouseOn && Input.GetMouseButtonDown(0))
+
+			if (_isSelected && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)))
 				onClick?.Invoke();
 		}
 	}

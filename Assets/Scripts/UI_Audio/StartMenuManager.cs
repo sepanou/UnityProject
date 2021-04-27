@@ -173,7 +173,7 @@ namespace UI_Audio {
 			else if (NetworkServer.active)
 				manager.StopServer();
 		}
-		
+
 		public void QuitApplication() {
 			StopServerAndOrClient();
 #if UNITY_EDITOR

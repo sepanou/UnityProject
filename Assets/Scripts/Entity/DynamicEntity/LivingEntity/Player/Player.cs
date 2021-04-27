@@ -244,7 +244,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					playerClass == PlayerClasses.Mage ? PlayerClasses.Warrior : PlayerClasses.Archer);
 
 			if (netIdentity.isServer && Input.GetKeyDown(KeyCode.K)) {
-				NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateSword().gameObject);
+				NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateBow().gameObject);
 				Debug.Log("Spawned !");
 			}
 

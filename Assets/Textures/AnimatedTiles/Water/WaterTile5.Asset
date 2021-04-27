@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8952dfadd7075a14fb85b4e27d68c335, type: 3}
-  m_Name: WaterFallImpactM
+  m_Name: WaterTile5
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -1678404251535746677, guid: 17f93c74aedad624b94a485ed76b3b49,
+  m_Sprite: {fileID: -5931651355096860314, guid: 059c6a916a5f89948a1a022bc31104c4,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
@@ -35,10 +35,12 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  animationSpeed: 5
+  animationSpeed: 3
   startTime: 0
   animations:
-  - {fileID: -1678404251535746677, guid: 17f93c74aedad624b94a485ed76b3b49, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: -1678404251535746677, guid: 17f93c74aedad624b94a485ed76b3b49, type: 3}
+  - {fileID: -5931651355096860314, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: -8188183713919327346, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: -2151120535259546686, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: 7157692169012229589, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: 2813154088312743187, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}
+  - {fileID: -2760291271038389447, guid: 059c6a916a5f89948a1a022bc31104c4, type: 3}

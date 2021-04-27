@@ -9,7 +9,7 @@ namespace Generation {
 		public bool Shop { get; set; } = false;
 		[FormerlySerializedAs("LevelId")] [SerializeField] public int levelId;
 		[SerializeField] public string lvlName;
-		public Room[,] RoomsMap { get; } = new Room[20, 20];
+		public Room[,] RoomsMap { get; } = new Room[21, 21];
 		public List<Room> RoomsList { get; } = new List<Room>();
 		public bool alreadyGenerated = false;
 
