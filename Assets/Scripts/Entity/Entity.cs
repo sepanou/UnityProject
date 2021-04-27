@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
@@ -9,10 +10,7 @@ using UnityEngine;
 
 namespace Entity {
 	public interface IInteractiveEntity {
-		[Command(requiresAuthority = false)]
-		void CmdInteract(Player player);
-		[Server]
-		void Interact(Player player);
+		[Server] void Interact(Player player);
 	}
 	
 	public abstract class Entity: NetworkBehaviour {
@@ -102,6 +100,7 @@ namespace Entity {
 				RpcSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer);
 		}
 
+		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
 		private void RpcSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId) {
 			if (spriteRenderer)
@@ -135,6 +134,7 @@ namespace Entity {
 			CmdStopInteracting(player);
 		}
 
+		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
 		private void RpcSetIsInteractive(NetworkConnection target, Player player, bool state) 
 			=> SetIsInteractive(player, state);

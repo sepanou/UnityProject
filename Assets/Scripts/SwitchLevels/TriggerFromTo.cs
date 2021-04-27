@@ -11,7 +11,7 @@ namespace SwitchLevels {
 		private void OnTriggerEnter2D(Collider2D other) {
 			// Verifying the collider is a player
 			if (!other.TryGetComponent(out Player player)) return;
-			CustomNetworkManager.singleton.StartSceneTransition();
+			CustomNetworkManager.Instance.StartSceneTransition();
 			if (player.isLocalPlayer)
 				Switch();
 		}

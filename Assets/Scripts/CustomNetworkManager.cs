@@ -5,7 +5,7 @@ using UI_Audio;
 using UnityEngine;
 
 public class CustomNetworkManager: NetworkManager {
-	public new static CustomNetworkManager singleton;
+	public static CustomNetworkManager Instance;
 	
 	[Header("Scene transition")] 
 	[SerializeField] private Animator sceneAnimator;
@@ -19,7 +19,7 @@ public class CustomNetworkManager: NetworkManager {
 	public override void Start() {
 		_playerPrefabs = new List<Player>();
 		base.Start();
-		singleton = this;
+		Instance = this;
 	}
 
 	public void StartSceneTransition() => sceneAnimator.Play("StartTransition");

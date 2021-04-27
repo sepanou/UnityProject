@@ -9,7 +9,7 @@ using Random = System.Random;
 namespace Generation {
 	public static class Generation{
 		private static Dictionary<RoomType, List<Room>> _availableRooms;
-		private static readonly Random _random = new Random();
+		private static readonly Random Random = new Random();
 
 		[Command(requiresAuthority = false)]
 		static void GenerateLevel(Level level) {
@@ -19,9 +19,9 @@ namespace Generation {
 			_availableRooms = GetLevels();
 			int rMaxY = rMap.GetLength(0);
 			int rMaxX = rMap.GetLength(1);
-			int x = _random.Next(rMaxX);
-			int y = _random.Next(rMaxY);
-			Room roomToPlace = _availableRooms[RoomType.Start][_random.Next(_availableRooms[RoomType.Start].Count)];
+			int x = Random.Next(rMaxX);
+			int y = Random.Next(rMaxY);
+			Room roomToPlace = _availableRooms[RoomType.Start][Random.Next(_availableRooms[RoomType.Start].Count)];
 			while (true)
 				if (TryAddRoom(lMap, rMap, roomToPlace, x, y))
 					break;
@@ -31,7 +31,7 @@ namespace Generation {
 					if (roomToCheckOn.Type == RoomType.DeadEnd) continue;
 					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
-						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, _random, lMap);
+						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap);
 						if (!(dir == 'T' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
 							: dir == 'B' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1)
 							: dir == 'L' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1)
@@ -44,13 +44,13 @@ namespace Generation {
 							level.Shop = true;
 					}
 				}
-				int prob = _random.Next(100);
+				int prob = Random.Next(100);
 				if (level.RoomsList.Count > 15 && prob < level.RoomsList.Count) return;
 				foreach (Room roomToCheckOn in lMap) {
 					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
 						if (roomToCheckOn.Type == RoomType.Start) continue;
 						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
-						Room roomToAdd = _availableRooms[RoomType.PreBoss][_random.Next(_availableRooms[RoomType.PreBoss].Count)];
+						Room roomToAdd = _availableRooms[RoomType.PreBoss][Random.Next(_availableRooms[RoomType.PreBoss].Count)];
 						if (dir == 'T' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
 							: dir == 'B' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1)
 							: dir == 'L' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1)
