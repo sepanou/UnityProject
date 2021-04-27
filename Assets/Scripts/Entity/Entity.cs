@@ -9,10 +9,7 @@ using UnityEngine;
 
 namespace Entity {
 	public interface IInteractiveEntity {
-		[Command(requiresAuthority = false)]
-		void CmdInteract(Player player);
-		[Server]
-		void Interact(Player player);
+		[Server] void Interact(Player player);
 	}
 	
 	public abstract class Entity: NetworkBehaviour {

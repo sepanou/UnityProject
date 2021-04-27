@@ -81,9 +81,6 @@ namespace Entity.DynamicEntity.Weapon {
 		public abstract RectTransform GetInformationPopup();
 		public abstract string GetName();
 
-		[Command(requiresAuthority = false)]
-		public void CmdInteract(Player player) => Interact(player);
-		
 		[Server]
 		public void Interact(Player player) {
 			PlayerFound = true;
