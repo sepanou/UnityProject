@@ -55,7 +55,7 @@ namespace Generation {
 				}
 				if (c == ',') continue;
 				//Is a number here
-				exits.Add((dir, c));
+				exits.Add((dir, int.Parse(""+c)));
 			}
 
 			string typeStr = "";
@@ -79,6 +79,7 @@ namespace Generation {
 				levelAndId += name[i];
 			}
 
+			Debug.Log(levelAndId);
 			int level = 0;
 			string nb = "";
 			for (int i = 1; i < levelAndId.Length; i++) {

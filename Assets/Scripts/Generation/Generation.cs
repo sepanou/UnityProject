@@ -10,24 +10,55 @@ namespace Generation {
 	public static class Generation{
 		private static Dictionary<RoomType, List<Room>> _availableRooms;
 		private static readonly Random Random = new Random();
+		private static List<Room> recentlyAddedRooms;
+		private static List<Room> roomsToTreat;
 
 		[Command(requiresAuthority = false)]
 		// ReSharper disable once UnusedMember.Local
-		static void GenerateLevel(Level level) {
+		public static void GenerateLevel(Level level) {
 			if (level.alreadyGenerated) return;
 			Room[,] rMap = level.RoomsMap;
 			List<Room> lMap = level.RoomsList;
+			recentlyAddedRooms = new List<Room>();
+			roomsToTreat = new List<Room>();
 			_availableRooms = GetLevels();
 			int rMaxY = rMap.GetLength(0);
 			int rMaxX = rMap.GetLength(1);
 			int x = Random.Next(rMaxX);
 			int y = Random.Next(rMaxY);
+			Debug.Log(_availableRooms.Count);
 			Room roomToPlace = _availableRooms[RoomType.Start][Random.Next(_availableRooms[RoomType.Start].Count)];
-			while (true)
+			(roomsToTreat, recentlyAddedRooms) = (recentlyAddedRooms, new List<Room>());
+			while (true) {
 				if (TryAddRoom(lMap, rMap, roomToPlace, x, y))
 					break;
-			bool placedLastRoom = false;
-			while (!placedLastRoom) {
+				x = Random.Next(rMaxX);
+				y = Random.Next(rMaxY);
+			}
+
+			int maxRooms = 20;
+			bool placedPreBossRoom = false;
+			while (!placedPreBossRoom) {
+				Debug.Log("Saluuuuuuuuuut");
+				if (lMap.Count >= 20) break; // Debug
+				foreach (Room room in roomsToTreat) {
+					foreach ((char dir, int nbDir) in room.Exits) {
+						(int rtcy, int rtcx) = room.Coordinates;
+						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap);
+						if (!(dir == 'T' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir /* - 1*/, rtcy /*+ 1 */) ||
+								dir == 'B' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir /*- 1*/, rtcy /*- 1*/) ||
+								dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcx /*- 1*/, rtcy /*+  - 1*/) ||
+								dir == 'R' && TryAddRoom(lMap, rMap, roomToAdd, rtcx /*+ 1*/, rtcy + nbDir /*- 1*/))
+							) continue;
+						if (roomToAdd.Type == RoomType.Chest)
+							level.Chests += 1;
+						if (roomToAdd.Type == RoomType.Shop)
+							level.Shop = true;
+					}
+				}
+				(roomsToTreat, recentlyAddedRooms) = (recentlyAddedRooms, new List<Room>());
+			}
+			/*while (!placedLastRoom) {
 				foreach (Room roomToCheckOn in lMap) {
 					if (roomToCheckOn.Type == RoomType.DeadEnd) continue;
 					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
@@ -60,7 +91,7 @@ namespace Generation {
 						) placedLastRoom = true;
 					} 
 				}
-			}
+			}*/
 			// TODO: Need to add Boss Room & Exit room.
 			level.alreadyGenerated = true;
 		}
@@ -68,10 +99,11 @@ namespace Generation {
 		private static Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap) {
 			RoomType roomType = !isThereAShop && seed.Next(100) <= 10 + lMap.Count / 2
 				? RoomType.Shop
-				: seed.Next(100) <= 10 / (chests + 1)
+				: seed.Next(100) <= 5 / (chests + 1)
 				? RoomType.Chest
 				: RoomType.Standard
 			;
+			if (roomType == RoomType.Shop) roomType = RoomType.Standard; // TODO : SHOP ROOM, REMOVE THIS LINE AFTER
 			return _availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)];
 		}
 		
@@ -87,9 +119,10 @@ namespace Generation {
 			for (int i = y; i < roomHeight / 16 + y; ++i)
 				for (int j = x; j < roomWidth / 16 + x; ++j)
 					rMap[y, x] = room;
-			room.Coordinates = (y, x);
+			room.Coordinates = (x, y);
 			lMap.Add(room);
-			AddPrefab(x,y, room.Name);
+			recentlyAddedRooms.Add(room);
+			AddPrefab(x*20,y*20, room.Name);
 			return true;
 		}
 
@@ -119,11 +152,11 @@ namespace Generation {
 			return true;
 		}
 		
-		public static Dictionary<RoomType, List<Room>> GetLevels() {
+		public static Dictionary<RoomType, List<Room>> GetLevels() {;
 			Dictionary<RoomType, List<Room>> ans = new Dictionary<RoomType, List<Room>>();
 			for (int i = 0; i < 9; i++)
 				ans.Add((RoomType) i, new List<Room>());
-			foreach (Object o in Resources.LoadAll("Level", typeof(GameObject))) {
+			foreach (Object o in Resources.LoadAll("Level1", typeof(GameObject))) {
 				string roomName = o.name;
 				Room room = new Room(Room.Generate(roomName), roomName);
 				ans[room.Type].Add(room);

@@ -14,7 +14,7 @@ namespace Generation {
 		public bool alreadyGenerated = false;
 
 		private void Start() {
-			Generation.AddPrefab(100, 0, "16x16eB1NxtL1R1");
+			Generation.GenerateLevel(this);
 		}
 	}
 }
