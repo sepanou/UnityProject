@@ -60,18 +60,5 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 		public Projectile.Projectile GetProjectile() => projectile;
 
 		public override string GetName() => RangeData.Name;
-
-		// Used for name generation
-		public readonly IReadOnlyList<(bool, string)> WeaponName =
-			new List<(bool, string)> {
-				(false, "L'arc"),				// false == masculine adjective, feminine otherwise.
-				(false, "L'arc court"),
-				(false, "L'arc long"),
-				(false, "L'arc monobloc"),
-				(false, "L'arc à poulies"),
-				(false, "L'arc droit"),
-				(false, "L'arc de chasse"),
-				(false, "L'arc Yumi")
-			}.AsReadOnly();
 	}
 }

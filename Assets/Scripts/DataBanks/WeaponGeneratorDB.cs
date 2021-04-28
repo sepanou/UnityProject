@@ -25,6 +25,21 @@ namespace DataBanks {
 		[SerializeField] private GameObject swordModel;
 		[SerializeField] private Sprite[] swordSprites;
 		
+		// Used for name generation
+		public readonly IReadOnlyList<(bool, string)> BowsNames =
+			new List<(bool, string)> {
+				(false, "L'arc"),				// false == masculine adjective, feminine otherwise.
+				(false, "L'arc court"),
+				(false, "L'arc long"),
+				(false, "L'arc monobloc"),
+				(false, "L'arc à poulies"),
+				(false, "L'arc droit"),
+				(false, "L'arc de chasse"),
+				(false, "L'arc Yumi"),
+				(true, "La Tempête"),
+				(false, "Le Déluge") // Après moi le déluge
+			}.AsReadOnly();
+		
 		private static readonly List<(string, string)> Adjectives =
 			new List<(string, string)> {
 				("légendaire", "légendaire"), // (masculin, féminin)
@@ -49,11 +64,11 @@ namespace DataBanks {
 				("horrible", "horrible"),
 				("échoué", "échouée"),
 				("fragmenté", "fragmentée"),
-				("terrifiante", "terrifiante"),
+				("terrifiant", "terrifiante"),
 				("enflamé", "enflamée"),
 				("spectral", "spectrale"),
 				("fantomatique", "fantomatique"),
-				("piquante", "piquante"),
+				("piquant", "piquante"),
 				("forcené", "forcenée"),
 				("tranchant", "tranchante"),
 				("brulant", "brulante"),
@@ -103,14 +118,14 @@ namespace DataBanks {
 				"du sorcier",
 				"du voleur",
 				"de Khorn",
-				"du seigneur des tombes",
+				"du seigneur des Tombes",
 				"des rats",
 				"des recoins du monde",
 				"d'ici",
 				"du barbare",
 				"du cultiste",
-				"d'oblivion",
-				"des indes",
+				"d'Oblivion",
+				"des Indes",
 				"de la colline",
 				"des montagnes",
 				"des plaines",
@@ -185,7 +200,15 @@ namespace DataBanks {
 			GameObject obj = Instantiate(bowModel);
 			Bow result = obj.GetComponent<Bow>();
 			result.RangeData = GenerateRangeData();
-			result.RangeData.Name = "Mighty Bow";
+			(bool feminine, string bowName) = BowsNames[Random.Range(0,BowsNames.Count-1)];
+			string adj;
+			if (feminine) 
+				(_, adj) = Adjectives[Random.Range(0, Adjectives.Count - 1)];
+			else
+				(adj, _) = Adjectives[Random.Range(0, Adjectives.Count - 1)];
+			string cName = NameComplements[Random.Range(0, NameComplements.Count - 1)];
+			result.RangeData.Name = bowName + " " + adj + " " + cName;
+			Debug.Log(result.RangeData.Name);
 			result.GetSpriteRenderer().sprite = GetRandomInArray(bowSprites);
 			return result;
 		}
