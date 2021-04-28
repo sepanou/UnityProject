@@ -52,7 +52,7 @@ public class CustomNetworkManager: NetworkManager {
 	}
 
 	public override void OnStopClient() {
-		LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Start);
 		base.OnStopClient();
+		LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Start);
 	}
 }

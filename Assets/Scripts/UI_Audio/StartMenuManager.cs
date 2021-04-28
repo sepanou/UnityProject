@@ -123,8 +123,7 @@ namespace UI_Audio {
 				StartCoroutine(ServerLaunchProcedure(gameModeFields));
 			} catch (Exception e) {
 				StopServerAndOrClient();
-				PlayerInfoManager.Instance.SetWarningText("Unable to launch the server...\n" +
-				                                          "Are you sure a server is not already launched?");
+				PlayerInfoManager.Instance.SetWarningText(e.Message);
 				PlayerInfoManager.Instance.OpenWarningBox();
 				Debug.LogWarning(e.Message);
 			}
@@ -156,7 +155,7 @@ namespace UI_Audio {
 				StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
 			} catch (Exception e) {
 				StopServerAndOrClient();
-				PlayerInfoManager.Instance.SetWarningText("Unable to join the server...");
+				PlayerInfoManager.Instance.SetWarningText(e.Message);
 				PlayerInfoManager.Instance.OpenWarningBox();
 				Debug.LogWarning(e.Message);
 			}

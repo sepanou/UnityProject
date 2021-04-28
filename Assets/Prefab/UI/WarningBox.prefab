@@ -247,7 +247,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 17.65
+  m_fontSize: 17.9
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -382,12 +382,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 470313441587662649, guid: 06a4c610b8f32da4899caad2c23b2c2c,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 470313441587662649, guid: 06a4c610b8f32da4899caad2c23b2c2c,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 4414756719926336574}
     - target: {fileID: 470313441587662649, guid: 06a4c610b8f32da4899caad2c23b2c2c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 470313441587662649, guid: 06a4c610b8f32da4899caad2c23b2c2c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 470313441587662649, guid: 06a4c610b8f32da4899caad2c23b2c2c,
@@ -413,7 +423,7 @@ PrefabInstance:
     - target: {fileID: 2544222135805640480, guid: 06a4c610b8f32da4899caad2c23b2c2c,
         type: 3}
       propertyPath: m_fontSize
-      value: 16.6
+      value: 16.8
       objectReference: {fileID: 0}
     - target: {fileID: 2582463141939836356, guid: 06a4c610b8f32da4899caad2c23b2c2c,
         type: 3}

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -12,7 +13,7 @@ namespace UI_Audio {
 		private bool _isMouseOn, _isSelected;
 
 		private new void Start() {
-			if (hoveringCanvas is null) {
+			if (!hoveringCanvas) {
 				Destroy(this);
 				return;
 			}
@@ -21,12 +22,13 @@ namespace UI_Audio {
 			hoveringCanvas.GetWorldCorners(_worldCorners);
 			SetTargetsActive(false);
 		}
-		
+
 		private void SetTargetsActive(bool state) {
 			foreach (GameObject obj in toActivate)
 				obj.SetActive(state);
 		}
 
+		// Used by buttons - do not set private !
 		public void OnSelect() {
 			if (EventSystem.current)
 				EventSystem.current.SetSelectedGameObject(gameObject);
@@ -38,6 +40,7 @@ namespace UI_Audio {
 			base.OnSelect(data);
 		}
 
+		// Used by buttons, do not set private or whatever !
 		public void OnDeselect() {
 			if (EventSystem.current)
 				OnDeselect(new BaseEventData(EventSystem.current));
@@ -53,7 +56,7 @@ namespace UI_Audio {
 			if (!MouseCursor.Instance || !MenuSettingsManager.Instance || MenuSettingsManager.Instance.isOpen) return;
 			bool isOn = MouseCursor.Instance.IsMouseOn(this);
 			if (!_isMouseOn && isOn) {
-				EventSystem.current.SetSelectedGameObject(gameObject);
+				OnSelect();
 				_isMouseOn = true;
 			} else if (_isMouseOn && !isOn)
 				_isMouseOn = false;

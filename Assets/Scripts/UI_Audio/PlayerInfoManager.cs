@@ -175,7 +175,8 @@ namespace UI_Audio {
 			warningButton.onClick.AddListener(_warningButtonAction);
 		}
 
-		private void RemoveWarningButtonActions() {
+		// Called via inspector
+		public void RemoveWarningButtonActions() {
 			if (_warningButtonAction != null)
 				warningButton.onClick.RemoveListener(_warningButtonAction);
 		}
