@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Generation {
 	public enum RoomType { Standard, Chest, Shop, Start, Exit, Boss, PreBoss, DeadEnd, Other }
@@ -10,8 +11,7 @@ namespace Generation {
 		public (int, int) Dimensions;
 		public string Name { get; private set; }
 		public RoomType Type { get; private set; }
-		private List<(char, int)> _exits;
-		public IReadOnlyList<(char, int)> Exits => _exits.AsReadOnly();
+		public List<(char, int)> _exits;
 		private int _level;
 		private int _id;
 		private (int, int) _coordinate; // Bottom
@@ -19,22 +19,25 @@ namespace Generation {
 		public int GetLevel() => _level;
 		public int GetId() => _id;
 		public (int, int) Coordinates; // Left of the Room
+		public (int, int) UDim;
+		public (int, int) uCoords;
 
 		// ReSharper disable once UnusedMember.Local
 		private void Start() {
 			IsDiscovered = false;
 		}
 
-		public Room(((int, int) dim, List<(char, int)> exits, RoomType type, int lvl, int id) p, string name) {
+		public Room(((int, int) dim, List<(char, int)> exits, RoomType type, int lvl, int id, (int,int) uDim) p, string name) {
 			Dimensions = p.dim;
 			_exits = p.exits;
 			Type = p.type;
 			_level = p.lvl;
 			_id = p.id;
 			Name = name;
+			UDim = p.uDim;
 		}
 
-		public static ((int, int), List<(char, int)>, RoomType, int, int) Generate(string name) {
+		public static ((int, int), List<(char, int)>, RoomType, int, int, (int,int)) Generate(string name) {
 			List<(char, int)> exits = new List<(char, int)>();
 			Debug.Log(name);
 			string dimensions = name.TakeWhile(c => c != 'e').Aggregate("", (current, c) => current + c);
@@ -90,7 +93,17 @@ namespace Generation {
 			}
 
 			int id = int.Parse(nb);
-			return (dim, exits, type, level, id);
+			(int ux, int uy) = dim;
+			(int uux, int uuy) = (0, 0);
+			if (ux == 16) uux = 1;
+			if (uy == 16) uuy = 1;
+			for (int i = 2; i <= 4 && uux == 0; i++ ) {
+				if (ux == (16 + 2) * i) uux = i;
+			}
+			for (int i = 2; i <= 4 && uuy == 0; i++) {
+				if (ux == (16 + 2) * i) uuy = i;
+			}
+			return (dim, exits, type, level, id, (uux, uuy));
 			//Debug.Log(Name + '\n' + $"{Dimensions}" + '\n' + $"{_exits}" + "\n" + $"{Type}" + '\n' + $"{_level}" + '\n' + $"{_id}");
 		}
 	}

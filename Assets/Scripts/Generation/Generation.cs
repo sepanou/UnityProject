@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using Mirror;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -10,8 +13,8 @@ namespace Generation {
 	public static class Generation{
 		private static Dictionary<RoomType, List<Room>> _availableRooms;
 		private static readonly Random Random = new Random();
-		private static List<Room> recentlyAddedRooms;
-		private static List<Room> roomsToTreat;
+		private static List<Room> _recentlyAddedRooms;
+		private static List<Room> _roomsToTreat;
 
 		[Command(requiresAuthority = false)]
 		// ReSharper disable once UnusedMember.Local
@@ -19,16 +22,16 @@ namespace Generation {
 			if (level.alreadyGenerated) return;
 			Room[,] rMap = level.RoomsMap;
 			List<Room> lMap = level.RoomsList;
-			recentlyAddedRooms = new List<Room>();
-			roomsToTreat = new List<Room>();
+			_recentlyAddedRooms = new List<Room>();
+			_roomsToTreat = new List<Room>();
 			_availableRooms = GetLevels();
 			int rMaxY = rMap.GetLength(0);
 			int rMaxX = rMap.GetLength(1);
-			int x = Random.Next(rMaxX);
-			int y = Random.Next(rMaxY);
+			int x = 50;
+			int y = 50;
 			Debug.Log(_availableRooms.Count);
 			Room roomToPlace = _availableRooms[RoomType.Start][Random.Next(_availableRooms[RoomType.Start].Count)];
-			(roomsToTreat, recentlyAddedRooms) = (recentlyAddedRooms, new List<Room>());
+			(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
 			while (true) {
 				if (TryAddRoom(lMap, rMap, roomToPlace, x, y))
 					break;
@@ -41,22 +44,33 @@ namespace Generation {
 			while (!placedPreBossRoom) {
 				Debug.Log("Saluuuuuuuuuut");
 				if (lMap.Count >= 20) break; // Debug
-				foreach (Room room in roomsToTreat) {
-					foreach ((char dir, int nbDir) in room.Exits) {
-						(int rtcy, int rtcx) = room.Coordinates;
-						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap);
-						if (!(dir == 'T' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir /* - 1*/, rtcy /*+ 1 */) ||
-								dir == 'B' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir /*- 1*/, rtcy /*- 1*/) ||
-								dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcx /*- 1*/, rtcy /*+  - 1*/) ||
-								dir == 'R' && TryAddRoom(lMap, rMap, roomToAdd, rtcx /*+ 1*/, rtcy + nbDir /*- 1*/))
-							) continue;
-						if (roomToAdd.Type == RoomType.Chest)
-							level.Chests += 1;
-						if (roomToAdd.Type == RoomType.Shop)
-							level.Shop = true;
+				foreach (Room room in _roomsToTreat) {
+					int j = 0;
+					foreach ((char dir, int nbDir) in room._exits) {
+						(int rtcx, int rtcy) = room.uCoords;
+						int i = 0;
+						while (i < 100) {
+							Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap);
+							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1) ||
+							     dir == 'B' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1) ||
+							     dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy - nbDir - 1) ||
+							     dir == 'R' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy - nbDir - 1))
+							) {
+								j++;
+								if (roomToAdd.Type == RoomType.Chest)
+									level.Chests += 1;
+								if (roomToAdd.Type == RoomType.Shop)
+									level.Shop = true;
+								break;
+							}
+
+							i++;
+						}
 					}
 				}
-				(roomsToTreat, recentlyAddedRooms) = (recentlyAddedRooms, new List<Room>());
+
+				if (_recentlyAddedRooms.Count == 0) break; 
+				(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
 			}
 			/*while (!placedLastRoom) {
 				foreach (Room roomToCheckOn in lMap) {
@@ -108,25 +122,28 @@ namespace Generation {
 		}
 		
 		private static bool TryAddRoom(ICollection<Room> lMap, Room[,] rMap, Room room, int x, int y) {
-			(int roomWidth, int roomHeight) = room.Dimensions;
+			(int uroomWidth, int uroomHeight) = room.UDim;
 			if (x < 0 || y < 0 || x >= rMap.GetLength(1) || y >= rMap.GetLength(0))
 				return false;
-			for (int i = y; i < roomHeight / 16 + y; ++i)
-				for (int j = x; j < roomWidth / 16 + x; ++j)
-					if (rMap[y, x] != null || !CheckForExits(rMap, room, x, y, i, j))
+			for (int i = y; i > y - uroomHeight; --i)
+				for (int j = x; j < uroomWidth + x; ++j)
+					if (rMap[i, j] != null)
 						return false;
+			if (!CheckForExits(rMap, room, x, y))
+				return false;
+			room.Coordinates = (x*20, y*-20);
+			room.uCoords = (x, y);
 			// Iterating twice because we checked if there was enough room (haha) first before placing anything
-			for (int i = y; i < roomHeight / 16 + y; ++i)
-				for (int j = x; j < roomWidth / 16 + x; ++j)
-					rMap[y, x] = room;
-			room.Coordinates = (x, y);
+			for (int i = y; i > y - uroomHeight; --i)
+				for (int j = x; j < uroomWidth + x; ++j)
+					rMap[i, j] = room;
 			lMap.Add(room);
-			recentlyAddedRooms.Add(room);
-			AddPrefab(x*20,y*20, room.Name);
+			_recentlyAddedRooms.Add(room);
+			AddPrefab(x*20,y*-20, room.Name);
 			return true;
 		}
 
-		private static bool SubFunction(int nbDir, int a, int b, Room room, int desiredDir, bool isX, char opposite) {
+		/*private static bool SubFunction(int nbDir, int a, int b, Room room, int desiredDir, bool isX, char opposite) {
 			if (a != nbDir) return true;
 			if (b < 0) return false;
 			if (room == null) return true;
@@ -138,10 +155,10 @@ namespace Generation {
 				return true;
 			}
 			return false;
-		}
+		}*/
 
-		private static bool CheckForExits(Room[,] rMap, Room room, int x, int y, int i, int j) {
-			foreach ((char direction, int nbDir) in room.Exits) {
+		private static bool CheckForExits(Room[,] rMap, Room room, int x, int y) {
+			/*foreach ((char direction, int nbDir) in room.Exits) {
 				if (!(direction == 'B' ? SubFunction(nbDir, j - x + 1, i - 1, rMap[i - 1, j], j + 1, true, 'T')
 					: direction == 'T' ? SubFunction(nbDir, j - x + 1, i + 1, rMap[i + 1, j], j + 1, true, 'B')
 					: direction == 'L' ? SubFunction(nbDir, i - y + 1, j - 1, rMap[i, j - 1], i + 1, false, 'R')
@@ -149,7 +166,72 @@ namespace Generation {
 					: throw new ArgumentException("invalid letter")
 				)) return false;
 			}
+			return true;*/
+			(int uX, int uY) = (x, y);
+			(int uW, int uH) = room.UDim;
+			foreach ((char dir, int nbDir) in room._exits) {
+				if (!(dir == 'T' && SubFunction(rMap, uX + nbDir - 1, uY - uH, 'B') ||
+				      (dir == 'B' && SubFunction(rMap,uX + nbDir - 1, uY + 1, 'T')) ||
+				      (dir == 'L' && SubFunction(rMap, uX - 1, uY - nbDir + 1, 'R')) ||
+				      (dir == 'R' && SubFunction(rMap, uX + uW, uY - nbDir + 1, 'L')))
+				) return false;
+			}
+			for (int i = uY; i > uY - uH; i--) {
+				for (int j = uX; j < uW + uX; j++) {
+					if (!(rMap[i + 1, j] == null ||
+					      (SubFunction(rMap, j, i + 1, 'T') && SubFunction2(rMap, room, j, i,'B', uX, uY))))
+						return false;
+					if (!(rMap[i - 1, j] == null ||
+					      (SubFunction(rMap, j, i - 1, 'B') && SubFunction2(rMap, room, j, i, 'T', uX, uY))))
+						return false;
+					if (!(rMap[i, j + 1] == null ||
+					      (SubFunction(rMap, j + 1, i, 'L') && SubFunction2(rMap, room, j, i, 'R', uX, uY))))
+						return false;
+					if (!(rMap[i, j - 1] == null ||
+					      (SubFunction(rMap, j - 1, i, 'R') && SubFunction2(rMap, room, j, i, 'L', uX, uY))))
+						return false;
+				}
+			}
 			return true;
+		}
+
+		private static bool SubFunction2(Room[,] rMap, Room room, int j, int i, char dirLkF, int uX, int uY) {
+			(int x, int y) = room.uCoords;
+			foreach ((char dir, int nbDir) in room._exits) {
+				if (dir == dirLkF && SubSubFunction(room, j, i, dir, nbDir, uX, uY))
+					return true;
+			}
+			return false;
+		}
+		private static bool SubFunction(Room[,] rMap,int toX, int toY, char dirLkF) { //DirLookingFor
+			if (toX < 0 || toY < 0 || toX >= rMap.GetLength(1) || toY >= rMap.GetLength(0))
+				return false;
+			if (rMap[toY, toX] == null) return true;
+			Room room = rMap[toY, toX];
+			foreach ((char dir, int nbDir) in room._exits) {
+				if (dir == dirLkF && SubSubFunction(room, toX, toY, dir, nbDir))
+					return true;
+			}
+			return false;
+		}
+		
+		private static bool SubSubFunction(Room room, int toX, int toY, char dir, int nbDir, int x = -1, int y = -1) {
+			
+			if (x == y && y == -1)
+				(x, y) = room.uCoords;
+			(int uW, int uH) = room.UDim;
+			switch (dir) {
+				case 'T':
+					return x + nbDir - 1 == toX && y - uH + 1 == toY;
+				case 'B':
+					return x + nbDir - 1 == toX && y == toY;
+				case 'L':
+					return x == toX && y - nbDir + 1 == toY;
+				case 'R':
+					return x == toX + uW - 1 && y - nbDir + 1 == toY;
+				default:
+					throw new ArgumentException("SubSubFunction Generation, invalid direction/letter");
+			}
 		}
 		
 		public static Dictionary<RoomType, List<Room>> GetLevels() {;
