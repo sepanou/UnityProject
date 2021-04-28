@@ -180,7 +180,6 @@ namespace Entity {
 				return;
 			_playerPool[player] = false;
 			if (!player.isLocalPlayer) return;
-			CmdAddPlayerToPool(player);
 			_canInteract = true;
 			LocalGameManager.Instance.playerInfoManager.displayKey.StartDisplay();
 			if (_checkInteractionCoroutine != null)
@@ -195,22 +194,9 @@ namespace Entity {
 			if (InteractionCondition != null && !InteractionCondition(player))
 				return;
 			_playerPool.Remove(player);
-			CmdRemovePlayerFromPool(player);
 			if (!player.isLocalPlayer) return;
 			_canInteract = false;
 			LocalGameManager.Instance.playerInfoManager.displayKey.StopDisplay();
-		}
-
-		[Command(requiresAuthority = false)]
-		private void CmdAddPlayerToPool(Player player) {
-			if (_playerPool.ContainsKey(player)) return;
-			_playerPool[player] = false;
-		}
-
-		[Command(requiresAuthority = false)]
-		private void CmdRemovePlayerFromPool(Player player) {
-			if (!_playerPool.ContainsKey(player)) return;
-			_playerPool.Remove(player);
 		}
 	}
 }

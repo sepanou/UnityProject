@@ -181,7 +181,10 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		// Command executed on the server
 		// Only called from the client GO, on the corresponding GO on the server
 		[Command]
-		private void CmdMove(float x, float y) => RpcApplyForceToRigidBody(x, y);
+		private void CmdMove(float x, float y) {
+			ApplyForceToRigidBody(x, y);
+			RpcApplyForceToRigidBody(x, y);
+		}
 		
 		[Command] // Only called by clients
 		private void CmdAttack(bool fireOneButton, bool fireTwoButton) {

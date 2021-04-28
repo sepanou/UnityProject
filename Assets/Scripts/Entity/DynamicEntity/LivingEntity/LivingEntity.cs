@@ -39,25 +39,30 @@ namespace Entity.DynamicEntity.LivingEntity {
 		public void TakeKnockBack() {
 			throw new NotImplementedException();
 		}
-		
-		[ClientRpc]
-		protected void RpcApplyForceToRigidBody(float x, float y) {
+
+		protected void ApplyForceToRigidBody(float x, float y) {
 			if (!_rigidbody) return;
 			Vector2 direction = new Vector2(x, y);
-			
+            			
 			if (direction == Vector2.zero) {
 				// Idle animations
 				_rigidbody.velocity = Vector2.zero;
 				Animator.Play(IdleAnims[_lastAnimationStateIndex]);
 				return;
 			}
-			
+            			
 			// Circle divided in 4 parts -> angle measurement based on Vector2.up
 			direction.Normalize();
 			_lastAnimationStateIndex = (int)Vector2.SignedAngle(Vector2.up, direction) + 360;
 			_lastAnimationStateIndex = _lastAnimationStateIndex / 90 % 4;
 			_rigidbody.velocity = Speed * direction;
 			Animator.Play(WalkAnims[_lastAnimationStateIndex]);
+		}
+
+		[ClientRpc]
+		protected void RpcApplyForceToRigidBody(float x, float y) {
+			if (!isServer)
+				ApplyForceToRigidBody(x, y);
 		}
 
 		[ServerCallback]
