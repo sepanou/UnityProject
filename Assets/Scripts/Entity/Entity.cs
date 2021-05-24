@@ -84,6 +84,7 @@ namespace Entity {
 		}
 		
 		public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
+
 		public Vector2 Position {
 			get => transform.position;
 			

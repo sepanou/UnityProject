@@ -16,7 +16,7 @@ namespace UI_Audio {
 		private Animator _animator;
 		private bool _isIdling;
 		private Camera _mouseCamera;
-		private bool _initialized = false;
+		private bool _initialized;
 
 		private void Awake() {
 			if (!Instance)
@@ -48,10 +48,8 @@ namespace UI_Audio {
 		public bool IsMouseOver(RectTransform rect)
 			=> RectTransformUtility.RectangleContainsScreenPoint(rect, _lastPos);
 
-		public bool IsMouseOn(Selectable selectable) 
+		public static bool IsMouseOn(Selectable selectable) 
 			=> TryGetElementFromRayCast(out Selectable result) && result == selectable;
-		
-		public Vector3 GetLocalViewWorldCoords() => transform.position;
 
 		public Quaternion OrientateObjectTowardsMouse(Vector3 referenceDirection, out Vector2 orientation) {
 			orientation = transform.position - _mouseCamera.transform.position;

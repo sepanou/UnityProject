@@ -8,7 +8,7 @@ namespace Entity.DynamicEntity {
 	
 	[RequireComponent(typeof(Collider2D))]
 	public class Npc: DynamicEntity, IInteractiveEntity {
-		private enum NpcType { Smith, Seller, Buyer, ClassSelector, StoryTeller }
+		public enum NpcType { Smith, Orchidologist, Collector, InnKeeper, ClassSelector, StoryTeller }
 		
 		// A NPC is interactive !
 		// ReSharper disable once NotAccessedField.Local
@@ -27,53 +27,63 @@ namespace Entity.DynamicEntity {
 		public void Interact(Player player) {
 			switch (npcType) {
 				case NpcType.Smith:
-					InteractSmith(player.connectionToClient, player);
+					TargetInteractSmith(player.connectionToClient, player);
 					break;
-				case NpcType.Seller:
-					InteractSeller(player.connectionToClient, player);
+				case NpcType.InnKeeper:
+					TargetInteractInnKeeper(player.connectionToClient, player);
 					break;
-				case NpcType.Buyer:
-					InteractBuyer(player.connectionToClient, player);
+				case NpcType.Collector:
+					TargetInteractCollector(player.connectionToClient, player);
+					break;
+				case NpcType.Orchidologist:
+					TargetInteractOrchidologist(player.connectionToClient, player);
 					break;
 				case NpcType.ClassSelector:
-					InteractClassSelector(player.connectionToClient, player);
+					TargetInteractClassSelector(player.connectionToClient, player);
 					break;
 				case NpcType.StoryTeller:
-					InteractStoryTeller(player.connectionToClient, player);
+					TargetInteractStoryTeller(player.connectionToClient, player);
 					break;
 				default:
-					throw new ArgumentException("Interact");
+					throw new ArgumentException("Unknown NPC Type !");
 			}
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
-		private void InteractSmith(NetworkConnection target, Player player) {
-			InventoryManager.smithInventory.Open();
+		private void TargetInteractSmith(NetworkConnection target, Player player) {
+			InventoryManager.OpenPlayerAnd(NpcType.Smith);
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
-		private void InteractBuyer(NetworkConnection target, Player player) {
+		private void TargetInteractCollector(NetworkConnection target, Player player) {
+			InventoryManager.OpenPlayerAnd(NpcType.Collector);
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
-		private void InteractSeller(NetworkConnection target, Player player) {
+		private void TargetInteractInnKeeper(NetworkConnection target, Player player) {
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
-		private void InteractStoryTeller(NetworkConnection target, Player player) {
+		private void TargetInteractOrchidologist(NetworkConnection target, Player player) {
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
-		private void InteractClassSelector(NetworkConnection target, Player player) {
+		private void TargetInteractStoryTeller(NetworkConnection target, Player player) {
+			// TODO
+		}
+		
+		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
+		[TargetRpc]
+		private void TargetInteractClassSelector(NetworkConnection target, Player player) {
 			switch (classType) {
 				case PlayerClasses.Archer:
 					PlayerInfoManager.PrintDialog(new [] {"#archer-selector"}, () => StopInteracting(player));

@@ -6,11 +6,14 @@ namespace Entity.DynamicEntity.LivingEntity {
 	public abstract class LivingEntity: DynamicEntity {
 		private static readonly string[] IdleAnims = {"IdleN", "IdleW", "IdleS", "IdleE"};
 		private static readonly string[] WalkAnims = {"WalkN", "WalkW", "WalkS", "WalkE"};
+		private static readonly Vector2[] AdvancedMoves = {Vector2.up, Vector2.left, Vector2.down, Vector2.right};
 		
 		[SyncVar] private float _health;
 		private bool _isAlive = true;
 		private int _lastAnimationStateIndex;
 		private Rigidbody2D _rigidbody;
+
+		[SerializeField] private bool advancedMoves;
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
 			base.OnSerialize(writer, initialState);
@@ -53,10 +56,12 @@ namespace Entity.DynamicEntity.LivingEntity {
             			
 			// Circle divided in 4 parts -> angle measurement based on Vector2.up
 			direction.Normalize();
-			_lastAnimationStateIndex = (int)Vector2.SignedAngle(Vector2.up, direction) + 360;
-			_lastAnimationStateIndex = _lastAnimationStateIndex / 90 % 4;
+			int signedAngle = (int) Vector2.SignedAngle(Vector2.up, direction);
+			_lastAnimationStateIndex = (int) Math.Round((signedAngle + 360) / 90f, 0, MidpointRounding.AwayFromZero) % 4;
 			_rigidbody.velocity = Speed * direction;
 			Animator.Play(WalkAnims[_lastAnimationStateIndex]);
+			if (!advancedMoves) return;
+			transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(AdvancedMoves[_lastAnimationStateIndex], direction));
 		}
 
 		[ClientRpc]

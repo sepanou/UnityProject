@@ -54,7 +54,7 @@ namespace UI_Audio {
 
 		private void Update() {
 			if (!MouseCursor.Instance || !MenuSettingsManager.Instance || MenuSettingsManager.Instance.isOpen) return;
-			bool isOn = MouseCursor.Instance.IsMouseOn(this);
+			bool isOn = MouseCursor.IsMouseOn(this);
 			if (!_isMouseOn && isOn) {
 				OnSelect();
 				_isMouseOn = true;

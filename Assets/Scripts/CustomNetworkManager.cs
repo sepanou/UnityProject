@@ -55,4 +55,6 @@ public class CustomNetworkManager: NetworkManager {
 		base.OnStopClient();
 		LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Start);
 	}
+
+	public void SetGameMode(bool soloMode) => maxConnections = soloMode ? 1 : 3;
 }

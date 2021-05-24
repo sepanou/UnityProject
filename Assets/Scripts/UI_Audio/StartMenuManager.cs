@@ -10,6 +10,7 @@ namespace UI_Audio {
 		[Header("Fields")]
 		[SerializeField] private RectTransform defaultFields;
 		[SerializeField] private RectTransform gameModeFields;
+		[SerializeField] private RectTransform soloFields;
 		[SerializeField] private RectTransform multiPlayerFields;
 		[SerializeField] private RectTransform pseudoFields;
 		[SerializeField] private TMP_InputField pseudoInput;
@@ -44,6 +45,7 @@ namespace UI_Audio {
 		
 		private void CloseSubFields() {
 			gameModeFields.gameObject.SetActive(false);
+			soloFields.gameObject.SetActive(false);
 			multiPlayerFields.gameObject.SetActive(false);
 			pseudoFields.gameObject.SetActive(false);
 		}
