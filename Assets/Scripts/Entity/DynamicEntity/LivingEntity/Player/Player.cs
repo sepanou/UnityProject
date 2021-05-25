@@ -11,6 +11,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 	public enum PlayerClasses: byte { Mage, Warrior, Archer }
 	
 	public class Player: LivingEntity {
+		[SerializeField] private GameObject toSpawn;
 		private const int MaxItemInInventory = 20;
 		public static event LocalPlayerClassChanged OnLocalPlayerClassChange;
 		public static event RemotePlayerClassChanged OnRemotePlayerClassChange;
@@ -283,6 +284,12 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (Input.GetKeyDown(KeyCode.N)) {
 				CmdSwitchWeapon();
 				Debug.Log("Changed weapon !");
+			}
+			
+			if (netIdentity.isServer && Input.GetKeyDown(KeyCode.K))
+			{
+				NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateSword().gameObject);
+				Debug.Log("Spawned !");
 			}
 		}
 	}
