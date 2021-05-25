@@ -169,6 +169,9 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
+  compressRotation: 0
+  interpolateScale: 1
+  syncScale: 1
 --- !u!114 &1068648613714987358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,10 +187,13 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   spriteRenderer: {fileID: 5628018141983903107}
+  interactionCollider: {fileID: 0}
   speed: 5
+  advancedMoves: 0
+  toSpawn: {fileID: 3427838936398561976, guid: 982a241209a47f04cb5a7e825a1f3fdd, type: 3}
   classData: {fileID: 11400000, guid: 2882da12331e80542b3b5aceabe162e4, type: 2}
   playerName: PlayerA
-  playerClass: 2
+  playerClass: 1
   weapon: {fileID: 0}
   energy: 100
 --- !u!95 &8972541332924031235
@@ -200,7 +206,7 @@ Animator:
   m_GameObject: {fileID: 5628018141983903104}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 61fe12a42220e5742978018cf64a47c6, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

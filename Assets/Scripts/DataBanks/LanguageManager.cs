@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UI_Audio;
 using UnityEngine;
@@ -9,11 +10,15 @@ namespace DataBanks {
 	[CreateAssetMenu(fileName = "LanguageManager", menuName = "DataBanks/LanguageManager", order = 5)]
 	public class LanguageManager: ScriptableObject {
 		public static event LanguageChanged OnLanguageChange;
+		private static string _path;
 
 		public delegate void LanguageChanged();
-		private List<Language> _languages = new List<Language>();
+		private readonly List<Language> _languages = new List<Language>();
 		private string _currentLanguageKey;
 		private Language _currentLanguage;
+		private TextAsset _frenchLanguageFile;
+
+		[SerializeField] private Language defaultEnglish;
 
 		[Serializable]
 		private class Language {
@@ -34,35 +39,65 @@ namespace DataBanks {
 		[Serializable]
 		private class FieldEntry {
 			public string fieldKey;
-			public string translation;
+			[TextArea] public string translation;
 		}
 		
 		public void Initialize() {
 			TextTranslator.LanguageManager = this;
 			PlayerInfoManager.LanguageManager = this;
 
+			_path = Path.Combine(Application.persistentDataPath, "Languages");
+			
+			// UK English is the default - hard coded - language
 			_currentLanguageKey = "English-UK";
-			_currentLanguage = null;
+			_currentLanguage = defaultEnglish;
+			_languages.Add(defaultEnglish);
+			
+			// French is necessarily supported
+			_frenchLanguageFile = Resources.Load<TextAsset>("French");
+			if (_frenchLanguageFile)
+				_languages.Add(JsonUtility.FromJson<Language>(_frenchLanguageFile.text));
+			
 			LoadData();
 		}
 
 		public static void InitLanguage() => OnLanguageChange?.Invoke();
 
+		/// <summary>
+		/// Loads all the .json files inside the 'Languages' folder
+		/// </summary>
 		private void LoadData() {
-			TextAsset jsonFile = Resources.Load<TextAsset>("LanguageManager");
-			if (jsonFile == null) return;
-			
-			try {
-				List<Language> temp =
-					JsonSerializer.FromJsonList<Language>(jsonFile.text);
-				if (temp.Count == 0)
-					Debug.LogWarning("LanguageManager.json is empty or faulty!");
-				else {
-					_languages = temp;
-					TryGetLanguage(_currentLanguageKey, out _currentLanguage);
+			if (!Directory.Exists(_path) || !File.Exists(Path.Combine(_path, "English-UK.json"))) {
+				Directory.CreateDirectory(_path);
+				
+				StreamWriter writer;
+				if (_frenchLanguageFile && !File.Exists(Path.Combine(_path, "French.json"))) {
+					writer = File.CreateText(Path.Combine(_path, "French.json"));
+					writer.Write(_frenchLanguageFile.text);
+					writer.Close();
 				}
-			} catch (Exception) {
-				Debug.LogWarning("LanguageManager.json file does not exist!");
+				writer = File.CreateText(Path.Combine(_path, "English-UK.json"));
+				writer.Write(JsonUtility.ToJson(_currentLanguage, true));
+				writer.Close();
+				return;
+			}
+			
+			DirectoryInfo directory = new DirectoryInfo(_path);
+			foreach (FileInfo file in directory.EnumerateFiles("*.json")) {
+				try {
+					// No need to load this specific file (hard coded)
+					if (file.Name == "English-UK.json")
+						continue;
+					Language language = JsonUtility.FromJson<Language>(File.ReadAllText(file.FullName));
+					if (language is null)
+						Debug.LogWarning($"Language file '{file.Name}' was not successfully deserialized...");
+					else
+						_languages.Add(language);
+				}
+				catch (Exception e) {
+					Debug.LogWarning($"An error occured while loading a language file: {file.Name}!");
+					Debug.LogWarning(e.Message);
+				}
 			}
 		}
 
@@ -92,6 +127,9 @@ namespace DataBanks {
 			OnLanguageChange?.Invoke();
 		}
 
+		/// <summary>
+		/// Essentially dedicated to build the Dropdown list of available languages
+		/// </summary>
 		public List<Dropdown.OptionData> GetAllLanguages()
 			=> _languages.Select(language => new Dropdown.OptionData(language.languageKey)).ToList();
 

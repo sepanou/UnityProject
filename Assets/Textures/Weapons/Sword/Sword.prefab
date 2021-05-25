@@ -223,6 +223,9 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 5
   localScaleSensitivity: 0.01
+  compressRotation: 0
+  interpolateScale: 1
+  syncScale: 1
 --- !u!58 &2883538419739573123
 CircleCollider2D:
   m_ObjectHideFlags: 0

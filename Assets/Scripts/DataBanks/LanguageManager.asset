@@ -12,4 +12,101 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acea25b63717f1246814b10d43686706, type: 3}
   m_Name: LanguageManager
   m_EditorClassIdentifier: 
-  reload: 0
+  defaultEnglish:
+    languageKey: English-UK
+    fields:
+    - fieldKey: forward
+      translation: Move Forward
+    - fieldKey: backward
+      translation: Move Backward
+    - fieldKey: right
+      translation: Move Right
+    - fieldKey: left
+      translation: Move Left
+    - fieldKey: default-attack
+      translation: Default Attack
+    - fieldKey: special-attack
+      translation: Special Attack
+    - fieldKey: open-inv
+      translation: Open Inventory
+    - fieldKey: open-menu
+      translation: Open Menu
+    - fieldKey: interact
+      translation: Interact
+    - fieldKey: controls
+      translation: Controls
+    - fieldKey: settings
+      translation: Settings
+    - fieldKey: language
+      translation: Language
+    - fieldKey: music
+      translation: Music
+    - fieldKey: sound-effects
+      translation: Sound effects
+    - fieldKey: screen-reso
+      translation: Screen Resolution
+    - fieldKey: screen-mode
+      translation: Screen Mode
+    - fieldKey: resume
+      translation: Resume
+    - fieldKey: back
+      translation: Back
+    - fieldKey: volume
+      translation: Volume
+    - fieldKey: graphics
+      translation: Graphics
+    - fieldKey: others
+      translation: Others
+    - fieldKey: windowed
+      translation: Windowed
+    - fieldKey: fullscreen-window
+      translation: Full Screen Window
+    - fieldKey: max-window
+      translation: Maximized Window
+    - fieldKey: exclusive-fullscreen
+      translation: Exclusive Full Screen
+    - fieldKey: play
+      translation: Play
+    - fieldKey: credits
+      translation: Credits
+    - fieldKey: quit
+      translation: Quit
+    - fieldKey: inventory
+      translation: Inventory
+    - fieldKey: solo
+      translation: Solo
+    - fieldKey: multiplayer
+      translation: Multiplayer
+    - fieldKey: proceed
+      translation: Proceed
+    - fieldKey: pseudo
+      translation: Pseudo
+    - fieldKey: start
+      translation: Start
+    - fieldKey: ip-address
+      translation: IP Address
+    - fieldKey: validate
+      translation: Validate
+    - fieldKey: connect
+      translation: Connect
+    - fieldKey: main-menu
+      translation: Main menu
+    - fieldKey: allow-multiplayer
+      translation: Allow multiplayer
+    - fieldKey: '#warrior-selector'
+      translation: 'So you''d like to be a warrior, ehh?
+
+        Good choice!
+
+        Nothing
+        better than a mighty sword and a metal shield!'
+    - fieldKey: '#mage-selector'
+      translation: 'Mastering the Arcane Arts is anything but easy!
+
+        Will
+        you be strong enough to subdue this knowledge?'
+    - fieldKey: '#archer-selector'
+      translation: 'Our accuracy and our semi-rapid movements is what qualifies us
+        the best!
+
+        You can give it a try - after all, all you risk is death...'
