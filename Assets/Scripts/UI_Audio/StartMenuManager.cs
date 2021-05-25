@@ -10,6 +10,7 @@ namespace UI_Audio {
 		[Header("Fields")]
 		[SerializeField] private RectTransform defaultFields;
 		[SerializeField] private RectTransform gameModeFields;
+		[SerializeField] private RectTransform soloFields;
 		[SerializeField] private RectTransform multiPlayerFields;
 		[SerializeField] private RectTransform pseudoFields;
 		[SerializeField] private TMP_InputField pseudoInput;
@@ -44,6 +45,7 @@ namespace UI_Audio {
 		
 		private void CloseSubFields() {
 			gameModeFields.gameObject.SetActive(false);
+			soloFields.gameObject.SetActive(false);
 			multiPlayerFields.gameObject.SetActive(false);
 			pseudoFields.gameObject.SetActive(false);
 		}
@@ -123,8 +125,7 @@ namespace UI_Audio {
 				StartCoroutine(ServerLaunchProcedure(gameModeFields));
 			} catch (Exception e) {
 				StopServerAndOrClient();
-				PlayerInfoManager.Instance.SetWarningText("Unable to launch the server...\n" +
-				                                          "Are you sure a server is not already launched?");
+				PlayerInfoManager.Instance.SetWarningText(e.Message);
 				PlayerInfoManager.Instance.OpenWarningBox();
 				Debug.LogWarning(e.Message);
 			}
@@ -156,7 +157,7 @@ namespace UI_Audio {
 				StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
 			} catch (Exception e) {
 				StopServerAndOrClient();
-				PlayerInfoManager.Instance.SetWarningText("Unable to join the server...");
+				PlayerInfoManager.Instance.SetWarningText(e.Message);
 				PlayerInfoManager.Instance.OpenWarningBox();
 				Debug.LogWarning(e.Message);
 			}
@@ -173,7 +174,7 @@ namespace UI_Audio {
 			else if (NetworkServer.active)
 				manager.StopServer();
 		}
-		
+
 		public void QuitApplication() {
 			StopServerAndOrClient();
 #if UNITY_EDITOR

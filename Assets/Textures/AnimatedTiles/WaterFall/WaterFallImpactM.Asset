@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8952dfadd7075a14fb85b4e27d68c335, type: 3}
   m_Name: WaterFallImpactM
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -1678404251535746677, guid: 17f93c74aedad624b94a485ed76b3b49, type: 3}
+  m_Sprite: {fileID: -1678404251535746677, guid: 17f93c74aedad624b94a485ed76b3b49,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

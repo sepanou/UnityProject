@@ -24,6 +24,7 @@ namespace Entity.StaticEntity {
 		private void RpcToggleSprite(bool isOpen2) {
 			AudioDB.PlayUISound("WoodenDoor");
 			_spriteRenderer.sprite = isOpen2 ? closed : opened;
+			_doorCollider[0].enabled = isOpen2;
 		}
 
 		[Server]
@@ -32,9 +33,5 @@ namespace Entity.StaticEntity {
 			RpcToggleSprite(isOpen);
 			isOpen = !isOpen;
 		}
-
-		public void ToDoOnEntering(Player player){}
-
-		public void ToDoOnExiting(Player player){}
 	}
 }

@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 namespace UI_Audio {
 	public class InventorySlot: MonoBehaviour {
-		private static InventorySlot _previouslySelected = null;
+		public static InventorySlot LastHovered;
+		private static InventorySlot _previouslySelected;
 		private static readonly Color Visible = new Color(255, 255, 255, 255);
 		private static readonly Color Invisible = new Color(255, 255, 255, 0);
 		
@@ -24,6 +25,7 @@ namespace UI_Audio {
 		[NonSerialized] public bool IsOccupied;
 		private bool _isMouseOver;
 		private IInventoryItem _item;
+		private Inventory _inventory;
 
 		private void Start() {
 			if (!hoveringCanvas || !targetGraphic || !slotImage) {
@@ -67,6 +69,7 @@ namespace UI_Audio {
 			if (!MouseCursor.Instance || _previouslySelected == this) return;
 			bool isOver = MouseCursor.Instance.IsMouseOver(hoveringCanvas);
 			if (!_isMouseOver && isOver) {
+				LastHovered = this;
 				_isMouseOver = true;
 				targetGraphic.sprite = hoverSprite;
 			} else if (_isMouseOver && !isOver) {

@@ -28,13 +28,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[SyncVar] [SerializeField] private int energy;
 
 		private Camera _mainCamera;
-
-		// ReSharper disable once UnusedMember.Local
-		private List<Charm> _charms = new List<Charm>(); // Could use targetRpc -> no need for others to see our charms !
+		
 		// serialization of Weapon objects, but it does for GameObject !
 		[ShowInInspector]
 		private readonly SyncList<Weapon.Weapon> _weapons = new SyncList<Weapon.Weapon>();
+		[ShowInInspector]
+		private readonly SyncList<Charm> _charms = new SyncList<Charm>();
 		private Inventory _inventory;
+		private ContainerInventory _containerInventory;
 
 		public int Kibrient => _kibrient;
 		public int Orchid => _orchid;
@@ -70,6 +71,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				_inventory = InventoryManager.Instance.playerInventory;
 				_mainCamera = LocalGameManager.Instance.SetMainCameraToPlayer(this);
 				_weapons.Callback += OnWeaponsUpdated;
+				_charms.Callback += OnCharmsUpdated;
 				LocalGameManager.Instance.LocalPlayer = this;
 				PlayerInfoManager.Instance.UpdateMoneyAmount(this);
 			}
@@ -81,10 +83,19 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		public bool HasEnoughEnergy(int amount) => energy >= amount;
 		
 		public bool HasEnoughKibrient(int amount) => _kibrient >= amount;
+
+		public bool TryReduceKibrient(int amount) {
+			if (!HasEnoughKibrient(amount))
+				return false;
+			_kibrient -= amount;
+			return true;
+		}
 		
 		public bool HasEnoughOrchid(int amount) => _orchid >= amount;
     
 		public bool IsFullInventory() => _weapons.Count >= MaxItemInInventory;
+
+		public void SetContainerInventory(ContainerInventory inventory) => _containerInventory = inventory;
 
 		public Vector3 WorldToScreenPoint(Vector3 position)
             => _mainCamera ? _mainCamera.WorldToScreenPoint(position) : Vector3.zero;
@@ -123,16 +134,38 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			}
 		}
 		
-		[ServerCallback] public void ReduceEnergy(int amount) => energy = amount >= energy ? 0 : energy - amount;
+		private void OnCharmsUpdated(SyncList<Charm>.Operation op, int itemIndex, Charm oldItem, Charm newItem) {
+			if (!isLocalPlayer) return;
+			
+			switch (op) {
+				case SyncList<Charm>.Operation.OP_ADD:
+					_inventory.TryAddItem(newItem);
+					break;
+				case SyncList<Charm>.Operation.OP_CLEAR:
+					_inventory.ClearInventory();
+					break;
+				case SyncList<Charm>.Operation.OP_REMOVEAT:
+					_inventory.TryRemoveItem(oldItem);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(op), op, null);
+			}
+		}
 
-		[ServerCallback]
+		[Server] public void AddCharm(Charm charm) => _charms.Add(charm);
+
+		[Server] public bool TryRemoveCharm(Charm charm) => _charms.Remove(charm);
+
+		[Server] public void ReduceEnergy(int amount) => energy = amount >= energy ? 0 : energy - amount;
+
+		[Server]
 		private void SwitchWeapon(Weapon.Weapon newWeapon) {
 			if (weapon) weapon.UnEquip();
 			weapon = newWeapon;
 			weapon.Equip(this);
 		}
 
-		[ServerCallback]
+		[Server]
 		private void CollectWeapon(Weapon.Weapon wp) {
 			wp.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
 			wp.holder = this;
@@ -181,7 +214,10 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		// Command executed on the server
 		// Only called from the client GO, on the corresponding GO on the server
 		[Command]
-		private void CmdMove(float x, float y) => RpcApplyForceToRigidBody(x, y);
+		private void CmdMove(float x, float y) {
+			ApplyForceToRigidBody(x, y);
+			RpcApplyForceToRigidBody(x, y);
+		}
 		
 		[Command] // Only called by clients
 		private void CmdAttack(bool fireOneButton, bool fireTwoButton) {
@@ -225,6 +261,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				return;
 			}
 
+			if (_inventory.IsOpen && _containerInventory && _containerInventory.IsOpen) {
+				if (Input.GetMouseButtonDown(0))
+					_containerInventory.TryMoveHoveredSlotItem(_inventory);
+				else if (InputManager.GetKeyDown("OpenInventory"))
+					InventoryManager.CloseAllInventories();
+				return;
+			}
+			
 			if (InputManager.GetKeyDown("OpenInventory")) {
 				if (!_inventory.IsOpen)
 					_inventory.Open();
@@ -232,27 +276,10 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					_inventory.Close();
 				return;
 			}
-			
-			if (_inventory.IsOpen) return;
 
 			CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
 				InputManager.GetKeyDown("SpecialAttack"));
-
-			// Change class (for testing)
-			if (Input.GetKeyDown(KeyCode.C))
-				CmdSwitchPlayerClass(playerClass == PlayerClasses.Archer ? PlayerClasses.Mage :
-					playerClass == PlayerClasses.Mage ? PlayerClasses.Warrior : PlayerClasses.Archer);
-
-			if (netIdentity.isServer && Input.GetKeyDown(KeyCode.K)) {
-				NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateBow().gameObject);
-				Debug.Log("Spawned !");
-			}
-
-			if (netIdentity.isServer && Input.GetKeyDown(KeyCode.P)) {
-				NetworkManager.singleton.ServerChangeScene("Level1Creation");
-				Debug.Log("Changed scene !");
-			}
-
+			
 			if (Input.GetKeyDown(KeyCode.N)) {
 				CmdSwitchWeapon();
 				Debug.Log("Changed weapon !");

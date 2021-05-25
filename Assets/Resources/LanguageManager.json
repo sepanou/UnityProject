@@ -166,6 +166,10 @@
                 {
                     "fieldKey": "main-menu",
                     "translation": "Main menu"
+                },
+                {
+                    "fieldKey": "allow-multiplayer",
+                    "translation": "Allow multiplayer"
                 }
             ]
         },
@@ -335,6 +339,10 @@
                 {
                     "fieldKey": "main-menu",
                     "translation": "Ecran titre"
+                },
+                {
+                    "fieldKey": "allow-multiplayer",
+                    "translation": "Autoriser le multijoueur"
                 }
             ]
         }

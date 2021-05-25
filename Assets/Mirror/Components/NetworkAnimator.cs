@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -35,7 +34,7 @@ namespace Mirror
         /// <summary>
         /// Syncs animator.speed
         /// </summary>
-        [SyncVar(hook = nameof(onAnimatorSpeedChanged))]
+        [SyncVar(hook = nameof(OnAnimatorSpeedChanged))]
         float animatorSpeed;
         float previousSpeed;
 
@@ -89,13 +88,6 @@ namespace Mirror
             layerWeight = new float[animator.layerCount];
         }
 
-        public IEnumerator Reload()
-        {
-            Awake();
-            yield return new WaitForSeconds(0.1f);
-            if (animator) enabled = true;
-        }
-
         void FixedUpdate()
         {
             if (!SendMessagesAllowed)
@@ -135,7 +127,7 @@ namespace Mirror
                 {
                     animatorSpeed = newSpeed;
                 }
-                else if (ClientScene.readyConnection != null)
+                else if (isClient)
                 {
                     CmdSetAnimatorSpeed(newSpeed);
                 }
@@ -149,7 +141,7 @@ namespace Mirror
             animatorSpeed = newSpeed;
         }
 
-        void onAnimatorSpeedChanged(float _, float value)
+        void OnAnimatorSpeedChanged(float _, float value)
         {
             // skip if host or client with authority
             // they will have already set the speed so don't set again
@@ -223,7 +215,7 @@ namespace Mirror
             {
                 RpcOnAnimationClientMessage(stateHash, normalizedTime, layerId, weight, parameters);
             }
-            else if (ClientScene.readyConnection != null)
+            else if (isClient)
             {
                 CmdOnAnimationServerMessage(stateHash, normalizedTime, layerId, weight, parameters);
             }
@@ -235,7 +227,7 @@ namespace Mirror
             {
                 RpcOnAnimationParametersClientMessage(parameters);
             }
-            else if (ClientScene.readyConnection != null)
+            else if (isClient)
             {
                 CmdOnAnimationParametersServerMessage(parameters);
             }
@@ -463,7 +455,7 @@ namespace Mirror
                     return;
                 }
 
-                if (ClientScene.readyConnection != null)
+                if (isClient)
                     CmdOnAnimationTriggerServerMessage(hash);
 
                 // call on client right away
@@ -512,7 +504,7 @@ namespace Mirror
                     return;
                 }
 
-                if (ClientScene.readyConnection != null)
+                if (isClient)
                     CmdOnAnimationResetTriggerServerMessage(hash);
 
                 // call on client right away

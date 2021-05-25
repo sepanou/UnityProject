@@ -14,19 +14,18 @@ public class CustomNetworkManager: NetworkManager {
 	[SerializeField] private string forestSceneName;
 	[SerializeField] private Vector3[] forestSpawnPoints;
 
-	private List<Player> _playerPrefabs;
+	private readonly List<Player> _playerPrefabs = new List<Player>();
 
 	public override void Start() {
-		_playerPrefabs = new List<Player>();
 		base.Start();
 		Instance = this;
 	}
 
 	public void StartSceneTransition() => sceneAnimator.Play("StartTransition");
 
-	private void SetPlayerSpawnPoints(Vector3[] spawnPoints) {
+	private void SetPlayerSpawnPoints(IReadOnlyList<Vector3> spawnPoints) {
 		for (int i = 0; i < _playerPrefabs.Count; i++)
-			_playerPrefabs[i].Position = spawnPoints[i % spawnPoints.Length];
+			_playerPrefabs[i].Position = spawnPoints[i % spawnPoints.Count];
 	}
 	
 	public override void OnServerAddPlayer(NetworkConnection conn) {
@@ -53,7 +52,9 @@ public class CustomNetworkManager: NetworkManager {
 	}
 
 	public override void OnStopClient() {
-		LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Start);
 		base.OnStopClient();
+		LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Start);
 	}
+
+	public void SetGameMode(bool soloMode) => maxConnections = soloMode ? 1 : 3;
 }
