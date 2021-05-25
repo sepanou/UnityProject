@@ -1,0 +1,173 @@
+{
+    "languageKey": "French",
+    "fields": [
+        {
+            "fieldKey": "forward",
+            "translation": "Avancer"
+        },
+        {
+            "fieldKey": "backward",
+            "translation": "Reculer"
+        },
+        {
+            "fieldKey": "right",
+            "translation": "Droite"
+        },
+        {
+            "fieldKey": "left",
+            "translation": "Gauche"
+        },
+        {
+            "fieldKey": "default-attack",
+            "translation": "Attaque par défaut"
+        },
+        {
+            "fieldKey": "special-attack",
+            "translation": "Attaque spéciale"
+        },
+        {
+            "fieldKey": "open-inv",
+            "translation": "Ouvrir l'inventaire"
+        },
+        {
+            "fieldKey": "open-menu",
+            "translation": "Ouvrir le menu"
+        },
+        {
+            "fieldKey": "interact",
+            "translation": "Intéragir"
+        },
+        {
+            "fieldKey": "controls",
+            "translation": "Contrôles"
+        },
+        {
+            "fieldKey": "settings",
+            "translation": "Paramètres"
+        },
+        {
+            "fieldKey": "language",
+            "translation": "Langue"
+        },
+        {
+            "fieldKey": "music",
+            "translation": "Musiques"
+        },
+        {
+            "fieldKey": "sound-effects",
+            "translation": "Effets sonores"
+        },
+        {
+            "fieldKey": "screen-reso",
+            "translation": "Résolution"
+        },
+        {
+            "fieldKey": "screen-mode",
+            "translation": "Affichage"
+        },
+        {
+            "fieldKey": "resume",
+            "translation": "Reprendre"
+        },
+        {
+            "fieldKey": "back",
+            "translation": "Retour"
+        },
+        {
+            "fieldKey": "volume",
+            "translation": "Volume"
+        },
+        {
+            "fieldKey": "graphics",
+            "translation": "Graphismes"
+        },
+        {
+            "fieldKey": "others",
+            "translation": "Autres"
+        },
+        {
+            "fieldKey": "windowed",
+            "translation": "Fenêtré"
+        },
+        {
+            "fieldKey": "fullscreen-window",
+            "translation": "Fenêtré plein écran"
+        },
+        {
+            "fieldKey": "max-window",
+            "translation": "Fenêtre élargie"
+        },
+        {
+            "fieldKey": "exclusive-fullscreen",
+            "translation": "Plein écran"
+        },
+        {
+            "fieldKey": "play",
+            "translation": "Jouer"
+        },
+        {
+            "fieldKey": "credits",
+            "translation": "Crédits"
+        },
+        {
+            "fieldKey": "quit",
+            "translation": "Quitter"
+        },
+        {
+            "fieldKey": "inventory",
+            "translation": "Inventaire"
+        },
+        {
+            "fieldKey": "solo",
+            "translation": "Solo"
+        },
+        {
+            "fieldKey": "multiplayer",
+            "translation": "Multijoueur"
+        },
+        {
+            "fieldKey": "proceed",
+            "translation": "Continuer"
+        },
+        {
+            "fieldKey": "pseudo",
+            "translation": "Pseudo"
+        },
+        {
+            "fieldKey": "start",
+            "translation": "Commencer"
+        },
+        {
+            "fieldKey": "ip-address",
+            "translation": "Adresse IP"
+        },
+        {
+            "fieldKey": "validate",
+            "translation": "Valider"
+        },
+        {
+            "fieldKey": "connect",
+            "translation": "Se connecter"
+        },
+        {
+            "fieldKey": "#warrior-selector",
+            "translation": "Mmhh... Tu voudrais devenir un guerrier, pas vrai ?\nC'est un bon choix !\nRien de mieux qu'une puissante épée et qu'un large bouclier !"
+        },
+        {
+            "fieldKey": "#mage-selector",
+            "translation": "La maîtrise des forces magiques est tout sauf facile !\nSeras-tu assez fort pour embrasser cette connaissance ?"
+        },
+        {
+            "fieldKey": "#archer-selector",
+            "translation": "Notre précision et nos mouvements semi-rapides est ce qui nous caractérise le mieux !\nBien sûr, tu peux t'y essayer ; après tout, tout ce que tu risques est la mort..."
+        },
+        {
+            "fieldKey": "main-menu",
+            "translation": "Ecran titre"
+        },
+        {
+            "fieldKey": "allow-multiplayer",
+            "translation": "Autoriser le multijoueur"
+        }
+    ]
+}
