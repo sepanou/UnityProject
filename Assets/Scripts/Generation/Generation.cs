@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using Mirror;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -42,8 +39,7 @@ namespace Generation {
 			int maxRooms = 20;
 			bool placedPreBossRoom = false;
 			while (!placedPreBossRoom) {
-				Debug.Log("Saluuuuuuuuuut");
-				if (lMap.Count >= 20) break; // Debug
+				if (lMap.Count >= 20 && level.Shop) break; // Debug
 				foreach (Room room in _roomsToTreat) {
 					int j = 0;
 					foreach ((char dir, int nbDir) in room._exits) {
@@ -75,41 +71,8 @@ namespace Generation {
 
 				if (_recentlyAddedRooms.Count == 0) break; 
 				(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
+				_roomsToTreat.Shuffle();
 			}
-			/*while (!placedLastRoom) {
-				foreach (Room roomToCheckOn in lMap) {
-					if (roomToCheckOn.Type == RoomType.DeadEnd) continue;
-					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
-						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
-						Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap);
-						if (!(dir == 'T' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
-							: dir == 'B' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1)
-							: dir == 'L' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1)
-							: dir == 'R' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1)
-							: throw new Exception("invalid letter")
-						)) continue;
-						if (roomToAdd.Type == RoomType.Chest)
-							level.Chests += 1;
-						if (roomToAdd.Type == RoomType.Shop)
-							level.Shop = true;
-					}
-				}
-				int prob = Random.Next(100);
-				if (level.RoomsList.Count > 15 && prob < level.RoomsList.Count) return;
-				foreach (Room roomToCheckOn in lMap) {
-					foreach ((char dir, int nbDir) in roomToCheckOn.Exits) {
-						if (roomToCheckOn.Type == RoomType.Start) continue;
-						(int rtcy, int rtcx) = roomToCheckOn.Coordinates;
-						Room roomToAdd = _availableRooms[RoomType.PreBoss][Random.Next(_availableRooms[RoomType.PreBoss].Count)];
-						if (dir == 'T' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1)
-							: dir == 'B' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1)
-							: dir == 'L' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy + nbDir - 1)
-							: dir == 'R' ? TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy + nbDir - 1)
-							: throw new Exception("invalid letter")
-						) placedLastRoom = true;
-					} 
-				}
-			}*/
 			// TODO: Need to add Boss Room & Exit room.
 			level.alreadyGenerated = true;
 		}
@@ -138,7 +101,6 @@ namespace Generation {
 				? RoomType.Chest
 				: RoomType.Standard
 			;
-			if (roomType == RoomType.Shop) roomType = RoomType.Standard; // TODO : SHOP ROOM, REMOVE THIS LINE AFTER
 			return _availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)];
 		}
 		
@@ -164,30 +126,7 @@ namespace Generation {
 			return true;
 		}
 
-		/*private static bool SubFunction(int nbDir, int a, int b, Room room, int desiredDir, bool isX, char opposite) {
-			if (a != nbDir) return true;
-			if (b < 0) return false;
-			if (room == null) return true;
-			Room neighbour = room;
-			(int nX, int nY) = neighbour.Dimensions;
-			desiredDir -= isX ? nX : nY;
-			foreach ((char nDir, int nNbDir) in neighbour.Exits) {
-				if (nDir != opposite || nNbDir != desiredDir) continue;
-				return true;
-			}
-			return false;
-		}*/
-
 		private static bool CheckForExits(Room[,] rMap, Room room, int x, int y) {
-			/*foreach ((char direction, int nbDir) in room.Exits) {
-				if (!(direction == 'B' ? SubFunction(nbDir, j - x + 1, i - 1, rMap[i - 1, j], j + 1, true, 'T')
-					: direction == 'T' ? SubFunction(nbDir, j - x + 1, i + 1, rMap[i + 1, j], j + 1, true, 'B')
-					: direction == 'L' ? SubFunction(nbDir, i - y + 1, j - 1, rMap[i, j - 1], i + 1, false, 'R')
-					: direction == 'R' ? SubFunction(nbDir, i - y + 1, j + 1, rMap[i, j - 1], i + 1, false, 'L')
-					: throw new ArgumentException("invalid letter")
-				)) return false;
-			}
-			return true;*/
 			(int uX, int uY) = (x, y);
 			(int uW, int uH) = room.UDim;
 			foreach ((char dir, int nbDir) in room._exits) {
@@ -216,6 +155,17 @@ namespace Generation {
 			return true;
 		}
 
+		/// <summary>
+		/// SubFunction in case of rooms which have not been placed yet
+		/// </summary>
+		/// <param name="rMap"></param>
+		/// <param name="room"></param>
+		/// <param name="j"></param>
+		/// <param name="i"></param>
+		/// <param name="dirLkF"></param>
+		/// <param name="uX"></param>
+		/// <param name="uY"></param>
+		/// <returns></returns>
 		private static bool SubFunction2(Room[,] rMap, Room room, int j, int i, char dirLkF, int uX, int uY) {
 			(int x, int y) = room.uCoords;
 			foreach ((char dir, int nbDir) in room._exits) {
@@ -224,6 +174,21 @@ namespace Generation {
 			}
 			return false;
 		}
+		/// <summary>
+		/// This function will return false if we cannot place the room given in argument in this particular place.
+		/// It will verify for every exit of the room (Exits given in a previous function), if it is exiting into
+		/// nothing (aka not placed room yet) it will return true, if it's out of bounds, it will return false.
+		/// If there is another room, it will verify if it is the direction we're looking for (aka if we're checking the
+		/// top exit of a room and there is a room at the top we're gonna search for bottom exits of the room. Then the
+		/// SubSubFunction will verify if the bottom exit is correctly placed in front of the other exit in case of
+		/// 36x36 or more rooms.
+		/// </summary>
+		/// <param name="rMap">Map of the Level</param>
+		/// <param name="toX">Coordinates we're looking at for the exit.</param>
+		/// <param name="toY">Coordinates we're looking at for the exit</param>
+		/// <param name="dirLkF">Direction we're looking for, for instance if we were previously checking on top exits
+		/// of a room, we will be looking for bottom exits on other rooms</param>
+		/// <returns>True if the room can be placed here without conflicting with any exits, false otherwise</returns>
 		private static bool SubFunction(Room[,] rMap,int toX, int toY, char dirLkF) { //DirLookingFor
 			if (toX < 0 || toY < 0 || toX >= rMap.GetLength(1) || toY >= rMap.GetLength(0))
 				return false;
@@ -236,6 +201,18 @@ namespace Generation {
 			return false;
 		}
 		
+		/// <summary>
+		/// This function will verify if the exit called in SubFunction is correctly placed in case of 36x36 or more rooms
+		/// </summary>
+		/// <param name="room"></param>
+		/// <param name="toX"></param>
+		/// <param name="toY"></param>
+		/// <param name="dir"></param>
+		/// <param name="nbDir"></param>
+		/// <param name="x">Given if the room isn't placed yet, aka doesn't have coordinates yet</param>
+		/// <param name="y">Same than x</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException"></exception>
 		private static bool SubSubFunction(Room room, int toX, int toY, char dir, int nbDir, int x = -1, int y = -1) {
 			
 			if (x == y && y == -1)
@@ -276,6 +253,22 @@ namespace Generation {
 			}
 			if (objectToAdd == null) throw new Exception("Room cannot be found");
 			Object.Instantiate(objectToAdd, new Vector3(x, y, 0), Quaternion.identity);
+		}
+		
+		/// <summary>
+		/// Shuffles a list, thanks Stack Overflow !
+		/// </summary>
+		/// <param name="list"></param>
+		/// <typeparam name="T"></typeparam>
+		public static void Shuffle<T>(this IList<T> list) {  
+			int n = list.Count;  
+			while (n > 1) {  
+				n--;  
+				int k = Random.Next(n + 1);  
+				T value = list[k];  
+				list[k] = list[n];  
+				list[n] = value;  
+			}  
 		}
 	}
 }
