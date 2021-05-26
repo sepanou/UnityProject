@@ -59,6 +59,7 @@ namespace Generation {
 								break;
 							}
 
+							_recentlyAddedRooms.Add(room);
 							++i;
 						}
 					}
