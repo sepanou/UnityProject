@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Behaviour;
+using Mirror;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public abstract class Mob: LivingEntity {
@@ -7,11 +8,10 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 
 		protected new void Instantiate() => base.Instantiate();
 
-		private void FixedUpdate() {
-			if (!isServer || Behaviour is null) return;
+		[ServerCallback] private void FixedUpdate() {
+			if (Behaviour is null) return;
 			Vector2 direction = Behaviour.NextDirection();
-			ApplyForceToRigidBody(direction.x, direction.y);
-			RpcApplyForceToRigidBody(direction.x, direction.y);
+			Move(direction.x, direction.y);
 		}
 	}
 }

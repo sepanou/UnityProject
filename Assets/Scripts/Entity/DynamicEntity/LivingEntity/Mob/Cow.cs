@@ -1,9 +1,11 @@
 ﻿using Behaviour;
+using Mirror;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public class Cow: Mob {
 		protected override void RpcDying() {
+			NetworkServer.Destroy(gameObject);
 			Debug.Log("Imma head out :(");
 		}
 

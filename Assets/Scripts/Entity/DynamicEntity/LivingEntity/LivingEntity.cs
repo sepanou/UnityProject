@@ -21,7 +21,8 @@ namespace Entity.DynamicEntity.LivingEntity {
 		[SerializeField] private string nameTag;
 		
 		[SyncVar] [SerializeField] private int maxHealth;
-		[SyncVar] private int _health;
+		[SyncVar(hook = nameof(SyncHealthChanged))] private int _health;
+		private void SyncHealthChanged(int o, int n) => OnHealthChange?.Invoke(n / (float) maxHealth);
 
 		public event HealthChanged OnHealthChange;
 		public delegate void HealthChanged(float ratio);
@@ -43,42 +44,48 @@ namespace Entity.DynamicEntity.LivingEntity {
 			maxHealth = reader.ReadInt32();
 			int newHealth = reader.ReadInt32();
 			if (newHealth == _health) return;
+			SyncHealthChanged(_health, newHealth);
 			_health = newHealth;
-			OnHealthChange?.Invoke(_health / (float) maxHealth);
 		}
 
 		protected abstract void RpcDying();
 		
 		protected new void Instantiate() {
-			// Physics only simulated on the server
-			// On client, no collision managed but triggers still work
-			//if (TryGetComponent(out Rigibody)) Rigibody.bodyType = netIdentity.isServer
-			//	? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
-			if (TryGetComponent(out _rigidBody)) _rigidBody.bodyType = RigidbodyType2D.Dynamic;
+			base.Instantiate();
+			if (TryGetComponent(out _rigidBody)) {
+				_rigidBody.bodyType = RigidbodyType2D.Dynamic;
+				_rigidBody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+			}
 			LastAnimationState = 0;
-			entityUI = Instantiate(entityUI, LocalGameManager.Instance.playerInfoManager.transform);
+			entityUI = Instantiate(entityUI, PlayerInfoManager.transform);
 			entityUI.transform.SetSiblingIndex(0);
 			entityUI.Initialize(this);
+			OnHealthChange += entityUI.SetHealthBarValue;
 			if (isServer)
 				_health = maxHealth;
-			OnHealthChange?.Invoke(1f);
+			SyncHealthChanged(_health, _health);
 			entityUI.SetNameTagField(nameTag);
-			base.Instantiate();
 		}
 		
 		public void TakeKnockBack() {
 			throw new NotImplementedException();
 		}
 
-		protected void ApplyForceToRigidBody(float x, float y) {
-			if (!_rigidBody) return;
+		[ClientRpc] private void RpcApplyAnimationStates(int animationState, bool isIdle, Vector2 velocity) {
+			if (!Animator || !_rigidBody) return;
+			Animator.Play(isIdle ? IdleAnims[animationState] : WalkAnims[animationState]);
+			_rigidBody.velocity = velocity;
+		}
+		
+		[Server] private (AnimationState, bool, Vector2) ApplyForceToRigidBody(float x, float y) {
+			if (!_rigidBody) return (0, true, Vector2.zero);
 			Vector2 direction = new Vector2(x, y);
             			
 			if (direction == Vector2.zero) {
 				// Idle animations
 				_rigidBody.velocity = Vector2.zero;
 				Animator.Play(IdleAnims[(int) LastAnimationState]);
-				return;
+				return (LastAnimationState, true, Vector2.zero);
 			}
             			
 			// Circle divided in 4 parts -> angle measurement based on Vector2.up
@@ -88,29 +95,29 @@ namespace Entity.DynamicEntity.LivingEntity {
 				(AnimationState) ((int) Math.Round((signedAngle + 360) / 90f, 0, MidpointRounding.AwayFromZero) % 4);
 			_rigidBody.velocity = Speed * direction;
 			Animator.Play(WalkAnims[(int) LastAnimationState]);
-			if (!advancedMoves) return;
-			transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(AdvancedMoves[(int) LastAnimationState], direction));
+			if (advancedMoves)
+				transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(AdvancedMoves[(int) LastAnimationState], direction));
+			return (LastAnimationState, false, _rigidBody.velocity);
 		}
 
-		[ClientRpc]
-		protected void RpcApplyForceToRigidBody(float x, float y) {
-			if (!isServer)
-				ApplyForceToRigidBody(x, y);
+		[Command] protected void CmdMove(float x, float y) => Move(x, y);
+		
+		[Server] protected void Move(float x, float y) {
+			(AnimationState state, bool isIdle, Vector2 velocity) = ApplyForceToRigidBody(x, y);
+			RpcApplyAnimationStates((int) state, isIdle, velocity);
 		}
 
-		[ServerCallback]
-		public void GetAttacked(int atk) {
+		[Server] public void GetAttacked(int atk) {
 			if (!_isAlive || atk == 0) return;
 			_health = Mathf.Max(_health - atk, 0);
-			OnHealthChange?.Invoke(_health / (float) maxHealth);
+			SyncHealthChanged(_health, _health);
 			// TakeKnockback(); Needs to be implemented
 			_isAlive = _health > 0;
 			if (!_isAlive) RpcDying();
 		}
 
 		private void OnDestroy() {
-			if (entityUI)
-				entityUI.Destroy();
+			if (entityUI) entityUI.Destroy();
 		}
 	}
 }

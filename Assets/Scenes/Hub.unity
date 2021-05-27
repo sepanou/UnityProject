@@ -1552,7 +1552,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &34224623
 MonoBehaviour:
@@ -18484,7 +18484,7 @@ PrefabInstance:
     - target: {fileID: 1918518750208897709, guid: fd6dd86d309c51e43b3a9275f8a95990,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1918518750208897709, guid: fd6dd86d309c51e43b3a9275f8a95990,
         type: 3}
@@ -62507,12 +62507,12 @@ MonoBehaviour:
   playerSpawnMethod: 1
   spawnPrefabs:
   - {fileID: 6908914794162927955, guid: fd6dd86d309c51e43b3a9275f8a95990, type: 3}
-  - {fileID: 2017461150231793244, guid: 9c948cbb36b86df43b6f88a7aefa7a87, type: 3}
   - {fileID: 3427838936398561976, guid: 982a241209a47f04cb5a7e825a1f3fdd, type: 3}
   - {fileID: 7279687285391168874, guid: 2d4d8f8747bd7384ab280dd034ffcf2f, type: 3}
-  - {fileID: 2198074381090187270, guid: f253105defb28994f8f1ab558d129c39, type: 3}
   - {fileID: 3931145845793517927, guid: f1790528367cd12448fa82f4c50c7d30, type: 3}
   - {fileID: 1882545377149301592, guid: a7c12a540bbfc5e439e178af2569ad74, type: 3}
+  - {fileID: 2017461150231793244, guid: 9c948cbb36b86df43b6f88a7aefa7a87, type: 3}
+  - {fileID: 2198074381090187270, guid: f253105defb28994f8f1ab558d129c39, type: 3}
   sceneAnimator: {fileID: 807742234}
   forestSceneName: Level1Creation
   forestSpawnPoints:
@@ -64488,6 +64488,7 @@ MonoBehaviour:
   multiPlayerFields: {fileID: 1378025774}
   pseudoFields: {fileID: 1919842795}
   pseudoInput: {fileID: 1507899329}
+  allowMultiPlayerToggle: {fileID: 1717898439}
   manager: {fileID: 770805803}
   ipAddressField: {fileID: 73301047}
   worldParticles: {fileID: 389465628}
@@ -107956,16 +107957,16 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 770805803}
-        m_MethodName: SetGameMode
-        m_Mode: 6
+      - m_Target: {fileID: 827564809}
+        m_MethodName: AllowMultiPlayer
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
   m_IsOn: 1
 --- !u!224 &1717898440

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using Entity.DynamicEntity.LivingEntity;
 using TMPro;
 using UnityEngine;
@@ -18,13 +17,12 @@ namespace UI_Audio.LivingEntityUI {
 
         public void Initialize(LivingEntity entity) {
             _target = entity;
-            _target.OnHealthChange += SetHealthBarValue;
             _worldCamera = LocalGameManager.Instance.worldCamera;
             _lastViewportPos = new Vector2Int(-1, -1);
             _dimensions = rectTransform.anchorMax;
         }
         
-        private void SetHealthBarValue(float amount) => healthBar.value = amount;
+        public void SetHealthBarValue(float amount) => healthBar.value = amount;
 
         public void SetNameTagField(string nameTag) => nameTagField.text = nameTag;
 

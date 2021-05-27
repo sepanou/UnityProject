@@ -26,7 +26,6 @@ namespace Entity {
 		private IInteractiveEntity _interactive;
 
 		[NonSerialized] protected static LocalGameManager Manager;
-		[NonSerialized] protected static LanguageManager LanguageManager;
 		[NonSerialized] protected static InputManager InputManager;
 		[NonSerialized] protected static PlayerInfoManager PlayerInfoManager;
 		[NonSerialized] protected static InventoryManager InventoryManager;
@@ -34,7 +33,6 @@ namespace Entity {
 		public static void InitClass(LocalGameManager manager) {
 			if (Manager) throw new Exception("InitClass called multiple times");
 			Manager = manager;
-			LanguageManager = Manager.languageManager;
 			PlayerInfoManager = Manager.playerInfoManager;
 			InventoryManager = Manager.inventoryManager;
 			InputManager = Manager.inputManager;
@@ -74,8 +72,7 @@ namespace Entity {
 		protected void Instantiate() {
 			if (!spriteRenderer)
 				spriteRenderer = GetComponent<SpriteRenderer>();
-			if (!isServer)
-				CmdApplyLayers();
+			if (!isServer && netId != 0) CmdApplyLayers();
 			InteractionCondition = null;
 			AutoStopInteracting = false;
 			_canInteract = false;
@@ -88,7 +85,7 @@ namespace Entity {
 		public Vector2 Position {
 			get => transform.position;
 			
-			[ServerCallback]
+			[Server]
 			set {
 				Transform tempTransform = transform;
 				tempTransform.position = new Vector3(value.x, value.y, tempTransform.position.z);
@@ -98,12 +95,12 @@ namespace Entity {
 		[Command(requiresAuthority = false)]
 		private void CmdApplyLayers(NetworkConnectionToClient target = null) {
 			if (spriteRenderer)
-				RpcSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer);
+				TargetSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer);
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
-		private void RpcSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId) {
+		private void TargetSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId) {
 			if (spriteRenderer)
 				spriteRenderer.sortingLayerID = sortingLayerId;
 			gameObject.layer = layerMaskId;
@@ -111,8 +108,7 @@ namespace Entity {
 		
 		// *-*-*-*-*- For interactive objects (NPC / Doors / ...) -*-*-*-*-*
 		
-		[ClientCallback]
-		private IEnumerator CheckInteraction(Player player) {
+		[Client] private IEnumerator CheckInteraction(Player player) {
 			while (_canInteract) {
 				while (!InputManager.GetKeyDown("Interact")) {
 					if (!_canInteract)
@@ -127,8 +123,7 @@ namespace Entity {
 			}
 		}
 
-		[ClientCallback]
-		protected void StopInteracting(Player player) {
+		[Client] protected void StopInteracting(Player player) {
 			// For callbacks from client (player) 
 			SetIsInteractive(player, false);
 			// Tell it to the server
@@ -136,12 +131,10 @@ namespace Entity {
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		[TargetRpc]
-		private void RpcSetIsInteractive(NetworkConnection target, Player player, bool state) 
+		[TargetRpc] private void TargetSetIsInteractive(NetworkConnection target, Player player, bool state) 
 			=> SetIsInteractive(player, state);
 
-		[Command(requiresAuthority = false)]
-		private void CmdTryInteract(Player player) {
+		[Command(requiresAuthority = false)] private void CmdTryInteract(Player player) {
 			if (InteractionCondition != null && !InteractionCondition(player))
 				return;
 			if (AutoStopInteracting) {
@@ -150,7 +143,7 @@ namespace Entity {
 			}
 			if (!_playerPool.ContainsKey(player) || _playerPool[player]) return;
 			SetIsInteractive(player, true);
-			RpcSetIsInteractive(player.connectionToClient, player, true);
+			TargetSetIsInteractive(player.connectionToClient, player, true);
 			_interactive.Interact(player);
 		}
 
@@ -169,10 +162,12 @@ namespace Entity {
 			_playerPool.Clear();
 			if (!player.isLocalPlayer) return;
 			_canInteract = false;
-			LocalGameManager.Instance.playerInfoManager.displayKey.StopDisplay();
+			PlayerInfoManager.displayKey.StopDisplay();
 		}
 
-		public void EnableInteraction() => interactionCollider.enabled = true;
+		[ClientRpc] public void RpcDisableInteraction(Player player) => DisableInteraction(player);
+
+		[ClientRpc] public void RpcEnableInteraction() => interactionCollider.enabled = true;
 
 		protected virtual void OnTriggerEnter2D(Collider2D other) {
 			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))

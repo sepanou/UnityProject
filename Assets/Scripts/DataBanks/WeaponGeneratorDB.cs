@@ -167,11 +167,11 @@ namespace DataBanks {
 
 		private static RangedWeaponData GenerateRangeData(bool epic = false) {
 			RangedWeaponData result = new RangedWeaponData();
-			result.DefaultDamageMultiplier = RoundRandomFloat(0.5f, 2f);
-			result.SpecialDamageMultiplier = RoundRandomFloat(0.75f, 1.25f);
-			result.ProjectileNumber = Random.Range(1, 7);
-			result.ProjectileSpeedMultiplier = RoundRandomFloat(0.5f, 2f);
-			result.ProjectileSizeMultiplier = RoundRandomFloat(0.5f, 2f);
+			result.defaultDamageMultiplier = RoundRandomFloat(0.5f, 2f);
+			result.specialDamageMultiplier = RoundRandomFloat(0.75f, 1.25f);
+			result.projectileNumber = Random.Range(1, 7);
+			result.projectileSpeedMultiplier = RoundRandomFloat(0.5f, 2f);
+			result.projectileSizeMultiplier = RoundRandomFloat(0.5f, 2f);
 			if (epic)
 				result *= 2;
 			return result;
@@ -179,10 +179,10 @@ namespace DataBanks {
 
 		private static MeleeWeaponData GenerateMeleeData(bool epic = false) {
 			MeleeWeaponData result = new MeleeWeaponData();
-			result.DefaultDamageMultiplier = RoundRandomFloat(0.5f, 3f);
-			result.SpecialDamageMultiplier = RoundRandomFloat(0.75f, 1.5f);
-			result.WeaponSizeMultiplier = RoundRandomFloat(0.75f, 2f);
-			result.KnockbackMultiplier = RoundRandomFloat(0.75f, 3f);
+			result.defaultDamageMultiplier = RoundRandomFloat(0.5f, 3f);
+			result.specialDamageMultiplier = RoundRandomFloat(0.75f, 1.5f);
+			result.weaponSizeMultiplier = RoundRandomFloat(0.75f, 2f);
+			result.knockbackMultiplier = RoundRandomFloat(0.75f, 3f);
 			if (epic)
 				result *= 2;
 			return result;
@@ -199,7 +199,7 @@ namespace DataBanks {
 		public Bow GenerateBow() {
 			GameObject obj = Instantiate(bowModel);
 			Bow result = obj.GetComponent<Bow>();
-			result.RangeData = GenerateRangeData();
+			result.rangeData = GenerateRangeData();
 			(bool feminine, string bowName) = BowsNames[Random.Range(0,BowsNames.Count-1)];
 			string adj;
 			if (feminine) 
@@ -207,8 +207,7 @@ namespace DataBanks {
 			else
 				(adj, _) = Adjectives[Random.Range(0, Adjectives.Count - 1)];
 			string cName = NameComplements[Random.Range(0, NameComplements.Count - 1)];
-			result.RangeData.Name = bowName + " " + adj + " " + cName;
-			Debug.Log(result.RangeData.Name);
+			result.rangeData.name = bowName + " " + adj + " " + cName;
 			result.GetSpriteRenderer().sprite = GetRandomInArray(bowSprites);
 			return result;
 		}
@@ -216,8 +215,8 @@ namespace DataBanks {
 		public Staff GenerateStaff() {
 			GameObject obj = Instantiate(staffModel);
 			Staff result = obj.GetComponent<Staff>();
-			result.RangeData = GenerateRangeData();
-			result.RangeData.Name = "Mighty Staff";
+			result.rangeData = GenerateRangeData();
+			result.rangeData.name = "Mighty Staff";
 			result.GetSpriteRenderer().sprite = GetRandomInArray(staffSprites);
 			return result;
 		}
@@ -225,8 +224,8 @@ namespace DataBanks {
 		public MeleeWeapon GenerateSword() {
 			GameObject obj = Instantiate(swordModel);
 			MeleeWeapon result = obj.GetComponent<MeleeWeapon>();
-			result.MeleeData = GenerateMeleeData();
-			result.MeleeData.Name = "Mighty Sword";
+			result.meleeData = GenerateMeleeData();
+			result.meleeData.name = "Mighty Sword";
 			result.GetSpriteRenderer().sprite = GetRandomInArray(swordSprites);
 			return result;
 		}

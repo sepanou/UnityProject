@@ -4827,7 +4827,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  Renderer: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  interactionCollider: {fileID: 0}
   speed: 3
 --- !u!114 &4126538001226602082
 MonoBehaviour:
@@ -4847,6 +4848,9 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
+  compressRotation: 0
+  interpolateScale: 1
+  syncScale: 1
 --- !u!1 &3931145846831559297
 GameObject:
   m_ObjectHideFlags: 0

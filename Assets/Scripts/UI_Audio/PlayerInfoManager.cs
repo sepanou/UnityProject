@@ -9,7 +9,6 @@ using Entity.DynamicEntity.Weapon.RangedWeapon;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 using UnityEngine.UI;
 
@@ -41,11 +40,10 @@ namespace UI_Audio {
 		public MeleeWeaponDescription meleeWeaponDescription;
 		public CharmDescription charmDescription;
 
-
-        [Header("Player Class Fields")]
+		[Header("Player Class Fields")]
         [SerializeField] private RectTransform playerClassCanvas;
         [SerializeField] private Image classIcon, powerBar, healthBar;
-        [FormerlySerializedAs("_displayKey")] [SerializeField] public DisplayKey displayKey;
+        [SerializeField] public DisplayKey displayKey;
         
 		[NonSerialized] public static LanguageManager LanguageManager;
 		[NonSerialized] public static InputManager InputManager;
@@ -85,7 +83,6 @@ namespace UI_Audio {
 			
 			// Player Class UI
 			Player.OnLocalPlayerClassChange += ChangeLocalPlayerClassInfo;
-			Weapon.OnWeaponChange += UpdateCurrentWeapon;
 		}
 
 		private IEnumerator WriteDialog(string[] dialogKeys, UnityAction callback, float delay = 0.02f) {
@@ -186,7 +183,6 @@ namespace UI_Audio {
 		public void OpenWarningBox() => warningBox.gameObject.SetActive(true);
 		
 		// Player Class information
-
 		private void ChangeLocalPlayerClassInfo(ClassData data) {
 			if (classIcon)
 				classIcon.sprite = data.classIcon;
@@ -215,10 +211,21 @@ namespace UI_Audio {
 			img.fillAmount = 0f;
 		}
 		
-		private void UpdateCurrentWeapon(Weapon wp) {
+		public void UpdateCurrentWeapon(Weapon wp) {
+			if (!wp) {
+				currentWeapon.enabled = false;
+				currentWeaponName.text = "";
+				return;
+			}
+
+			currentWeapon.enabled = true;
 			currentWeapon.sprite = wp.GetSpriteRenderer().sprite;
 			currentWeaponName.text = wp.GetName();
 		}
+
+		public void UpdatePlayerHealth(float ratio) => healthBar.fillAmount = ratio;
+
+		public void UpdatePlayerPower(float ratio) => powerBar.fillAmount = ratio;
 
 		public void StartSpecialAttackCooldown(float duration)
 			=> IsSafeAttackCooldown(duration, ref _specialAttackCooldown, specialAttackCooldown);

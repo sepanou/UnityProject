@@ -14,21 +14,19 @@ namespace Entity.StaticEntity {
 
 
 		private void Start() {
+			Instantiate();
 			_doorCollider = GetComponents<Collider2D>();
 			_spriteRenderer = GetComponent<SpriteRenderer>();
-			Instantiate();
 			AutoStopInteracting = true;
 		}
 
-		[ClientRpc]
-		private void RpcToggleSprite(bool isOpen2) {
+		[ClientRpc] private void RpcToggleSprite(bool isOpen2) {
 			AudioDB.PlayUISound("WoodenDoor");
 			_spriteRenderer.sprite = isOpen2 ? closed : opened;
 			_doorCollider[0].enabled = isOpen2;
 		}
 
-		[Server]
-		public void Interact(Player player) {
+		[Server] public void Interact(Player player) {
 			_doorCollider[0].enabled = isOpen;
 			RpcToggleSprite(isOpen);
 			isOpen = !isOpen;

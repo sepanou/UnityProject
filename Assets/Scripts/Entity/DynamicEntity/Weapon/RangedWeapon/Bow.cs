@@ -6,7 +6,7 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 	public class Bow: RangedWeapon {
 		private void Start() => Instantiate();
 
-		private void FixedUpdate() {
+		[ClientCallback] private void FixedUpdate() {
 			if (!hasAuthority|| !equipped || isGrounded || !MouseCursor.Instance) return;
 			// Only run by the weapon's owner (client)
 			gameObject.transform.localRotation =
@@ -14,15 +14,13 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 			CmdUpdateOrientation(orient);
 		}
 
-		[ServerCallback]
-		protected override void DefaultAttack() {
+		[Server] protected override void DefaultAttack() {
 			RpcAttackAnimation();
 			Projectile.Projectile.SpawnProjectile(this, launchPoint.position);
 			LastAttackTime = Time.time;
 		}
 
-		[ServerCallback]
-		protected override void SpecialAttack() {
+		[Server] protected override void SpecialAttack() {
 			RpcAttackAnimation();
 			Projectile.Projectile.SpawnProjectile(this, launchPoint.position);
 			holder.ReduceEnergy(specialAttackCost);

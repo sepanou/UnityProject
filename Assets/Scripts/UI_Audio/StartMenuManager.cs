@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Mirror;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI_Audio {
 	public class StartMenuManager: MonoBehaviour {
@@ -14,6 +15,7 @@ namespace UI_Audio {
 		[SerializeField] private RectTransform multiPlayerFields;
 		[SerializeField] private RectTransform pseudoFields;
 		[SerializeField] private TMP_InputField pseudoInput;
+		[SerializeField] private Toggle allowMultiPlayerToggle;
 
 		[Header("Server related GameObjects")]
 		[SerializeField] private NetworkManager manager;
@@ -80,6 +82,11 @@ namespace UI_Audio {
 			InfoManger.SetWarningText("Pseudo length must be greater or equal to four...");
 			InfoManger.OpenWarningBox();
 		}
+
+		public string GetPseudoText() => pseudoInput.text;
+
+		public void AllowMultiPlayer() =>
+			NetworkManager.singleton.maxConnections = allowMultiPlayerToggle.isOn ? 3 : 1;
 
 		private static IEnumerator ClientConnectionProcedure(RectTransform currentFields) {
 			if (currentFields)
