@@ -58,10 +58,9 @@ namespace Generation {
 								if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
 								break;
 							}
-
-							_recentlyAddedRooms.Add(room);
 							++i;
 						}
+						//if (i >= 99) _recentlyAddedRooms.Add(room); // To add only when we will have every type of rooms
 					}
 				}
 
