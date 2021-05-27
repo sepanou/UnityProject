@@ -39,7 +39,7 @@ namespace Generation {
 			int maxRooms = 20;
 			bool placedPreBossRoom = false;
 			while (!placedPreBossRoom) {
-				if (lMap.Count >= 20 && level.Shop) break; // Debug
+				if (lMap.Count >= 20 && level.Shop && placedPreBossRoom) break; // Debug
 				foreach (Room room in _roomsToTreat) {
 					foreach ((char dir, int nbDir) in room._exits) {
 						if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
@@ -54,14 +54,14 @@ namespace Generation {
 							) {
 								if (roomToAdd.Type == RoomType.Chest) level.Chests += 1;
 								if (roomToAdd.Type == RoomType.Shop) level.Shop = true;
+								if (roomToAdd.Type == RoomType.PreBoss) placedPreBossRoom = true;
 								_recentlyAddedRooms.Add(roomToAdd);
-								if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
 								break;
 							}
 							++i;
 						}
-						//if (i >= 99) _recentlyAddedRooms.Add(room); // To add only when we will have every type of rooms
 					}
+					if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
 				}
 
 				if (_recentlyAddedRooms.Count == 0) break; 
@@ -114,6 +114,8 @@ namespace Generation {
 		private static Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap) {
 			RoomType roomType = !isThereAShop && seed.Next(100) <= 10 + lMap.Count / 2
 				? RoomType.Shop
+				: isThereAShop && lMap.Count >= 20 && seed.Next(100) <= -10 + lMap.Count
+				? RoomType.PreBoss
 				: seed.Next(100) <= 5 / (chests + 1)
 				? RoomType.Chest
 				: RoomType.Standard
