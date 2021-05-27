@@ -62512,6 +62512,7 @@ MonoBehaviour:
   - {fileID: 7279687285391168874, guid: 2d4d8f8747bd7384ab280dd034ffcf2f, type: 3}
   - {fileID: 2198074381090187270, guid: f253105defb28994f8f1ab558d129c39, type: 3}
   - {fileID: 3931145845793517927, guid: f1790528367cd12448fa82f4c50c7d30, type: 3}
+  - {fileID: 1882545377149301592, guid: a7c12a540bbfc5e439e178af2569ad74, type: 3}
   sceneAnimator: {fileID: 807742234}
   forestSceneName: Level1Creation
   forestSpawnPoints:

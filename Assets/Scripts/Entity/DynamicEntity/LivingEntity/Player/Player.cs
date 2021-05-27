@@ -1,35 +1,38 @@
 using System;
-using System.Collections.Generic;
 using DataBanks;
 using Entity.Collectibles;
 using Entity.DynamicEntity.Weapon;
 using Mirror;
 using UI_Audio;
+using UI_Audio.LivingEntityUI;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Player {
 	public enum PlayerClasses: byte { Mage, Warrior, Archer }
 	
 	public class Player: LivingEntity {
-		[SerializeField] private GameObject toSpawn;
 		private const int MaxItemInInventory = 20;
 		public static event LocalPlayerClassChanged OnLocalPlayerClassChange;
 		public static event RemotePlayerClassChanged OnRemotePlayerClassChange;
 		public delegate void LocalPlayerClassChanged(ClassData data);
+		public event EnergyChanged OnEnergyChange;
+		public delegate void EnergyChanged(float ratio);
 
 		public delegate void RemotePlayerClassChanged(ClassData data);
 		
+		[Header("Player Fields")]
 		[SerializeField] private PlayerClassData classData;
+		[SerializeField] private GameObject toSpawn;
 
 		[SyncVar] public string playerName;
 		[SyncVar] public PlayerClasses playerClass;
 		[SyncVar] [SerializeField] protected Weapon.Weapon weapon;
 		[SyncVar] private int _kibrient;
 		[SyncVar] private int _orchid;
-		[SyncVar] [SerializeField] private int energy;
+		[SyncVar] private int _energy;
+		[SyncVar] [SerializeField] private int maxEnergy;
 
 		private Camera _mainCamera;
-		
 		// serialization of Weapon objects, but it does for GameObject !
 		[ShowInInspector]
 		private readonly SyncList<Weapon.Weapon> _weapons = new SyncList<Weapon.Weapon>();
@@ -37,13 +40,15 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private readonly SyncList<Charm> _charms = new SyncList<Charm>();
 		private Inventory _inventory;
 		private ContainerInventory _containerInventory;
-
+		private PlayerUI _playerUI;
+		
 		public int Kibrient => _kibrient;
 		public int Orchid => _orchid;
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
 			base.OnSerialize(writer, initialState);
-			writer.WriteInt32(energy);
+			writer.WriteInt32(_energy);
+			writer.WriteInt32(maxEnergy);
 			writer.WriteInt32(_kibrient);
 			writer.WriteInt32(_orchid);
 			writer.WriteByte((byte) playerClass);
@@ -54,25 +59,39 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		public override void OnDeserialize(NetworkReader reader, bool initialState) {
 			base.OnDeserialize(reader, initialState);
-			energy = reader.ReadInt32();
+			int newEnergy = reader.ReadInt32();
+			maxEnergy = reader.ReadInt32();
 			_kibrient = reader.ReadInt32();
 			_orchid = reader.ReadInt32();
 			playerClass = (PlayerClasses) reader.ReadByte();
 			playerName = reader.ReadString();
 			weapon = reader.ReadWeapon();
+			if (newEnergy == _energy) return;
+			_energy = newEnergy;
+			OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
 		}
 
 		private void Start() {
 			DontDestroyOnLoad(this);
 			Instantiate();
-			if (!isLocalPlayer)
+			if (isServer)
+				_energy = maxEnergy;
+			if (!isLocalPlayer) {
 				OnRemotePlayerClassChange += ChangeAnimator;
+				_playerUI = (PlayerUI) entityUI;
+				if (!_playerUI) return;
+				_playerUI.SetNameTagField(playerName);
+				OnEnergyChange += _playerUI.SetEnergyBarValue;
+				OnEnergyChange?.Invoke(1f);
+			}
 			else {
 				OnLocalPlayerClassChange += ChangeAnimator;
 				_inventory = InventoryManager.Instance.playerInventory;
 				_mainCamera = LocalGameManager.Instance.SetMainCameraToPlayer(this);
 				_weapons.Callback += OnWeaponsUpdated;
 				_charms.Callback += OnCharmsUpdated;
+				// Only health / energy UI for the other players
+				entityUI.Destroy();
 				LocalGameManager.Instance.LocalPlayer = this;
 				PlayerInfoManager.Instance.UpdateMoneyAmount(this);
 			}
@@ -81,7 +100,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		}
 
 		// Can be executed by both client & server (Synced data analysis) -> double check
-		public bool HasEnoughEnergy(int amount) => energy >= amount;
+		public bool HasEnoughEnergy(int amount) => _energy >= amount;
 		
 		public bool HasEnoughKibrient(int amount) => _kibrient >= amount;
 
@@ -105,6 +124,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (Animator) Animator.runtimeAnimatorController = data.animatorController;
 			if (spriteRenderer) spriteRenderer.sprite = data.defaultSprite;
 			playerClass = data.playerClass;
+			if (_playerUI) _playerUI.SetEnergyBarColor(playerClass);
 		}
 		
 		private void SwitchClass(PlayerClasses @class) {
@@ -157,7 +177,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[Server] public bool TryRemoveCharm(Charm charm) => _charms.Remove(charm);
 
-		[Server] public void ReduceEnergy(int amount) => energy = amount >= energy ? 0 : energy - amount;
+		[Server] public void ReduceEnergy(int amount) {
+			if (amount == 0) return;
+			_energy = Math.Max(_energy - amount, 0);
+			OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
+		}
 
 		[Server]
 		private void SwitchWeapon(Weapon.Weapon newWeapon) {
@@ -288,9 +312,13 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			
 			if (netIdentity.isServer && Input.GetKeyDown(KeyCode.K))
 			{
-				NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateSword().gameObject);
+				//NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateSword().gameObject);
+				GameObject obj = Instantiate(toSpawn, Vector3.zero, Quaternion.identity);
+				NetworkServer.Spawn(obj);
 				Debug.Log("Spawned !");
 			}
+			
+			if (Input.GetKeyDown(KeyCode.B)) GetAttacked(1);
 		}
 	}
 	
