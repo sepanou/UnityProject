@@ -39,9 +39,8 @@ namespace Generation {
 			int maxRooms = 20;
 			bool placedPreBossRoom = false;
 			while (!placedPreBossRoom) {
-				if (lMap.Count >= 20 && level.Shop) break; // Debug
+				if (lMap.Count >= 20 && level.Shop && placedPreBossRoom) break; // Debug
 				foreach (Room room in _roomsToTreat) {
-					int j = 0;
 					foreach ((char dir, int nbDir) in room._exits) {
 						if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
 						(int rtcx, int rtcy) = room.uCoords;
@@ -53,20 +52,16 @@ namespace Generation {
 							     dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy - nbDir + 1) ||
 							     dir == 'R' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy - nbDir + 1))
 							) {
-								j++;
-								if (roomToAdd.Type == RoomType.Chest)
-									level.Chests += 1;
-								if (roomToAdd.Type == RoomType.Shop)
-									level.Shop = true;
+								if (roomToAdd.Type == RoomType.Chest) level.Chests += 1;
+								if (roomToAdd.Type == RoomType.Shop) level.Shop = true;
+								if (roomToAdd.Type == RoomType.PreBoss) placedPreBossRoom = true;
+								_recentlyAddedRooms.Add(roomToAdd);
 								break;
 							}
-
-							i++;
-						}
-						if (i >= 100) {
-							_recentlyAddedRooms.Add(room);
+							++i;
 						}
 					}
+					if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
 				}
 
 				if (_recentlyAddedRooms.Count == 0) break; 
@@ -77,6 +72,28 @@ namespace Generation {
 			level.alreadyGenerated = true;
 		}
 
+		private static bool AreExitsOccupied(Room[,] rMap, Room room) {
+			(int x, int y) = room.uCoords;
+			foreach ((char dir, int nbDir) in room._exits) {
+				switch (dir) {
+					case 'T':
+						if (y - 1 < 0 || rMap[y - 1, x + nbDir - 1] == null) return false;
+						break;
+					case 'B':
+						if (y + 1 > rMap.GetLength(0) || rMap[y + 1, x + nbDir - 1] == null) return false;
+						break;
+					case 'L':
+						if (x - 1 < 0 || rMap[y - nbDir + 1, x - 1] == null) return false;
+						break;
+					case 'R':
+						if (x + 1 > rMap.GetLength(1) || rMap[y - nbDir + 1, x + 1] == null) return false;
+						break;
+					default:
+						throw new ArgumentException("AreExitsOccupied: Wrong letter for an exit");
+				}
+			}
+			return true;
+		}
 		private static bool IsExitOccupied(Room[,] rMap, Room room, char dir, int nbDir) {
 			(int x, int y) = room.uCoords;
 			(int uW, int uH) = room.UDim;
@@ -97,6 +114,8 @@ namespace Generation {
 		private static Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap) {
 			RoomType roomType = !isThereAShop && seed.Next(100) <= 10 + lMap.Count / 2
 				? RoomType.Shop
+				: isThereAShop && lMap.Count >= 20 && seed.Next(100) <= -10 + lMap.Count
+				? RoomType.PreBoss
 				: seed.Next(100) <= 5 / (chests + 1)
 				? RoomType.Chest
 				: RoomType.Standard
