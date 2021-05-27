@@ -1,35 +1,50 @@
 using System;
-using System.Collections.Generic;
 using DataBanks;
 using Entity.Collectibles;
 using Entity.DynamicEntity.Weapon;
 using Mirror;
 using UI_Audio;
+using UI_Audio.LivingEntityUI;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Player {
 	public enum PlayerClasses: byte { Mage, Warrior, Archer }
 	
 	public class Player: LivingEntity {
-		[SerializeField] private GameObject toSpawn;
 		private const int MaxItemInInventory = 20;
 		public static event LocalPlayerClassChanged OnLocalPlayerClassChange;
 		public static event RemotePlayerClassChanged OnRemotePlayerClassChange;
 		public delegate void LocalPlayerClassChanged(ClassData data);
-
 		public delegate void RemotePlayerClassChanged(ClassData data);
-		
-		[SerializeField] private PlayerClassData classData;
+		public event EnergyChanged OnEnergyChange;
+		public delegate void EnergyChanged(float ratio);
 
-		[SyncVar] public string playerName;
-		[SyncVar] public PlayerClasses playerClass;
-		[SyncVar] [SerializeField] protected Weapon.Weapon weapon;
-		[SyncVar] private int _kibrient;
-		[SyncVar] private int _orchid;
-		[SyncVar] [SerializeField] private int energy;
+		[Header("Player Fields")]
+		[SerializeField] private PlayerClassData classData;
+		[SerializeField] private GameObject toSpawn;
+
+		[SyncVar(hook = nameof(SyncPlayerNameChanged))] public string playerName;
+		private void SyncPlayerNameChanged(string o, string n) {
+			if (!isLocalPlayer)
+				entityUI.SetNameTagField(n);
+		}
+		
+		[SyncVar(hook = nameof(SyncPlayerClassChanged))] public PlayerClasses playerClass;
+		private void SyncPlayerClassChanged(PlayerClasses o, PlayerClasses n) => SwitchClass(n);
+		
+		[SyncVar(hook = nameof(SyncWeaponChanged))] [SerializeField] protected Weapon.Weapon weapon;
+		private void SyncWeaponChanged(Weapon.Weapon o, Weapon.Weapon n) => PlayerInfoManager.UpdateCurrentWeapon(n);
+		
+		[SyncVar(hook = nameof(SyncMoneyChanged))] private int _kibrient;
+		[SyncVar(hook = nameof(SyncMoneyChanged))] private int _orchid;
+		private void SyncMoneyChanged(int o, int n) => PlayerInfoManager.UpdateMoneyAmount(this);
+		
+		[SyncVar(hook = nameof(SyncEnergyChanged))] private int _energy;
+		private void SyncEnergyChanged(int o, int n) => OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
+		
+		[SyncVar] [SerializeField] private int maxEnergy;
 
 		private Camera _mainCamera;
-		
 		// serialization of Weapon objects, but it does for GameObject !
 		[ShowInInspector]
 		private readonly SyncList<Weapon.Weapon> _weapons = new SyncList<Weapon.Weapon>();
@@ -37,13 +52,15 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private readonly SyncList<Charm> _charms = new SyncList<Charm>();
 		private Inventory _inventory;
 		private ContainerInventory _containerInventory;
-
+		private PlayerUI _playerUI;
+		
 		public int Kibrient => _kibrient;
 		public int Orchid => _orchid;
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
 			base.OnSerialize(writer, initialState);
-			writer.WriteInt32(energy);
+			writer.WriteInt32(_energy);
+			writer.WriteInt32(maxEnergy);
 			writer.WriteInt32(_kibrient);
 			writer.WriteInt32(_orchid);
 			writer.WriteByte((byte) playerClass);
@@ -54,57 +71,91 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		public override void OnDeserialize(NetworkReader reader, bool initialState) {
 			base.OnDeserialize(reader, initialState);
-			energy = reader.ReadInt32();
-			_kibrient = reader.ReadInt32();
-			_orchid = reader.ReadInt32();
-			playerClass = (PlayerClasses) reader.ReadByte();
-			playerName = reader.ReadString();
-			weapon = reader.ReadWeapon();
+			int newEnergy = reader.ReadInt32();
+			maxEnergy = reader.ReadInt32();
+			int newKibrient = reader.ReadInt32();
+			int newOrchid = reader.ReadInt32();
+			PlayerClasses newPlayerClass = (PlayerClasses) reader.ReadByte();
+			string newPlayerName = reader.ReadString();
+			Weapon.Weapon newWeapon = reader.ReadWeapon();
+			
+			if (newEnergy != _energy) {
+				SyncEnergyChanged(_energy, newEnergy);
+				_energy = newEnergy;
+			}
+
+			if (newPlayerClass != playerClass) {
+				SyncPlayerClassChanged(playerClass, newPlayerClass);
+				playerClass = newPlayerClass;
+			}
+
+			if (newKibrient != _kibrient || newOrchid != _orchid) {
+				SyncMoneyChanged(_kibrient, newKibrient);
+				_kibrient = newKibrient;
+				_orchid = newOrchid;
+			}
+
+			if (newPlayerName != playerName) {
+				SyncPlayerNameChanged(playerName, newPlayerName);
+				playerName = newPlayerName;
+			}
+			
+			if (newWeapon == weapon) return;
+			SyncWeaponChanged(weapon, newWeapon);
+			weapon = newWeapon;
 		}
 
 		private void Start() {
 			DontDestroyOnLoad(this);
 			Instantiate();
-			if (!isLocalPlayer)
+			if (isServer)
+				_energy = maxEnergy;
+			if (!isLocalPlayer) {
 				OnRemotePlayerClassChange += ChangeAnimator;
+				_playerUI = (PlayerUI) entityUI;
+				if (!_playerUI) return;
+				_playerUI.SetNameTagField(playerName);
+				OnEnergyChange += _playerUI.SetEnergyBarValue;
+				SyncEnergyChanged(_energy, _energy);
+			}
 			else {
 				OnLocalPlayerClassChange += ChangeAnimator;
-				_inventory = InventoryManager.Instance.playerInventory;
-				_mainCamera = LocalGameManager.Instance.SetMainCameraToPlayer(this);
+				_inventory = Manager.inventoryManager.playerInventory;
+				_mainCamera = Manager.SetMainCameraToPlayer(this);
 				_weapons.Callback += OnWeaponsUpdated;
 				_charms.Callback += OnCharmsUpdated;
-				LocalGameManager.Instance.LocalPlayer = this;
-				PlayerInfoManager.Instance.UpdateMoneyAmount(this);
+				// Only health / energy UI for the other players
+				entityUI.Destroy();
+				Manager.LocalPlayer = this;
+				PlayerInfoManager.UpdateMoneyAmount(this);
+				OnEnergyChange += PlayerInfoManager.UpdatePlayerPower;
+				OnHealthChange += PlayerInfoManager.UpdatePlayerHealth;
 			}
-			Debug.Log(playerName);
+			
 			SwitchClass(playerClass);
 		}
 
+		public override void OnStartLocalPlayer() {
+			base.OnStartLocalPlayer();
+			CmdSetPseudo(Manager.startMenuManager.GetPseudoText());
+		}
+
 		// Can be executed by both client & server (Synced data analysis) -> double check
-		public bool HasEnoughEnergy(int amount) => energy >= amount;
+		public bool HasEnoughEnergy(int amount) => _energy >= amount;
 		
 		public bool HasEnoughKibrient(int amount) => _kibrient >= amount;
 
-		public bool TryReduceKibrient(int amount) {
-			if (!HasEnoughKibrient(amount))
-				return false;
-			_kibrient -= amount;
-			return true;
-		}
-		
 		public bool HasEnoughOrchid(int amount) => _orchid >= amount;
     
 		public bool IsFullInventory() => _weapons.Count >= MaxItemInInventory;
 
 		public void SetContainerInventory(ContainerInventory inventory) => _containerInventory = inventory;
 
-		public Vector3 WorldToScreenPoint(Vector3 position)
-            => _mainCamera ? _mainCamera.WorldToScreenPoint(position) : Vector3.zero;
-
 		private void ChangeAnimator(ClassData data) {
 			if (Animator) Animator.runtimeAnimatorController = data.animatorController;
 			if (spriteRenderer) spriteRenderer.sprite = data.defaultSprite;
 			playerClass = data.playerClass;
+			if (_playerUI) _playerUI.SetEnergyBarColor(playerClass);
 		}
 		
 		private void SwitchClass(PlayerClasses @class) {
@@ -152,47 +203,53 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					throw new ArgumentOutOfRangeException(nameof(op), op, null);
 			}
 		}
+		
+		[Server] public bool TryReduceKibrient(int amount) {
+			if (!HasEnoughKibrient(amount))
+				return false;
+			_kibrient -= amount;
+			return true;
+		}
 
 		[Server] public void AddCharm(Charm charm) => _charms.Add(charm);
 
 		[Server] public bool TryRemoveCharm(Charm charm) => _charms.Remove(charm);
 
-		[Server] public void ReduceEnergy(int amount) => energy = amount >= energy ? 0 : energy - amount;
+		[Server] public void ReduceEnergy(int amount) {
+			if (amount == 0) return;
+			_energy = Math.Max(_energy - amount, 0);
+			OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
+		}
 
-		[Server]
-		private void SwitchWeapon(Weapon.Weapon newWeapon) {
-			if (weapon) weapon.UnEquip();
+		[Server] private void SwitchWeapon(Weapon.Weapon newWeapon) {
+			if (weapon) {
+				weapon.UnEquip();
+				weapon = null;
+			}
 			weapon = newWeapon;
 			weapon.Equip(this);
 		}
 
-		[Server]
-		private void CollectWeapon(Weapon.Weapon wp) {
-			wp.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
-			wp.holder = this;
-			wp.DisableInteraction(this);
-			wp.RpcSetWeaponParent(transform);
-			if (weapon)
-				wp.UnEquip();
-			else
-				SwitchWeapon(wp);
-			_weapons.Add(wp);
-		}
-
-		[ClientRpc] private void RpcSwitchPlayerClass(PlayerClasses @class) => SwitchClass(@class);
-
-		[ClientRpc]
-		public void RpcCollect(uint entityNetId) {
+		[Server] public void Collect(uint entityNetId) {
 			if (!NetworkIdentity.spawned.TryGetValue(entityNetId, out NetworkIdentity entityIdentity)) return;
 			if (!entityIdentity.gameObject.TryGetComponent(out Entity collectible)) return;
 			
 			switch (collectible) {
 				case Weapon.Weapon wp:
 					wp.isGrounded = false;
-					CollectWeapon(wp);
+					wp.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
+					wp.holder = this;
 					wp.DisableInteraction(this);
-					if (wp.TryGetComponent(out NetworkTransform netTransform))
+					wp.RpcDisableInteraction(this);
+					Transform wpParent = transform;
+					wp.transform.parent = wpParent;
+					wp.RpcSetWeaponParent(wpParent);
+					if (!weapon) SwitchWeapon(wp);
+					_weapons.Add(wp);
+					if (wp.TryGetComponent(out NetworkTransform netTransform)) {
 						netTransform.clientAuthority = true;
+						wp.TargetSetClientAuthority(wp.connectionToClient, true);
+					}
 					break;
 				case Charm _:
 					break;
@@ -201,41 +258,27 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			}
 		}
 		
-		[ClientRpc]
-		protected override void RpcDying() {
+		[ClientRpc] protected override void RpcDying() {
 			Debug.Log("Player " + playerName + " is dead !");
 		}
-		
-		[Command]
-		public void CmdSwitchPlayerClass(PlayerClasses @class) {
-			if (@class == playerClass) return;
-			RpcSwitchPlayerClass(@class);
-		}
-		
-		// Command executed on the server
-		// Only called from the client GO, on the corresponding GO on the server
-		[Command]
-		private void CmdMove(float x, float y) {
-			ApplyForceToRigidBody(x, y);
-			RpcApplyForceToRigidBody(x, y);
-		}
-		
-		[Command] // Only called by clients
-		private void CmdAttack(bool fireOneButton, bool fireTwoButton) {
+
+		[Command] private void CmdSetPseudo(string pseudo) => playerName = pseudo;
+
+		[Command] public void CmdSwitchPlayerClass(PlayerClasses @class) => playerClass = @class;
+
+		[Command] private void CmdAttack(bool fireOneButton, bool fireTwoButton) {
 			if (!fireOneButton && !fireTwoButton) return;
 			if (weapon && weapon.CanAttack()) weapon.UseWeapon(fireOneButton, fireTwoButton);
 		}
 
-		[Command]
-		private void CmdSwitchWeapon() {
+		[Command] private void CmdSwitchWeapon() {
 			if (_weapons.Count == 0) return;
 			SwitchWeapon(!weapon ? _weapons[0] : _weapons[(_weapons.IndexOf(weapon) + 1) % _weapons.Count]);
 		}
 		
-		[ClientCallback]
-		private void FixedUpdate() {
+		[ClientCallback] private void FixedUpdate() {
 			// For physics
-			if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen) return;
+			if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen || !NetworkClient.ready) return;
 			int horizontal = 0;
 			int vertical = 0;
 			if (InputManager.GetKeyPressed("Forward"))
@@ -249,10 +292,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			CmdMove(horizontal, vertical);
 		}
 
-		[ClientCallback]
-		private void Update() {
+		[ClientCallback] private void Update() {
 			// For inputs
-			if (!isLocalPlayer) return;
+			if (!isLocalPlayer || !NetworkClient.ready) return;
 			
 			if (InputManager.GetKeyDown("OpenMenu")) {
 				if (!MenuSettingsManager.Instance.isOpen)
@@ -288,8 +330,16 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			
 			if (netIdentity.isServer && Input.GetKeyDown(KeyCode.K))
 			{
-				NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateSword().gameObject);
+				//NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateSword().gameObject);
+				GameObject obj = Instantiate(toSpawn, Vector3.zero, Quaternion.identity);
+				NetworkServer.Spawn(obj);
 				Debug.Log("Spawned !");
+			}
+			
+			if (Input.GetKeyDown(KeyCode.B)) GetAttacked(1);
+			
+			if (netIdentity.isServer && Input.GetKeyDown(KeyCode.V)) {
+				NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateBow().gameObject);
 			}
 		}
 	}

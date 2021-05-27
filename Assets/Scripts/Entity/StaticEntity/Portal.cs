@@ -9,12 +9,12 @@ namespace Entity.StaticEntity {
 		private static readonly int IsPlayerHere = Animator.StringToHash("IsPlayerHere");
 
 		private void Start() {
+			Instantiate();
 			_nbOfPlayers = 0;
 			_animator = GetComponent<Animator>();
-			Instantiate();
 		}
 		
-		protected override void OnTriggerEnter2D(Collider2D other) {
+		protected new void OnTriggerEnter2D(Collider2D other) {
 			if (_nbOfPlayers <= 0) {
 				_animator.Play("Opening");
 				_animator.SetBool(IsPlayerHere, true);
@@ -23,15 +23,14 @@ namespace Entity.StaticEntity {
 			base.OnTriggerEnter2D(other);
 		}
 
-		protected override void OnTriggerExit2D(Collider2D other) {
+		protected new void OnTriggerExit2D(Collider2D other) {
 			_nbOfPlayers--;
 			if (_nbOfPlayers <= 0) 
 				_animator.SetBool(IsPlayerHere, false);
 			base.OnTriggerExit2D(other);
 		}
 
-		[Server]
-		public void Interact(Player player) {
+		[Server] public void Interact(Player player) {
 			Debug.Log("salut les salopes");
 		}
 	}

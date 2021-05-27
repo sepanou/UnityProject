@@ -6,10 +6,11 @@ using UnityEngine;
 using AnimationState = Entity.DynamicEntity.LivingEntity.AnimationState;
 
 namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
+	[Serializable]
 	public class MeleeWeaponData {
-		public float KnockbackMultiplier, WeaponSizeMultiplier;
-		public float DefaultDamageMultiplier, SpecialDamageMultiplier;
-		public string Name;
+		public float knockbackMultiplier, weaponSizeMultiplier;
+		public float defaultDamageMultiplier, specialDamageMultiplier;
+		public string name;
 
 		public static MeleeWeaponData operator *(MeleeWeaponData other, int nbr) {
 			if (other == null || nbr == 0)
@@ -17,63 +18,72 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			if (nbr == 1)
 				return other;
 			return new MeleeWeaponData {
-				KnockbackMultiplier = other.KnockbackMultiplier * nbr,
-				WeaponSizeMultiplier = other.WeaponSizeMultiplier * nbr,
-				DefaultDamageMultiplier = other.DefaultDamageMultiplier * nbr,
-				SpecialDamageMultiplier = other.SpecialDamageMultiplier * nbr
+				knockbackMultiplier = other.knockbackMultiplier * nbr,
+				weaponSizeMultiplier = other.weaponSizeMultiplier * nbr,
+				defaultDamageMultiplier = other.defaultDamageMultiplier * nbr,
+				specialDamageMultiplier = other.specialDamageMultiplier * nbr
 			};
 		}
 	}
 	
 	public class MeleeWeapon: Weapon {
-		[NonSerialized] public MeleeWeaponData MeleeData;
+		[SyncVar] [HideInInspector] public MeleeWeaponData meleeData;
 		private bool _animating;
+
+		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
+			base.OnSerialize(writer, initialState);
+			writer.Write(meleeData);
+			return true;
+		}
+
+		public override void OnDeserialize(NetworkReader reader, bool initialState) {
+			base.OnDeserialize(reader, initialState);
+			meleeData = reader.Read<MeleeWeaponData>();
+		}
 
 		private void Start() => Instantiate();
 
 		public override RectTransform GetInformationPopup() {
 			return !PlayerInfoManager.Instance 
 				? null 
-				: PlayerInfoManager.Instance.ShowMeleeWeaponDescription(MeleeData);
+				: PlayerInfoManager.Instance.ShowMeleeWeaponDescription(meleeData);
 		}
 
-		public override string GetName() => MeleeData.Name;
+		public override string GetName() => meleeData.name;
 
-		private void FixedUpdate() {
+		[ClientCallback] private void FixedUpdate() {
 			if (!hasAuthority || !equipped || isGrounded || !MouseCursor.Instance) return;
-			if (!_animating)
-				SetLocalPosition();
+			if (!_animating) SetLocalPosition();
 		}
 
-		[ServerCallback]
-		protected override void DefaultAttack() {
+		[Server] protected override void DefaultAttack() {
 			TargetProcessAttack(holder.connectionToClient);
 			LastAttackTime = Time.time;
 		}
 
-		[ServerCallback]
-		protected override void SpecialAttack() {
+		[Server] protected override void SpecialAttack() {
 			TargetProcessAttack(holder.connectionToClient);
 			holder.ReduceEnergy(specialAttackCost);
 			LastAttackTime = Time.time;
 		}
 
-		[ClientCallback]
-		private void SetLocalPosition() {
+		[Client] private void SetLocalPosition() {
+			if (!hasAuthority) return;
 			Transform _transform = transform;
-			if (holder.LastAnimationState == AnimationState.East 
-			    || holder.LastAnimationState == AnimationState.North) {
-				_transform.localPosition = new Vector2(0.3f, _transform.localPosition.y);
-				CmdSetSpriteFlipX(false);
-			}
-			else if (holder.LastAnimationState == AnimationState.West 
-			         || holder.LastAnimationState == AnimationState.South) {
-				_transform.localPosition = new Vector2(-0.3f, _transform.localPosition.y);
-				CmdSetSpriteFlipX(true);
+			switch (holder.LastAnimationState) {
+				case AnimationState.East:
+				case AnimationState.North:
+					_transform.localPosition = new Vector2(0.3f, _transform.localPosition.y);
+					CmdSetSpriteFlipX(false);
+					break;
+				default:
+					_transform.localPosition = new Vector2(-0.3f, _transform.localPosition.y);
+					CmdSetSpriteFlipX(true);
+					break;
 			}
 		}
 
-		[ClientCallback] // Only run by the owner -> networkTransform automatically synchronizes everything
+		[Client] // Only run by the owner -> networkTransform automatically synchronizes everything
 		private IEnumerator ProcessAttack() {
 			SetLocalPosition();
 			_animating = true;
@@ -104,8 +114,7 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 
 		[ClientRpc] private void RpcSetSpriteFlipX(bool state) => spriteRenderer.flipX = state;
 
-		[TargetRpc]
-		private void TargetProcessAttack(NetworkConnection target) {
+		[TargetRpc] private void TargetProcessAttack(NetworkConnection target) {
 			StopAllCoroutines();
 			StartCoroutine(ProcessAttack());
 		}

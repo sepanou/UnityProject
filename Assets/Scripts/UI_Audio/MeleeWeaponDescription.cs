@@ -12,11 +12,11 @@ namespace UI_Audio {
 			weaponName;
 
 		public void SetData(MeleeWeaponData data) {
-			knockBackMultiplier.text = "x " + data.KnockbackMultiplier;
-			weaponSizeMultiplier.text = "x " + data.WeaponSizeMultiplier;
-			defaultDamageMultiplier.text = "x " + data.DefaultDamageMultiplier;
-			specialDamageMultiplier.text = "x " + data.SpecialDamageMultiplier;
-			weaponName.text = data.Name;
+			knockBackMultiplier.text = "x " + data.knockbackMultiplier;
+			weaponSizeMultiplier.text = "x " + data.weaponSizeMultiplier;
+			defaultDamageMultiplier.text = "x " + data.defaultDamageMultiplier;
+			specialDamageMultiplier.text = "x " + data.specialDamageMultiplier;
+			weaponName.text = data.name;
 		}
 	}
 }

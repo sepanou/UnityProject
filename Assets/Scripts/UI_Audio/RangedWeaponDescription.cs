@@ -14,12 +14,12 @@ namespace UI_Audio {
 			weaponName;
 
 		public void SetData(RangedWeaponData data) {
-			projectileSpeedMultiplier.text = "x " + data.ProjectileSpeedMultiplier;
-			projectileSizeMultiplier.text = "x " + data.ProjectileSizeMultiplier;
-			defaultDamageMultiplier.text = "x " + data.DefaultDamageMultiplier;
-			specialDamageMultiplier.text = "x " + data.SpecialDamageMultiplier;
-			projectileNumber.text = data.ProjectileNumber + " projectiles";
-			weaponName.text = data.Name;
+			projectileSpeedMultiplier.text = "x " + data.projectileSpeedMultiplier;
+			projectileSizeMultiplier.text = "x " + data.projectileSizeMultiplier;
+			defaultDamageMultiplier.text = "x " + data.defaultDamageMultiplier;
+			specialDamageMultiplier.text = "x " + data.specialDamageMultiplier;
+			projectileNumber.text = data.projectileNumber + " projectiles";
+			weaponName.text = data.name;
 		}
 	}
 }

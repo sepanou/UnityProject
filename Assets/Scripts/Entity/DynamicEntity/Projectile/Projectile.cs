@@ -16,8 +16,7 @@ namespace Entity.DynamicEntity.Projectile {
 		
 		protected abstract void Move();
 
-		[ServerCallback]
-		public static void SpawnProjectile(RangedWeapon source, Vector2 position) {
+		[Server] public static void SpawnProjectile(RangedWeapon source, Vector2 position) {
 			Quaternion localRotation = Quaternion.Euler(
 				new Vector3(0, 0, Vector2.SignedAngle(Vector2.up, source.orientation))
 			);
@@ -29,7 +28,6 @@ namespace Entity.DynamicEntity.Projectile {
 			NetworkServer.Spawn(projectile.gameObject);
 		}
 
-		[ServerCallback]
-		private void FixedUpdate() => Move();
+		[ServerCallback] private void FixedUpdate() => Move();
 	}
 }

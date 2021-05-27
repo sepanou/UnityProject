@@ -19,12 +19,11 @@ namespace Entity.DynamicEntity {
 		[SerializeField] private NpcType npcType;
 
 		private void Start() {
-			TryGetComponent(out _rigidBody);
 			Instantiate();
+			TryGetComponent(out _rigidBody);
 		}
 
-		[Server]
-		public void Interact(Player player) {
+		[Server] public void Interact(Player player) {
 			switch (npcType) {
 				case NpcType.Smith:
 					TargetInteractSmith(player.connectionToClient, player);
@@ -50,40 +49,34 @@ namespace Entity.DynamicEntity {
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		[TargetRpc]
-		private void TargetInteractSmith(NetworkConnection target, Player player) {
+		[TargetRpc] private void TargetInteractSmith(NetworkConnection target, Player player) {
 			InventoryManager.OpenPlayerAnd(NpcType.Smith);
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		[TargetRpc]
-		private void TargetInteractCollector(NetworkConnection target, Player player) {
+		[TargetRpc] private void TargetInteractCollector(NetworkConnection target, Player player) {
 			InventoryManager.OpenPlayerAnd(NpcType.Collector);
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		[TargetRpc]
-		private void TargetInteractInnKeeper(NetworkConnection target, Player player) {
+		[TargetRpc] private void TargetInteractInnKeeper(NetworkConnection target, Player player) {
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		[TargetRpc]
-		private void TargetInteractOrchidologist(NetworkConnection target, Player player) {
+		[TargetRpc] private void TargetInteractOrchidologist(NetworkConnection target, Player player) {
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		[TargetRpc]
-		private void TargetInteractStoryTeller(NetworkConnection target, Player player) {
+		[TargetRpc] private void TargetInteractStoryTeller(NetworkConnection target, Player player) {
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		[TargetRpc]
-		private void TargetInteractClassSelector(NetworkConnection target, Player player) {
+		[TargetRpc] private void TargetInteractClassSelector(NetworkConnection target, Player player) {
 			switch (classType) {
 				case PlayerClasses.Archer:
 					PlayerInfoManager.PrintDialog(new [] {"#archer-selector"}, () => StopInteracting(player));
