@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using DataBanks;
 using Mirror;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -39,7 +40,6 @@ namespace Generation {
 			int maxRooms = 20;
 			bool placedPreBossRoom = false;
 			while (!placedPreBossRoom) {
-				if (lMap.Count >= 20 && level.Shop && placedPreBossRoom) break; // Debug
 				foreach (Room room in _roomsToTreat) {
 					foreach ((char dir, int nbDir) in room._exits) {
 						if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
@@ -64,7 +64,11 @@ namespace Generation {
 					if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
 				}
 
-				if (_recentlyAddedRooms.Count == 0) break; 
+				if (_recentlyAddedRooms.Count == 0) {
+					level.RoomsList.ForEach(room => {
+						if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
+					});
+				} 
 				(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
 				_roomsToTreat.Shuffle();
 			}
