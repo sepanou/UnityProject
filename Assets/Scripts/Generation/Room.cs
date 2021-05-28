@@ -37,6 +37,16 @@ namespace Generation {
 			UDim = p.uDim;
 		}
 
+		public Room(Room room) {
+			Dimensions = room.Dimensions;
+			_exits = new List<(char, int)>(room._exits);
+			Type = room.Type;
+			_level = room._level;
+			_id = room._id;
+			Name = room.Name;
+			UDim = room.UDim;
+		}
+
 		public static ((int, int), List<(char, int)>, RoomType, int, int, (int,int)) Generate(string name) {
 			List<(char, int)> exits = new List<(char, int)>();
 			Debug.Log(name);

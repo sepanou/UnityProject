@@ -84,7 +84,9 @@ namespace DataBanks {
 				(false, "Le pendentif"),
 				(true, "La croix"),
 				(false, "Le linceul"),
-				(true, "La fiole")
+				(true, "La fiole"),
+				(false, "Le charme"),
+				(false, "Le totem")
 			}.AsReadOnly();
 		
 		private static readonly List<(string, string)> Adjectives =
