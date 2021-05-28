@@ -50,23 +50,25 @@ namespace Entity.DynamicEntity {
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc] private void TargetInteractSmith(NetworkConnection target, Player player) {
-			InventoryManager.OpenPlayerAnd(NpcType.Smith);
+			InventoryManager.OpenShopKeeperInventory(NpcType.Smith, this);
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc] private void TargetInteractCollector(NetworkConnection target, Player player) {
-			InventoryManager.OpenPlayerAnd(NpcType.Collector);
+			InventoryManager.OpenShopKeeperInventory(NpcType.Collector, this);
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc] private void TargetInteractInnKeeper(NetworkConnection target, Player player) {
+			InventoryManager.OpenShopKeeperInventory(NpcType.InnKeeper, this);
 			// TODO
 		}
 		
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc] private void TargetInteractOrchidologist(NetworkConnection target, Player player) {
+			InventoryManager.OpenShopKeeperInventory(NpcType.Orchidologist, this);
 			// TODO
 		}
 		
@@ -93,6 +95,25 @@ namespace Entity.DynamicEntity {
 				default:
 					throw new ArgumentException("InteractClassSelector");
 			}
+		}
+
+		[ClientCallback] protected new void OnTriggerExit2D(Collider2D other) {
+			base.OnTriggerExit2D(other);
+			InventoryManager.CloseAllInventories();
+		}
+	}
+	
+	public static class NpcSerialization {
+		public static void WriteNpc(this NetworkWriter writer, Npc npc) {
+			writer.WriteBoolean(npc);
+			if (npc && npc.netIdentity)
+				writer.WriteNetworkIdentity(npc.netIdentity);
+		}
+
+		public static Npc ReadNpc(this NetworkReader reader) {
+			if (!reader.ReadBoolean()) return null;
+			NetworkIdentity identity = reader.ReadNetworkIdentity();
+			return !identity ? null : identity.GetComponent<Npc>();
 		}
 	}
 }

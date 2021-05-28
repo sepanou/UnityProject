@@ -5,7 +5,6 @@ using UnityEngine.UI;
 namespace UI_Audio {
 	public class InventorySlot: MonoBehaviour {
 		public static InventorySlot LastHovered;
-		private static InventorySlot _previouslySelected;
 		private static readonly Color Visible = new Color(255, 255, 255, 255);
 		private static readonly Color Invisible = new Color(255, 255, 255, 0);
 		
@@ -19,6 +18,7 @@ namespace UI_Audio {
 		[SerializeField] private Sprite selectedSprite;
 		[SerializeField] private Sprite normalSprite;
 		
+		// DO NOT REMOVE -> used by the UI in the inspector
 		[SerializeField] private Button.ButtonClickedEvent clickEvent = new Button.ButtonClickedEvent();
 		[SerializeField] private Toggle.ToggleEvent containsItemEvent = new Toggle.ToggleEvent();
 
@@ -37,6 +37,8 @@ namespace UI_Audio {
 			infoDisplay.gameObject.SetActive(false);
 		}
 
+		public bool IsMouseOver() => _isMouseOver;
+		
 		public void SetSlotItem(IInventoryItem item) {
 			slotImage.sprite = item.GetSpriteRenderer().sprite;
 			slotImage.color = Visible;
@@ -66,7 +68,9 @@ namespace UI_Audio {
 		}
 
 		private void Update() {
-			if (!MouseCursor.Instance || _previouslySelected == this) return;
+			if (!MouseCursor.Instance) return;
+			if (!IsOccupied) SetInfoDisplayActive(false);
+			
 			bool isOver = MouseCursor.Instance.IsMouseOver(hoveringCanvas);
 			if (!_isMouseOver && isOver) {
 				LastHovered = this;
@@ -78,10 +82,9 @@ namespace UI_Audio {
 				targetGraphic.sprite = normalSprite;
 			} else if (_isMouseOver && _item != null)
 				SetInfoDisplayActive(true);
+			
 			if (!_isMouseOver || !Input.GetMouseButtonDown(0)) return;
-			if (_previouslySelected)
-				_previouslySelected.targetGraphic.sprite = _previouslySelected.normalSprite;
-			_previouslySelected = this;
+			
 			targetGraphic.sprite = selectedSprite;
 			clickEvent?.Invoke();
 		}

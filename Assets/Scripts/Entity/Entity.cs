@@ -72,14 +72,18 @@ namespace Entity {
 		protected void Instantiate() {
 			if (!spriteRenderer)
 				spriteRenderer = GetComponent<SpriteRenderer>();
-			if (!isServer && netId != 0) CmdApplyLayers();
 			InteractionCondition = null;
 			AutoStopInteracting = false;
 			_canInteract = false;
 			_playerPool = new Dictionary<Player, bool>();
 			_interactive = interactionCollider && this is IInteractiveEntity interactive ? interactive : null;
 		}
-		
+
+		public override void OnStartClient() {
+			base.OnStartClient();
+			CmdApplyLayers();
+		}
+
 		public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
 
 		public Vector2 Position {
@@ -95,14 +99,16 @@ namespace Entity {
 		[Command(requiresAuthority = false)]
 		private void CmdApplyLayers(NetworkConnectionToClient target = null) {
 			if (spriteRenderer)
-				TargetSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer);
+				TargetSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer, spriteRenderer.enabled);
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
-		private void TargetSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId) {
-			if (spriteRenderer)
+		private void TargetSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId, bool rendererEnabled) {
+			if (spriteRenderer) {
 				spriteRenderer.sortingLayerID = sortingLayerId;
+				spriteRenderer.enabled = rendererEnabled;
+			}
 			gameObject.layer = layerMaskId;
 		}
 		
@@ -155,8 +161,12 @@ namespace Entity {
 			_playerPool[player] = state;
 		}
 
+		[Server] public bool VerifyInteractionWith(Player player) 
+			=> _playerPool.ContainsKey(player) && _playerPool[player];
+
 		public void DisableInteraction(Player player) {
 			interactionCollider.enabled = false;
+			if (netId == 0) return; // == not networked yet
 			if (_checkInteractionCoroutine != null)
 				StopCoroutine(_checkInteractionCoroutine);
 			_playerPool.Clear();
@@ -177,7 +187,7 @@ namespace Entity {
 			_playerPool[player] = false;
 			if (!player.isLocalPlayer) return;
 			_canInteract = true;
-			LocalGameManager.Instance.playerInfoManager.displayKey.StartDisplay();
+			PlayerInfoManager.displayKey.StartDisplay();
 			if (_checkInteractionCoroutine != null)
 				StopCoroutine(_checkInteractionCoroutine);
 			_checkInteractionCoroutine = CheckInteraction(player);
@@ -192,7 +202,7 @@ namespace Entity {
 			_playerPool.Remove(player);
 			if (!player.isLocalPlayer) return;
 			_canInteract = false;
-			LocalGameManager.Instance.playerInfoManager.displayKey.StopDisplay();
+			PlayerInfoManager.displayKey.StopDisplay();
 		}
 	}
 }

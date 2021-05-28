@@ -8,6 +8,7 @@ namespace Entity.DynamicEntity {
 		/// a cooldown (= weapons) depending on the context
 		/// </summary>
 		[SyncVar] [SerializeField] private float speed;
+		protected float DefaultSpeed { get; private set; }
 		protected Animator Animator;
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
@@ -22,9 +23,11 @@ namespace Entity.DynamicEntity {
 		protected new void Instantiate() {
 			base.Instantiate();
 			Animator = GetComponent<Animator>();
+			if (isServer) // The value entered in the inspector at the start is the default speed
+				DefaultSpeed = speed;
 		}
 		
-		public float Speed {
+		protected float Speed {
 			get => speed;
 			[Server] set => speed = value >= 0f ? value : speed;
 		}

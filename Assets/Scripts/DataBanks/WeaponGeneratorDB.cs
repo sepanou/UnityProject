@@ -26,7 +26,7 @@ namespace DataBanks {
 		[SerializeField] private Sprite[] swordSprites;
 		
 		// Used for name generation
-		public readonly IReadOnlyList<(bool, string)> BowsNames =
+		private static readonly IReadOnlyList<(bool, string)> BowNames =
 			new List<(bool, string)> {
 				(false, "L'arc"),				// false == masculine adjective, feminine otherwise.
 				(false, "L'arc court"),
@@ -38,6 +38,55 @@ namespace DataBanks {
 				(false, "L'arc Yumi"),
 				(true, "La Tempête"),
 				(false, "Le Déluge") // Après moi le déluge
+			}.AsReadOnly();
+
+		private static readonly IReadOnlyList<(bool, string)> StaffNames =
+			new List<(bool, string)> {
+				(false, "Le sceptre"),
+				(false, "Le bâton"),
+				(true, "La baguette"),
+				(true, "La crosse"),
+				(false, "Le bourdon"),
+				(false, "Le bâton"),
+				(true, "La canne"),
+				(false, "Le gourdin"),
+				(false, "Le témoin")
+			}.AsReadOnly();
+
+		private static readonly IReadOnlyList<(bool, string)> MeleeNames =
+			new List<(bool, string)> {
+				(true, "L'épée"),
+				(false, "Le glaive"),
+				(true, "La broadsword"),
+				(true, "La claymore"),
+				(false, "L'espadon"),
+				(true, "L'épée bâtarde"),
+				(true, "La flamberge"),
+				(true, "La rapière"),
+				(true, "La canne-épée"),
+				(false, "Le jian"),
+				(true, "La machette"),
+				(false, "Le katana"),
+				(false, "Le sabre")
+			}.AsReadOnly();
+
+		private static readonly IReadOnlyList<(bool, string)> CharmNames =
+			new List<(bool, string)> {
+				(false, "Le talisman"),
+				(false, "Le médaillon"),
+				(true, "L'amulette"),
+				(false, "Le sceau"),
+				(true, "La médaille"),
+				(true, "La relique"),
+				(true, "La bague"),
+				(false, "L'anneau"),
+				(false, "Le collier"),
+				(false, "Le pendentif"),
+				(true, "La croix"),
+				(false, "Le linceul"),
+				(true, "La fiole"),
+				(false, "Le charme"),
+				(false, "Le totem")
 			}.AsReadOnly();
 		
 		private static readonly List<(string, string)> Adjectives =
@@ -84,7 +133,12 @@ namespace DataBanks {
 				("fatiguant", "fatiguante"),
 				("agile", "agile"),
 				("standard", "standard"),
-				("universel", "universelle")
+				("universel", "universelle"),
+				("frénétique", "frénétique"),
+				("maudit", "maudite"),
+				("apocalyptique", "apocalyptique"),
+				("bourrin", "bourrine"),
+				("perrave", "perrave")
 			};
 
 		private static readonly List<string> NameComplements = 
@@ -131,10 +185,12 @@ namespace DataBanks {
 				"des plaines",
 				"de Tzeentch",
 				"de Slaneesh",
-				"de Nurgle"
+				"de Nurgle",
+				"des cataclysmes",
+				"du Pyromane"
 			};
 
-		public static string GenerateName(List<(bool, string)> weaponType) {
+		public static string GenerateName(IReadOnlyList<(bool, string)> weaponType) {
 			(bool adjType, string weaponName) = weaponType[Random.Range(0, weaponType.Count)];
 			(string, string) adjs = Adjectives[Random.Range(0, Adjectives.Count)];
 			string adj = !adjType ? adjs.Item1 : adjs.Item2;
@@ -146,43 +202,40 @@ namespace DataBanks {
 			=> array.Count == 0 ? default : array[Random.Range(0, array.Count)];
 
 		private static float RoundRandomFloat(float min, float max, int tolerance = 3)
-			=> (float) Math.Round((decimal) Random.Range(min, max), tolerance);
+			=> (float) Math.Round(Random.Range(min, max), tolerance);
 
 		private static CharmData GenerateCharmData() {
-			CharmData result = new CharmData();
-			if (Random.Range(0, 2) == 1)
-				result.DefaultAttackDamageBonus = RoundRandomFloat(0f, 0.05f);
-			if (Random.Range(0, 2) == 1)
-				result.SpecialAttackDamageBonus = RoundRandomFloat(0f, 0.025f);
-			if (Random.Range(0, 2) == 1)
-				result.HealthBonus = Random.Range(0, 10);
-			if (Random.Range(0, 2) == 1)
-				result.PowerBonus = Random.Range(0, 5);
-			if (Random.Range(0, 2) == 1)
-				result.SpeedBonus = RoundRandomFloat(0f, 0.025f);
-			if (Random.Range(0, 2) == 1)
-				result.CooldownReduction = RoundRandomFloat(0f, 0.025f);
+			CharmData result = new CharmData {
+				defaultAttackDamageBonus = RoundRandomFloat(0f, 0.25f),
+				specialAttackDamageBonus = RoundRandomFloat(0f, 0.5f),
+				healthBonus = Random.Range(0, 30),
+				powerBonus = Random.Range(0, 50),
+				speedBonus = RoundRandomFloat(0f, 0.2f),
+				cooldownReduction = RoundRandomFloat(0f, 0.2f)
+			};
 			return result;
 		}
 
 		private static RangedWeaponData GenerateRangeData(bool epic = false) {
-			RangedWeaponData result = new RangedWeaponData();
-			result.defaultDamageMultiplier = RoundRandomFloat(0.5f, 2f);
-			result.specialDamageMultiplier = RoundRandomFloat(0.75f, 1.25f);
-			result.projectileNumber = Random.Range(1, 7);
-			result.projectileSpeedMultiplier = RoundRandomFloat(0.5f, 2f);
-			result.projectileSizeMultiplier = RoundRandomFloat(0.5f, 2f);
+			RangedWeaponData result = new RangedWeaponData {
+				defaultDamageMultiplier = RoundRandomFloat(0.5f, 2f),
+				specialDamageMultiplier = RoundRandomFloat(0.75f, 1.25f),
+				projectileNumber = Random.Range(1, 7),
+				projectileSpeedMultiplier = RoundRandomFloat(0.5f, 2f),
+				projectileSizeMultiplier = RoundRandomFloat(0.5f, 2f)
+			};
 			if (epic)
 				result *= 2;
 			return result;
 		}
 
 		private static MeleeWeaponData GenerateMeleeData(bool epic = false) {
-			MeleeWeaponData result = new MeleeWeaponData();
-			result.defaultDamageMultiplier = RoundRandomFloat(0.5f, 3f);
-			result.specialDamageMultiplier = RoundRandomFloat(0.75f, 1.5f);
-			result.weaponSizeMultiplier = RoundRandomFloat(0.75f, 2f);
-			result.knockbackMultiplier = RoundRandomFloat(0.75f, 3f);
+			MeleeWeaponData result = new MeleeWeaponData {
+				defaultDamageMultiplier = RoundRandomFloat(0.5f, 3f),
+				specialDamageMultiplier = RoundRandomFloat(0.75f, 1.5f),
+				weaponSizeMultiplier = RoundRandomFloat(0.75f, 2f),
+				knockbackMultiplier = RoundRandomFloat(0.75f, 3f)
+			};
 			if (epic)
 				result *= 2;
 			return result;
@@ -192,6 +245,7 @@ namespace DataBanks {
 			GameObject obj = Instantiate(charmModel);
 			Charm result = obj.GetComponent<Charm>();
 			result.Bonuses = data ?? GenerateCharmData();
+			result.name = GenerateName(CharmNames);
 			result.GetSpriteRenderer().sprite = !sprite ? GetRandomInArray(charmSprites): sprite;
 			return result;
 		}
@@ -200,14 +254,7 @@ namespace DataBanks {
 			GameObject obj = Instantiate(bowModel);
 			Bow result = obj.GetComponent<Bow>();
 			result.rangeData = GenerateRangeData();
-			(bool feminine, string bowName) = BowsNames[Random.Range(0,BowsNames.Count-1)];
-			string adj;
-			if (feminine) 
-				(_, adj) = Adjectives[Random.Range(0, Adjectives.Count - 1)];
-			else
-				(adj, _) = Adjectives[Random.Range(0, Adjectives.Count - 1)];
-			string cName = NameComplements[Random.Range(0, NameComplements.Count - 1)];
-			result.rangeData.name = bowName + " " + adj + " " + cName;
+			result.rangeData.name = GenerateName(BowNames);
 			result.GetSpriteRenderer().sprite = GetRandomInArray(bowSprites);
 			return result;
 		}
@@ -216,7 +263,14 @@ namespace DataBanks {
 			GameObject obj = Instantiate(staffModel);
 			Staff result = obj.GetComponent<Staff>();
 			result.rangeData = GenerateRangeData();
-			result.rangeData.name = "Mighty Staff";
+			(bool feminine, string staffName) = StaffNames[Random.Range(0,StaffNames.Count-1)];
+			string adj;
+			if (feminine) 
+				(_, adj) = Adjectives[Random.Range(0, Adjectives.Count - 1)];
+			else
+				(adj, _) = Adjectives[Random.Range(0, Adjectives.Count - 1)];
+			string cName = NameComplements[Random.Range(0, NameComplements.Count - 1)];
+			result.rangeData.name = staffName + " " + adj + " " + cName;
 			result.GetSpriteRenderer().sprite = GetRandomInArray(staffSprites);
 			return result;
 		}
@@ -225,7 +279,7 @@ namespace DataBanks {
 			GameObject obj = Instantiate(swordModel);
 			MeleeWeapon result = obj.GetComponent<MeleeWeapon>();
 			result.meleeData = GenerateMeleeData();
-			result.meleeData.name = "Mighty Sword";
+			result.meleeData.name = GenerateName(MeleeNames);
 			result.GetSpriteRenderer().sprite = GetRandomInArray(swordSprites);
 			return result;
 		}

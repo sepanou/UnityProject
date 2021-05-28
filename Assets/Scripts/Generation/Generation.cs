@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Mirror;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
 namespace Generation {
-	public static class Generation {
+	public static class Generation { 
 		private static Dictionary<RoomType, List<Room>> _availableRooms;
 		private static readonly Random Random = new Random();
 		private static List<Room> _recentlyAddedRooms;
 		private static List<Room> _roomsToTreat;
+		private static Coroutine salut;
 
 		[Command(requiresAuthority = false)]
 		// ReSharper disable once UnusedMember.Local
@@ -36,17 +39,23 @@ namespace Generation {
 				y = Random.Next(rMaxY);
 			}
 
+			Stopwatch time = new Stopwatch();
+			time.Start();
 			int maxRooms = 20;
 			bool placedPreBossRoom = false;
 			while (!placedPreBossRoom) {
-				if (lMap.Count >= 20 && level.Shop && placedPreBossRoom) break; // Debug
 				foreach (Room room in _roomsToTreat) {
 					foreach ((char dir, int nbDir) in room._exits) {
+						TimeSpan ts = time.Elapsed;
+						if (ts.Minutes >= 1) {
+							Debug.Log("Nique sa mère");
+							//return;
+						};
 						if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
 						(int rtcx, int rtcy) = room.uCoords;
 						int i = 0;
 						while (i < 100) {
-							Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap);
+							Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap, placedPreBossRoom);
 							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1) ||
 							     dir == 'B' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1) ||
 							     dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy - nbDir + 1) ||
@@ -64,7 +73,12 @@ namespace Generation {
 					if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
 				}
 
-				if (_recentlyAddedRooms.Count == 0) break; 
+				if (_recentlyAddedRooms.Count == 0) {
+					break;
+					level.RoomsList.ForEach(room => {
+						if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
+					});
+				} 
 				(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
 				_roomsToTreat.Shuffle();
 			}
@@ -111,16 +125,17 @@ namespace Generation {
 			}
 		}
 
-		private static Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap) {
+		private static Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap, bool placedPreBossRoom) {
 			RoomType roomType = !isThereAShop && seed.Next(100) <= 10 + lMap.Count / 2
 				? RoomType.Shop
-				: isThereAShop && lMap.Count >= 20 && seed.Next(100) <= -10 + lMap.Count
+				: isThereAShop && !placedPreBossRoom && lMap.Count >= 20 && seed.Next(100) <= -10 + lMap.Count*2
 				? RoomType.PreBoss
 				: seed.Next(100) <= 5 / (chests + 1)
 				? RoomType.Chest
 				: RoomType.Standard
 			;
-			return _availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)];
+			if (roomType == RoomType.PreBoss) Debug.Log("Preboss");
+			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)]);
 		}
 		
 		private static bool TryAddRoom(ICollection<Room> lMap, Room[,] rMap, Room room, int x, int y) {
