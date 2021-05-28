@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6743381077366112557}
   - component: {fileID: 656279510425447668}
+  - component: {fileID: 8716402026676702192}
   - component: {fileID: 2544222135805640480}
   m_Layer: 5
   m_Name: Label
@@ -45,6 +46,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3635468614736940868}
   m_CullTransparentMesh: 0
+--- !u!114 &8716402026676702192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3635468614736940868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77b35aec710b94441b1cc4f5b972308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fieldKey: back
+  formatText: 
+  upperCase: 1
+  lowerCase: 0
 --- !u!114 &2544222135805640480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,7 +109,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 53.5
+  m_fontSize: 53.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

@@ -114,8 +114,12 @@ namespace DataBanks {
 		private string GetTranslation(string fieldKey) {
 			if (_currentLanguage == null)
 				return "";
-			if (!_currentLanguage.TryGetTranslation(fieldKey, out string translation))
-				Debug.LogWarning("The field " + fieldKey + " does not exist!");
+
+			if (_currentLanguage.TryGetTranslation(fieldKey, out string translation)) 
+				return translation;
+			
+			Debug.LogWarning("The field " + fieldKey + " does not exist!");
+			defaultEnglish.TryGetTranslation(fieldKey, out translation);
 			return translation;
 		}
 

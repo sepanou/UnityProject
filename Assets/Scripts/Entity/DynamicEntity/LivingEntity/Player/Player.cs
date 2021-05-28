@@ -39,13 +39,13 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[SyncVar(hook = nameof(SyncMoneyChanged))] private int _orchid;
 		private void SyncMoneyChanged(int o, int n) => PlayerInfoManager.UpdateMoneyAmount(this);
 		
+		private int _defaultMaxEnergy;
+		[SyncVar(hook = nameof(SyncEnergyChanged))] [SerializeField] private int maxEnergy;
 		[SyncVar(hook = nameof(SyncEnergyChanged))] private int _energy;
 		private void SyncEnergyChanged(int o, int n) => OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
-		
-		[SyncVar] [SerializeField] private int maxEnergy;
 
+		private CharmData _currentCharmBonus;
 		private Camera _mainCamera;
-		// serialization of Weapon objects, but it does for GameObject !
 		[ShowInInspector]
 		private readonly SyncList<Weapon.Weapon> _weapons = new SyncList<Weapon.Weapon>();
 		[ShowInInspector]
@@ -72,14 +72,15 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		public override void OnDeserialize(NetworkReader reader, bool initialState) {
 			base.OnDeserialize(reader, initialState);
 			int newEnergy = reader.ReadInt32();
-			maxEnergy = reader.ReadInt32();
+			int newMaxEnergy = reader.ReadInt32();
 			int newKibrient = reader.ReadInt32();
 			int newOrchid = reader.ReadInt32();
 			PlayerClasses newPlayerClass = (PlayerClasses) reader.ReadByte();
 			string newPlayerName = reader.ReadString();
 			Weapon.Weapon newWeapon = reader.ReadWeapon();
 			
-			if (newEnergy != _energy) {
+			if (newEnergy != _energy || newMaxEnergy != maxEnergy) {
+				maxEnergy = newMaxEnergy;
 				SyncEnergyChanged(_energy, newEnergy);
 				_energy = newEnergy;
 			}
@@ -108,8 +109,13 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private void Start() {
 			DontDestroyOnLoad(this);
 			Instantiate();
-			if (isServer)
+			
+			if (isServer) {
+				_defaultMaxEnergy = maxEnergy;
 				_energy = maxEnergy;
+				_charms.Callback += OnCharmsUpdatedServer;
+			}
+			
 			if (!isLocalPlayer) {
 				OnRemotePlayerClassChange += ChangeAnimator;
 				_playerUI = (PlayerUI) entityUI;
@@ -123,7 +129,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				_inventory = Manager.inventoryManager.playerInventory;
 				_mainCamera = Manager.SetMainCameraToPlayer(this);
 				_weapons.Callback += OnWeaponsUpdated;
-				_charms.Callback += OnCharmsUpdated;
+				_charms.Callback += OnCharmsUpdatedClient;
 				// Only health / energy UI for the other players
 				entityUI.Destroy();
 				Manager.LocalPlayer = this;
@@ -168,6 +174,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				OnRemotePlayerClassChange?.Invoke(data);
 		}
 
+		[Client]
 		private void OnWeaponsUpdated(SyncList<Weapon.Weapon>.Operation op, int itemIndex, Weapon.Weapon oldItem, Weapon.Weapon newItem) {
 			if (!isLocalPlayer) return;
 			
@@ -182,11 +189,13 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					_inventory.TryRemoveItem(oldItem);
 					break;
 				default:
-					throw new ArgumentOutOfRangeException(nameof(op), op, null);
+					Debug.LogWarning("An error happened while updating the sync weapons list (Client)");
+					break;
 			}
 		}
-		
-		private void OnCharmsUpdated(SyncList<Charm>.Operation op, int itemIndex, Charm oldItem, Charm newItem) {
+
+		[Client]
+		private void OnCharmsUpdatedClient(SyncList<Charm>.Operation op, int itemIndex, Charm oldItem, Charm newItem) {
 			if (!isLocalPlayer) return;
 			
 			switch (op) {
@@ -200,7 +209,35 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					_inventory.TryRemoveItem(oldItem);
 					break;
 				default:
-					throw new ArgumentOutOfRangeException(nameof(op), op, null);
+					Debug.LogWarning("An error happened while updating the sync charm list (Client)");
+					break;
+			}
+		}
+		
+		[Server]
+		private void OnCharmsUpdatedServer(SyncList<Charm>.Operation op, int itemIndex, Charm oldItem, Charm newItem) {
+			switch (op) {
+				case SyncList<Charm>.Operation.OP_ADD:
+					_currentCharmBonus += newItem.bonuses;
+					maxEnergy += newItem.bonuses.powerBonus;
+					maxHealth += newItem.bonuses.healthBonus;
+					Speed = DefaultSpeed * (1 + _currentCharmBonus.speedBonus);
+					break;
+				case SyncList<Charm>.Operation.OP_CLEAR:
+					maxHealth = DefaultMaxHealth;
+					maxEnergy = _defaultMaxEnergy;
+					Speed = DefaultSpeed;
+					_currentCharmBonus = null;
+					break;
+				case SyncList<Charm>.Operation.OP_REMOVEAT:
+					_currentCharmBonus -= oldItem.bonuses;
+					maxEnergy -= oldItem.bonuses.powerBonus;
+					maxHealth -= oldItem.bonuses.healthBonus;
+					Speed = DefaultSpeed * (1 + _currentCharmBonus.speedBonus);
+					break;
+				default:
+					Debug.LogWarning("An error happened while updating the sync charm list (Server)");
+					break;
 			}
 		}
 		
@@ -213,7 +250,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[Server] public void AddCharm(Charm charm) => _charms.Add(charm);
 
-		[Server] public bool TryRemoveCharm(Charm charm) => _charms.Remove(charm);
+		[Server] public bool RemoveCharm(Charm charm) => _charms.Remove(charm);
 
 		[Server] public void ReduceEnergy(int amount) {
 			if (amount == 0) return;
@@ -233,31 +270,36 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[Server] public void Collect(uint entityNetId) {
 			if (!NetworkIdentity.spawned.TryGetValue(entityNetId, out NetworkIdentity entityIdentity)) return;
 			if (!entityIdentity.gameObject.TryGetComponent(out Entity collectible)) return;
-			
-			switch (collectible) {
-				case Weapon.Weapon wp:
-					wp.isGrounded = false;
-					wp.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
-					wp.holder = this;
-					wp.DisableInteraction(this);
-					wp.RpcDisableInteraction(this);
-					Transform wpParent = transform;
-					wp.transform.parent = wpParent;
-					wp.RpcSetWeaponParent(wpParent);
-					if (!weapon) SwitchWeapon(wp);
-					_weapons.Add(wp);
-					if (wp.TryGetComponent(out NetworkTransform netTransform)) {
-						netTransform.clientAuthority = true;
-						wp.TargetSetClientAuthority(wp.connectionToClient, true);
-					}
-					break;
-				case Charm _:
-					break;
-				case Money _:
-					break;
+
+			if (collectible is Money _) {
+				// TODO
+				return;
 			}
+
+			Transform parent = transform;
+			
+			if (collectible is Weapon.Weapon wp) {
+				wp.isGrounded = false;
+				wp.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
+				wp.holder = this;
+				wp.DisableInteraction(this);
+				wp.RpcDisableInteraction(this);
+				wp.transform.parent = parent;
+				wp.RpcSetWeaponParent(parent);
+				if (!weapon) SwitchWeapon(wp);
+				_weapons.Add(wp);
+				if (!wp.TryGetComponent(out NetworkTransform netTransform)) return; // Should never happen
+				netTransform.clientAuthority = true;
+				wp.TargetSetClientAuthority(wp.connectionToClient, true);
+			} else if (collectible is Charm charm) {
+				charm.DisableInteraction(this);
+				charm.RpcDisableInteraction(this);
+				charm.transform.parent = parent;
+				charm.SetIsGrounded(false);
+				_charms.Add(charm);
+			} else Debug.LogWarning("Error, unknown collectible type...");
 		}
-		
+
 		[ClientRpc] protected override void RpcDying() {
 			Debug.Log("Player " + playerName + " is dead !");
 		}
@@ -274,6 +316,17 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[Command] private void CmdSwitchWeapon() {
 			if (_weapons.Count == 0) return;
 			SwitchWeapon(!weapon ? _weapons[0] : _weapons[(_weapons.IndexOf(weapon) + 1) % _weapons.Count]);
+		}
+
+		[TargetRpc] public void TargetPrintWarning(NetworkConnection target, string message) {
+			PlayerInfoManager.RemoveWarningButtonActions();
+			PlayerInfoManager.SetWarningText(message);
+			PlayerInfoManager.OpenWarningBox();
+		}
+
+		[TargetRpc] public void TargetPrintInfoMessage(NetworkConnection target, string message) {
+			PlayerInfoManager.SetInfoText(message);
+			PlayerInfoManager.OpenInfoBox();
 		}
 		
 		[ClientCallback] private void FixedUpdate() {
@@ -339,7 +392,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (Input.GetKeyDown(KeyCode.B)) GetAttacked(1);
 			
 			if (netIdentity.isServer && Input.GetKeyDown(KeyCode.V)) {
-				NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateBow().gameObject);
+				NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateCharm().gameObject);
 			}
 		}
 	}

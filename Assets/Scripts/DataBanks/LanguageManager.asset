@@ -110,3 +110,7 @@ MonoBehaviour:
         the best!
 
         You can give it a try - after all, all you risk is death...'
+    - fieldKey: merge
+      translation: merge
+    - fieldKey: smith
+      translation: Smith

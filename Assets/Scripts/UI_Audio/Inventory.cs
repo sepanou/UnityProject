@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Entity.DynamicEntity;
+using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
 
@@ -58,20 +60,22 @@ namespace UI_Audio {
 	
 	public abstract class ContainerInventory : Inventory {
 		// Inventories with the ability to exchange items with the player's inventory dynamically
-		private readonly HashSet<IInventoryItem> _itemsMoved = new HashSet<IInventoryItem>();
-		private bool _transactionCompleted;
+		protected readonly HashSet<IInventoryItem> ItemsMoved = new HashSet<IInventoryItem>();
+		protected Npc NpcOwner;
+
+		public void SetNpcOwner(Npc owner) => NpcOwner = owner;
 
 		public override bool TryAddItem(IInventoryItem item) {
-			if (!base.TryAddItem(item))
+			if (!NpcOwner || !base.TryAddItem(item))
 				return false;
-			_itemsMoved.Add(item);
+			ItemsMoved.Add(item);
 			return true;
 		}
 
 		public override bool TryRemoveItem(IInventoryItem item) {
-			if (!base.TryRemoveItem(item))
+			if (!NpcOwner || !base.TryRemoveItem(item))
 				return false;
-			_itemsMoved.Remove(item);
+			ItemsMoved.Remove(item);
 			return true;
 		}
 
@@ -79,16 +83,20 @@ namespace UI_Audio {
 		
 		protected abstract bool CustomTryRemove(IInventoryItem item);
 
-		public void TryMoveHoveredSlotItem(Inventory playerInventory) {
+		public virtual void TryMoveHoveredSlotItem(Inventory playerInventory) {
 			InventorySlot lastHovered = InventorySlot.LastHovered;
 			IInventoryItem toMove;
-			if (!lastHovered || (toMove = lastHovered.GetSlotItem()) is null) 
+			
+			if (!lastHovered || !lastHovered.IsMouseOver() || (toMove = lastHovered.GetSlotItem()) is null)
 				return;
+			
 			if (Contains(toMove)) {
+				// Move item from containerInv to playerInv
 				if (CustomTryRemove(toMove))
 					playerInventory.TryAddItem(toMove);
 			}
 			else {
+				// Move item from playerInv to containerInv
 				if (CustomTryAdd(toMove))
 					playerInventory.TryRemoveItem(toMove);
 			}
@@ -96,15 +104,12 @@ namespace UI_Audio {
 
 		public override void Close() {
 			base.Close();
+			NpcOwner = null;
 			ClearInventory();
-			if (_transactionCompleted) {
-				_transactionCompleted = false;
-				return;
-			}
-			foreach (IInventoryItem inventoryItem in _itemsMoved)
+			foreach (IInventoryItem inventoryItem in ItemsMoved)
 				LocalGameManager.Instance.inventoryManager.playerInventory.TryAddItem(inventoryItem);
 		}
-		
-		[TargetRpc] protected void TargetValidateTransaction(NetworkConnection target) => _transactionCompleted = true;
+
+		[Server] protected bool VerifyInteractionWithNpc(Player player, Npc owner) => owner.VerifyInteractionWith(player);
 	}
 }

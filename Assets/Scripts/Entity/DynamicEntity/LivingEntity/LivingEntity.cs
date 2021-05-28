@@ -20,9 +20,10 @@ namespace Entity.DynamicEntity.LivingEntity {
 		[SerializeField] protected LivingEntityUI entityUI;
 		[SerializeField] private string nameTag;
 		
-		[SyncVar] [SerializeField] private int maxHealth;
-		[SyncVar(hook = nameof(SyncHealthChanged))] private int _health;
-		private void SyncHealthChanged(int o, int n) => OnHealthChange?.Invoke(n / (float) maxHealth);
+		protected int DefaultMaxHealth { get; private set; }
+		[SyncVar(hook = nameof(SyncHealthChanged))] [SerializeField] protected int maxHealth;
+		[SyncVar(hook = nameof(SyncHealthChanged))] [ShowInInspector] private int _health;
+		private void SyncHealthChanged(int o, int n) => OnHealthChange?.Invoke(_health / (float) maxHealth);
 
 		public event HealthChanged OnHealthChange;
 		public delegate void HealthChanged(float ratio);
@@ -41,9 +42,10 @@ namespace Entity.DynamicEntity.LivingEntity {
 
 		public override void OnDeserialize(NetworkReader reader, bool initialState) {
 			base.OnDeserialize(reader, initialState);
-			maxHealth = reader.ReadInt32();
+			int newMaxHealth = reader.ReadInt32();
 			int newHealth = reader.ReadInt32();
-			if (newHealth == _health) return;
+			if (newHealth == _health && newMaxHealth == maxHealth) return;
+			maxHealth = newMaxHealth;
 			SyncHealthChanged(_health, newHealth);
 			_health = newHealth;
 		}
@@ -56,13 +58,18 @@ namespace Entity.DynamicEntity.LivingEntity {
 				_rigidBody.bodyType = RigidbodyType2D.Dynamic;
 				_rigidBody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 			}
+			
 			LastAnimationState = 0;
 			entityUI = Instantiate(entityUI, PlayerInfoManager.transform);
 			entityUI.transform.SetSiblingIndex(0);
 			entityUI.Initialize(this);
 			OnHealthChange += entityUI.SetHealthBarValue;
-			if (isServer)
+			
+			if (isServer) {
+				DefaultMaxHealth = maxHealth;
 				_health = maxHealth;
+			}
+			
 			SyncHealthChanged(_health, _health);
 			entityUI.SetNameTagField(nameTag);
 		}
