@@ -107,7 +107,7 @@ namespace Entity.DynamicEntity.Weapon {
 			transform.localPosition = defaultCoordsWhenLikedToPlayer;
 		}
 
-		[ClientRpc] public void RpcSetWeaponParent(Transform parent) => transform.parent = parent;
+		[ClientRpc] public void RpcSetWeaponParent(Transform parent) => transform.SetParent(parent, false);
 
 		[TargetRpc] public void TargetSetClientAuthority(NetworkConnection target, bool state) {
 			if (TryGetComponent(out NetworkTransform netTransform))

@@ -146,43 +146,40 @@ namespace DataBanks {
 			=> array.Count == 0 ? default : array[Random.Range(0, array.Count)];
 
 		private static float RoundRandomFloat(float min, float max, int tolerance = 3)
-			=> (float) Math.Round((decimal) Random.Range(min, max), tolerance);
+			=> (float) Math.Round(Random.Range(min, max), tolerance);
 
 		private static CharmData GenerateCharmData() {
-			CharmData result = new CharmData();
-			if (Random.Range(0, 2) == 1)
-				result.DefaultAttackDamageBonus = RoundRandomFloat(0f, 0.05f);
-			if (Random.Range(0, 2) == 1)
-				result.SpecialAttackDamageBonus = RoundRandomFloat(0f, 0.025f);
-			if (Random.Range(0, 2) == 1)
-				result.HealthBonus = Random.Range(0, 10);
-			if (Random.Range(0, 2) == 1)
-				result.PowerBonus = Random.Range(0, 5);
-			if (Random.Range(0, 2) == 1)
-				result.SpeedBonus = RoundRandomFloat(0f, 0.025f);
-			if (Random.Range(0, 2) == 1)
-				result.CooldownReduction = RoundRandomFloat(0f, 0.025f);
+			CharmData result = new CharmData {
+				defaultAttackDamageBonus = RoundRandomFloat(0f, 0.25f),
+				specialAttackDamageBonus = RoundRandomFloat(0f, 0.5f),
+				healthBonus = Random.Range(0, 30),
+				powerBonus = Random.Range(0, 50),
+				speedBonus = RoundRandomFloat(0f, 0.2f),
+				cooldownReduction = RoundRandomFloat(0f, 0.2f)
+			};
 			return result;
 		}
 
 		private static RangedWeaponData GenerateRangeData(bool epic = false) {
-			RangedWeaponData result = new RangedWeaponData();
-			result.defaultDamageMultiplier = RoundRandomFloat(0.5f, 2f);
-			result.specialDamageMultiplier = RoundRandomFloat(0.75f, 1.25f);
-			result.projectileNumber = Random.Range(1, 7);
-			result.projectileSpeedMultiplier = RoundRandomFloat(0.5f, 2f);
-			result.projectileSizeMultiplier = RoundRandomFloat(0.5f, 2f);
+			RangedWeaponData result = new RangedWeaponData {
+				defaultDamageMultiplier = RoundRandomFloat(0.5f, 2f),
+				specialDamageMultiplier = RoundRandomFloat(0.75f, 1.25f),
+				projectileNumber = Random.Range(1, 7),
+				projectileSpeedMultiplier = RoundRandomFloat(0.5f, 2f),
+				projectileSizeMultiplier = RoundRandomFloat(0.5f, 2f)
+			};
 			if (epic)
 				result *= 2;
 			return result;
 		}
 
 		private static MeleeWeaponData GenerateMeleeData(bool epic = false) {
-			MeleeWeaponData result = new MeleeWeaponData();
-			result.defaultDamageMultiplier = RoundRandomFloat(0.5f, 3f);
-			result.specialDamageMultiplier = RoundRandomFloat(0.75f, 1.5f);
-			result.weaponSizeMultiplier = RoundRandomFloat(0.75f, 2f);
-			result.knockbackMultiplier = RoundRandomFloat(0.75f, 3f);
+			MeleeWeaponData result = new MeleeWeaponData {
+				defaultDamageMultiplier = RoundRandomFloat(0.5f, 3f),
+				specialDamageMultiplier = RoundRandomFloat(0.75f, 1.5f),
+				weaponSizeMultiplier = RoundRandomFloat(0.75f, 2f),
+				knockbackMultiplier = RoundRandomFloat(0.75f, 3f)
+			};
 			if (epic)
 				result *= 2;
 			return result;
@@ -191,7 +188,7 @@ namespace DataBanks {
 		public Charm GenerateCharm(CharmData data = null, Sprite sprite = null) {
 			GameObject obj = Instantiate(charmModel);
 			Charm result = obj.GetComponent<Charm>();
-			result.Bonuses = data ?? GenerateCharmData();
+			result.bonuses = data ?? GenerateCharmData();
 			result.GetSpriteRenderer().sprite = !sprite ? GetRandomInArray(charmSprites): sprite;
 			return result;
 		}

@@ -11,12 +11,12 @@ namespace UI_Audio {
 			speedBonus, cooldownReduction;
 
 		public void SetData(CharmData data) {
-			defaultAttackBonus.text = "+ " + data.DefaultAttackDamageBonus + " %";
-			specialAttackBonus.text = "+ " + data.SpecialAttackDamageBonus + " %";
-			healthBonus.text = "+ " + data.HealthBonus + " HP";
-			powerBonus.text = "+ " + data.PowerBonus + " PP";
-			cooldownReduction.text = "- " + data.CooldownReduction + " %";
-			speedBonus.text = "+ " + data.SpeedBonus + " %";
+			defaultAttackBonus.text = "+ " + data.defaultAttackDamageBonus + " %";
+			specialAttackBonus.text = "+ " + data.specialAttackDamageBonus + " %";
+			healthBonus.text = "+ " + data.healthBonus + " HP";
+			powerBonus.text = "+ " + data.powerBonus + " PP";
+			cooldownReduction.text = "- " + data.cooldownReduction + " %";
+			speedBonus.text = "+ " + data.speedBonus + " %";
 		}
 	}
 }
