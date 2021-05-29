@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI_Audio {
+namespace UI_Audio.Inventories {
 	public class InventorySlot: MonoBehaviour {
 		public static InventorySlot LastHovered;
 		private static readonly Color Visible = new Color(255, 255, 255, 255);

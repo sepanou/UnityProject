@@ -5,11 +5,17 @@ using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
 
-namespace UI_Audio {
+namespace UI_Audio.Inventories {
 	public class Inventory: NetworkBehaviour {
 		[SerializeField] private InventorySlot[] slots;
 		private int _count, _size;
 		public bool IsOpen => gameObject.activeSelf;
+
+		public override void OnStartClient() {
+			base.OnStartClient();
+			Close();
+			// NetworkBehaviours are by default deactivated when the network is not ready
+		}
 
 		private void Awake() {
 			if (slots.Length == 0)
@@ -18,7 +24,7 @@ namespace UI_Audio {
 			_count = 0;
 		}
 
-		protected bool Contains(IInventoryItem item)
+		[Client] protected bool Contains(IInventoryItem item)
 			=> slots.Any(slot => slot.GetSlotItem() == item);
 
 		public void ClearInventory() {
@@ -27,7 +33,7 @@ namespace UI_Audio {
 			_count = 0;
 		}
 
-		public virtual bool TryAddItem(IInventoryItem item) {
+		[Client] public virtual bool TryAddItem(IInventoryItem item) {
 			if (_count >= _size || item is null || Contains(item)) return false;
 			
 			foreach (InventorySlot slot in slots) {
@@ -40,7 +46,7 @@ namespace UI_Audio {
 			return false;
 		}
 
-		public virtual bool TryRemoveItem(IInventoryItem item) {
+		[Client] public virtual bool TryRemoveItem(IInventoryItem item) {
 			if (item is null) return false;
 			
 			foreach (InventorySlot slot in slots) {
@@ -61,18 +67,18 @@ namespace UI_Audio {
 	public abstract class ContainerInventory : Inventory {
 		// Inventories with the ability to exchange items with the player's inventory dynamically
 		protected readonly HashSet<IInventoryItem> ItemsMoved = new HashSet<IInventoryItem>();
-		protected Npc NpcOwner;
+		public Npc NpcOwner { get; private set; }
 
-		public void SetNpcOwner(Npc owner) => NpcOwner = owner;
+		[Client] public void SetNpcOwner(Npc owner) => NpcOwner = owner;
 
-		public override bool TryAddItem(IInventoryItem item) {
+		[Client] public override bool TryAddItem(IInventoryItem item) {
 			if (!NpcOwner || !base.TryAddItem(item))
 				return false;
 			ItemsMoved.Add(item);
 			return true;
 		}
 
-		public override bool TryRemoveItem(IInventoryItem item) {
+		[Client] public override bool TryRemoveItem(IInventoryItem item) {
 			if (!NpcOwner || !base.TryRemoveItem(item))
 				return false;
 			ItemsMoved.Remove(item);
@@ -83,7 +89,7 @@ namespace UI_Audio {
 		
 		protected abstract bool CustomTryRemove(IInventoryItem item);
 
-		public virtual void TryMoveHoveredSlotItem(Inventory playerInventory) {
+		[Client] public virtual void TryMoveHoveredSlotItem(Inventory playerInventory) {
 			InventorySlot lastHovered = InventorySlot.LastHovered;
 			IInventoryItem toMove;
 			
@@ -104,6 +110,9 @@ namespace UI_Audio {
 
 		public override void Close() {
 			base.Close();
+			
+			if (NpcOwner) NpcOwner.StopInteracting(LocalGameManager.Instance.LocalPlayer);
+			
 			NpcOwner = null;
 			ClearInventory();
 			foreach (IInventoryItem inventoryItem in ItemsMoved)

@@ -6,6 +6,7 @@ using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UI_Audio;
+using UI_Audio.Inventories;
 using UnityEngine;
 
 namespace Entity {
@@ -129,7 +130,7 @@ namespace Entity {
 			}
 		}
 
-		[Client] protected void StopInteracting(Player player) {
+		[Client] public void StopInteracting(Player player) {
 			// For callbacks from client (player) 
 			SetIsInteractive(player, false);
 			// Tell it to the server

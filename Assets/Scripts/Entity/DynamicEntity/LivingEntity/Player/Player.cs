@@ -4,6 +4,7 @@ using Entity.Collectibles;
 using Entity.DynamicEntity.Weapon;
 using Mirror;
 using UI_Audio;
+using UI_Audio.Inventories;
 using UI_Audio.LivingEntityUI;
 using UnityEngine;
 
@@ -54,8 +55,15 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private ContainerInventory _containerInventory;
 		private PlayerUI _playerUI;
 		
-		public int Kibrient => _kibrient;
-		public int Orchid => _orchid;
+		public int Kibrient {
+			get => _kibrient;
+			[Server] set => _kibrient = value;
+		}
+
+		public int Orchid {
+			get => _orchid;
+			[Server] set => _orchid = value;
+		}
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
 			base.OnSerialize(writer, initialState);
@@ -252,6 +260,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[Server] public bool RemoveCharm(Charm charm) => _charms.Remove(charm);
 
+		[Server] public bool RemoveWeapon(Weapon.Weapon wp) => _weapons.Remove(wp);
+
 		[Server] public void ReduceEnergy(int amount) {
 			if (amount == 0) return;
 			_energy = Math.Max(_energy - amount, 0);
@@ -328,7 +338,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			PlayerInfoManager.SetInfoText(message);
 			PlayerInfoManager.OpenInfoBox();
 		}
-		
+
 		[ClientCallback] private void FixedUpdate() {
 			// For physics
 			if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen || !NetworkClient.ready) return;
@@ -361,7 +371,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				if (Input.GetMouseButtonDown(0))
 					_containerInventory.TryMoveHoveredSlotItem(_inventory);
 				else if (InputManager.GetKeyDown("OpenInventory"))
-					InventoryManager.CloseAllInventories();
+					InventoryManager.CloseShopKeeperInventory(_containerInventory);
 				return;
 			}
 			
