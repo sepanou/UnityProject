@@ -2,6 +2,7 @@
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UI_Audio;
+using UI_Audio.Inventories;
 using UnityEngine;
 
 namespace Entity.Collectibles {

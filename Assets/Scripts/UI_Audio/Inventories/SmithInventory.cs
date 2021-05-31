@@ -1,24 +1,24 @@
 ﻿using System.Linq;
-using System.Runtime.Versioning;
 using Entity.Collectibles;
 using Entity.DynamicEntity;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 
-namespace UI_Audio {
+namespace UI_Audio.Inventories {
 	public class SmithInventory: ContainerInventory {
 		private const int KibryCostPerCharm = 5;
 		public InventorySlot resultSlot;
 
-		protected override bool CustomTryAdd(IInventoryItem item) => item is Charm && base.TryAddItem(item);
-		protected override bool CustomTryRemove(IInventoryItem item) => item is Charm && base.TryRemoveItem(item);
+		[Client] protected override bool CustomTryAdd(IInventoryItem item) => item is Charm && base.TryAddItem(item);
+		
+		[Client] protected override bool CustomTryRemove(IInventoryItem item) => item is Charm && base.TryRemoveItem(item);
 
 		public override void Close() {
 			base.Close();
 			resultSlot.ClearItem();
 		}
 
-		public override void TryMoveHoveredSlotItem(Inventory playerInventory) {
+		[Client] public override void TryMoveHoveredSlotItem(Inventory playerInventory) {
 			if (!InventorySlot.LastHovered) return;
 			
 			if (InventorySlot.LastHovered != resultSlot) {
@@ -36,20 +36,22 @@ namespace UI_Audio {
 		[TargetRpc] private void TargetMergeSuccessful(NetworkConnection target, Charm finalCharm) {
 			ItemsMoved.Clear();
 			ClearInventory();
-			if (!LocalGameManager.Instance.inventoryManager.playerInventory.TryRemoveItem(finalCharm))
-				return;
 			
+			if (!LocalGameManager.Instance.inventoryManager.playerInventory.TryRemoveItem(finalCharm))
+				return; // Should not happen
+			
+			NpcOwner.PrintDialog(new[] { "#trade-completed", "#want-more" }, null, true);
 			ItemsMoved.Add(finalCharm);
 			resultSlot.SetSlotItem(finalCharm);
 		}
 
 		[Command(requiresAuthority = false)]
-		private void CmdMergeAndAddCharm(Charm[] toMerge, Player player, Npc owner, NetworkConnectionToClient sender = null) {
+		private void CmdMergeAndAddCharm(Charm[] toMerge, Npc owner, Player player, NetworkConnectionToClient sender = null) {
 			// Check for cheats, potential incorrect args and the possibility to proceed...
 			if (sender != player.connectionToClient) return;
 			
 			if (!VerifyInteractionWithNpc(player, owner)) {
-				player.TargetPrintWarning(sender, "You are no longer interacting with the blacksmith!");
+				player.TargetPrintWarning(sender, "You are no longer interacting with this NPC!");
 				return;
 			}
 			
@@ -84,6 +86,6 @@ namespace UI_Audio {
 		}
 
 		[Client] public void OnMergeButtonClick() =>
-			CmdMergeAndAddCharm(ItemsMoved.Cast<Charm>().ToArray(), LocalGameManager.Instance.LocalPlayer, NpcOwner);
+			CmdMergeAndAddCharm(ItemsMoved.Cast<Charm>().ToArray(), NpcOwner, LocalGameManager.Instance.LocalPlayer);
 	}
 }

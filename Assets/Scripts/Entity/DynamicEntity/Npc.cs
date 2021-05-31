@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Entity.DynamicEntity {
 	
@@ -17,7 +18,8 @@ namespace Entity.DynamicEntity {
 
 		[SerializeField] private PlayerClasses classType;
 		[SerializeField] private NpcType npcType;
-
+		public NpcType GetNpcType => npcType;
+		
 		private void Start() {
 			Instantiate();
 			TryGetComponent(out _rigidBody);
@@ -96,6 +98,9 @@ namespace Entity.DynamicEntity {
 					throw new ArgumentException("InteractClassSelector");
 			}
 		}
+
+		[Client] public void PrintDialog(string[] dialogKeys, UnityAction callback, bool sudden = false) =>
+			PlayerInfoManager.PrintDialog(dialogKeys, callback, sudden);
 
 		[ClientCallback] protected new void OnTriggerExit2D(Collider2D other) {
 			base.OnTriggerExit2D(other);

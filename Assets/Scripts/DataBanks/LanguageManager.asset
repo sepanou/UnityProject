@@ -114,3 +114,32 @@ MonoBehaviour:
       translation: merge
     - fieldKey: smith
       translation: Smith
+    - fieldKey: '#collector-start'
+      translation: 'Welcome dear adventurer, would you like to trade?
+
+        I
+        can smell the ancient relics you carry from here!
+
+        Don''t be shy,
+        show me what you got...'
+    - fieldKey: '#collector-stop'
+      translation: 'Safe travels comrade.
+
+        And if you find some interesting
+        relics - I''ll be right there!'
+    - fieldKey: '#smith-start'
+      translation: 'Hey, do you need something?
+
+        As long as you got charms
+        to merge, I''m all ears!'
+    - fieldKey: '#smith-stop'
+      translation: 'Bye, and don''t forget to collect all the charms you find...
+
+        They
+        can be of tremendous help during battle.'
+    - fieldKey: '#trade-completed'
+      translation: It's always a pleasure to trade with you.
+    - fieldKey: '#want-more'
+      translation: Do you need something else?
+    - fieldKey: collector
+      translation: Collector

@@ -244,7 +244,7 @@ namespace DataBanks {
 		public Charm GenerateCharm(CharmData data = null, Sprite sprite = null) {
 			GameObject obj = Instantiate(charmModel);
 			Charm result = obj.GetComponent<Charm>();
-			result.Bonuses = data ?? GenerateCharmData();
+			result.bonuses = data ?? GenerateCharmData();
 			result.name = GenerateName(CharmNames);
 			result.GetSpriteRenderer().sprite = !sprite ? GetRandomInArray(charmSprites): sprite;
 			return result;

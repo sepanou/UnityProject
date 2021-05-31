@@ -48,7 +48,7 @@ namespace UI_Audio {
 		[NonSerialized] public static LanguageManager LanguageManager;
 		[NonSerialized] public static InputManager InputManager;
 		[NonSerialized] public static PlayerInfoManager Instance;
-		
+
 		private void Awake() {
 			if (!Instance)
 				Instance = this;
@@ -72,7 +72,7 @@ namespace UI_Audio {
 			
 			// Dialog box
 			dialogBox.gameObject.SetActive(false);
-			
+
 			// Warning box
 			warningBox.gameObject.SetActive(false);
 						
@@ -85,12 +85,23 @@ namespace UI_Audio {
 			Player.OnLocalPlayerClassChange += ChangeLocalPlayerClassInfo;
 		}
 
-		private IEnumerator WriteDialog(string[] dialogKeys, UnityAction callback, float delay = 0.02f) {
+		/// <summary>
+		/// Writes a dialog
+		/// </summary>
+		/// <param name="dialogKeys">An array with the dialog part keys (see LanguageManager) to print, one after the other</param>
+		/// <param name="callback">Method to call when the dialog is finished</param>
+		/// <param name="sudden">Optional: set to true if there was already a dialog printed before BY THE SAME NPC</param>
+		/// <param name="delay">Optional: the delay between each character printing</param>
+		/// <returns></returns>
+		private IEnumerator WriteDialog(string[] dialogKeys, UnityAction callback, bool sudden = false, float delay = 0.02f) {
 			if (!LanguageManager)
 				yield break;
 			
 			dialogText.text = "";
-			yield return new WaitUntil(() => InputManager.GetKeyUp("Interact"));
+			
+			if (!sudden)
+				yield return new WaitUntil(() => InputManager.GetKeyUp("Interact"));
+			
 			dialogBox.gameObject.SetActive(true);
 
 			foreach (string dialogKey in dialogKeys) {
@@ -117,11 +128,11 @@ namespace UI_Audio {
 		}
 		
 		// Dialog box
-		public void PrintDialog(string[] dialogKeys, UnityAction callback) { // in order of appearance
+		public void PrintDialog(string[] dialogKeys, UnityAction callback, bool sudden = false) {
 			if (!dialogBox || !dialogText) return;
 			if (_dialogWriter != null)
 				StopCoroutine(_dialogWriter);
-			_dialogWriter = StartCoroutine(WriteDialog(dialogKeys, callback));
+			_dialogWriter = StartCoroutine(WriteDialog(dialogKeys, callback, sudden));
 		}
 
 		// Info box
