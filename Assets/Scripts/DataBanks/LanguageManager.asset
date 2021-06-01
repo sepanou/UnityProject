@@ -131,7 +131,10 @@ MonoBehaviour:
       translation: 'Hey, do you need something?
 
         As long as you got charms
-        to merge, I''m all ears!'
+        to merge, I''m all ears!
+
+        Merging 2 charms cost 5 kibrient, 3 cost
+        10, and so on. Got that?'
     - fieldKey: '#smith-stop'
       translation: 'Bye, and don''t forget to collect all the charms you find...
 
@@ -143,3 +146,20 @@ MonoBehaviour:
       translation: Do you need something else?
     - fieldKey: collector
       translation: Collector
+    - fieldKey: sell
+      translation: Sell
+    - fieldKey: buy
+      translation: Buy
+    - fieldKey: innkeeper
+      translation: InnKeeper
+    - fieldKey: '#innkeeper-start'
+      translation: 'Welcome to my inn!
+
+        I have plenty of valuable items you
+        may need.
+
+        Come, take a look...'
+    - fieldKey: '#innkeeper-stop'
+      translation: 'See you soon big baboon ;)
+
+        (We should change this dialog...)'

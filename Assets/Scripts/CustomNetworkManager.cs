@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UI_Audio;
@@ -14,7 +13,7 @@ public class CustomNetworkManager: NetworkManager {
 	[Header("Forest Scene Spawn Points")]
 	[SerializeField] private string forestSceneName;
 	[SerializeField] private Vector3[] forestSpawnPoints;
-
+	
 	private readonly List<Player> _playerPrefabs = new List<Player>();
 	private Coroutine _sceneTransitionCoroutine;
 
@@ -32,8 +31,9 @@ public class CustomNetworkManager: NetworkManager {
 
 	// Event methods
 	public override void OnServerAddPlayer(NetworkConnection conn) {
-		base.OnServerAddPlayer(conn);
-		_playerPrefabs.Add(conn.identity.gameObject.GetComponent<Player>());
+		GameObject player = Instantiate(playerPrefab, startPositions[startPositionIndex].position, Quaternion.identity);
+		NetworkServer.AddPlayerForConnection(conn, player);
+		_playerPrefabs.Add(player.GetComponent<Player>());
 	}
 
 	public override void OnServerSceneChanged(string sceneName) {
@@ -48,12 +48,12 @@ public class CustomNetworkManager: NetworkManager {
 
 	public override void OnClientSceneChanged(NetworkConnection conn) {
 		base.OnClientSceneChanged(conn);
+		Debug.LogWarning("Scene LOADED");
 		if (sceneAnimator)
 			sceneAnimator.Play("EndTransition");
 		if (networkSceneName == forestSceneName)
 			AudioDB.PlayMusic("ForestMusic");
 	}
-	
 
 	public override void OnStopClient() {
 		base.OnStopClient();

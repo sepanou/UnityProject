@@ -5,6 +5,8 @@ using UnityEngine.UI;
 namespace UI_Audio.Inventories {
 	public class InventorySlot: MonoBehaviour {
 		public static InventorySlot LastHovered;
+		public static event ItemSlotClicked OnItemSlotClick;
+		public delegate void ItemSlotClicked(InventorySlot clicked);
 		private static readonly Color Visible = new Color(255, 255, 255, 255);
 		private static readonly Color Invisible = new Color(255, 255, 255, 0);
 		
@@ -40,7 +42,10 @@ namespace UI_Audio.Inventories {
 		public bool IsMouseOver() => _isMouseOver;
 		
 		public void SetSlotItem(IInventoryItem item) {
-			slotImage.sprite = item.GetSpriteRenderer().sprite;
+			if (!item.TryGetSpriteRenderer(out SpriteRenderer sRenderer))
+				return;
+			
+			slotImage.sprite = sRenderer.sprite;
 			slotImage.color = Visible;
 			_item = item;
 			if (!IsOccupied)
@@ -82,11 +87,12 @@ namespace UI_Audio.Inventories {
 				targetGraphic.sprite = normalSprite;
 			} else if (_isMouseOver && _item != null)
 				SetInfoDisplayActive(true);
-			
+
 			if (!_isMouseOver || !Input.GetMouseButtonDown(0)) return;
 			
 			targetGraphic.sprite = selectedSprite;
 			clickEvent?.Invoke();
+			OnItemSlotClick?.Invoke(this);
 		}
 	}
 }
