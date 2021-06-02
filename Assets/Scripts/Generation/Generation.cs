@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Mirror;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -14,9 +12,8 @@ namespace Generation {
 		private static readonly Random Random = new Random();
 		private static List<Room> _recentlyAddedRooms;
 		private static List<Room> _roomsToTreat;
-		private static Coroutine salut;
-
-		[Command(requiresAuthority = false)]
+		
+		[Server]
 		// ReSharper disable once UnusedMember.Local
 		public static void GenerateLevel(Level level) {
 			if (level.alreadyGenerated) return;
@@ -29,7 +26,6 @@ namespace Generation {
 			int rMaxX = rMap.GetLength(1);
 			int x = 50;
 			int y = 50;
-			Debug.Log(_availableRooms.Count);
 			Room roomToPlace = _availableRooms[RoomType.Start][Random.Next(_availableRooms[RoomType.Start].Count)];
 			(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
 			while (true) {
@@ -38,28 +34,19 @@ namespace Generation {
 				x = Random.Next(rMaxX);
 				y = Random.Next(rMaxY);
 			}
-
-			Stopwatch time = new Stopwatch();
-			time.Start();
-			int maxRooms = 20;
 			bool placedPreBossRoom = false;
 			while (!placedPreBossRoom) {
 				foreach (Room room in _roomsToTreat) {
 					foreach ((char dir, int nbDir) in room._exits) {
-						TimeSpan ts = time.Elapsed;
-						if (ts.Minutes >= 1) {
-							Debug.Log("Nique sa mère");
-							//return;
-						};
 						if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
-						(int rtcx, int rtcy) = room.uCoords;
-						int i = 0;
-						while (i < 100) {
+						(int rtcX, int rtcY) = room.UCoords;
+						(int uW, int uH) = room.UDim;
+						while (true) {
 							Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap, placedPreBossRoom);
-							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - 1) ||
-							     dir == 'B' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1) ||
-							     dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy - nbDir + 1) ||
-							     dir == 'R' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + 1, rtcy - nbDir + 1))
+							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToAdd, rtcX + nbDir - 1, rtcY - uH) ||
+							     dir == 'B' && TryAddRoom(lMap, rMap, roomToAdd, rtcX + nbDir - 1, rtcY + 1) ||
+							     dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcX - 1, rtcY - nbDir + 1) ||
+							     dir == 'R' && TryAddRoom(lMap, rMap, roomToAdd, rtcX + uW, rtcY - nbDir + 1))
 							) {
 								if (roomToAdd.Type == RoomType.Chest) level.Chests += 1;
 								if (roomToAdd.Type == RoomType.Shop) level.Shop = true;
@@ -67,31 +54,69 @@ namespace Generation {
 								_recentlyAddedRooms.Add(roomToAdd);
 								break;
 							}
-							++i;
 						}
 					}
 					if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
 				}
 
-				if (_recentlyAddedRooms.Count == 0) {
-					break;
-					level.RoomsList.ForEach(room => {
-						if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
-					});
-				} 
+				if (_recentlyAddedRooms.Count == 0) break;
 				(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
 				_roomsToTreat.Shuffle();
 			}
-			// TODO: Need to add Boss Room & Exit room.
+			List<Room> oldRooms = new List<Room>(lMap);
+			foreach (Room room in oldRooms) {
+				if (AreExitsOccupied(rMap, room)) continue;
+				foreach ((char dir, int nbDir) in room._exits) {
+					if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
+					(x, y) = room.UCoords;
+					(int uH, int uW) = room.UDim;
+					bool placedRoom;
+					switch (dir) {
+						case 'T':
+							placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('B'), x + nbDir - 1, y - uH);
+							break;
+						case 'B':
+							placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('T'), x + nbDir - 1, y + 1);
+							break;
+						case 'L':
+							placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('R'), x - 1, y - nbDir + 1);
+							break;
+						case 'R':
+							placedRoom =TryAddRoom(lMap, rMap, FindDeadEnd('L'), x + uW, y - nbDir + 1);
+							break;
+						default:
+							throw new ArgumentException("Wrong letter");
+					}
+
+					if (!placedRoom) { // This is ugly but it does work :p
+						foreach (Room roomToReplace in _availableRooms[RoomType.Standard]) {
+							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y - uH) ||
+							     dir == 'B' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y + 1) ||
+							     dir == 'L' && TryAddRoom(lMap, rMap, roomToReplace, x - 1, y - nbDir + 1) ||
+							     dir == 'R' && TryAddRoom(lMap, rMap, roomToReplace, x + uW, y - nbDir + 1))
+							) break;
+						}
+					}
+				}
+			}
 			level.alreadyGenerated = true;
 		}
 
+		[Server]
+		private static Room FindDeadEnd(char dir) {
+			foreach (Room room in _availableRooms[RoomType.DeadEnd]) {
+				if (room._exits[0].Item1 == dir) return new Room(room);
+			}
+			throw new ArgumentException("FindDeadEnd: Room not found");
+		}
+		[Server]
 		private static bool AreExitsOccupied(Room[,] rMap, Room room) {
-			(int x, int y) = room.uCoords;
+			(int x, int y) = room.UCoords;
+			(int uW, int uH) = room.UDim;
 			foreach ((char dir, int nbDir) in room._exits) {
 				switch (dir) {
 					case 'T':
-						if (y - 1 < 0 || rMap[y - 1, x + nbDir - 1] == null) return false;
+						if (y - 1 < 0 || rMap[y - uH, x + nbDir - 1] == null) return false;
 						break;
 					case 'B':
 						if (y + 1 > rMap.GetLength(0) || rMap[y + 1, x + nbDir - 1] == null) return false;
@@ -100,7 +125,7 @@ namespace Generation {
 						if (x - 1 < 0 || rMap[y - nbDir + 1, x - 1] == null) return false;
 						break;
 					case 'R':
-						if (x + 1 > rMap.GetLength(1) || rMap[y - nbDir + 1, x + 1] == null) return false;
+						if (x + 1 > rMap.GetLength(1) || rMap[y - nbDir + 1, x + uW] == null) return false;
 						break;
 					default:
 						throw new ArgumentException("AreExitsOccupied: Wrong letter for an exit");
@@ -108,8 +133,10 @@ namespace Generation {
 			}
 			return true;
 		}
+		
+		[Server]
 		private static bool IsExitOccupied(Room[,] rMap, Room room, char dir, int nbDir) {
-			(int x, int y) = room.uCoords;
+			(int x, int y) = room.UCoords;
 			(int uW, int uH) = room.UDim;
 			switch (dir) {
 				case 'T':
@@ -125,6 +152,7 @@ namespace Generation {
 			}
 		}
 
+		[Server]
 		private static Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap, bool placedPreBossRoom) {
 			RoomType roomType = !isThereAShop && seed.Next(100) <= 10 + lMap.Count / 2
 				? RoomType.Shop
@@ -134,25 +162,25 @@ namespace Generation {
 				? RoomType.Chest
 				: RoomType.Standard
 			;
-			if (roomType == RoomType.PreBoss) Debug.Log("Preboss");
 			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)]);
 		}
 		
+		[Server]
 		private static bool TryAddRoom(ICollection<Room> lMap, Room[,] rMap, Room room, int x, int y) {
-			(int uroomWidth, int uroomHeight) = room.UDim;
+			(int uRoomWidth, int uRoomHeight) = room.UDim;
 			if (x < 0 || y < 0 || x >= rMap.GetLength(1) || y >= rMap.GetLength(0))
 				return false;
-			for (int i = y; i > y - uroomHeight; --i)
-				for (int j = x; j < uroomWidth + x; ++j)
+			for (int i = y; i > y - uRoomHeight; --i)
+				for (int j = x; j < uRoomWidth + x; ++j)
 					if (rMap[i, j] != null)
 						return false;
 			if (!CheckForExits(rMap, room, x, y))
 				return false;
 			room.Coordinates = (x*20, y*-20);
-			room.uCoords = (x, y);
+			room.UCoords = (x, y);
 			// Iterating twice because we checked if there was enough room (haha) first before placing anything
-			for (int i = y; i > y - uroomHeight; --i)
-				for (int j = x; j < uroomWidth + x; ++j)
+			for (int i = y; i > y - uRoomHeight; --i)
+				for (int j = x; j < uRoomWidth + x; ++j)
 					rMap[i, j] = room;
 			lMap.Add(room);
 			_recentlyAddedRooms.Add(room);
@@ -160,6 +188,7 @@ namespace Generation {
 			return true;
 		}
 
+		[Server]
 		private static bool CheckForExits(Room[,] rMap, Room room, int x, int y) {
 			(int uX, int uY) = (x, y);
 			(int uW, int uH) = room.UDim;
@@ -172,17 +201,17 @@ namespace Generation {
 			}
 			for (int i = uY; i > uY - uH; i--) {
 				for (int j = uX; j < uW + uX; j++) {
-					if (!(rMap[i + 1, j] == null ||
-					      (SubFunction(rMap, j, i + 1, 'T') && SubFunction2(rMap, room, j, i,'B', uX, uY))))
+					if (!(rMap[i + 1, j] == null || rMap[i + 1, j] == room ||
+					      (SubFunction(rMap, j, i + 1, 'T') == SubFunction2(room, j, i,'B', uX, uY))))
 						return false;
-					if (!(rMap[i - 1, j] == null ||
-					      (SubFunction(rMap, j, i - 1, 'B') && SubFunction2(rMap, room, j, i, 'T', uX, uY))))
+					if (!(rMap[i - 1, j] == null || rMap[i - 1, j] == room ||
+					      (SubFunction(rMap, j, i - 1, 'B') == SubFunction2(room, j, i, 'T', uX, uY))))
 						return false;
-					if (!(rMap[i, j + 1] == null ||
-					      (SubFunction(rMap, j + 1, i, 'L') && SubFunction2(rMap, room, j, i, 'R', uX, uY))))
+					if (!(rMap[i, j + 1] == null || rMap[i, j + 1] == room ||
+					      (SubFunction(rMap, j + 1, i, 'L') == SubFunction2(room, j, i, 'R', uX, uY))))
 						return false;
-					if (!(rMap[i, j - 1] == null ||
-					      (SubFunction(rMap, j - 1, i, 'R') && SubFunction2(rMap, room, j, i, 'L', uX, uY))))
+					if (!(rMap[i, j - 1] == null || rMap[i, j - 1] == room ||
+					      (SubFunction(rMap, j - 1, i, 'R') == SubFunction2(room, j, i, 'L', uX, uY))))
 						return false;
 				}
 			}
@@ -192,7 +221,6 @@ namespace Generation {
 		/// <summary>
 		/// SubFunction in case of rooms which have not been placed yet
 		/// </summary>
-		/// <param name="rMap"></param>
 		/// <param name="room"></param>
 		/// <param name="j"></param>
 		/// <param name="i"></param>
@@ -200,8 +228,8 @@ namespace Generation {
 		/// <param name="uX"></param>
 		/// <param name="uY"></param>
 		/// <returns></returns>
-		private static bool SubFunction2(Room[,] rMap, Room room, int j, int i, char dirLkF, int uX, int uY) {
-			(int x, int y) = room.uCoords;
+		[Server]
+		private static bool SubFunction2(Room room, int j, int i, char dirLkF, int uX, int uY) {
 			foreach ((char dir, int nbDir) in room._exits) {
 				if (dir == dirLkF && SubSubFunction(room, j, i, dir, nbDir, uX, uY))
 					return true;
@@ -223,6 +251,7 @@ namespace Generation {
 		/// <param name="dirLkF">Direction we're looking for, for instance if we were previously checking on top exits
 		/// of a room, we will be looking for bottom exits on other rooms</param>
 		/// <returns>True if the room can be placed here without conflicting with any exits, false otherwise</returns>
+		[Server]
 		private static bool SubFunction(Room[,] rMap,int toX, int toY, char dirLkF) { //DirLookingFor
 			if (toX < 0 || toY < 0 || toX >= rMap.GetLength(1) || toY >= rMap.GetLength(0))
 				return false;
@@ -247,10 +276,11 @@ namespace Generation {
 		/// <param name="y">Same than x</param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentException"></exception>
+		[Server]
 		private static bool SubSubFunction(Room room, int toX, int toY, char dir, int nbDir, int x = -1, int y = -1) {
 			
 			if (x == y && y == -1)
-				(x, y) = room.uCoords;
+				(x, y) = room.UCoords;
 			(int uW, int uH) = room.UDim;
 			switch (dir) {
 				case 'T':
@@ -260,13 +290,14 @@ namespace Generation {
 				case 'L':
 					return x == toX && y - nbDir + 1 == toY;
 				case 'R':
-					return x == toX + uW - 1 && y - nbDir + 1 == toY;
+					return x + uW - 1 == toX && y - nbDir + 1 == toY;
 				default:
 					throw new ArgumentException("SubSubFunction Generation, invalid direction/letter");
 			}
 		}
 		
-		public static Dictionary<RoomType, List<Room>> GetLevels() {;
+		[Server]
+		private static Dictionary<RoomType, List<Room>> GetLevels() {
 			Dictionary<RoomType, List<Room>> ans = new Dictionary<RoomType, List<Room>>();
 			for (int i = 0; i < 9; i++)
 				ans.Add((RoomType) i, new List<Room>());
@@ -278,15 +309,15 @@ namespace Generation {
 			return ans;
 		}
 
-		[Command(requiresAuthority = false)]
-		public static void AddPrefab(int x, int y, string roomName) {
+		[Server]
+		private static void AddPrefab(int x, int y, string roomName) {
 			Object objectToAdd = null;
 			foreach (Object o in Resources.LoadAll("Level1", typeof(GameObject))) {
 				if (o.name != roomName) continue;
 				objectToAdd = o; break;
 			}
 			if (objectToAdd == null) throw new Exception("Room cannot be found");
-			Object.Instantiate(objectToAdd, new Vector3(x, y, 0), Quaternion.identity);
+			NetworkServer.Spawn((GameObject)Object.Instantiate(objectToAdd, new Vector3(x, y, 0), Quaternion.identity));
 		}
 		
 		/// <summary>
@@ -294,7 +325,8 @@ namespace Generation {
 		/// </summary>
 		/// <param name="list"></param>
 		/// <typeparam name="T"></typeparam>
-		public static void Shuffle<T>(this IList<T> list) {  
+		[Server]
+		private static void Shuffle<T>(this IList<T> list) {  
 			int n = list.Count;  
 			while (n > 1) {  
 				n--;  

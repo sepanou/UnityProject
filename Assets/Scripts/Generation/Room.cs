@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Generation {
 	public enum RoomType { Standard, Chest, Shop, Start, Exit, Boss, PreBoss, DeadEnd, Other }
@@ -20,7 +19,7 @@ namespace Generation {
 		public int GetId() => _id;
 		public (int, int) Coordinates; // Left of the Room
 		public (int, int) UDim;
-		public (int, int) uCoords;
+		public (int, int) UCoords;
 
 		// ReSharper disable once UnusedMember.Local
 		private void Start() {

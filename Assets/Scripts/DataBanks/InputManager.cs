@@ -38,6 +38,8 @@ namespace DataBanks {
 				_actionToKey[entry.actionName] = entry.keyEntry;
 		}
 
+		public KeyCode GetKeyCode(string action) => _actionToKey[action];
+
 		private void UpdateEntries()
 			=> entries = _actionToKey.Select(entry => new InputEntry(entry.Key, entry.Value)).ToArray();
 

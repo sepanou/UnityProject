@@ -18,7 +18,7 @@ MonoBehaviour:
   - actionName: Backward
     keyEntry: 115
   - actionName: Left
-    keyEntry: 97
+    keyEntry: 113
   - actionName: Right
     keyEntry: 100
   - actionName: DefaultAttack
@@ -30,4 +30,4 @@ MonoBehaviour:
   - actionName: OpenMenu
     keyEntry: 27
   - actionName: Interact
-    keyEntry: 101
+    keyEntry: 323
