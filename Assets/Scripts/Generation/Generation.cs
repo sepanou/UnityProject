@@ -13,9 +13,8 @@ namespace Generation {
 		private static readonly Random Random = new Random();
 		private static List<Room> _recentlyAddedRooms;
 		private static List<Room> _roomsToTreat;
-		private static Coroutine salut;
-
-		[Command(requiresAuthority = false)]
+		
+		[Server]
 		// ReSharper disable once UnusedMember.Local
 		public static void GenerateLevel(Level level) {
 			if (level.alreadyGenerated) return;
@@ -28,7 +27,6 @@ namespace Generation {
 			int rMaxX = rMap.GetLength(1);
 			int x = 50;
 			int y = 50;
-			Debug.Log(_availableRooms.Count);
 			Room roomToPlace = _availableRooms[RoomType.Start][Random.Next(_availableRooms[RoomType.Start].Count)];
 			(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
 			while (true) {
@@ -37,7 +35,6 @@ namespace Generation {
 				x = Random.Next(rMaxX);
 				y = Random.Next(rMaxY);
 			}
-			int maxRooms = 20;
 			bool placedPreBossRoom = false;
 			while (!placedPreBossRoom) {
 				foreach (Room room in _roomsToTreat) {
@@ -67,7 +64,6 @@ namespace Generation {
 				(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
 				_roomsToTreat.Shuffle();
 			}
-			// TODO: Need to add Boss Room & Exit room.
 			List<Room> oldRooms = new List<Room>(lMap);
 			foreach (Room room in oldRooms) {
 				if (AreExitsOccupied(rMap, room)) continue;
@@ -94,7 +90,6 @@ namespace Generation {
 					}
 
 					if (!placedRoom) { // This is ugly but it does work :p
-						Debug.Log("Compromis");
 						foreach (Room roomToReplace in _availableRooms[RoomType.Standard]) {
 							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y - uH) ||
 							     dir == 'B' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y + 1) ||
@@ -108,12 +103,14 @@ namespace Generation {
 			level.alreadyGenerated = true;
 		}
 
+		[Server]
 		private static Room FindDeadEnd(char dir) {
 			foreach (Room room in _availableRooms[RoomType.DeadEnd]) {
 				if (room._exits[0].Item1 == dir) return new Room(room);
 			}
 			throw new ArgumentException("FindDeadEnd: Room not found");
 		}
+		[Server]
 		private static bool AreExitsOccupied(Room[,] rMap, Room room) {
 			(int x, int y) = room.uCoords;
 			(int uW, int uH) = room.UDim;
@@ -137,6 +134,8 @@ namespace Generation {
 			}
 			return true;
 		}
+		
+		[Server]
 		private static bool IsExitOccupied(Room[,] rMap, Room room, char dir, int nbDir) {
 			(int x, int y) = room.uCoords;
 			(int uW, int uH) = room.UDim;
@@ -154,6 +153,7 @@ namespace Generation {
 			}
 		}
 
+		[Server]
 		private static Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap, bool placedPreBossRoom) {
 			RoomType roomType = !isThereAShop && seed.Next(100) <= 10 + lMap.Count / 2
 				? RoomType.Shop
@@ -167,6 +167,7 @@ namespace Generation {
 			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)]);
 		}
 		
+		[Server]
 		private static bool TryAddRoom(ICollection<Room> lMap, Room[,] rMap, Room room, int x, int y) {
 			(int uroomWidth, int uroomHeight) = room.UDim;
 			if (x < 0 || y < 0 || x >= rMap.GetLength(1) || y >= rMap.GetLength(0))
@@ -189,6 +190,7 @@ namespace Generation {
 			return true;
 		}
 
+		[Server]
 		private static bool CheckForExits(Room[,] rMap, Room room, int x, int y) {
 			(int uX, int uY) = (x, y);
 			(int uW, int uH) = room.UDim;
@@ -202,16 +204,16 @@ namespace Generation {
 			for (int i = uY; i > uY - uH; i--) {
 				for (int j = uX; j < uW + uX; j++) {
 					if (!(rMap[i + 1, j] == null || rMap[i + 1, j] == room ||
-					      (SubFunction(rMap, j, i + 1, 'T') == SubFunction2(rMap, room, j, i,'B', uX, uY))))
+					      (SubFunction(rMap, j, i + 1, 'T') == SubFunction2(room, j, i,'B', uX, uY))))
 						return false;
 					if (!(rMap[i - 1, j] == null || rMap[i - 1, j] == room ||
-					      (SubFunction(rMap, j, i - 1, 'B') == SubFunction2(rMap, room, j, i, 'T', uX, uY))))
+					      (SubFunction(rMap, j, i - 1, 'B') == SubFunction2(room, j, i, 'T', uX, uY))))
 						return false;
 					if (!(rMap[i, j + 1] == null || rMap[i, j + 1] == room ||
-					      (SubFunction(rMap, j + 1, i, 'L') == SubFunction2(rMap, room, j, i, 'R', uX, uY))))
+					      (SubFunction(rMap, j + 1, i, 'L') == SubFunction2(room, j, i, 'R', uX, uY))))
 						return false;
 					if (!(rMap[i, j - 1] == null || rMap[i, j - 1] == room ||
-					      (SubFunction(rMap, j - 1, i, 'R') == SubFunction2(rMap, room, j, i, 'L', uX, uY))))
+					      (SubFunction(rMap, j - 1, i, 'R') == SubFunction2(room, j, i, 'L', uX, uY))))
 						return false;
 				}
 			}
@@ -221,7 +223,6 @@ namespace Generation {
 		/// <summary>
 		/// SubFunction in case of rooms which have not been placed yet
 		/// </summary>
-		/// <param name="rMap"></param>
 		/// <param name="room"></param>
 		/// <param name="j"></param>
 		/// <param name="i"></param>
@@ -229,7 +230,8 @@ namespace Generation {
 		/// <param name="uX"></param>
 		/// <param name="uY"></param>
 		/// <returns></returns>
-		private static bool SubFunction2(Room[,] rMap, Room room, int j, int i, char dirLkF, int uX, int uY) {
+		[Server]
+		private static bool SubFunction2(Room room, int j, int i, char dirLkF, int uX, int uY) {
 			foreach ((char dir, int nbDir) in room._exits) {
 				if (dir == dirLkF && SubSubFunction(room, j, i, dir, nbDir, uX, uY))
 					return true;
@@ -251,6 +253,7 @@ namespace Generation {
 		/// <param name="dirLkF">Direction we're looking for, for instance if we were previously checking on top exits
 		/// of a room, we will be looking for bottom exits on other rooms</param>
 		/// <returns>True if the room can be placed here without conflicting with any exits, false otherwise</returns>
+		[Server]
 		private static bool SubFunction(Room[,] rMap,int toX, int toY, char dirLkF) { //DirLookingFor
 			if (toX < 0 || toY < 0 || toX >= rMap.GetLength(1) || toY >= rMap.GetLength(0))
 				return false;
@@ -275,6 +278,7 @@ namespace Generation {
 		/// <param name="y">Same than x</param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentException"></exception>
+		[Server]
 		private static bool SubSubFunction(Room room, int toX, int toY, char dir, int nbDir, int x = -1, int y = -1) {
 			
 			if (x == y && y == -1)
@@ -294,7 +298,8 @@ namespace Generation {
 			}
 		}
 		
-		public static Dictionary<RoomType, List<Room>> GetLevels() {;
+		[Server]
+		private static Dictionary<RoomType, List<Room>> GetLevels() {
 			Dictionary<RoomType, List<Room>> ans = new Dictionary<RoomType, List<Room>>();
 			for (int i = 0; i < 9; i++)
 				ans.Add((RoomType) i, new List<Room>());
@@ -306,15 +311,15 @@ namespace Generation {
 			return ans;
 		}
 
-		[Command(requiresAuthority = false)]
-		public static void AddPrefab(int x, int y, string roomName) {
+		[Server]
+		private static void AddPrefab(int x, int y, string roomName) {
 			Object objectToAdd = null;
 			foreach (Object o in Resources.LoadAll("Level1", typeof(GameObject))) {
 				if (o.name != roomName) continue;
 				objectToAdd = o; break;
 			}
 			if (objectToAdd == null) throw new Exception("Room cannot be found");
-			Object.Instantiate(objectToAdd, new Vector3(x, y, 0), Quaternion.identity);
+			NetworkServer.Spawn((GameObject)Object.Instantiate(objectToAdd, new Vector3(x, y, 0), Quaternion.identity));
 		}
 		
 		/// <summary>
@@ -322,6 +327,7 @@ namespace Generation {
 		/// </summary>
 		/// <param name="list"></param>
 		/// <typeparam name="T"></typeparam>
+		[Server]
 		public static void Shuffle<T>(this IList<T> list) {  
 			int n = list.Count;  
 			while (n > 1) {  

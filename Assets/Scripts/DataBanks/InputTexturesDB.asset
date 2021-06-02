@@ -1,0 +1,279 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55ff59ab678b2ef43aba7019d5041013, type: 3}
+  m_Name: InputTexturesDB
+  m_EditorClassIdentifier: 
+  entries:
+  - keyName: A
+    key: 97
+    sprite1: {fileID: 7180400842202819022, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -6763444760678913942, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Z
+    key: 122
+    sprite1: {fileID: -8118550357589574327, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 6938918660620312144, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: E
+    key: 101
+    sprite1: {fileID: -8987218071075685888, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 7217947235006876599, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: R
+    key: 114
+    sprite1: {fileID: -6569946172626917550, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 8836131536508764384, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: T
+    key: 116
+    sprite1: {fileID: 4779546714817138435, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 4665532605229591000, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Y
+    key: 121
+    sprite1: {fileID: 7651139625858172803, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -9112851679759342389, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: U
+    key: 117
+    sprite1: {fileID: 5975927194453627018, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 4005828959354958661, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: I
+    key: 105
+    sprite1: {fileID: 7443484666048028728, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -5563180621113543986, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: O
+    key: 111
+    sprite1: {fileID: 7411636552670920434, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 8221088073784213136, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: P
+    key: 112
+    sprite1: {fileID: 4159493047062860385, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -7467014136494866560, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Q
+    key: 113
+    sprite1: {fileID: -8563585478641092892, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 1003498695857230975, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: S
+    key: 115
+    sprite1: {fileID: -6287761762480190147, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 3020473816892123509, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: D
+    key: 100
+    sprite1: {fileID: 4544677088136051825, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 3148527434684669501, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: F
+    key: 102
+    sprite1: {fileID: -1877722620157608689, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -3161029900396488241, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: G
+    key: 103
+    sprite1: {fileID: 4699456538134403414, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -798160476072474379, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: H
+    key: 104
+    sprite1: {fileID: 1470126823047125390, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -1554471193271147758, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: J
+    key: 106
+    sprite1: {fileID: 1013710833147117483, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -3295281450832069211, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: K
+    key: 107
+    sprite1: {fileID: 6849838280546743533, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 5617952408572180628, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: L
+    key: 108
+    sprite1: {fileID: 3446809425795495245, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 7834992520503879077, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: M
+    key: 109
+    sprite1: {fileID: 6763581123171675045, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 7324316816983419972, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: W
+    key: 119
+    sprite1: {fileID: 1095696640505627421, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -8036028425766284477, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: X
+    key: 120
+    sprite1: {fileID: -1384245900385334760, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 3044431650659754657, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: C
+    key: 99
+    sprite1: {fileID: 2038996747240083428, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 502247719942187716, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: V
+    key: 118
+    sprite1: {fileID: -5427773513689089394, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 5273073671620170494, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: B
+    key: 98
+    sprite1: {fileID: 1099208029275584529, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -7444416152616316073, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: N
+    key: 110
+    sprite1: {fileID: 1664316500051242178, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -8919991181202559027, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Alpha0
+    key: 48
+    sprite1: {fileID: -3349752014854738777, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -7218699116599259075, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Alpha1
+    key: 49
+    sprite1: {fileID: 4602309120992862197, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 2115850956354327475, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Alpha2
+    key: 50
+    sprite1: {fileID: -6244483439925667557, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 8824549947066866965, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Alpha3
+    key: 51
+    sprite1: {fileID: 9038799447572911698, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -6535736107482941261, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Alpha4
+    key: 0
+    sprite1: {fileID: -2994694265313334832, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -8996362882409190965, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Alpha5
+    key: 53
+    sprite1: {fileID: -3605773293703486232, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 8793351238450268263, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Alpha6
+    key: 54
+    sprite1: {fileID: 731107271427265930, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 8764329273497538847, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Alpha7
+    key: 55
+    sprite1: {fileID: -6390016976006492599, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 1699751248258616436, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Alpha8
+    key: 56
+    sprite1: {fileID: 3733906889836894585, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 4202137139461170957, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Alpha9
+    key: 57
+    sprite1: {fileID: 8530703037045641025, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 5388272844714325189, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Escape
+    key: 27
+    sprite1: {fileID: 9115587173067719296, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 7929641257984239216, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Space
+    key: 32
+    sprite1: {fileID: 5867957129360422767, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -3501850741187119222, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Tab
+    key: 9
+    sprite1: {fileID: -5248312618191500409, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: 6131839486461264541, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: LeftShift
+    key: 304
+    sprite1: {fileID: 5504453423294119863, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -8086883478418376316, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: LeftControl
+    key: 306
+    sprite1: {fileID: 5038211114992292482, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -2227660447996634254, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: LeftAlt
+    key: 308
+    sprite1: {fileID: 3308298242329715537, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -5861593960616018676, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Return
+    key: 13
+    sprite1: {fileID: 7375706934011578679, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -3821604413433617886, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+  - keyName: Backspace
+    key: 8
+    sprite1: {fileID: -1913570621371804825, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}
+    sprite2: {fileID: -6846427352195296955, guid: 7c7a0d5d746086242b64cc8897094ebb,
+      type: 3}

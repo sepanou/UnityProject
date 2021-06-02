@@ -13,7 +13,7 @@ namespace Generation {
 		public List<Room> RoomsList { get; } = new List<Room>();
 		public bool alreadyGenerated = false;
 
-		private void Start() {
+		public override void OnStartServer() {
 			Generation.GenerateLevel(this);
 		}
 	}
