@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -40,14 +39,14 @@ namespace Generation {
 				foreach (Room room in _roomsToTreat) {
 					foreach ((char dir, int nbDir) in room._exits) {
 						if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
-						(int rtcx, int rtcy) = room.uCoords;
+						(int rtcX, int rtcY) = room.UCoords;
 						(int uW, int uH) = room.UDim;
 						while (true) {
 							Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap, placedPreBossRoom);
-							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy - uH) ||
-							     dir == 'B' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + nbDir - 1, rtcy + 1) ||
-							     dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcx - 1, rtcy - nbDir + 1) ||
-							     dir == 'R' && TryAddRoom(lMap, rMap, roomToAdd, rtcx + uW, rtcy - nbDir + 1))
+							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToAdd, rtcX + nbDir - 1, rtcY - uH) ||
+							     dir == 'B' && TryAddRoom(lMap, rMap, roomToAdd, rtcX + nbDir - 1, rtcY + 1) ||
+							     dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcX - 1, rtcY - nbDir + 1) ||
+							     dir == 'R' && TryAddRoom(lMap, rMap, roomToAdd, rtcX + uW, rtcY - nbDir + 1))
 							) {
 								if (roomToAdd.Type == RoomType.Chest) level.Chests += 1;
 								if (roomToAdd.Type == RoomType.Shop) level.Shop = true;
@@ -69,7 +68,7 @@ namespace Generation {
 				if (AreExitsOccupied(rMap, room)) continue;
 				foreach ((char dir, int nbDir) in room._exits) {
 					if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
-					(x, y) = room.uCoords;
+					(x, y) = room.UCoords;
 					(int uH, int uW) = room.UDim;
 					bool placedRoom;
 					switch (dir) {
@@ -112,7 +111,7 @@ namespace Generation {
 		}
 		[Server]
 		private static bool AreExitsOccupied(Room[,] rMap, Room room) {
-			(int x, int y) = room.uCoords;
+			(int x, int y) = room.UCoords;
 			(int uW, int uH) = room.UDim;
 			foreach ((char dir, int nbDir) in room._exits) {
 				switch (dir) {
@@ -137,7 +136,7 @@ namespace Generation {
 		
 		[Server]
 		private static bool IsExitOccupied(Room[,] rMap, Room room, char dir, int nbDir) {
-			(int x, int y) = room.uCoords;
+			(int x, int y) = room.UCoords;
 			(int uW, int uH) = room.UDim;
 			switch (dir) {
 				case 'T':
@@ -163,26 +162,25 @@ namespace Generation {
 				? RoomType.Chest
 				: RoomType.Standard
 			;
-			if (roomType == RoomType.PreBoss) Debug.Log("Preboss");
 			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)]);
 		}
 		
 		[Server]
 		private static bool TryAddRoom(ICollection<Room> lMap, Room[,] rMap, Room room, int x, int y) {
-			(int uroomWidth, int uroomHeight) = room.UDim;
+			(int uRoomWidth, int uRoomHeight) = room.UDim;
 			if (x < 0 || y < 0 || x >= rMap.GetLength(1) || y >= rMap.GetLength(0))
 				return false;
-			for (int i = y; i > y - uroomHeight; --i)
-				for (int j = x; j < uroomWidth + x; ++j)
+			for (int i = y; i > y - uRoomHeight; --i)
+				for (int j = x; j < uRoomWidth + x; ++j)
 					if (rMap[i, j] != null)
 						return false;
 			if (!CheckForExits(rMap, room, x, y))
 				return false;
 			room.Coordinates = (x*20, y*-20);
-			room.uCoords = (x, y);
+			room.UCoords = (x, y);
 			// Iterating twice because we checked if there was enough room (haha) first before placing anything
-			for (int i = y; i > y - uroomHeight; --i)
-				for (int j = x; j < uroomWidth + x; ++j)
+			for (int i = y; i > y - uRoomHeight; --i)
+				for (int j = x; j < uRoomWidth + x; ++j)
 					rMap[i, j] = room;
 			lMap.Add(room);
 			_recentlyAddedRooms.Add(room);
@@ -282,7 +280,7 @@ namespace Generation {
 		private static bool SubSubFunction(Room room, int toX, int toY, char dir, int nbDir, int x = -1, int y = -1) {
 			
 			if (x == y && y == -1)
-				(x, y) = room.uCoords;
+				(x, y) = room.UCoords;
 			(int uW, int uH) = room.UDim;
 			switch (dir) {
 				case 'T':
@@ -328,7 +326,7 @@ namespace Generation {
 		/// <param name="list"></param>
 		/// <typeparam name="T"></typeparam>
 		[Server]
-		public static void Shuffle<T>(this IList<T> list) {  
+		private static void Shuffle<T>(this IList<T> list) {  
 			int n = list.Count;  
 			while (n > 1) {  
 				n--;  

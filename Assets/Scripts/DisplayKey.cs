@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using DataBanks;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class DisplayKey: MonoBehaviour {
