@@ -4,7 +4,15 @@ using UnityEngine;
 
 namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 	public class Bow: RangedWeapon {
-		private void Start() => Instantiate();
+		public override void OnStartServer() {
+			base.OnStartServer();
+			Instantiate();
+		}
+
+		public override void OnStartClient() {
+			base.OnStartClient();
+			if (!isServer) Instantiate();
+		}
 
 		[ClientCallback] private void FixedUpdate() {
 			if (!hasAuthority|| !equipped || isGrounded || !MouseCursor.Instance) return;

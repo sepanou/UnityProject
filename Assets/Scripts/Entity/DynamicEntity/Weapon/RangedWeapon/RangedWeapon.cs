@@ -1,11 +1,22 @@
 using System;
 using Mirror;
-using UI_Audio;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 	[Serializable]
 	public class RangedWeaponData {
+		public const float MaxProjectileSpeedMultiplier = 2f,
+			MaxProjectileSizeMultiplier = 2f,
+			MaxDefaultDamageMultiplier = 2f,
+			MaxSpecialDamageMultiplier = 1.25f,
+			MinProjectileSpeedMultiplier = 0.5f,
+			MinProjectileSizeMultiplier = 0.5f,
+			MinDefaultDamageMultiplier = 0.5f,
+			MinSpecialDamageMultiplier = 0.75f;
+		
+		public const int MaxProjectileNumber = 7,
+			MinProjectileNumber = 1;
+		
 		public float projectileSpeedMultiplier, projectileSizeMultiplier;
 		public int projectileNumber;
 		public float defaultDamageMultiplier, specialDamageMultiplier;
@@ -23,6 +34,21 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 				defaultDamageMultiplier = other.defaultDamageMultiplier * nbr,
 				specialDamageMultiplier = other.specialDamageMultiplier * nbr
 			};
+		}
+		
+		public static int GetKibryValue(RangedWeaponData data) {
+			float kibryValue = 0f;
+			kibryValue += 100f * (data.projectileSpeedMultiplier - MinProjectileSpeedMultiplier) /
+			              (MaxProjectileSpeedMultiplier - MinProjectileSpeedMultiplier);
+			kibryValue += 100f * (data.projectileSizeMultiplier - MinProjectileSizeMultiplier) /
+			              (MaxProjectileSizeMultiplier - MinProjectileSizeMultiplier);
+			kibryValue += 100f * (data.defaultDamageMultiplier - MinDefaultDamageMultiplier) /
+			              (MaxDefaultDamageMultiplier - MinDefaultDamageMultiplier);
+			kibryValue += 100f * (data.specialDamageMultiplier - MinSpecialDamageMultiplier) /
+			              (MaxSpecialDamageMultiplier - MinSpecialDamageMultiplier);
+			kibryValue += 100f * (data.projectileNumber - MinProjectileNumber) /
+			              (MaxProjectileNumber - MinProjectileNumber);
+			return (int) kibryValue;
 		}
 	}
 	
@@ -45,13 +71,12 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 			orientation = reader.ReadVector2();
 			rangeData = reader.Read<RangedWeaponData>();
 		}
-		
-		public override RectTransform GetInformationPopup() {
-			return !PlayerInfoManager.Instance 
-				? null 
-				: PlayerInfoManager.Instance.ShowRangedWeaponDescription(rangeData);
-		}
-		
+
+		public override RectTransform GetInformationPopup() 
+			=> PlayerInfoManager.ShowRangedWeaponDescription(rangeData);
+
+		public override int GetKibryValue() => RangedWeaponData.GetKibryValue(rangeData);
+
 		protected new void Instantiate() {
 			base.Instantiate();
 			if (isServer) orientation = Vector2.up;
@@ -60,6 +85,6 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 
 		public Projectile.Projectile GetProjectile() => projectile;
 
-		public override string GetName() => rangeData.name;
+		public override string GetWeaponName() => rangeData.name;
 	}
 }

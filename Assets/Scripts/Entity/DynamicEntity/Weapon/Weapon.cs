@@ -1,9 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Entity.DynamicEntity.LivingEntity.Player;
-using DataBanks;
 using Mirror;
-using UI_Audio;
-using UI_Audio.Inventories;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,16 +8,17 @@ namespace Entity.DynamicEntity.Weapon {
 	public abstract class Weapon: DynamicEntity, IInventoryItem, IInteractiveEntity {
 		[SyncVar] public Player holder;
 		[SyncVar] public PlayerClasses compatibleClass;
-		[SyncVar] public bool isGrounded;
 		[SyncVar] protected float LastAttackTime; // For cooldown purposes
 		[SyncVar] protected bool PlayerFound; // Has the player collected the item?
+		
+		[SyncVar(hook = nameof(SyncIsGroundedChanged))] public bool isGrounded;
+		private void SyncIsGroundedChanged(bool o, bool n) => SetActive(n);
 		
 		[SyncVar(hook = nameof(SyncEquippedChanged))] public bool equipped;
 		private void SyncEquippedChanged(bool o, bool n) => ChangeWeaponEquipped(n);
 
 		[SerializeField] protected int defaultDamage;
 		[SerializeField] protected int specialAttackCost;
-		[SerializeField] protected WeaponGeneratorDB weaponGenerator;
 		[SerializeField] protected Vector3 defaultCoordsWhenLikedToPlayer;
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
@@ -39,9 +37,14 @@ namespace Entity.DynamicEntity.Weapon {
 			holder = reader.ReadPlayer();
 			compatibleClass = (PlayerClasses) reader.ReadByte();
 			bool newEquipped = reader.ReadBoolean();
-			isGrounded = reader.ReadBoolean();
+			bool newIsGrounded = reader.ReadBoolean();
 			LastAttackTime = reader.ReadSingle();
 			PlayerFound = reader.ReadBoolean();
+
+			if (isGrounded != newIsGrounded) {
+				SyncIsGroundedChanged(isGrounded, newIsGrounded);
+				isGrounded = newIsGrounded;
+			}
 			
 			if (newEquipped == equipped) return;
 			SyncEquippedChanged(equipped, newEquipped);
@@ -60,7 +63,10 @@ namespace Entity.DynamicEntity.Weapon {
 
 			if (holder) SetActive(equipped);
 
-			SceneManager.sceneLoaded += (scene, module) => SetActive(equipped);
+			SceneManager.sceneLoaded += (scene, module) => {
+				if (this) SetActive(equipped); // Don't change
+			};
+			
 			AutoStopInteracting = true;
 			InteractionCondition = player => !PlayerFound 
 			                                 && isGrounded
@@ -81,8 +87,11 @@ namespace Entity.DynamicEntity.Weapon {
 		protected abstract void DefaultAttack();
 		protected abstract void SpecialAttack();
 		public abstract RectTransform GetInformationPopup();
-		public abstract string GetName();
+		public abstract int GetKibryValue();
+		public abstract string GetWeaponName();
 
+		[Server] public void SetIsGrounded(bool state) => isGrounded = state;
+		
 		[Server] public void Interact(Player player) {
 			PlayerFound = true;
 			StartCoroutine(Collectibles.Collectibles.OnTargetDetected(this, player));

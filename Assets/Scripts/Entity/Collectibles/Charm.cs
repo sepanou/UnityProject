@@ -1,16 +1,21 @@
 ﻿using System;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
-using UI_Audio;
-using UI_Audio.Inventories;
 using UnityEngine;
 
 namespace Entity.Collectibles {
 	[Serializable]
 	public class CharmData {
+		public const float MaxDefaultAttackDamageBonus = 0.25f, 
+			MaxSpecialAttackDamageBonus = 0.5f,
+			MaxSpeedBonus = 0.2f,
+			MaxCooldownReduction = 0.2f;
+		public const int MaxHealthBonus = 30, MaxPowerBonus = 50;
+		
 		public float defaultAttackDamageBonus, specialAttackDamageBonus;
 		public int healthBonus, powerBonus;
 		public float speedBonus, cooldownReduction;
+		public string name;
 		
 		public static CharmData operator +(CharmData first, CharmData second) {
 			if (first == null)
@@ -23,7 +28,8 @@ namespace Entity.Collectibles {
 				healthBonus = first.healthBonus + second.healthBonus,
 				powerBonus = first.powerBonus + second.powerBonus,
 				speedBonus = first.speedBonus + second.speedBonus,
-				cooldownReduction = first.cooldownReduction + second.cooldownReduction
+				cooldownReduction = first.cooldownReduction + second.cooldownReduction,
+				name = second.name
 			};
 		}
 
@@ -38,8 +44,20 @@ namespace Entity.Collectibles {
 				healthBonus = first.healthBonus - second.healthBonus,
 				powerBonus = first.powerBonus - second.powerBonus,
 				speedBonus = first.speedBonus - second.speedBonus,
-				cooldownReduction = first.cooldownReduction - second.cooldownReduction
+				cooldownReduction = first.cooldownReduction - second.cooldownReduction,
+				name = first.name
 			};
+		}
+
+		public static int GetKibryValue(CharmData charmData) {
+			float kibryValue = 0f;
+			kibryValue += 100f * charmData.defaultAttackDamageBonus / MaxDefaultAttackDamageBonus;
+			kibryValue += 100f * charmData.specialAttackDamageBonus / MaxSpecialAttackDamageBonus;
+			kibryValue += 100f * charmData.speedBonus / MaxSpeedBonus;
+			kibryValue += 100f * charmData.cooldownReduction / MaxCooldownReduction;
+			kibryValue += 100f * charmData.healthBonus / MaxHealthBonus;
+			kibryValue += 100f * charmData.powerBonus / MaxPowerBonus;
+			return (int) kibryValue;
 		}
 	}
 	
@@ -47,9 +65,19 @@ namespace Entity.Collectibles {
 		[SyncVar] [HideInInspector] public CharmData bonuses;
 		
 		[SyncVar(hook = nameof(SyncIsGroundedChanged))] private bool _isGrounded = true;
-		private void SyncIsGroundedChanged(bool o, bool n) => spriteRenderer.enabled = n;
 
-		private void Start() => Instantiate();
+		private void SyncIsGroundedChanged(bool o, bool n) =>
+			spriteRenderer.color = new Color(255, 255, 255, n ? 255 : 0);
+
+		public override void OnStartServer() {
+			base.OnStartServer();
+			Instantiate();
+		}
+
+		public override void OnStartClient() {
+			base.OnStartClient();
+			if (!isServer) Instantiate();
+		}
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
 			base.OnSerialize(writer, initialState);
@@ -68,7 +96,9 @@ namespace Entity.Collectibles {
 		}
 
 		public RectTransform GetInformationPopup() 
-			=> !PlayerInfoManager ? null : PlayerInfoManager.ShowCharmDescription(bonuses);
+			=> PlayerInfoManager.ShowCharmDescription(bonuses);
+
+		public int GetKibryValue() => CharmData.GetKibryValue(bonuses);
 
 		[Server] public void SetIsGrounded(bool state) => _isGrounded = state;
 

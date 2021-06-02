@@ -163,6 +163,7 @@ namespace UI_Audio {
 				StopCoroutine(_infoBoxOpening);
 			return true;
 		}
+		
 		public void OpenInfoBox() {
 			if (!IsSafeInfoBox()) return;
 			_infoBoxOpening = StartCoroutine(OpeningInfoBox(false));
@@ -171,6 +172,11 @@ namespace UI_Audio {
 		public void CloseInfoBox() {
 			if (!IsSafeInfoBox()) return;
 			_infoBoxOpening = StartCoroutine(OpeningInfoBox(true));
+		}
+
+		public IEnumerator DelayInfoBoxClosure(float delay) {
+			yield return new WaitForSeconds(delay);
+			CloseInfoBox();
 		}
 		
 		public void SetInfoText(string text) => infoText.text = text;
@@ -231,7 +237,7 @@ namespace UI_Audio {
 
 			currentWeapon.enabled = true;
 			currentWeapon.sprite = wp.GetSpriteRenderer().sprite;
-			currentWeaponName.text = wp.GetName();
+			currentWeaponName.text = wp.GetWeaponName();
 		}
 
 		public void UpdatePlayerHealth(float ratio) => healthBar.fillAmount = ratio;
@@ -262,19 +268,28 @@ namespace UI_Audio {
 
 		// Weapon descriptive menus
 
+		private void HideAllDescriptions() {
+			meleeWeaponDescription.gameObject.SetActive(false);
+			rangedWeaponDescription.gameObject.SetActive(false);
+			charmDescription.gameObject.SetActive(false);
+		}
+		
 		public RectTransform ShowRangedWeaponDescription(RangedWeaponData data) {
+			HideAllDescriptions();
 			rangedWeaponDescription.SetData(data);
 			rangedWeaponDescription.gameObject.SetActive(true);
 			return rangedWeaponDescription.rectTransform;
 		}
 		
 		public RectTransform ShowMeleeWeaponDescription(MeleeWeaponData data) {
+			HideAllDescriptions();
 			meleeWeaponDescription.SetData(data);
 			meleeWeaponDescription.gameObject.SetActive(true);
 			return meleeWeaponDescription.rectTransform;
 		}
 		
 		public RectTransform ShowCharmDescription(CharmData data) {
+			HideAllDescriptions();
 			charmDescription.SetData(data);
 			charmDescription.gameObject.SetActive(true);
 			return charmDescription.rectTransform;

@@ -8,9 +8,10 @@ namespace UI_Audio {
 		[SerializeField] private TMP_Text defaultAttackBonus,
 			specialAttackBonus,
 			healthBonus, powerBonus,
-			speedBonus, cooldownReduction;
+			speedBonus, cooldownReduction, nameField;
 
 		public void SetData(CharmData data) {
+			nameField.text = data.name;
 			defaultAttackBonus.text = "+ " + data.defaultAttackDamageBonus + " %";
 			specialAttackBonus.text = "+ " + data.specialAttackDamageBonus + " %";
 			healthBonus.text = "+ " + data.healthBonus + " HP";

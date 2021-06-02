@@ -14,7 +14,7 @@ namespace Entity {
 		[Server] void Interact(Player player);
 	}
 	
-	public abstract class Entity: NetworkBehaviour {
+	public abstract class Entity: NetworkBehaviour, INetworkObject {
 		[SerializeField] protected SpriteRenderer spriteRenderer;
 		[SerializeField] private Collider2D interactionCollider;
 
@@ -29,14 +29,16 @@ namespace Entity {
 		[NonSerialized] protected static LocalGameManager Manager;
 		[NonSerialized] protected static InputManager InputManager;
 		[NonSerialized] protected static PlayerInfoManager PlayerInfoManager;
+		[NonSerialized] protected static WeaponGeneratorDB WeaponGenerator;
 		[NonSerialized] protected static InventoryManager InventoryManager;
 
 		public static void InitClass(LocalGameManager manager) {
 			if (Manager) throw new Exception("InitClass called multiple times");
 			Manager = manager;
 			PlayerInfoManager = Manager.playerInfoManager;
-			InventoryManager = Manager.inventoryManager;
 			InputManager = Manager.inputManager;
+			InventoryManager = Manager.inventoryManager;
+			WeaponGenerator = Manager.weaponGenerator;
 		}
 
 		public static void SetRenderingLayersInChildren(int sortingLayerID, string sortingLayerName, int layerMask, GameObject gameObject) {
@@ -81,17 +83,28 @@ namespace Entity {
 		}
 
 		public override void OnStartClient() {
+			//print("started "+ name);
 			base.OnStartClient();
 			CmdApplyLayers();
 		}
 
 		public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
 
+		public GameObject GetGameObject() => gameObject;
+
+		public NetworkIdentity GetNetworkIdentity() => netIdentity;
+
+		public string GetName() => name;
+
+		public bool TryGetSpriteRenderer(out SpriteRenderer sRenderer) {
+			sRenderer = !spriteRenderer ? null : spriteRenderer;
+			return !(sRenderer is null);
+		}
+
 		public Vector2 Position {
 			get => transform.position;
 			
-			[Server]
-			set {
+			[Server] set {
 				Transform tempTransform = transform;
 				tempTransform.position = new Vector3(value.x, value.y, tempTransform.position.z);
 			}
@@ -100,16 +113,14 @@ namespace Entity {
 		[Command(requiresAuthority = false)]
 		private void CmdApplyLayers(NetworkConnectionToClient target = null) {
 			if (spriteRenderer)
-				TargetSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer, spriteRenderer.enabled);
+				TargetSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer);
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		[TargetRpc]
-		private void TargetSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId, bool rendererEnabled) {
-			if (spriteRenderer) {
+		private void TargetSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId) {
+			if (spriteRenderer)
 				spriteRenderer.sortingLayerID = sortingLayerId;
-				spriteRenderer.enabled = rendererEnabled;
-			}
 			gameObject.layer = layerMaskId;
 		}
 		
@@ -162,7 +173,7 @@ namespace Entity {
 			_playerPool[player] = state;
 		}
 
-		[Server] public bool VerifyInteractionWith(Player player) 
+		public bool VerifyInteractionWith(Player player) 
 			=> _playerPool.ContainsKey(player) && _playerPool[player];
 
 		public void DisableInteraction(Player player) {

@@ -981,7 +981,7 @@ namespace Mirror
                 Debug.LogError($"Spawn scene object not found for {message.sceneId:X} SpawnableObjects.Count={spawnableObjects.Count}");
 
                 // dump the whole spawnable objects dict for easier debugging
-                //foreach (KeyValuePair<ulong, NetworkIdentity> kvp in spawnableObjects)
+                // foreach (KeyValuePair<ulong, NetworkIdentity> kvp in spawnableObjects) 
                 //    Debug.Log($"Spawnable: SceneId={kvp.Key:X} name={kvp.Value.name}");
             }
             //else Debug.Log($"Client spawn for [netId:{msg.netId}] [sceneId:{msg.sceneId:X}] obj:{identity}");

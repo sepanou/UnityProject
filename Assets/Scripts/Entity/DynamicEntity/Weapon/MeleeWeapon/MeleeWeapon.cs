@@ -8,6 +8,15 @@ using AnimationState = Entity.DynamicEntity.LivingEntity.AnimationState;
 namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 	[Serializable]
 	public class MeleeWeaponData {
+		public const float MaxKnockbackMultiplier = 3f,
+			MaxWeaponSizeMultiplier = 2f,
+			MaxDefaultDamageMultiplier = 3f,
+			MaxSpecialDamageMultiplier = 1.5f,
+			MinKnockbackMultiplier = 0.75f,
+			MinWeaponSizeMultiplier = 0.75f,
+			MinDefaultDamageMultiplier = 0.5f,
+			MinSpecialDamageMultiplier = 0.75f;
+		
 		public float knockbackMultiplier, weaponSizeMultiplier;
 		public float defaultDamageMultiplier, specialDamageMultiplier;
 		public string name;
@@ -23,6 +32,19 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 				defaultDamageMultiplier = other.defaultDamageMultiplier * nbr,
 				specialDamageMultiplier = other.specialDamageMultiplier * nbr
 			};
+		}
+
+		public static int GetKibryValue(MeleeWeaponData data) {
+			float kibryValue = 0f;
+			kibryValue += 100f * (data.knockbackMultiplier - MinKnockbackMultiplier) /
+			              (MaxKnockbackMultiplier - MinKnockbackMultiplier);
+			kibryValue += 100f * (data.weaponSizeMultiplier - MinWeaponSizeMultiplier) /
+			              (MaxWeaponSizeMultiplier - MinWeaponSizeMultiplier);
+			kibryValue += 100f * (data.defaultDamageMultiplier - MinDefaultDamageMultiplier) /
+			              (MaxDefaultDamageMultiplier - MinDefaultDamageMultiplier);
+			kibryValue += 100f * (data.specialDamageMultiplier - MinSpecialDamageMultiplier) /
+			              (MaxSpecialDamageMultiplier - MinSpecialDamageMultiplier);
+			return (int) kibryValue;
 		}
 	}
 	
@@ -41,15 +63,22 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			meleeData = reader.Read<MeleeWeaponData>();
 		}
 
-		private void Start() => Instantiate();
-
-		public override RectTransform GetInformationPopup() {
-			return !PlayerInfoManager.Instance 
-				? null 
-				: PlayerInfoManager.Instance.ShowMeleeWeaponDescription(meleeData);
+		public override void OnStartServer() {
+			base.OnStartServer();
+			Instantiate();
 		}
 
-		public override string GetName() => meleeData.name;
+		public override void OnStartClient() {
+			base.OnStartClient();
+			if (!isServer) Instantiate();
+		}
+
+		public override RectTransform GetInformationPopup() 
+			=> PlayerInfoManager.ShowMeleeWeaponDescription(meleeData);
+
+		public override int GetKibryValue() => MeleeWeaponData.GetKibryValue(meleeData);
+
+		public override string GetWeaponName() => meleeData.name;
 
 		[ClientCallback] private void FixedUpdate() {
 			if (!hasAuthority || !equipped || isGrounded || !MouseCursor.Instance) return;

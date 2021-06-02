@@ -206,35 +206,44 @@ namespace DataBanks {
 
 		private static CharmData GenerateCharmData() {
 			CharmData result = new CharmData {
-				defaultAttackDamageBonus = RoundRandomFloat(0f, 0.25f),
-				specialAttackDamageBonus = RoundRandomFloat(0f, 0.5f),
-				healthBonus = Random.Range(0, 30),
-				powerBonus = Random.Range(0, 50),
-				speedBonus = RoundRandomFloat(0f, 0.2f),
-				cooldownReduction = RoundRandomFloat(0f, 0.2f)
+				defaultAttackDamageBonus = RoundRandomFloat(0f, CharmData.MaxDefaultAttackDamageBonus),
+				specialAttackDamageBonus = RoundRandomFloat(0f, CharmData.MaxSpecialAttackDamageBonus),
+				healthBonus = Random.Range(0, CharmData.MaxHealthBonus),
+				powerBonus = Random.Range(0, CharmData.MaxPowerBonus),
+				speedBonus = RoundRandomFloat(0f, CharmData.MaxSpeedBonus),
+				cooldownReduction = RoundRandomFloat(0f, CharmData.MaxCooldownReduction)
 			};
 			return result;
 		}
 
-		private static RangedWeaponData GenerateRangeData(bool epic = false) {
+		private static RangedWeaponData GenerateRangeData(bool epic) {
 			RangedWeaponData result = new RangedWeaponData {
-				defaultDamageMultiplier = RoundRandomFloat(0.5f, 2f),
-				specialDamageMultiplier = RoundRandomFloat(0.75f, 1.25f),
-				projectileNumber = Random.Range(1, 7),
-				projectileSpeedMultiplier = RoundRandomFloat(0.5f, 2f),
-				projectileSizeMultiplier = RoundRandomFloat(0.5f, 2f)
+				defaultDamageMultiplier = RoundRandomFloat(RangedWeaponData.MinDefaultDamageMultiplier,
+					RangedWeaponData.MaxDefaultDamageMultiplier),
+				specialDamageMultiplier = RoundRandomFloat(RangedWeaponData.MinSpecialDamageMultiplier,
+					RangedWeaponData.MaxSpecialDamageMultiplier),
+				projectileNumber = Random.Range(RangedWeaponData.MinProjectileNumber,
+					RangedWeaponData.MaxProjectileNumber),
+				projectileSpeedMultiplier = RoundRandomFloat(RangedWeaponData.MinProjectileSpeedMultiplier,
+					RangedWeaponData.MaxProjectileSpeedMultiplier),
+				projectileSizeMultiplier = RoundRandomFloat(RangedWeaponData.MinProjectileSizeMultiplier,
+					RangedWeaponData.MaxProjectileSizeMultiplier)
 			};
 			if (epic)
 				result *= 2;
 			return result;
 		}
 
-		private static MeleeWeaponData GenerateMeleeData(bool epic = false) {
+		private static MeleeWeaponData GenerateMeleeData(bool epic) {
 			MeleeWeaponData result = new MeleeWeaponData {
-				defaultDamageMultiplier = RoundRandomFloat(0.5f, 3f),
-				specialDamageMultiplier = RoundRandomFloat(0.75f, 1.5f),
-				weaponSizeMultiplier = RoundRandomFloat(0.75f, 2f),
-				knockbackMultiplier = RoundRandomFloat(0.75f, 3f)
+				defaultDamageMultiplier = RoundRandomFloat(MeleeWeaponData.MinDefaultDamageMultiplier,
+					MeleeWeaponData.MaxDefaultDamageMultiplier),
+				specialDamageMultiplier = RoundRandomFloat(MeleeWeaponData.MinSpecialDamageMultiplier,
+					MeleeWeaponData.MaxSpecialDamageMultiplier),
+				weaponSizeMultiplier = RoundRandomFloat(MeleeWeaponData.MinWeaponSizeMultiplier,
+					MeleeWeaponData.MaxWeaponSizeMultiplier),
+				knockbackMultiplier = RoundRandomFloat(MeleeWeaponData.MinKnockbackMultiplier,
+					MeleeWeaponData.MaxKnockbackMultiplier)
 			};
 			if (epic)
 				result *= 2;
@@ -245,24 +254,24 @@ namespace DataBanks {
 			GameObject obj = Instantiate(charmModel);
 			Charm result = obj.GetComponent<Charm>();
 			result.bonuses = data ?? GenerateCharmData();
-			result.name = GenerateName(CharmNames);
+			result.bonuses.name = GenerateName(CharmNames);
 			result.GetSpriteRenderer().sprite = !sprite ? GetRandomInArray(charmSprites): sprite;
 			return result;
 		}
 
-		public Bow GenerateBow() {
+		public Bow GenerateBow(bool epic = false) {
 			GameObject obj = Instantiate(bowModel);
 			Bow result = obj.GetComponent<Bow>();
-			result.rangeData = GenerateRangeData();
+			result.rangeData = GenerateRangeData(epic);
 			result.rangeData.name = GenerateName(BowNames);
 			result.GetSpriteRenderer().sprite = GetRandomInArray(bowSprites);
 			return result;
 		}
 		
-		public Staff GenerateStaff() {
+		public Staff GenerateStaff(bool epic = false) {
 			GameObject obj = Instantiate(staffModel);
 			Staff result = obj.GetComponent<Staff>();
-			result.rangeData = GenerateRangeData();
+			result.rangeData = GenerateRangeData(epic);
 			(bool feminine, string staffName) = StaffNames[Random.Range(0,StaffNames.Count-1)];
 			string adj;
 			if (feminine) 
@@ -275,10 +284,10 @@ namespace DataBanks {
 			return result;
 		}
 		
-		public MeleeWeapon GenerateSword() {
+		public MeleeWeapon GenerateSword(bool epic = false) {
 			GameObject obj = Instantiate(swordModel);
 			MeleeWeapon result = obj.GetComponent<MeleeWeapon>();
-			result.meleeData = GenerateMeleeData();
+			result.meleeData = GenerateMeleeData(epic);
 			result.meleeData.name = GenerateName(MeleeNames);
 			result.GetSpriteRenderer().sprite = GetRandomInArray(swordSprites);
 			return result;

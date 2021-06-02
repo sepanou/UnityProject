@@ -16,8 +16,8 @@ public class LocalGameManager: MonoBehaviour {
 	[Header("User Interface")] public StartMenuManager startMenuManager;
 	public MenuSettingsManager menuSettingsManager;
 	public PlayerInfoManager playerInfoManager;
-	public InventoryManager inventoryManager;
 	public MouseCursor mouseCursor;
+	public InventoryManager inventoryManager;
 
 	[Header("Cameras")] public Camera mouseAndParticlesCamera;
 	public Camera worldCamera; // = player's camera when he enters the game
@@ -47,7 +47,6 @@ public class LocalGameManager: MonoBehaviour {
 		else {
 			LocalState = LocalGameStates.InGame;
 			worldCamera.transform.SetParent(transform);
-			inventoryManager.CloseAllInventories();
 			menuSettingsManager.CloseMenu();
 			startMenuManager.CloseStartMenu();
 			playerInfoManager.HidePlayerClassUI();
@@ -76,6 +75,7 @@ public class LocalGameManager: MonoBehaviour {
 				worldCamera.transform.SetParent(transform);
 				startMenuManager.StopServerAndOrClient();
 				inventoryManager.CloseAllInventories();
+				inventoryManager.ClearAllInventories();
 				AudioDB.PlayMusic("MainMenuMusic");
 				menuSettingsManager.CloseMenu();
 				startMenuManager.OpenStartMenu();

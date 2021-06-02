@@ -47,12 +47,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		private CharmData _currentCharmBonus;
 		private Camera _mainCamera;
-		[ShowInInspector]
-		private readonly SyncList<Weapon.Weapon> _weapons = new SyncList<Weapon.Weapon>();
-		[ShowInInspector]
-		private readonly SyncList<Charm> _charms = new SyncList<Charm>();
+		[ShowInInspector] private readonly CustomSyncList<Weapon.Weapon> _weapons = new CustomSyncList<Weapon.Weapon>();
+		[ShowInInspector] private readonly SyncList<Charm> _charms = new SyncList<Charm>();
 		private Inventory _inventory;
 		private ContainerInventory _containerInventory;
+		private SellerInventory _sellerInventory;
 		private PlayerUI _playerUI;
 		
 		public int Kibrient {
@@ -117,8 +116,10 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private void Start() {
 			DontDestroyOnLoad(this);
 			Instantiate();
+			_weapons.SetCoroutineHandler(Manager);
 			
 			if (isServer) {
+				_kibrient = 500;
 				_defaultMaxEnergy = maxEnergy;
 				_energy = maxEnergy;
 				_charms.Callback += OnCharmsUpdatedServer;
@@ -134,7 +135,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			}
 			else {
 				OnLocalPlayerClassChange += ChangeAnimator;
-				_inventory = Manager.inventoryManager.playerInventory;
+				_inventory = InventoryManager.playerInventory;
 				_mainCamera = Manager.SetMainCameraToPlayer(this);
 				_weapons.Callback += OnWeaponsUpdated;
 				_charms.Callback += OnCharmsUpdatedClient;
@@ -161,9 +162,13 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		public bool HasEnoughOrchid(int amount) => _orchid >= amount;
     
-		public bool IsFullInventory() => _weapons.Count >= MaxItemInInventory;
+		public bool IsFullInventory() => _weapons.Count + _charms.Count >= MaxItemInInventory;
 
-		public void SetContainerInventory(ContainerInventory inventory) => _containerInventory = inventory;
+		[Client] public void SetContainerInventory(ContainerInventory inventory)
+			=> _containerInventory = inventory;
+		
+		[Client] public void SetSellerInventory(SellerInventory inventory)
+			=> _sellerInventory = inventory;
 
 		private void ChangeAnimator(ClassData data) {
 			if (Animator) Animator.runtimeAnimatorController = data.animatorController;
@@ -183,6 +188,26 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		}
 
 		[Client]
+		private void OnWeaponsUpdated(SyncList<uint>.Operation op, int index, Weapon.Weapon item) {
+			if (!isLocalPlayer) return;
+			
+			switch (op) {
+				case SyncList<uint>.Operation.OP_ADD:
+					_inventory.TryAddItem(item);
+					break;
+				case SyncList<uint>.Operation.OP_CLEAR:
+					_inventory.ClearInventory();
+					break;
+				case SyncList<uint>.Operation.OP_REMOVEAT:
+					_inventory.TryRemoveItem(item);
+					break;
+				default:
+					Debug.LogWarning("An error happened while updating the sync weapons list (Client)");
+					break;
+			}
+		}
+		
+		/*[Client]
 		private void OnWeaponsUpdated(SyncList<Weapon.Weapon>.Operation op, int itemIndex, Weapon.Weapon oldItem, Weapon.Weapon newItem) {
 			if (!isLocalPlayer) return;
 			
@@ -200,7 +225,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					Debug.LogWarning("An error happened while updating the sync weapons list (Client)");
 					break;
 			}
-		}
+		}*/
 
 		[Client]
 		private void OnCharmsUpdatedClient(SyncList<Charm>.Operation op, int itemIndex, Charm oldItem, Charm newItem) {
@@ -257,9 +282,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		}
 
 		[Server] public void AddCharm(Charm charm) => _charms.Add(charm);
-
 		[Server] public bool RemoveCharm(Charm charm) => _charms.Remove(charm);
-
+		[Server] public void AddWeapon(Weapon.Weapon wp) => _weapons.Add(wp);
 		[Server] public bool RemoveWeapon(Weapon.Weapon wp) => _weapons.Remove(wp);
 
 		[Server] public void ReduceEnergy(int amount) {
@@ -280,6 +304,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[Server] public void Collect(uint entityNetId) {
 			if (!NetworkIdentity.spawned.TryGetValue(entityNetId, out NetworkIdentity entityIdentity)) return;
 			if (!entityIdentity.gameObject.TryGetComponent(out Entity collectible)) return;
+
+			if (IsFullInventory()) {
+				TargetPrintInfoMessage(connectionToClient, "Your inventory is full");
+				return;
+			}
 
 			if (collectible is Money _) {
 				// TODO
@@ -337,6 +366,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[TargetRpc] public void TargetPrintInfoMessage(NetworkConnection target, string message) {
 			PlayerInfoManager.SetInfoText(message);
 			PlayerInfoManager.OpenInfoBox();
+			StartCoroutine(PlayerInfoManager.DelayInfoBoxClosure(5)); // Auto close the info box
 		}
 
 		[ClientCallback] private void FixedUpdate() {
@@ -360,26 +390,31 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (!isLocalPlayer || !NetworkClient.ready) return;
 			
 			if (InputManager.GetKeyDown("OpenMenu")) {
-				if (!MenuSettingsManager.Instance.isOpen)
-					MenuSettingsManager.Instance.OpenMenu();
+				if (!Manager.menuSettingsManager.isOpen)
+					Manager.menuSettingsManager.OpenMenu();
 				else
-					MenuSettingsManager.Instance.CloseMenu();
+					Manager.menuSettingsManager.CloseMenu();
 				return;
 			}
 
 			if (_inventory.IsOpen && _containerInventory && _containerInventory.IsOpen) {
-				if (Input.GetMouseButtonDown(0))
+				if (Input.GetMouseButtonDown(0)) 
 					_containerInventory.TryMoveHoveredSlotItem(_inventory);
-				else if (InputManager.GetKeyDown("OpenInventory"))
+				else if (InputManager.GetKeyDown("OpenInventory")) 
 					InventoryManager.CloseShopKeeperInventory(_containerInventory);
 				return;
 			}
-			
+
+			if (_sellerInventory && _sellerInventory.IsOpen && InputManager.GetKeyDown("OpenInventory")) {
+				InventoryManager.CloseShopKeeperInventory(_sellerInventory);
+				return;
+			}
+
 			if (InputManager.GetKeyDown("OpenInventory")) {
-				if (!_inventory.IsOpen)
-					_inventory.Open();
-				else
+				if (_inventory.IsOpen)
 					_inventory.Close();
+				else
+					_inventory.Open();
 				return;
 			}
 
@@ -391,18 +426,16 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				Debug.Log("Changed weapon !");
 			}
 			
-			if (netIdentity.isServer && Input.GetKeyDown(KeyCode.K))
-			{
-				//NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateSword().gameObject);
-				GameObject obj = Instantiate(toSpawn, Vector3.zero, Quaternion.identity);
-				NetworkServer.Spawn(obj);
-				Debug.Log("Spawned !");
+			if (isServer && Input.GetKeyDown(KeyCode.K)) {
+				Debug.Log("spawned bow");
+				NetworkServer.Spawn(WeaponGenerator.GenerateBow().gameObject);
 			}
 			
 			if (Input.GetKeyDown(KeyCode.B)) GetAttacked(1);
 			
-			if (netIdentity.isServer && Input.GetKeyDown(KeyCode.V)) {
-				NetworkServer.Spawn(LocalGameManager.Instance.weaponGenerator.GenerateCharm().gameObject);
+			if (isServer && Input.GetKeyDown(KeyCode.V)) {
+				Debug.Log("spawned charm");
+				NetworkServer.Spawn(WeaponGenerator.GenerateCharm().gameObject);
 			}
 		}
 	}
