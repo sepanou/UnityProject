@@ -26,19 +26,13 @@ public class CustomSyncList<T> : SyncList<uint>, IEnumerable<T> where T : INetwo
     private const float DelayForNetworkSpawnInSeconds = 1f;
     private const int ChecksNbrForNetworkSpawn = 10;
 
-    private MonoBehaviour _coroutineHandler;
+    private static MonoBehaviour CoroutineHandler => NetworkManager.singleton;
 
     /// <summary>
-    /// Creates a SyncList trying to avoid the issues of non-syncing items - notably when spawning them
+    /// Creates a SyncList trying to avoid the issues of non-syncing items - notably when spawning them on late joining clients
     /// </summary>
     public CustomSyncList() : base(EqualityComparer<uint>.Default) => base.Callback += OnSyncListChanged;
 
-    /// <summary>
-    /// MUST BE SET - otherwise nothing will work :(
-    /// </summary>
-    /// <param name="singleton">A script that never uses 'StopAllCoroutines()', otherwise 'BOOM'</param>
-    public void SetCoroutineHandler(MonoBehaviour singleton) => _coroutineHandler = singleton;
-    
     private static bool IsValid(T element) {
         if (element == null) return false;
         if (element.GetNetworkIdentity()) return true;
@@ -54,19 +48,22 @@ public class CustomSyncList<T> : SyncList<uint>, IEnumerable<T> where T : INetwo
             }
             yield return new WaitForSeconds(DelayForNetworkSpawnInSeconds);
         }
+    }
 
-        Debug.LogWarning($"[CustomSyncList] Timeout - network object with netId #{netId} was not found in the spawned objects");
+    public override void OnDeserializeAll(NetworkReader reader) {
+        base.OnDeserializeAll(reader);
+        for (int i = 0; i < Count; i++)
+            NetworkManager.singleton.StartCoroutine(WaitForNetworkSpawn(new Change(Operation.OP_ADD, i), base[i]));
     }
 
     private void OnSyncListChanged(Operation op, int index, uint oldItem, uint newItem) {
-        Debug.Log("coroutine handler " + _coroutineHandler);
         switch (op) {
             case Operation.OP_SET:
             case Operation.OP_ADD:
-                _coroutineHandler.StartCoroutine(WaitForNetworkSpawn(new Change(op, index), newItem));
+                CoroutineHandler.StartCoroutine(WaitForNetworkSpawn(new Change(op, index), newItem));
                 break;
             case Operation.OP_REMOVEAT:
-                _coroutineHandler.StartCoroutine(WaitForNetworkSpawn(new Change(op, index), oldItem));
+                CoroutineHandler.StartCoroutine(WaitForNetworkSpawn(new Change(op, index), oldItem));
                 break;
             case Operation.OP_CLEAR:
                 Callback?.Invoke(op, index, default);

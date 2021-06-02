@@ -18,10 +18,7 @@ namespace UI_Audio.Inventories {
             }
         }
 
-        private new void Start() {
-            Dialog = new[] {"#collector-stop"};
-            base.Start();
-        }
+        private void Start() => Dialog = new[] {"#collector-stop"};
 
         protected override bool CustomTryAdd(IInventoryItem item) {
             if (!(item is Weapon) && !(item is Charm) || !base.TryAddItem(item))

@@ -81,25 +81,25 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 		public override string GetWeaponName() => meleeData.name;
 
 		[ClientCallback] private void FixedUpdate() {
-			if (!hasAuthority || !equipped || isGrounded || !MouseCursor.Instance) return;
+			if (!hasAuthority || !Equipped || IsGrounded || !MouseCursor.Instance) return;
 			if (!_animating) SetLocalPosition();
 		}
 
 		[Server] protected override void DefaultAttack() {
-			TargetProcessAttack(holder.connectionToClient);
+			TargetProcessAttack(Holder.connectionToClient);
 			LastAttackTime = Time.time;
 		}
 
 		[Server] protected override void SpecialAttack() {
-			TargetProcessAttack(holder.connectionToClient);
-			holder.ReduceEnergy(specialAttackCost);
+			TargetProcessAttack(Holder.connectionToClient);
+			Holder.ReduceEnergy(specialAttackCost);
 			LastAttackTime = Time.time;
 		}
 
 		[Client] private void SetLocalPosition() {
 			if (!hasAuthority) return;
 			Transform _transform = transform;
-			switch (holder.LastAnimationState) {
+			switch (Holder.LastAnimationState) {
 				case AnimationState.East:
 				case AnimationState.North:
 					_transform.localPosition = new Vector2(0.3f, _transform.localPosition.y);

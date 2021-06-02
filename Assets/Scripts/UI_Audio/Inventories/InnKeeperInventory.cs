@@ -11,7 +11,7 @@ namespace UI_Audio.Inventories {
             base.Start();
         }
 
-        protected override void DisplayPrice(IInventoryItem item) 
+        public override void DisplayPrice(IInventoryItem item) 
             => kibryDisplay.text = item is null ? "0" : item.GetKibryValue().ToString();
     }
 }

@@ -33,7 +33,8 @@ namespace Entity.StaticEntity.Npcs {
         }
         
         [ClientCallback] protected override void OnTriggerExit2D(Collider2D other) {
-            InventoryManager.CloseAllInventories();
+            if (other.TryGetComponent(out Player player) && player.isLocalPlayer)
+                InventoryManager.CloseAllInventories();
             base.OnTriggerExit2D(other);
         }
     }

@@ -62,12 +62,15 @@ namespace Entity.Collectibles {
 	}
 	
 	public class Charm: Collectibles, IInventoryItem, IInteractiveEntity {
-		[SyncVar] [HideInInspector] public CharmData bonuses;
+		[SyncVar] [ShowInInspector] public CharmData bonuses;
+		
+		// Index of the sprite in the WPGenerator array -> Mirror can't serialize sprites
+		[SyncVar(hook = nameof(SyncSpriteIndexChanged))] [NonSerialized] public int SpriteIndex;
+		private void SyncSpriteIndexChanged(int o, int n) 
+			=> spriteRenderer.sprite = WeaponGenerator.GetCharmSprite(n);
 		
 		[SyncVar(hook = nameof(SyncIsGroundedChanged))] private bool _isGrounded = true;
-
-		private void SyncIsGroundedChanged(bool o, bool n) =>
-			spriteRenderer.color = new Color(255, 255, 255, n ? 255 : 0);
+		private void SyncIsGroundedChanged(bool o, bool n) => SetSpriteRendererVisible(n);
 
 		public override void OnStartServer() {
 			base.OnStartServer();
@@ -83,6 +86,7 @@ namespace Entity.Collectibles {
 			base.OnSerialize(writer, initialState);
 			writer.WriteBoolean(_isGrounded);
 			writer.Write(bonuses);
+			writer.WriteInt32(SpriteIndex);
 			return true;
 		}
 
@@ -90,6 +94,13 @@ namespace Entity.Collectibles {
 			base.OnDeserialize(reader, initialState);
 			bool newIsGrounded = reader.ReadBoolean(); 
 			bonuses = reader.Read<CharmData>();
+			int newSpriteIndex = reader.ReadInt32();
+
+			if (newSpriteIndex != SpriteIndex) {
+				SyncSpriteIndexChanged(SpriteIndex, newSpriteIndex);
+				SpriteIndex = newSpriteIndex;
+			}
+			
 			if (newIsGrounded == _isGrounded) return;
 			SyncIsGroundedChanged(_isGrounded, newIsGrounded);
 			_isGrounded = newIsGrounded;

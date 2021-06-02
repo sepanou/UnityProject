@@ -52,12 +52,8 @@ namespace Entity.StaticEntity.Npcs {
             if (result is null) return;
 			
             Charm finalCharm = LocalGameManager.Instance.weaponGenerator.GenerateCharm(result);
-            finalCharm.DisableInteraction(player);
-            finalCharm.SetIsGrounded(false);
-            finalCharm.GetSpriteRenderer().enabled = false;
-            finalCharm.transform.parent = player.transform;
             NetworkServer.Spawn(finalCharm.gameObject);
-            player.AddCharm(finalCharm);
+            player.CollectCharm(finalCharm);
 
             TargetMergeSuccessful(sender, finalCharm);
         }

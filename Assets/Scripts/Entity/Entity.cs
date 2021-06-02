@@ -83,7 +83,6 @@ namespace Entity {
 		}
 
 		public override void OnStartClient() {
-			//print("started "+ name);
 			base.OnStartClient();
 			CmdApplyLayers();
 		}
@@ -99,6 +98,11 @@ namespace Entity {
 		public bool TryGetSpriteRenderer(out SpriteRenderer sRenderer) {
 			sRenderer = !spriteRenderer ? null : spriteRenderer;
 			return !(sRenderer is null);
+		}
+
+		public void SetSpriteRendererVisible(bool state) {
+			if (spriteRenderer)
+				spriteRenderer.color = new Color(255, 255, 255, state ? 255 : 0);
 		}
 
 		public Vector2 Position {
@@ -123,6 +127,9 @@ namespace Entity {
 				spriteRenderer.sortingLayerID = sortingLayerId;
 			gameObject.layer = layerMaskId;
 		}
+		
+		[ClientRpc] public void RpcSetParent(Transform parent, bool worldPositionStays)
+			=> transform.SetParent(parent, worldPositionStays);
 		
 		// *-*-*-*-*- For interactive objects (NPC / Doors / ...) -*-*-*-*-*
 		

@@ -13,20 +13,29 @@ namespace Entity.StaticEntity.Npcs {
         protected bool IsLootEpic;
 
         protected abstract void TargetItemBought(NetworkConnection target);
+        
+        protected abstract void SendNotEnoughCurrencyMessage(Player player, NetworkConnectionToClient sender);
 
         protected abstract int GetCost(IInventoryItem item);
 
-        protected abstract bool TryReducePlayerCurrency(Player player, int cost, NetworkConnectionToClient sender);
-        
+        protected abstract bool HasEnoughCurrency(Player player, int cost);
+
+        protected abstract void ReducePlayerCurrency(Player player, int cost);
+
         protected new void Instantiate() {
-            _items.SetCoroutineHandler(this);
-            if (isLocalPlayer) {
+            if (isClient) {
                 _items.Callback += ItemsOnChanged;
                 // SyncList callbacks are not invoked when the game object starts
+                // For late joining clients notably
                 foreach (IInventoryItem item in _items)
                     Inventory.TryAddItem(item);
             }
             base.Instantiate();
+        }
+
+        public override void OnStartServer() {
+            GenerateInventory();
+            base.OnStartServer();
         }
 
         [Server] private void GenerateInventory() {
@@ -46,7 +55,7 @@ namespace Entity.StaticEntity.Npcs {
                 generated.DisableInteraction(null);
                 generated.transform.parent = transform;
                 NetworkServer.Spawn(generated.gameObject);
-                
+
                 if (generated is Charm charm) {
                     charm.SetIsGrounded(false);
                     _items.Add(charm);
@@ -56,10 +65,6 @@ namespace Entity.StaticEntity.Npcs {
                     _items.Add(wp);
                 }
             }
-            
-            Inventory.ClearInventory();
-            foreach (IInventoryItem item in _items)
-                Inventory.TryAddItem(item);
         }
 
         [Command(requiresAuthority = false)]
@@ -72,25 +77,28 @@ namespace Entity.StaticEntity.Npcs {
                 return;
             }
 
+            int cost = GetCost(item);
+            if (!HasEnoughCurrency(player, cost)) {
+                SendNotEnoughCurrencyMessage(player, sender);
+                return;
+            }
+
             if (!_items.Remove(item)) {
                 player.TargetPrintWarning(sender, "Too late...\nThis item has already been sold!");
                 return;
             }
-            
-            if (item is Charm charm) player.AddCharm(charm);
-            else if (item is Weapon wp) player.AddWeapon(wp);
-            else return;
-            
-            int cost = GetCost(item);
-            
-            if (!TryReducePlayerCurrency(player, cost, sender)) return;
 
+            ReducePlayerCurrency(player, cost);
+            if (item is Charm charm) player.CollectCharm(charm);
+            else if (item is Weapon wp) player.CollectWeapon(wp);
+            else return;
             TargetItemBought(sender);
         }
 
         [Client] private void ItemsOnChanged(SyncList<uint>.Operation op, int index, IInventoryItem item) {
             switch (op) {
                 case SyncList<uint>.Operation.OP_ADD:
+                    (item as Entity)?.transform.SetParent(transform, false);
                     Inventory.TryAddItem(item);
                     break;
                 case SyncList<uint>.Operation.OP_CLEAR:
@@ -103,13 +111,6 @@ namespace Entity.StaticEntity.Npcs {
                     Debug.LogWarning("[SyncList] Operation not handled.");
                     break;
             }
-        }
-        
-        [ServerCallback] protected override void OnTriggerEnter2D(Collider2D other) {
-            // Generates the inventory when everything has been bought
-            if (_items.Count == 0)
-                GenerateInventory();
-            base.OnTriggerEnter2D(other);
         }
     }
 }

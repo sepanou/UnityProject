@@ -15,7 +15,7 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 		}
 
 		[ClientCallback] private void FixedUpdate() {
-			if (!hasAuthority|| !equipped || isGrounded || !MouseCursor.Instance) return;
+			if (!hasAuthority|| !Equipped || IsGrounded || !MouseCursor.Instance) return;
 			// Only run by the weapon's owner (client)
 			gameObject.transform.localRotation =
 				MouseCursor.Instance.OrientateObjectTowardsMouse(Vector2.up, out Vector2 orient);
@@ -31,7 +31,7 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 		[Server] protected override void SpecialAttack() {
 			RpcAttackAnimation(true);
 			Projectile.Projectile.SpawnProjectile(this, launchPoint.position);
-			holder.ReduceEnergy(specialAttackCost);
+			Holder.ReduceEnergy(specialAttackCost);
 			LastAttackTime = Time.time;
 		}
 

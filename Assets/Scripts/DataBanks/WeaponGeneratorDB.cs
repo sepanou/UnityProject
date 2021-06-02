@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entity.Collectibles;
+using Entity.DynamicEntity.Weapon;
 using Entity.DynamicEntity.Weapon.MeleeWeapon;
 using Entity.DynamicEntity.Weapon.RangedWeapon;
 using UnityEngine;
@@ -198,8 +199,30 @@ namespace DataBanks {
 			return weaponName + " " + adj + " " + comp;
 		}
 
-		private static T GetRandomInArray<T>(IReadOnlyList<T> array)
-			=> array.Count == 0 ? default : array[Random.Range(0, array.Count)];
+		public Sprite GetWeaponSprite(Weapon wp, int index) {
+			if (index == -1) return null;
+			
+			switch (wp) {
+				case Staff _:
+					return index < staffSprites.Length ? staffSprites[index] : null;
+				case Bow _:
+					return index < bowSprites.Length ? bowSprites[index] : null;
+				case MeleeWeapon _:
+					return index < swordSprites.Length ? swordSprites[index] : null;
+				default:
+					return null;
+			}
+		}
+
+		public Sprite GetCharmSprite(int index) =>
+			index == -1 || index >= charmSprites.Length ? null : charmSprites[index];
+
+		private static T GetRandomInArray<T>(IReadOnlyList<T> array, out int index) {
+			index = -1;
+			if (array.Count == 0) return default;
+			index = Random.Range(0, array.Count);
+			return array[index];
+		}
 
 		private static float RoundRandomFloat(float min, float max, int tolerance = 3)
 			=> (float) Math.Round(Random.Range(min, max), tolerance);
@@ -250,12 +273,12 @@ namespace DataBanks {
 			return result;
 		}
 
-		public Charm GenerateCharm(CharmData data = null, Sprite sprite = null) {
+		public Charm GenerateCharm(CharmData data = null) {
 			GameObject obj = Instantiate(charmModel);
 			Charm result = obj.GetComponent<Charm>();
 			result.bonuses = data ?? GenerateCharmData();
 			result.bonuses.name = GenerateName(CharmNames);
-			result.GetSpriteRenderer().sprite = !sprite ? GetRandomInArray(charmSprites): sprite;
+			result.GetSpriteRenderer().sprite = GetRandomInArray(charmSprites, out result.SpriteIndex);
 			return result;
 		}
 
@@ -264,7 +287,7 @@ namespace DataBanks {
 			Bow result = obj.GetComponent<Bow>();
 			result.rangeData = GenerateRangeData(epic);
 			result.rangeData.name = GenerateName(BowNames);
-			result.GetSpriteRenderer().sprite = GetRandomInArray(bowSprites);
+			result.GetSpriteRenderer().sprite = GetRandomInArray(bowSprites, out result.SpriteIndex);
 			return result;
 		}
 		
@@ -272,6 +295,7 @@ namespace DataBanks {
 			GameObject obj = Instantiate(staffModel);
 			Staff result = obj.GetComponent<Staff>();
 			result.rangeData = GenerateRangeData(epic);
+			
 			(bool feminine, string staffName) = StaffNames[Random.Range(0,StaffNames.Count-1)];
 			string adj;
 			if (feminine) 
@@ -279,8 +303,9 @@ namespace DataBanks {
 			else
 				(adj, _) = Adjectives[Random.Range(0, Adjectives.Count - 1)];
 			string cName = NameComplements[Random.Range(0, NameComplements.Count - 1)];
+			
 			result.rangeData.name = staffName + " " + adj + " " + cName;
-			result.GetSpriteRenderer().sprite = GetRandomInArray(staffSprites);
+			result.GetSpriteRenderer().sprite = GetRandomInArray(staffSprites, out result.SpriteIndex);
 			return result;
 		}
 		
@@ -289,7 +314,7 @@ namespace DataBanks {
 			MeleeWeapon result = obj.GetComponent<MeleeWeapon>();
 			result.meleeData = GenerateMeleeData(epic);
 			result.meleeData.name = GenerateName(MeleeNames);
-			result.GetSpriteRenderer().sprite = GetRandomInArray(swordSprites);
+			result.GetSpriteRenderer().sprite = GetRandomInArray(swordSprites, out result.SpriteIndex);
 			return result;
 		}
 	}

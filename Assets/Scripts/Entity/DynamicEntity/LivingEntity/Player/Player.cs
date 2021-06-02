@@ -32,13 +32,20 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		
 		[SyncVar(hook = nameof(SyncPlayerClassChanged))] public PlayerClasses playerClass;
 		private void SyncPlayerClassChanged(PlayerClasses o, PlayerClasses n) => SwitchClass(n);
-		
+
 		[SyncVar(hook = nameof(SyncWeaponChanged))] [SerializeField] protected Weapon.Weapon weapon;
-		private void SyncWeaponChanged(Weapon.Weapon o, Weapon.Weapon n) => PlayerInfoManager.UpdateCurrentWeapon(n);
+		private void SyncWeaponChanged(Weapon.Weapon o, Weapon.Weapon n) {
+			if (o) o.SetSpriteRendererVisible(false);
+			if (n) n.SetSpriteRendererVisible(true);
+			if (isLocalPlayer) PlayerInfoManager.UpdateCurrentWeapon(n);
+		}
 		
 		[SyncVar(hook = nameof(SyncMoneyChanged))] private int _kibrient;
 		[SyncVar(hook = nameof(SyncMoneyChanged))] private int _orchid;
-		private void SyncMoneyChanged(int o, int n) => PlayerInfoManager.UpdateMoneyAmount(this);
+		private void SyncMoneyChanged(int o, int n) {
+			if (!isLocalPlayer) return;
+			PlayerInfoManager.UpdateMoneyAmount(this);
+		}
 		
 		private int _defaultMaxEnergy;
 		[SyncVar(hook = nameof(SyncEnergyChanged))] [SerializeField] private int maxEnergy;
@@ -47,8 +54,10 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		private CharmData _currentCharmBonus;
 		private Camera _mainCamera;
-		[ShowInInspector] private readonly CustomSyncList<Weapon.Weapon> _weapons = new CustomSyncList<Weapon.Weapon>();
-		[ShowInInspector] private readonly SyncList<Charm> _charms = new SyncList<Charm>();
+		[ShowInInspector]
+		private readonly CustomSyncList<Weapon.Weapon> _weapons = new CustomSyncList<Weapon.Weapon>();
+		[ShowInInspector]
+		private readonly CustomSyncList<Charm> _charms = new CustomSyncList<Charm>();
 		private Inventory _inventory;
 		private ContainerInventory _containerInventory;
 		private SellerInventory _sellerInventory;
@@ -73,6 +82,15 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			writer.WriteByte((byte) playerClass);
 			writer.WriteString(playerName);
 			writer.WriteWeapon(weapon);
+			
+			if (initialState) {
+				_charms.OnSerializeAll(writer);
+				_weapons.OnSerializeAll(writer);
+			} else {
+				_charms.OnSerializeDelta(writer);
+				_weapons.OnSerializeDelta(writer);
+			}
+			
 			return true;
 		}
 
@@ -86,6 +104,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			string newPlayerName = reader.ReadString();
 			Weapon.Weapon newWeapon = reader.ReadWeapon();
 			
+			if (initialState) {
+				_charms.OnDeserializeAll(reader);
+				_weapons.OnDeserializeAll(reader);
+			} else {
+				_charms.OnDeserializeDelta(reader);
+				_weapons.OnDeserializeDelta(reader);
+			}
+			
 			if (newEnergy != _energy || newMaxEnergy != maxEnergy) {
 				maxEnergy = newMaxEnergy;
 				SyncEnergyChanged(_energy, newEnergy);
@@ -98,16 +124,16 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			}
 
 			if (newKibrient != _kibrient || newOrchid != _orchid) {
-				SyncMoneyChanged(_kibrient, newKibrient);
 				_kibrient = newKibrient;
 				_orchid = newOrchid;
+				SyncMoneyChanged(_kibrient, newKibrient);
 			}
 
 			if (newPlayerName != playerName) {
 				SyncPlayerNameChanged(playerName, newPlayerName);
 				playerName = newPlayerName;
 			}
-			
+
 			if (newWeapon == weapon) return;
 			SyncWeaponChanged(weapon, newWeapon);
 			weapon = newWeapon;
@@ -116,10 +142,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private void Start() {
 			DontDestroyOnLoad(this);
 			Instantiate();
-			_weapons.SetCoroutineHandler(Manager);
-			
+
 			if (isServer) {
-				_kibrient = 500;
+				if (isLocalPlayer) _kibrient = 500;
 				_defaultMaxEnergy = maxEnergy;
 				_energy = maxEnergy;
 				_charms.Callback += OnCharmsUpdatedServer;
@@ -158,9 +183,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		// Can be executed by both client & server (Synced data analysis) -> double check
 		public bool HasEnoughEnergy(int amount) => _energy >= amount;
 		
-		public bool HasEnoughKibrient(int amount) => _kibrient >= amount;
+		public bool HasEnoughKibrient(int amount) => Kibrient >= amount;
 
 		public bool HasEnoughOrchid(int amount) => _orchid >= amount;
+
+		public bool HasWeaponEquipped(Weapon.Weapon wp) => weapon == wp;
     
 		public bool IsFullInventory() => _weapons.Count + _charms.Count >= MaxItemInInventory;
 
@@ -193,6 +220,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			
 			switch (op) {
 				case SyncList<uint>.Operation.OP_ADD:
+					item.transform.localPosition = item.defaultCoordsWhenLikedToPlayer;
+					if (!weapon) CmdSwitchWeapon(item);
 					_inventory.TryAddItem(item);
 					break;
 				case SyncList<uint>.Operation.OP_CLEAR:
@@ -206,40 +235,20 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					break;
 			}
 		}
-		
-		/*[Client]
-		private void OnWeaponsUpdated(SyncList<Weapon.Weapon>.Operation op, int itemIndex, Weapon.Weapon oldItem, Weapon.Weapon newItem) {
-			if (!isLocalPlayer) return;
-			
-			switch (op) {
-				case SyncList<Weapon.Weapon>.Operation.OP_ADD:
-					_inventory.TryAddItem(newItem);
-					break;
-				case SyncList<Weapon.Weapon>.Operation.OP_CLEAR:
-					_inventory.ClearInventory();
-					break;
-				case SyncList<Weapon.Weapon>.Operation.OP_REMOVEAT:
-					_inventory.TryRemoveItem(oldItem);
-					break;
-				default:
-					Debug.LogWarning("An error happened while updating the sync weapons list (Client)");
-					break;
-			}
-		}*/
 
 		[Client]
-		private void OnCharmsUpdatedClient(SyncList<Charm>.Operation op, int itemIndex, Charm oldItem, Charm newItem) {
+		private void OnCharmsUpdatedClient(SyncList<uint>.Operation op, int index, Charm item) {
 			if (!isLocalPlayer) return;
 			
 			switch (op) {
-				case SyncList<Charm>.Operation.OP_ADD:
-					_inventory.TryAddItem(newItem);
+				case SyncList<uint>.Operation.OP_ADD:
+					_inventory.TryAddItem(item);
 					break;
-				case SyncList<Charm>.Operation.OP_CLEAR:
+				case SyncList<uint>.Operation.OP_CLEAR:
 					_inventory.ClearInventory();
 					break;
-				case SyncList<Charm>.Operation.OP_REMOVEAT:
-					_inventory.TryRemoveItem(oldItem);
+				case SyncList<uint>.Operation.OP_REMOVEAT:
+					_inventory.TryRemoveItem(item);
 					break;
 				default:
 					Debug.LogWarning("An error happened while updating the sync charm list (Client)");
@@ -248,24 +257,24 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		}
 		
 		[Server]
-		private void OnCharmsUpdatedServer(SyncList<Charm>.Operation op, int itemIndex, Charm oldItem, Charm newItem) {
+		private void OnCharmsUpdatedServer(SyncList<uint>.Operation op, int index, Charm item) {
 			switch (op) {
-				case SyncList<Charm>.Operation.OP_ADD:
-					_currentCharmBonus += newItem.bonuses;
-					maxEnergy += newItem.bonuses.powerBonus;
-					maxHealth += newItem.bonuses.healthBonus;
+				case SyncList<uint>.Operation.OP_ADD:
+					_currentCharmBonus += item.bonuses;
+					maxEnergy += item.bonuses.powerBonus;
+					maxHealth += item.bonuses.healthBonus;
 					Speed = DefaultSpeed * (1 + _currentCharmBonus.speedBonus);
 					break;
-				case SyncList<Charm>.Operation.OP_CLEAR:
+				case SyncList<uint>.Operation.OP_CLEAR:
 					maxHealth = DefaultMaxHealth;
 					maxEnergy = _defaultMaxEnergy;
 					Speed = DefaultSpeed;
 					_currentCharmBonus = null;
 					break;
-				case SyncList<Charm>.Operation.OP_REMOVEAT:
-					_currentCharmBonus -= oldItem.bonuses;
-					maxEnergy -= oldItem.bonuses.powerBonus;
-					maxHealth -= oldItem.bonuses.healthBonus;
+				case SyncList<uint>.Operation.OP_REMOVEAT:
+					_currentCharmBonus -= item.bonuses;
+					maxEnergy -= item.bonuses.powerBonus;
+					maxHealth -= item.bonuses.healthBonus;
 					Speed = DefaultSpeed * (1 + _currentCharmBonus.speedBonus);
 					break;
 				default:
@@ -277,28 +286,57 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[Server] public bool TryReduceKibrient(int amount) {
 			if (!HasEnoughKibrient(amount))
 				return false;
-			_kibrient -= amount;
+			Kibrient -= amount;
 			return true;
 		}
-
-		[Server] public void AddCharm(Charm charm) => _charms.Add(charm);
+		
 		[Server] public bool RemoveCharm(Charm charm) => _charms.Remove(charm);
-		[Server] public void AddWeapon(Weapon.Weapon wp) => _weapons.Add(wp);
-		[Server] public bool RemoveWeapon(Weapon.Weapon wp) => _weapons.Remove(wp);
+		[Server] public bool RemoveWeapon(Weapon.Weapon wp) {
+			if (!_weapons.Remove(wp)) return false;
+			if (wp == weapon) weapon = null;
+			return true;
+		}
 
 		[Server] public void ReduceEnergy(int amount) {
 			if (amount == 0) return;
 			_energy = Math.Max(_energy - amount, 0);
 			OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
 		}
-
+		
 		[Server] private void SwitchWeapon(Weapon.Weapon newWeapon) {
-			if (weapon) {
-				weapon.UnEquip();
-				weapon = null;
-			}
+			if (_weapons.Count == 0 || !_weapons.Contains(newWeapon)) return;
 			weapon = newWeapon;
-			weapon.Equip(this);
+		}
+
+		[Server] public void CollectWeapon(Weapon.Weapon wp) {
+			// Interactions + Authority
+			wp.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
+			wp.SetIsGrounded(false);
+			wp.DisableInteraction(this);
+			wp.RpcDisableInteraction(this);
+			// Transform
+			Transform parent = transform;
+			wp.transform.SetParent(parent, false);
+			wp.RpcSetParent(parent, false);
+			// Set owner
+			wp.LinkToPlayer(this);
+			// Target authority for synchronization of networkTransforms
+			_weapons.Add(wp);
+			if (!wp.TryGetComponent(out NetworkTransform netTransform)) return; // Should never happen
+			netTransform.clientAuthority = true;
+			wp.TargetSetClientAuthority(wp.connectionToClient, true);
+		}
+
+		[Server] public void CollectCharm(Charm charm) {
+			// Interactions
+			charm.DisableInteraction(this);
+			charm.RpcDisableInteraction(this);
+			charm.SetIsGrounded(false);
+			// Transform
+			Transform parent = transform;
+			charm.transform.SetParent(parent);
+			charm.RpcSetParent(parent, false);
+			_charms.Add(charm);
 		}
 
 		[Server] public void Collect(uint entityNetId) {
@@ -310,33 +348,20 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				return;
 			}
 
-			if (collectible is Money _) {
-				// TODO
-				return;
+			switch (collectible) {
+				case Money _:
+					// TODO
+					return;
+				case Weapon.Weapon wp:
+					CollectWeapon(wp);
+					break;
+				case Charm charm:
+					CollectCharm(charm);
+					break;
+				default:
+					Debug.LogWarning("Error, unknown collectible type...");
+					break;
 			}
-
-			Transform parent = transform;
-			
-			if (collectible is Weapon.Weapon wp) {
-				wp.isGrounded = false;
-				wp.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
-				wp.holder = this;
-				wp.DisableInteraction(this);
-				wp.RpcDisableInteraction(this);
-				wp.transform.parent = parent;
-				wp.RpcSetWeaponParent(parent);
-				if (!weapon) SwitchWeapon(wp);
-				_weapons.Add(wp);
-				if (!wp.TryGetComponent(out NetworkTransform netTransform)) return; // Should never happen
-				netTransform.clientAuthority = true;
-				wp.TargetSetClientAuthority(wp.connectionToClient, true);
-			} else if (collectible is Charm charm) {
-				charm.DisableInteraction(this);
-				charm.RpcDisableInteraction(this);
-				charm.transform.parent = parent;
-				charm.SetIsGrounded(false);
-				_charms.Add(charm);
-			} else Debug.LogWarning("Error, unknown collectible type...");
 		}
 
 		[ClientRpc] protected override void RpcDying() {
@@ -352,7 +377,12 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (weapon && weapon.CanAttack()) weapon.UseWeapon(fireOneButton, fireTwoButton);
 		}
 
-		[Command] private void CmdSwitchWeapon() {
+		[Command] private void CmdSwitchWeapon(Weapon.Weapon wp) {
+			if (wp) {
+				SwitchWeapon(wp);
+				return;
+			}
+			
 			if (_weapons.Count == 0) return;
 			SwitchWeapon(!weapon ? _weapons[0] : _weapons[(_weapons.IndexOf(weapon) + 1) % _weapons.Count]);
 		}
@@ -422,19 +452,17 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				InputManager.GetKeyDown("SpecialAttack"));
 			
 			if (Input.GetKeyDown(KeyCode.N)) {
-				CmdSwitchWeapon();
+				CmdSwitchWeapon(null);
 				Debug.Log("Changed weapon !");
 			}
 			
 			if (isServer && Input.GetKeyDown(KeyCode.K)) {
-				Debug.Log("spawned bow");
 				NetworkServer.Spawn(WeaponGenerator.GenerateBow().gameObject);
 			}
 			
 			if (Input.GetKeyDown(KeyCode.B)) GetAttacked(1);
 			
 			if (isServer && Input.GetKeyDown(KeyCode.V)) {
-				Debug.Log("spawned charm");
 				NetworkServer.Spawn(WeaponGenerator.GenerateCharm().gameObject);
 			}
 		}

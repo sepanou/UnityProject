@@ -11,10 +11,7 @@ namespace UI_Audio.Inventories {
 		
 		protected override bool CustomTryRemove(IInventoryItem item) => item is Charm && base.TryRemoveItem(item);
 
-		private new void Start() {
-			Dialog = new[] {"#smith-stop"};
-			base.Start();
-		}
+		private void Start() => Dialog = new[] {"#smith-stop"};
 		
 		public override void Close() { 
 			base.Close();
