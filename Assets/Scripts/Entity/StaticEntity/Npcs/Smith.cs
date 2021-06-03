@@ -2,6 +2,7 @@
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UI_Audio.Inventories;
+using UnityEngine;
 
 namespace Entity.StaticEntity.Npcs {
     public class Smith : ShopKeeper {
@@ -15,8 +16,10 @@ namespace Entity.StaticEntity.Npcs {
         [TargetRpc] private void TargetMergeSuccessful(NetworkConnection target, Charm finalCharm) {
             Inventory.ClearInventory();
 			
-            if (!InventoryManager.playerInventory.TryRemoveItem(finalCharm))
-                return; // Should not happen
+            if (!InventoryManager.playerInventory.TryRemoveItem(finalCharm)) {
+                Debug.Log("Unsuccessful");
+                return;
+            } // Should not happen
 			
             PrintDialog(new[] { "#trade-completed", "#want-more" }, null, true);
             GetInventory<SmithInventory>().SetResultSlot(finalCharm);

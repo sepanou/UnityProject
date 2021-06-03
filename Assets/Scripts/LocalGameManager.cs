@@ -12,6 +12,7 @@ public class LocalGameManager: MonoBehaviour {
 	public LanguageManager languageManager;
 	public WeaponGeneratorDB weaponGenerator;
 	public AudioDB audioManager;
+	public InputTexturesDB inputTexturesDB;
 
 	[Header("User Interface")] public StartMenuManager startMenuManager;
 	public MenuSettingsManager menuSettingsManager;
@@ -63,6 +64,7 @@ public class LocalGameManager: MonoBehaviour {
 		mouseCursor.Initialize();
 		menuSettingsManager.Initialize();
 		inventoryManager.Initialize();
+		inputTexturesDB.SetEntries();
 	}
 
 	public void SetLocalGameState(LocalGameStates state) {

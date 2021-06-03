@@ -27,8 +27,10 @@ namespace Entity.StaticEntity.Npcs {
                 _items.Callback += ItemsOnChanged;
                 // SyncList callbacks are not invoked when the game object starts
                 // For late joining clients notably
-                foreach (IInventoryItem item in _items)
+                foreach (IInventoryItem item in _items) {
                     Inventory.TryAddItem(item);
+                    (item as Entity)?.SetSpriteRendererVisible(false);
+                }
             }
             base.Instantiate();
         }
@@ -98,8 +100,11 @@ namespace Entity.StaticEntity.Npcs {
         [Client] private void ItemsOnChanged(SyncList<uint>.Operation op, int index, IInventoryItem item) {
             switch (op) {
                 case SyncList<uint>.Operation.OP_ADD:
-                    (item as Entity)?.transform.SetParent(transform, false);
                     Inventory.TryAddItem(item);
+                    Entity entityItem = item as Entity;
+                    if (!entityItem || entityItem is null) return;
+                    entityItem.transform.SetParent(transform, false);
+                    entityItem.SetSpriteRendererVisible(false);
                     break;
                 case SyncList<uint>.Operation.OP_CLEAR:
                     Inventory.ClearInventory();

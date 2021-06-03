@@ -127,10 +127,7 @@ namespace Entity {
 				spriteRenderer.sortingLayerID = sortingLayerId;
 			gameObject.layer = layerMaskId;
 		}
-		
-		[ClientRpc] public void RpcSetParent(Transform parent, bool worldPositionStays)
-			=> transform.SetParent(parent, worldPositionStays);
-		
+
 		// *-*-*-*-*- For interactive objects (NPC / Doors / ...) -*-*-*-*-*
 		
 		[Client] private IEnumerator CheckInteraction(Player player) {

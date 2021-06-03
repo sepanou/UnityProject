@@ -92,6 +92,7 @@ public class CustomSyncList<T> : SyncList<uint>, IEnumerable<T> where T : INetwo
 
     public new T this[int index] {
         get {
+            if (index < 0 || index >= Count) return default;
             uint netId = base[index];
             if (NetworkIdentity.spawned.TryGetValue(netId, out NetworkIdentity identity))
                 return identity.gameObject.GetComponent<T>();
@@ -103,7 +104,7 @@ public class CustomSyncList<T> : SyncList<uint>, IEnumerable<T> where T : INetwo
             base[index] = value.GetNetworkIdentity().netId;
         }
     }
-    
+
     public new CustomEnumerator GetEnumerator() => new CustomEnumerator(this);
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator() => new CustomEnumerator(this);

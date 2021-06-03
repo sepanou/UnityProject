@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
@@ -57,7 +56,10 @@ namespace Entity.DynamicEntity.Weapon {
 			SpriteIndex = newSpriteIndex;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
+		// Called after OnStartClient(), OnStartServer(), ...
+		// Do not move this instruction to Instantiate - invisible weapons when joining otherwise
+		private void Start() => SetSpriteRendererVisible(Equipped || IsGrounded);
+
 		protected new void Instantiate() {
 			base.Instantiate();
 			

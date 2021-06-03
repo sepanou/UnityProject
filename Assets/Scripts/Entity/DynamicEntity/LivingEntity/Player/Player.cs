@@ -1,7 +1,6 @@
 using System;
 using DataBanks;
 using Entity.Collectibles;
-using Entity.DynamicEntity.Weapon;
 using Mirror;
 using UI_Audio;
 using UI_Audio.Inventories;
@@ -33,11 +32,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[SyncVar(hook = nameof(SyncPlayerClassChanged))] public PlayerClasses playerClass;
 		private void SyncPlayerClassChanged(PlayerClasses o, PlayerClasses n) => SwitchClass(n);
 
-		[SyncVar(hook = nameof(SyncWeaponChanged))] [SerializeField] protected Weapon.Weapon weapon;
-		private void SyncWeaponChanged(Weapon.Weapon o, Weapon.Weapon n) {
-			if (o) o.SetSpriteRendererVisible(false);
-			if (n) n.SetSpriteRendererVisible(true);
-			if (isLocalPlayer) PlayerInfoManager.UpdateCurrentWeapon(n);
+		[SyncVar(hook = nameof(SyncWeaponChanged))] private int _weaponId = -1;
+		private void SyncWeaponChanged(int o, int n) {
+			if (_weapons[o]) _weapons[o].SetSpriteRendererVisible(false);
+			if (_weapons[n]) _weapons[n].SetSpriteRendererVisible(true);
+			if (isLocalPlayer) PlayerInfoManager.UpdateCurrentWeapon(_weapons[n]);
 		}
 		
 		[SyncVar(hook = nameof(SyncMoneyChanged))] private int _kibrient;
@@ -62,6 +61,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private ContainerInventory _containerInventory;
 		private SellerInventory _sellerInventory;
 		private PlayerUI _playerUI;
+		private Weapon.Weapon Weapon => _weapons[_weaponId]; 
 		
 		public int Kibrient {
 			get => _kibrient;
@@ -81,7 +81,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			writer.WriteInt32(_orchid);
 			writer.WriteByte((byte) playerClass);
 			writer.WriteString(playerName);
-			writer.WriteWeapon(weapon);
+			writer.WriteInt32(_weaponId);
 			
 			if (initialState) {
 				_charms.OnSerializeAll(writer);
@@ -102,7 +102,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			int newOrchid = reader.ReadInt32();
 			PlayerClasses newPlayerClass = (PlayerClasses) reader.ReadByte();
 			string newPlayerName = reader.ReadString();
-			Weapon.Weapon newWeapon = reader.ReadWeapon();
+			int newWeaponId = reader.ReadInt32();
 			
 			if (initialState) {
 				_charms.OnDeserializeAll(reader);
@@ -134,9 +134,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				playerName = newPlayerName;
 			}
 
-			if (newWeapon == weapon) return;
-			SyncWeaponChanged(weapon, newWeapon);
-			weapon = newWeapon;
+			if (newWeaponId == _weaponId) return;
+			SyncWeaponChanged(_weaponId, newWeaponId);
+			_weaponId = newWeaponId;
 		}
 
 		private void Start() {
@@ -150,6 +150,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				_charms.Callback += OnCharmsUpdatedServer;
 			}
 			
+			if (isClient) _weapons.Callback += OnWeaponsUpdated;
+			
 			if (!isLocalPlayer) {
 				OnRemotePlayerClassChange += ChangeAnimator;
 				_playerUI = (PlayerUI) entityUI;
@@ -162,7 +164,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				OnLocalPlayerClassChange += ChangeAnimator;
 				_inventory = InventoryManager.playerInventory;
 				_mainCamera = Manager.SetMainCameraToPlayer(this);
-				_weapons.Callback += OnWeaponsUpdated;
 				_charms.Callback += OnCharmsUpdatedClient;
 				// Only health / energy UI for the other players
 				entityUI.Destroy();
@@ -187,7 +188,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		public bool HasEnoughOrchid(int amount) => _orchid >= amount;
 
-		public bool HasWeaponEquipped(Weapon.Weapon wp) => weapon == wp;
+		public bool HasWeaponEquipped(Weapon.Weapon wp) => Weapon == wp;
     
 		public bool IsFullInventory() => _weapons.Count + _charms.Count >= MaxItemInInventory;
 
@@ -216,12 +217,15 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[Client]
 		private void OnWeaponsUpdated(SyncList<uint>.Operation op, int index, Weapon.Weapon item) {
+			if (op == SyncList<uint>.Operation.OP_ADD && item)
+				item.transform.SetParent(transform, false);
+			
 			if (!isLocalPlayer) return;
 			
 			switch (op) {
 				case SyncList<uint>.Operation.OP_ADD:
 					item.transform.localPosition = item.defaultCoordsWhenLikedToPlayer;
-					if (!weapon) CmdSwitchWeapon(item);
+					if (!Weapon) CmdSwitchWeapon(item);
 					_inventory.TryAddItem(item);
 					break;
 				case SyncList<uint>.Operation.OP_CLEAR:
@@ -238,10 +242,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[Client]
 		private void OnCharmsUpdatedClient(SyncList<uint>.Operation op, int index, Charm item) {
+			if (op == SyncList<uint>.Operation.OP_ADD && item)
+				item.transform.SetParent(transform, false);
+			
 			if (!isLocalPlayer) return;
 			
 			switch (op) {
 				case SyncList<uint>.Operation.OP_ADD:
+					item.transform.SetParent(transform, false);
 					_inventory.TryAddItem(item);
 					break;
 				case SyncList<uint>.Operation.OP_CLEAR:
@@ -293,7 +301,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[Server] public bool RemoveCharm(Charm charm) => _charms.Remove(charm);
 		[Server] public bool RemoveWeapon(Weapon.Weapon wp) {
 			if (!_weapons.Remove(wp)) return false;
-			if (wp == weapon) weapon = null;
+			if (HasWeaponEquipped(wp)) _weaponId = -1;
 			return true;
 		}
 
@@ -305,7 +313,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		
 		[Server] private void SwitchWeapon(Weapon.Weapon newWeapon) {
 			if (_weapons.Count == 0 || !_weapons.Contains(newWeapon)) return;
-			weapon = newWeapon;
+			_weaponId = _weapons.IndexOf(newWeapon);
 		}
 
 		[Server] public void CollectWeapon(Weapon.Weapon wp) {
@@ -315,9 +323,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			wp.DisableInteraction(this);
 			wp.RpcDisableInteraction(this);
 			// Transform
-			Transform parent = transform;
-			wp.transform.SetParent(parent, false);
-			wp.RpcSetParent(parent, false);
+			wp.transform.SetParent(transform, false);
 			// Set owner
 			wp.LinkToPlayer(this);
 			// Target authority for synchronization of networkTransforms
@@ -333,9 +339,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			charm.RpcDisableInteraction(this);
 			charm.SetIsGrounded(false);
 			// Transform
-			Transform parent = transform;
-			charm.transform.SetParent(parent);
-			charm.RpcSetParent(parent, false);
+			charm.transform.SetParent(transform, false);
 			_charms.Add(charm);
 		}
 
@@ -374,17 +378,17 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[Command] private void CmdAttack(bool fireOneButton, bool fireTwoButton) {
 			if (!fireOneButton && !fireTwoButton) return;
-			if (weapon && weapon.CanAttack()) weapon.UseWeapon(fireOneButton, fireTwoButton);
+			if (Weapon && Weapon.CanAttack()) Weapon.UseWeapon(fireOneButton, fireTwoButton);
 		}
 
 		[Command] private void CmdSwitchWeapon(Weapon.Weapon wp) {
-			if (wp) {
+			if (!(wp is null) && wp) {
 				SwitchWeapon(wp);
 				return;
 			}
 			
 			if (_weapons.Count == 0) return;
-			SwitchWeapon(!weapon ? _weapons[0] : _weapons[(_weapons.IndexOf(weapon) + 1) % _weapons.Count]);
+			SwitchWeapon(!Weapon ? _weapons[0] : _weapons[(_weaponId + 1) % _weapons.Count]);
 		}
 
 		[TargetRpc] public void TargetPrintWarning(NetworkConnection target, string message) {
@@ -451,11 +455,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
 				InputManager.GetKeyDown("SpecialAttack"));
 			
-			if (Input.GetKeyDown(KeyCode.N)) {
+			if (Input.GetKeyDown(KeyCode.N))
 				CmdSwitchWeapon(null);
-				Debug.Log("Changed weapon !");
-			}
-			
+
 			if (isServer && Input.GetKeyDown(KeyCode.K)) {
 				NetworkServer.Spawn(WeaponGenerator.GenerateBow().gameObject);
 			}

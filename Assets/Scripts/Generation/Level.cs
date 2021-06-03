@@ -11,7 +11,7 @@ namespace Generation {
 		[SerializeField] public string lvlName;
 		public Room[,] RoomsMap { get; } = new Room[101, 101];
 		public List<Room> RoomsList { get; } = new List<Room>();
-		public bool alreadyGenerated = false;
+		public bool alreadyGenerated;
 
 		public override void OnStartServer() {
 			Generation.GenerateLevel(this);

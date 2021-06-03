@@ -16,7 +16,6 @@ public class DisplayKey: MonoBehaviour {
 	private void Start() {
 		_image = GetComponent<Image>();
 		_image.color = new Color(255,255,255,0);
-		inputTexturesDB.SetEntries();
 		InputTexture inputTexture = inputTexturesDB.Textures[inputManager.GetKeyCode("Interact").ToString()];
 		_spr1 = inputTexture.sprite1;
 		_spr2 = inputTexture.sprite2;
