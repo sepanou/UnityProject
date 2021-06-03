@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public interface IInventoryItem : INetworkObject {
 	RectTransform GetInformationPopup();
 	GameObject GetGameObject();
 	int GetKibryValue();
+	void Drop(Player player);
 }
 
 namespace UI_Audio.Inventories {
@@ -18,7 +20,7 @@ namespace UI_Audio.Inventories {
 		public int Size => slots.Length;
 		public bool IsOpen { get; private set; }
 
-		protected bool Contains(IInventoryItem item)
+		public bool Contains(IInventoryItem item)
 			=> slots.Any(slot => slot.GetSlotItem() == item);
 
 		public virtual void ClearInventory() {

@@ -36,6 +36,7 @@ namespace UI_Audio.Inventories {
 			}
 			_isMouseOver = false;
 			targetGraphic.sprite = normalSprite;
+			slotImage.preserveAspect = true;
 			infoDisplay.gameObject.SetActive(false);
 		}
 

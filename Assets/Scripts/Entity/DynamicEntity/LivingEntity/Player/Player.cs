@@ -133,7 +133,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				SyncPlayerNameChanged(playerName, newPlayerName);
 				playerName = newPlayerName;
 			}
-
+			
 			if (newWeaponId == _weaponId) return;
 			SyncWeaponChanged(_weaponId, newWeaponId);
 			_weaponId = newWeaponId;
@@ -217,21 +217,21 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[Client]
 		private void OnWeaponsUpdated(SyncList<uint>.Operation op, int index, Weapon.Weapon item) {
-			if (op == SyncList<uint>.Operation.OP_ADD && item)
-				item.transform.SetParent(transform, false);
-			
-			if (!isLocalPlayer) return;
-			
 			switch (op) {
 				case SyncList<uint>.Operation.OP_ADD:
+					item.transform.SetParent(transform, false);
+					if (!isLocalPlayer) return;
 					item.transform.localPosition = item.defaultCoordsWhenLikedToPlayer;
 					if (!Weapon) CmdSwitchWeapon(item);
 					_inventory.TryAddItem(item);
 					break;
 				case SyncList<uint>.Operation.OP_CLEAR:
+					if (!isLocalPlayer) return;
 					_inventory.ClearInventory();
 					break;
 				case SyncList<uint>.Operation.OP_REMOVEAT:
+					item.transform.SetParent(null, false);
+					if (!isLocalPlayer) return;
 					_inventory.TryRemoveItem(item);
 					break;
 				default:
@@ -242,20 +242,19 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[Client]
 		private void OnCharmsUpdatedClient(SyncList<uint>.Operation op, int index, Charm item) {
-			if (op == SyncList<uint>.Operation.OP_ADD && item)
-				item.transform.SetParent(transform, false);
-			
-			if (!isLocalPlayer) return;
-			
 			switch (op) {
 				case SyncList<uint>.Operation.OP_ADD:
 					item.transform.SetParent(transform, false);
+					if (!isLocalPlayer) return;
 					_inventory.TryAddItem(item);
 					break;
 				case SyncList<uint>.Operation.OP_CLEAR:
+					if (!isLocalPlayer) return;
 					_inventory.ClearInventory();
 					break;
 				case SyncList<uint>.Operation.OP_REMOVEAT:
+					item.transform.SetParent(null, false);
+					if (!isLocalPlayer) return;
 					_inventory.TryRemoveItem(item);
 					break;
 				default:
@@ -299,9 +298,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		}
 		
 		[Server] public bool RemoveCharm(Charm charm) => _charms.Remove(charm);
+		
 		[Server] public bool RemoveWeapon(Weapon.Weapon wp) {
+			bool hadWeaponEquipped = HasWeaponEquipped(wp);
 			if (!_weapons.Remove(wp)) return false;
-			if (HasWeaponEquipped(wp)) _weaponId = -1;
+			if (hadWeaponEquipped) _weaponId = -1;
 			return true;
 		}
 
@@ -317,29 +318,12 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		}
 
 		[Server] public void CollectWeapon(Weapon.Weapon wp) {
-			// Interactions + Authority
-			wp.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
-			wp.SetIsGrounded(false);
-			wp.DisableInteraction(this);
-			wp.RpcDisableInteraction(this);
-			// Transform
-			wp.transform.SetParent(transform, false);
-			// Set owner
 			wp.LinkToPlayer(this);
-			// Target authority for synchronization of networkTransforms
 			_weapons.Add(wp);
-			if (!wp.TryGetComponent(out NetworkTransform netTransform)) return; // Should never happen
-			netTransform.clientAuthority = true;
-			wp.TargetSetClientAuthority(wp.connectionToClient, true);
 		}
 
 		[Server] public void CollectCharm(Charm charm) {
-			// Interactions
-			charm.DisableInteraction(this);
-			charm.RpcDisableInteraction(this);
-			charm.SetIsGrounded(false);
-			// Transform
-			charm.transform.SetParent(transform, false);
+			charm.LinkToPlayer(this);
 			_charms.Add(charm);
 		}
 
@@ -391,6 +375,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			SwitchWeapon(!Weapon ? _weapons[0] : _weapons[(_weaponId + 1) % _weapons.Count]);
 		}
 
+		[Command] private void CmdDropItem(IInventoryItem item) => item?.Drop(this);
+
 		[TargetRpc] public void TargetPrintWarning(NetworkConnection target, string message) {
 			PlayerInfoManager.RemoveWarningButtonActions();
 			PlayerInfoManager.SetWarningText(message);
@@ -431,6 +417,16 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				return;
 			}
 
+			// Right click in inventory == Drop the item
+			if (_inventory.IsOpen && Input.GetMouseButtonDown(1)) {
+				InventorySlot lastHovered = InventorySlot.LastHovered;
+				IInventoryItem item;
+				if (lastHovered && (item = lastHovered.GetSlotItem()) != null && _inventory.Contains(item))
+					CmdDropItem(item);
+				return;
+			}
+
+			// Left click in inventory while trading with a NPC == Move the item to the other inventory
 			if (_inventory.IsOpen && _containerInventory && _containerInventory.IsOpen) {
 				if (Input.GetMouseButtonDown(0)) 
 					_containerInventory.TryMoveHoveredSlotItem(_inventory);
@@ -452,16 +448,24 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				return;
 			}
 
-			CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
-				InputManager.GetKeyDown("SpecialAttack"));
-			
-			if (Input.GetKeyDown(KeyCode.N))
+			if (InputManager.GetKeyDown("SwitchWeapon")) {
 				CmdSwitchWeapon(null);
-
-			if (isServer && Input.GetKeyDown(KeyCode.K)) {
-				NetworkServer.Spawn(WeaponGenerator.GenerateBow().gameObject);
+				return;
 			}
 			
+			CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
+				InputManager.GetKeyDown("SpecialAttack"));
+
+			if (isServer && Input.GetKeyDown(KeyCode.B)) {
+				NetworkServer.Spawn(WeaponGenerator.GenerateBow().gameObject);
+			}
+			if (isServer && Input.GetKeyDown(KeyCode.K)) {
+				NetworkServer.Spawn(WeaponGenerator.GenerateSword().gameObject);
+			}
+			if (isServer && Input.GetKeyDown(KeyCode.L)) {
+				NetworkServer.Spawn(WeaponGenerator.GenerateStaff().gameObject);
+			}
+
 			if (Input.GetKeyDown(KeyCode.B)) GetAttacked(1);
 			
 			if (isServer && Input.GetKeyDown(KeyCode.V)) {

@@ -5,6 +5,8 @@ using UnityEngine;
 namespace Entity.StaticEntity.Npcs {
     public class ClassSelector : Npc {
         [SerializeField] private PlayerClasses classType;
+
+        private void Start() => Instantiate();
         
         [TargetRpc] protected override void TargetInteract(NetworkConnection target, Player player) {
             switch (classType) {

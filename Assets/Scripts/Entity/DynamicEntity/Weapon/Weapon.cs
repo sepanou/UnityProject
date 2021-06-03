@@ -91,6 +91,7 @@ namespace Entity.DynamicEntity.Weapon {
 		protected abstract void SpecialAttack();
 		public abstract RectTransform GetInformationPopup();
 		public abstract int GetKibryValue();
+
 		public abstract string GetWeaponName();
 
 		[Server] public void SetIsGrounded(bool state) => IsGrounded = state;
@@ -107,9 +108,45 @@ namespace Entity.DynamicEntity.Weapon {
 			else if (fireTwoButton && Holder.HasEnoughEnergy(specialAttackCost)) SpecialAttack();
 		}
 
-		[Server] public void LinkToPlayer(Player player) => Holder = player;
+		[Server] public void LinkToPlayer(Player player) {
+			// Interactions + Authority
+			netIdentity.AssignClientAuthority(player.netIdentity.connectionToClient);
+			IsGrounded = false;
+			DisableInteraction(player);
+			RpcDisableInteraction(player);
+			// Transform
+			transform.SetParent(player.transform, false);
+			// Set owner
+			Holder = player;
+			// Target authority for synchronization of networkTransforms
+			if (!TryGetComponent(out NetworkTransform netTransform)) return; // Should never happen
+			netTransform.clientAuthority = true;
+			TargetSetClientAuthority(connectionToClient, true);
+		}
 
-		[TargetRpc] public void TargetSetClientAuthority(NetworkConnection target, bool state) {
+		[Server] public void Drop(Player player) {
+			if (!Holder) return;
+			// Interactions
+			IsGrounded = true;
+			_playerFound = false;
+			EnableInteraction();
+			RpcEnableInteraction();
+			// Target authority for synchronization of networkTransforms
+			if (TryGetComponent(out NetworkTransform netTransform))
+				netTransform.clientAuthority = false;
+			TargetSetClientAuthority(connectionToClient, false);
+			netIdentity.RemoveClientAuthority();
+			// Transform
+			Transform current = transform;
+			current.SetParent(null, false);
+			current.localPosition = Vector3.zero;
+			current.position = player.transform.position;
+			// Set owner
+			Holder.RemoveWeapon(this);
+			Holder = null;
+		}
+
+		[TargetRpc] private void TargetSetClientAuthority(NetworkConnection target, bool state) {
 			if (TryGetComponent(out NetworkTransform netTransform))
 				netTransform.clientAuthority = state;
 		}

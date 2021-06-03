@@ -15,7 +15,6 @@ MonoBehaviour:
   charmModel: {fileID: 3180890005130477577, guid: 1e3e8980e2f8a8c4a8613bed6c8635aa,
     type: 3}
   charmSprites:
-  - {fileID: 21300000, guid: f749b7cce931b744ba44b93af739e530, type: 3}
   - {fileID: 21300000, guid: 880830c965d748e4d89fdbd7e976654b, type: 3}
   - {fileID: 21300000, guid: 6fd13b775fe306246a3c4f2c892e27e5, type: 3}
   - {fileID: 21300000, guid: 324176d7bfde49049bd2536dcb518392, type: 3}
@@ -60,11 +59,45 @@ MonoBehaviour:
     type: 3}
   bowSprites:
   - {fileID: -8828886737162667788, guid: 3c8a34e21f8816e4f97988951d4d7615, type: 3}
+  - {fileID: 21300000, guid: 6a0438d471489004eb26263634495363, type: 3}
+  - {fileID: 21300000, guid: 9b59f8f2bca04124d979544d9d9a3875, type: 3}
+  - {fileID: 21300000, guid: 37394eeee4208ca4b96cba9dc8992150, type: 3}
+  - {fileID: 21300000, guid: df997003e5c3cb546842737878082877, type: 3}
+  - {fileID: 21300000, guid: c249e02145d24a04cbf9aa85167e5e4b, type: 3}
+  - {fileID: 21300000, guid: d0c359667caca274c8b64d3538ce503c, type: 3}
+  - {fileID: 21300000, guid: 36c80ed3f288c114ba7546604c70a7e5, type: 3}
+  - {fileID: 21300000, guid: 89d0267aa4badb04e9655430437f2b06, type: 3}
+  - {fileID: 21300000, guid: 1f4ba53c5dc978e49bca68fcef14db23, type: 3}
+  - {fileID: 21300000, guid: b63e3c3c2a6e4b8499d45cefef72ce4e, type: 3}
+  - {fileID: 21300000, guid: 72b5b6a7e5f49c844a2d91d94cbc3a7f, type: 3}
+  - {fileID: 21300000, guid: 22bddc1ed291e654f8bee8f6e6035cb5, type: 3}
   staffModel: {fileID: 7279687285391168874, guid: 2d4d8f8747bd7384ab280dd034ffcf2f,
     type: 3}
   staffSprites:
-  - {fileID: 21300000, guid: cbab688443865d048814ae2cae7b4c7f, type: 3}
+  - {fileID: 21300000, guid: db4bad4a943f6d143a056e35c1567e26, type: 3}
+  - {fileID: 21300000, guid: f9d6a10d947918841ad6eac45102ad51, type: 3}
+  - {fileID: 21300000, guid: d9d0f255f7f435546b599d92f692591c, type: 3}
+  - {fileID: 21300000, guid: 44f8813614452b543be44c99a530eb84, type: 3}
+  - {fileID: 21300000, guid: 2bfd8237a00871f409b0c96cb1701144, type: 3}
+  - {fileID: 21300000, guid: d79cb9dd4b1ad0d4fa7598381d6b22e8, type: 3}
+  - {fileID: 21300000, guid: a6d43f7a18bf626469b74673b3408ec0, type: 3}
+  - {fileID: 21300000, guid: 5a0d61ed8804dc742b3fa5e98c646f00, type: 3}
+  - {fileID: 21300000, guid: 692a0cfc720a3a94d9a1b83b80b7b02c, type: 3}
+  - {fileID: 21300000, guid: 61c8e1035766c584e8e422ce4545df3e, type: 3}
+  - {fileID: 21300000, guid: a6a7b14611755354896fb37d6629bc68, type: 3}
+  - {fileID: 21300000, guid: 69bec3b331a011f468ab61b328d5ba95, type: 3}
   swordModel: {fileID: 3427838936398561976, guid: 982a241209a47f04cb5a7e825a1f3fdd,
     type: 3}
   swordSprites:
+  - {fileID: 21300000, guid: 1e4ae5f22edb2d946b297ac56a813014, type: 3}
+  - {fileID: 21300000, guid: 5f6e544475c56264da42bac0914435cf, type: 3}
   - {fileID: 21300000, guid: a17f6f67ce0185a48acb7e46affc123e, type: 3}
+  - {fileID: 21300000, guid: 0f16e45c86c33a449a69abea12bdbb2a, type: 3}
+  - {fileID: 21300000, guid: b53f95e1ec0ec1b46a8a7a9900d2e77a, type: 3}
+  - {fileID: 21300000, guid: 5a8fd71b8178e0a40baaf8a79b81efb6, type: 3}
+  - {fileID: 21300000, guid: 8a5b9e9c866276941bb1049be97dc512, type: 3}
+  - {fileID: 21300000, guid: 521a0311bd068524a96feaedac25c7c2, type: 3}
+  - {fileID: 21300000, guid: b2f8eee077fd6b24aba2122797178d35, type: 3}
+  - {fileID: 21300000, guid: 1888cadecbac5fe43b762c5b5499e3b8, type: 3}
+  - {fileID: 21300000, guid: 5f20ea151665c6c45bed28d17ffd295b, type: 3}
+  - {fileID: 21300000, guid: cabd27eecf118f8408d1860dd1183516, type: 3}

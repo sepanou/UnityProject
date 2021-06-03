@@ -163,3 +163,5 @@ MonoBehaviour:
       translation: 'See you soon big baboon ;)
 
         (We should change this dialog...)'
+    - fieldKey: switch-weapon
+      translation: Switch Weapon

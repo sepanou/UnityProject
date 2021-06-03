@@ -4637,6 +4637,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1006250568596231189}
   - component: {fileID: 509613705665913563}
+  - component: {fileID: -5408979898053760544}
+  - component: {fileID: 3358487455182804330}
   m_Layer: 0
   m_Name: 16x16eB1L1StdL1R1
   m_TagString: Untagged
@@ -4697,6 +4699,39 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &-5408979898053760544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8812893370885884946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
+--- !u!114 &3358487455182804330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8812893370885884946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f14a54a5b084dd5b306673810bc752c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  hasBeenDiscovered: 0
+  hasBeenCleared: 0
 --- !u!1001 &256603354879136715
 PrefabInstance:
   m_ObjectHideFlags: 0

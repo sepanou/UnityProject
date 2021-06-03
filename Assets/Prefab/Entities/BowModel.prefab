@@ -11,12 +11,11 @@ GameObject:
   - component: {fileID: 4671268149181120722}
   - component: {fileID: -5727337771764513854}
   - component: {fileID: 572109878211023939}
-  - component: {fileID: 5890061017820911818}
   - component: {fileID: -6064306282551117732}
   - component: {fileID: 5900744793733015568}
   - component: {fileID: 7887381192874093965}
   m_Layer: 0
-  m_Name: Bow
+  m_Name: BowModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,37 +104,21 @@ MonoBehaviour:
   spriteRenderer: {fileID: -5727337771764513854}
   interactionCollider: {fileID: 7887381192874093965}
   speed: 0
-  holder: {fileID: 0}
   compatibleClass: 2
-  equipped: 0
-  isGrounded: 1
   defaultDamage: 1
   specialAttackCost: 10
-  weaponGenerator: {fileID: 11400000, guid: e5e5295fd017fc64e83b09cabc106492, type: 2}
   defaultCoordsWhenLikedToPlayer: {x: 0, y: 0.25, z: 0}
   launchPoint: {fileID: 8642561507799599230}
   projectile: {fileID: -3282971848471082322, guid: f253105defb28994f8f1ab558d129c39,
     type: 3}
   orientation: {x: 0, y: 0}
---- !u!95 &5890061017820911818
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2017461150231793244}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e042204f843544143803ab693c8a2984, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  rangeData:
+    projectileSpeedMultiplier: 0
+    projectileSizeMultiplier: 0
+    projectileNumber: 0
+    defaultDamageMultiplier: 0
+    specialDamageMultiplier: 0
+    name: 
 --- !u!114 &-6064306282551117732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,6 +154,9 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 5
   localScaleSensitivity: 0.01
+  compressRotation: 0
+  interpolateScale: 1
+  syncScale: 1
 --- !u!58 &7887381192874093965
 CircleCollider2D:
   m_ObjectHideFlags: 0

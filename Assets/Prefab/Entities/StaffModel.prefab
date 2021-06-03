@@ -71,12 +71,12 @@ SpriteRenderer:
   m_SortingLayerID: -1281448579
   m_SortingLayer: 1
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: cbab688443865d048814ae2cae7b4c7f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2bfd8237a00871f409b0c96cb1701144, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.26, y: 0.52}
+  m_Size: {x: 0.9230769, y: 1.9230769}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -106,7 +106,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4495962703776795687}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6295683382376867881}
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 903625705336959861}
   - component: {fileID: 415130924750563707}
   m_Layer: 0
-  m_Name: Staff
+  m_Name: StaffModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -182,18 +182,21 @@ MonoBehaviour:
   spriteRenderer: {fileID: 5630434913441829427}
   interactionCollider: {fileID: 415130924750563707}
   speed: 0
-  holder: {fileID: 0}
   compatibleClass: 0
-  equipped: 0
-  isGrounded: 1
   defaultDamage: 10
   specialAttackCost: 10
-  weaponGenerator: {fileID: 11400000, guid: e5e5295fd017fc64e83b09cabc106492, type: 2}
-  defaultCoordsWhenLikedToPlayer: {x: 0, y: 0, z: 0}
+  defaultCoordsWhenLikedToPlayer: {x: 0, y: 0.2, z: 0}
   launchPoint: {fileID: 2873147007369620641}
   projectile: {fileID: -1884307828703802254, guid: f1790528367cd12448fa82f4c50c7d30,
     type: 3}
   orientation: {x: 0, y: 0}
+  rangeData:
+    projectileSpeedMultiplier: 0
+    projectileSizeMultiplier: 0
+    projectileNumber: 0
+    defaultDamageMultiplier: 0
+    specialDamageMultiplier: 0
+    name: 
 --- !u!95 &1079590766876661063
 Animator:
   serializedVersion: 3
@@ -231,6 +234,9 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 5
   localScaleSensitivity: 0.01
+  compressRotation: 0
+  interpolateScale: 1
+  syncScale: 1
 --- !u!58 &415130924750563707
 CircleCollider2D:
   m_ObjectHideFlags: 0

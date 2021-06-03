@@ -115,6 +115,28 @@ namespace Entity.Collectibles {
 
 		[Server] public void Interact(Player player)
 			=> StartCoroutine(OnTargetDetected(this, player));
+
+		[Server] public void LinkToPlayer(Player player) {
+			// Interactions
+			DisableInteraction(player);
+			RpcDisableInteraction(player);
+			_isGrounded = false;
+			// Transform
+			transform.SetParent(player.transform, false);
+		}
+		
+		[Server] public void Drop(Player player) {
+			// Interactions
+			EnableInteraction();
+			RpcEnableInteraction();
+			_isGrounded = true;
+			// Transform
+			Transform current = transform;
+			current.SetParent(null, false);
+			current.localPosition = Vector3.zero;
+			current.position = player.transform.position;
+			player.RemoveCharm(this);
+		}
 	}
 	
 	public static class CharmSerialization {

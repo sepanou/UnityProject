@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7028607100034038723}
   - component: {fileID: 4671547867471230747}
   m_Layer: 0
-  m_Name: Charm
+  m_Name: CharmModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,15 +73,15 @@ SpriteRenderer:
   m_SortingLayerID: -1281448579
   m_SortingLayer: 1
   m_SortingOrder: 2
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e47ac0a44fe30674d976c270f9362338, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &4102207403746134930
@@ -124,6 +124,7 @@ MonoBehaviour:
     powerBonus: 0
     speedBonus: 0
     cooldownReduction: 0
+    name: 
 --- !u!58 &4671547867471230747
 CircleCollider2D:
   m_ObjectHideFlags: 0

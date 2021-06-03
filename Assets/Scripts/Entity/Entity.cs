@@ -22,7 +22,7 @@ namespace Entity {
 		protected Func<Player, bool> InteractionCondition;
 		// <Player, bool : is he currently interacting with the object>
 		private Dictionary<Player, bool> _playerPool;
-		private bool _canInteract;
+		private bool _canInteract; // Can the LOCAL player interact with this entity?
 		private IEnumerator _checkInteractionCoroutine;
 		private IInteractiveEntity _interactive;
 
@@ -120,7 +120,11 @@ namespace Entity {
 				TargetSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer);
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
+		[TargetRpc]
+		public void TargetSetRenderingLayersInChildren(NetworkConnection target, int sortingLayerID,
+			string sortingLayerName, int layerMask) 
+			=> SetRenderingLayersInChildren(sortingLayerID, sortingLayerName, layerMask, gameObject);
+		
 		[TargetRpc]
 		private void TargetSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId) {
 			if (spriteRenderer)
@@ -137,6 +141,9 @@ namespace Entity {
 						yield break;
 					yield return null;
 				}
+
+				if (!_playerPool.ContainsKey(player))
+					yield return null;
 
 				if (!_playerPool[player] || AutoStopInteracting)
 					CmdTryInteract(player);
@@ -177,11 +184,12 @@ namespace Entity {
 			_playerPool[player] = state;
 		}
 
-		public bool VerifyInteractionWith(Player player) 
+		protected bool VerifyInteractionWith(Player player) 
 			=> _playerPool.ContainsKey(player) && _playerPool[player];
 
 		public void DisableInteraction(Player player) {
-			interactionCollider.enabled = false;
+			if (interactionCollider)
+				interactionCollider.enabled = false;
 			if (netId == 0) return; // == not networked yet
 			if (_checkInteractionCoroutine != null)
 				StopCoroutine(_checkInteractionCoroutine);
@@ -191,9 +199,14 @@ namespace Entity {
 			PlayerInfoManager.displayKey.StopDisplay();
 		}
 
-		[ClientRpc] public void RpcDisableInteraction(Player player) => DisableInteraction(player);
+		protected void EnableInteraction() {
+			if (interactionCollider)
+				interactionCollider.enabled = true;
+		}
 
-		[ClientRpc] public void RpcEnableInteraction() => interactionCollider.enabled = true;
+		[ClientRpc] protected void RpcDisableInteraction(Player player) => DisableInteraction(player);
+
+		[ClientRpc] protected void RpcEnableInteraction() => EnableInteraction();
 
 		protected virtual void OnTriggerEnter2D(Collider2D other) {
 			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))
@@ -212,8 +225,6 @@ namespace Entity {
 		
 		protected virtual void OnTriggerExit2D(Collider2D other) {
 			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))
-				return;
-			if (InteractionCondition != null && !InteractionCondition(player))
 				return;
 			_playerPool.Remove(player);
 			if (!player.isLocalPlayer) return;

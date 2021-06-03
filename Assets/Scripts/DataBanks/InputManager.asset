@@ -30,4 +30,6 @@ MonoBehaviour:
   - actionName: OpenMenu
     keyEntry: 27
   - actionName: Interact
-    keyEntry: 323
+    keyEntry: 101
+  - actionName: SwitchWeapon
+    keyEntry: 120

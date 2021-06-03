@@ -3,8 +3,7 @@ using UnityEngine;
 public class StairsLayerTrigger: MonoBehaviour {
 	[SerializeField] private string destinationSortingLayer;
 	[SerializeField] private string destinationLayerMask;
-	private int _sortingLayerId;
-	private int _layerMaskId;
+	private int _sortingLayerId, _layerMaskId;
 
 	private void Start() {
 		_sortingLayerId = SortingLayer.NameToID(destinationSortingLayer);
