@@ -20,6 +20,7 @@ namespace Generation {
 		public (int, int) Coordinates; // Left of the Room
 		public (int, int) UDim;
 		public (int, int) UCoords;
+		public int UniqueId;
 
 		// ReSharper disable once UnusedMember.Local
 		private void Start() {
@@ -36,7 +37,7 @@ namespace Generation {
 			UDim = p.uDim;
 		}
 
-		public Room(Room room) {
+		public Room(Room room, int uniqueID) {
 			Dimensions = room.Dimensions;
 			_exits = new List<(char, int)>(room._exits);
 			Type = room.Type;
@@ -44,6 +45,7 @@ namespace Generation {
 			_id = room._id;
 			Name = room.Name;
 			UDim = room.UDim;
+			UniqueId = uniqueID;
 		}
 
 		public static ((int, int), List<(char, int)>, RoomType, int, int, (int,int)) Generate(string name) {

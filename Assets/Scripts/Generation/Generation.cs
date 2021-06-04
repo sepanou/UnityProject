@@ -12,6 +12,7 @@ namespace Generation {
 		private static readonly Random Random = new Random();
 		private static List<Room> _recentlyAddedRooms;
 		private static List<Room> _roomsToTreat;
+		private static int _uniqueIds;
 		
 		[Server]
 		// ReSharper disable once UnusedMember.Local
@@ -105,7 +106,8 @@ namespace Generation {
 		[Server]
 		private static Room FindDeadEnd(char dir) {
 			foreach (Room room in _availableRooms[RoomType.DeadEnd]) {
-				if (room._exits[0].Item1 == dir) return new Room(room);
+				++_uniqueIds;
+				if (room._exits[0].Item1 == dir) return new Room(room, _uniqueIds);
 			}
 			throw new ArgumentException("FindDeadEnd: Room not found");
 		}
@@ -162,7 +164,8 @@ namespace Generation {
 				? RoomType.Chest
 				: RoomType.Standard
 			;
-			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)]);
+			++_uniqueIds;
+			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)], _uniqueIds);
 		}
 		
 		[Server]
@@ -201,16 +204,16 @@ namespace Generation {
 			}
 			for (int i = uY; i > uY - uH; i--) {
 				for (int j = uX; j < uW + uX; j++) {
-					if (!(rMap[i + 1, j] == null || rMap[i + 1, j] == room ||
-					      (SubFunction(rMap, j, i + 1, 'T') == SubFunction2(room, j, i,'B', uX, uY))))
+					if (!(rMap[i + 1, j] == null || rMap[i + 1, j].UniqueId == room.UniqueId ||
+					      (SubFunction(rMap, j, i + 1, 'T') == SubFunction2(room, j, i, 'B', uX, uY))))
 						return false;
-					if (!(rMap[i - 1, j] == null || rMap[i - 1, j] == room ||
+					if (!(rMap[i - 1, j] == null || rMap[i - 1, j].UniqueId == room.UniqueId ||
 					      (SubFunction(rMap, j, i - 1, 'B') == SubFunction2(room, j, i, 'T', uX, uY))))
 						return false;
-					if (!(rMap[i, j + 1] == null || rMap[i, j + 1] == room ||
+					if (!(rMap[i, j + 1] == null || rMap[i, j + 1].UniqueId == room.UniqueId ||
 					      (SubFunction(rMap, j + 1, i, 'L') == SubFunction2(room, j, i, 'R', uX, uY))))
 						return false;
-					if (!(rMap[i, j - 1] == null || rMap[i, j - 1] == room ||
+					if (!(rMap[i, j - 1] == null || rMap[i, j - 1].UniqueId == room.UniqueId ||
 					      (SubFunction(rMap, j - 1, i, 'R') == SubFunction2(room, j, i, 'L', uX, uY))))
 						return false;
 				}
@@ -309,7 +312,7 @@ namespace Generation {
 			return ans;
 		}
 
-		[Server]
+		[ClientRpc]
 		private static void AddPrefab(int x, int y, string roomName) {
 			Object objectToAdd = null;
 			foreach (Object o in Resources.LoadAll("Level1", typeof(GameObject))) {
