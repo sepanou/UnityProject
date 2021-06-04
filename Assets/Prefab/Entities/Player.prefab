@@ -198,7 +198,6 @@ MonoBehaviour:
   toSpawn: {fileID: 1882545377149301592, guid: a7c12a540bbfc5e439e178af2569ad74, type: 3}
   playerName: PlayerA
   playerClass: 2
-  weapon: {fileID: 0}
   maxEnergy: 100
 --- !u!95 &8972541332924031235
 Animator:

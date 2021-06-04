@@ -3982,8 +3982,8 @@ Transform:
   - {fileID: 827564803}
   - {fileID: 1807969962}
   - {fileID: 711440084}
-  - {fileID: 1362564846}
   - {fileID: 423005437}
+  - {fileID: 1362564846}
   m_Father: {fileID: 770805806}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -17520,7 +17520,7 @@ RectTransform:
   m_Children:
   - {fileID: 389465628}
   m_Father: {fileID: 166225833}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -59244,7 +59244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39adc6e09d5544ed955a50ce8600355a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visRange: 80
+  visRange: 100000
   rebuildInterval: 1
   checkMethod: 1
   showSlider: 0
@@ -102526,7 +102526,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 50.52002, y: 49.570007}
+  m_AnchoredPosition: {x: 50.52002, y: 49.569946}
   m_SizeDelta: {x: 101, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1808074336
@@ -116240,7 +116240,7 @@ PrefabInstance:
     - target: {fileID: 203088037981429627, guid: 9263dea38d9918d499ec0f4b0c8cbac4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 203088037981429627, guid: 9263dea38d9918d499ec0f4b0c8cbac4,
         type: 3}

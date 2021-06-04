@@ -65,38 +65,60 @@ namespace Generation {
 				_roomsToTreat.Shuffle();
 			}
 			List<Room> oldRooms = new List<Room>(lMap);
-			foreach (Room room in oldRooms) {
-				if (AreExitsOccupied(rMap, room)) continue;
-				foreach ((char dir, int nbDir) in room._exits) {
-					if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
-					(x, y) = room.UCoords;
-					(int uH, int uW) = room.UDim;
-					bool placedRoom;
-					switch (dir) {
-						case 'T':
-							placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('B'), x + nbDir - 1, y - uH);
-							break;
-						case 'B':
-							placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('T'), x + nbDir - 1, y + 1);
-							break;
-						case 'L':
-							placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('R'), x - 1, y - nbDir + 1);
-							break;
-						case 'R':
-							placedRoom =TryAddRoom(lMap, rMap, FindDeadEnd('L'), x + uW, y - nbDir + 1);
-							break;
-						default:
-							throw new ArgumentException("Wrong letter");
-					}
-
-					if (!placedRoom) { // This is ugly but it does work :p
-						foreach (Room roomToReplace in _availableRooms[RoomType.Standard]) {
-							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y - uH) ||
-							     dir == 'B' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y + 1) ||
-							     dir == 'L' && TryAddRoom(lMap, rMap, roomToReplace, x - 1, y - nbDir + 1) ||
-							     dir == 'R' && TryAddRoom(lMap, rMap, roomToReplace, x + uW, y - nbDir + 1))
-							) break;
+			List<Room> standardAddedRooms = new List<Room>();
+			while (true) {
+				foreach (Room room in oldRooms) {
+					if (AreExitsOccupied(rMap, room)) continue;
+					foreach ((char dir, int nbDir) in room._exits) {
+						if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
+						(x, y) = room.UCoords;
+						(int uH, int uW) = room.UDim;
+						bool placedRoom;
+						switch (dir) {
+							case 'T':
+								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('B'), x + nbDir - 1, y - uH);
+								break;
+							case 'B':
+								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('T'), x + nbDir - 1, y + 1);
+								break;
+							case 'L':
+								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('R'), x - 1, y - nbDir + 1);
+								break;
+							case 'R':
+								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('L'), x + uW, y - nbDir + 1);
+								break;
+							default:
+								throw new ArgumentException("Wrong letter");
 						}
+
+						if (!placedRoom) {
+							// This is ugly but it does work :p
+							List<Room> rooms = new List<Room>(_availableRooms[RoomType.Standard]);
+							rooms.Shuffle();
+							foreach (Room roomToReplace in rooms) {
+								if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y - uH) ||
+								     dir == 'B' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y + 1) ||
+								     dir == 'L' && TryAddRoom(lMap, rMap, roomToReplace, x - 1, y - nbDir + 1) ||
+								     dir == 'R' && TryAddRoom(lMap, rMap, roomToReplace, x + uW, y - nbDir + 1))
+								) {
+									standardAddedRooms.Add(roomToReplace);
+									break;
+								}
+							}
+						}
+					}
+				}
+
+				if (standardAddedRooms.Count == 0) break;
+				(standardAddedRooms, oldRooms) = (new List<Room>(), standardAddedRooms);
+			}
+			//Filling phase
+			foreach (Room room in lMap) {
+				(x, y) = room.UCoords;
+				(int uW, int uH) = room.UDim;
+				for (int i = y + 1; i >= y - uH; --i) {
+					for (int j = x - 1; j <= x + uW; j++) {
+						if (rMap[i,j] == null) AddPrefab(j*20, i*-20, "Filler");
 					}
 				}
 			}
