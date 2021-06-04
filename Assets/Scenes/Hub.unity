@@ -59201,9 +59201,13 @@ MonoBehaviour:
   - {fileID: 3505082931880663599, guid: 05ce2b265c6ffec43a12b99efde3ede6, type: 3}
   - {fileID: 2670758541171800637, guid: e76075de44ddca24a99a7b36ae1c0398, type: 3}
   - {fileID: 6108967529495489962, guid: 70f284d083e5e85429437f7c3066fe4c, type: 3}
-  - {fileID: 3931145845793517927, guid: f1790528367cd12448fa82f4c50c7d30, type: 3}
-  - {fileID: 2198074381090187270, guid: f253105defb28994f8f1ab558d129c39, type: 3}
   - {fileID: 1882545377149301592, guid: a7c12a540bbfc5e439e178af2569ad74, type: 3}
+  - {fileID: 2198074381090187270, guid: f253105defb28994f8f1ab558d129c39, type: 3}
+  - {fileID: 3931145845793517927, guid: f1790528367cd12448fa82f4c50c7d30, type: 3}
+  - {fileID: 1087747426597687567, guid: fd6892582960c4644bcaf1e8d18ab1f2, type: 3}
+  - {fileID: 2375817997351732174, guid: 04751a18bbba38640ab0b6e6ee6cb34b, type: 3}
+  - {fileID: 7737981464072272741, guid: fdb2f9d715a8b2a46aab0c82e661abda, type: 3}
+  - {fileID: 5698889285121029488, guid: c20fc59d71e09cc4f841a72cce40188b, type: 3}
   sceneAnimator: {fileID: 807742234}
   forestSceneName: Level1Creation
   forestSpawnPoints:
