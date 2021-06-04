@@ -214,6 +214,21 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			else
 				OnRemotePlayerClassChange?.Invoke(data);
 		}
+		
+		public int ApplyDamageBonuses(int damage, bool isSpecialAttack) {
+			if (_currentCharmBonus is null) return damage;
+			return (int) (damage * (isSpecialAttack
+			? _currentCharmBonus
+				.specialAttackDamageBonus
+			: _currentCharmBonus
+				.defaultAttackDamageBonus));
+		}
+
+		public float ApplyCooldownBonuses(float initialCooldown) {
+			if (_currentCharmBonus is null) return initialCooldown;
+			if (_currentCharmBonus.cooldownReduction >= 1) return 0f;
+			return initialCooldown * (1 - _currentCharmBonus.cooldownReduction);
+		}
 
 		[Client]
 		private void OnWeaponsUpdated(SyncList<uint>.Operation op, int index, Weapon.Weapon item) {
@@ -269,19 +284,26 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				case SyncList<uint>.Operation.OP_ADD:
 					_currentCharmBonus += item.bonuses;
 					maxEnergy += item.bonuses.powerBonus;
+					_energy += item.bonuses.powerBonus;
 					maxHealth += item.bonuses.healthBonus;
+					Health += item.bonuses.healthBonus;
 					Speed = DefaultSpeed * (1 + _currentCharmBonus.speedBonus);
 					break;
 				case SyncList<uint>.Operation.OP_CLEAR:
 					maxHealth = DefaultMaxHealth;
+					Health = DefaultMaxHealth;
 					maxEnergy = _defaultMaxEnergy;
+					_energy = _defaultMaxEnergy;
 					Speed = DefaultSpeed;
 					_currentCharmBonus = null;
 					break;
 				case SyncList<uint>.Operation.OP_REMOVEAT:
+					int changedHealth = Health - item.bonuses.healthBonus;
 					_currentCharmBonus -= item.bonuses;
 					maxEnergy -= item.bonuses.powerBonus;
+					ReduceEnergy(item.bonuses.powerBonus);
 					maxHealth -= item.bonuses.healthBonus;
+					Health = changedHealth <= 0 ? Health : changedHealth;
 					Speed = DefaultSpeed * (1 + _currentCharmBonus.speedBonus);
 					break;
 				default:
@@ -298,7 +320,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		}
 		
 		[Server] public bool RemoveCharm(Charm charm) => _charms.Remove(charm);
-		
+
 		[Server] public bool RemoveWeapon(Weapon.Weapon wp) {
 			bool hadWeaponEquipped = HasWeaponEquipped(wp);
 			if (!_weapons.Remove(wp)) return false;
@@ -465,9 +487,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (isServer && Input.GetKeyDown(KeyCode.L)) {
 				NetworkServer.Spawn(WeaponGenerator.GenerateStaff().gameObject);
 			}
-
-			if (Input.GetKeyDown(KeyCode.B)) GetAttacked(1);
 			
+			if (isServer && Input.GetKeyDown(KeyCode.F)) {
+				NetworkServer.Spawn(Instantiate(toSpawn, Vector3.zero, Quaternion.identity));
+			}
+
 			if (isServer && Input.GetKeyDown(KeyCode.V)) {
 				NetworkServer.Spawn(WeaponGenerator.GenerateCharm().gameObject);
 			}

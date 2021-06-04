@@ -14,7 +14,7 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 			MinDefaultDamageMultiplier = 0.5f,
 			MinSpecialDamageMultiplier = 0.75f;
 		
-		public const int MaxProjectileNumber = 7,
+		public const int MaxProjectileNumber = 4,
 			MinProjectileNumber = 1;
 		
 		public float projectileSpeedMultiplier, projectileSizeMultiplier;
@@ -54,7 +54,7 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 	
 	public abstract class RangedWeapon: Weapon {
 		[SerializeField] protected Transform launchPoint;
-		[SerializeField] private Projectile.Projectile projectile;
+		protected Projectile.Projectile Projectile;
 		
 		[SyncVar] [HideInInspector] public Vector2 orientation;
 		[SyncVar] [HideInInspector] public RangedWeaponData rangeData;
@@ -72,6 +72,11 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 			rangeData = reader.Read<RangedWeaponData>();
 		}
 
+		protected abstract void SetProjectile();
+		
+		protected override float GetDamageMultiplier(bool isSpecial) =>
+			isSpecial ? rangeData.specialDamageMultiplier : rangeData.defaultDamageMultiplier;
+
 		public override RectTransform GetInformationPopup() 
 			=> PlayerInfoManager.ShowRangedWeaponDescription(rangeData);
 
@@ -79,11 +84,12 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 
 		protected new void Instantiate() {
 			base.Instantiate();
-			if (isServer) orientation = Vector2.up;
-			projectile.Instantiate();
+			if (!isServer) return;
+			orientation = Vector2.up;
+			SetProjectile();
 		}
 
-		public Projectile.Projectile GetProjectile() => projectile;
+		[Server] public Projectile.Projectile GetProjectile() => Projectile;
 
 		public override string GetWeaponName() => rangeData.name;
 	}

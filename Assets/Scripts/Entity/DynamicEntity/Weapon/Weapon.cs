@@ -8,7 +8,6 @@ namespace Entity.DynamicEntity.Weapon {
 	public abstract class Weapon: DynamicEntity, IInventoryItem, IInteractiveEntity {
 		[SyncVar] protected Player Holder;
 		[SyncVar] public PlayerClasses compatibleClass;
-		[SyncVar] protected float LastAttackTime; // For cooldown purposes
 		[SyncVar] private bool _playerFound; // Has the player collected the item?
 		
 		// Index of the sprite in the WPGenerator array -> Mirror can't serialize sprites
@@ -19,10 +18,13 @@ namespace Entity.DynamicEntity.Weapon {
 		[SyncVar(hook = nameof(SyncIsGroundedChanged))] protected bool IsGrounded;
 		private void SyncIsGroundedChanged(bool o, bool n) => SetSpriteRendererVisible(n);
 		
-
-		[SerializeField] protected int defaultDamage;
-		[SerializeField] protected int specialAttackCost;
 		[SerializeField] public Vector3 defaultCoordsWhenLikedToPlayer;
+		[SerializeField] protected int defaultDamage, specialDamage;
+		[SerializeField] protected int specialAttackCost;
+		private float _lastAttackTime; // For cooldown purposes
+		// Makes sure that the cooldown of the last attack is not modified if the player removes / add Charms
+		private float _lastAttackCooldown;
+		private bool _isSpecial; // True if the last attack was a special one
 		
 		protected bool Equipped => Holder && Holder.HasWeaponEquipped(this);
 
@@ -31,7 +33,7 @@ namespace Entity.DynamicEntity.Weapon {
 			writer.WritePlayer(Holder);
 			writer.WriteByte((byte) compatibleClass);
 			writer.WriteBoolean(IsGrounded);
-			writer.WriteSingle(LastAttackTime);
+			writer.WriteSingle(_lastAttackTime);
 			writer.WriteBoolean(_playerFound);
 			writer.WriteInt32(SpriteIndex);
 			return true;
@@ -42,7 +44,7 @@ namespace Entity.DynamicEntity.Weapon {
 			Holder = reader.ReadPlayer();
 			compatibleClass = (PlayerClasses) reader.ReadByte();
 			bool newIsGrounded = reader.ReadBoolean();
-			LastAttackTime = reader.ReadSingle();
+			_lastAttackTime = reader.ReadSingle();
 			_playerFound = reader.ReadBoolean();
 			int newSpriteIndex = reader.ReadInt32();
 
@@ -66,7 +68,7 @@ namespace Entity.DynamicEntity.Weapon {
 			if (isServer) {
 				IsGrounded = true; // By default, weapon on the ground !
 				_playerFound = false;
-				LastAttackTime = -1f;
+				_lastAttackTime = -1f;
 			}
 
 			if (Holder) SetSpriteRendererVisible(Equipped);
@@ -82,16 +84,25 @@ namespace Entity.DynamicEntity.Weapon {
 			                                 && !player.IsFullInventory();
 		}
 
-		public int GetDamage() => defaultDamage;
+		protected int GetDamage() => (int) ((Holder
+			? Holder.ApplyDamageBonuses(_isSpecial ? specialDamage : defaultDamage, _isSpecial)
+			: _isSpecial ? specialDamage : defaultDamage) * GetDamageMultiplier(_isSpecial));
+		
+		// Used for projectile - they have a bool telling whether they were launched on a special or default attack
+		public int GetDamage(bool isSpecial) => (int) ((Holder
+			? Holder.ApplyDamageBonuses(isSpecial ? specialDamage : defaultDamage, isSpecial)
+			: _isSpecial ? specialDamage : defaultDamage) * GetDamageMultiplier(isSpecial));
+
 		public int GetSpecialAttackCost() => specialAttackCost;
 
-		public bool CanAttack() => Holder && Equipped && (LastAttackTime < 0 || !(Time.time - LastAttackTime < Speed));
+		public bool CanAttack()
+			=> Holder && Equipped && (_lastAttackTime < 0 || !(Time.time - _lastAttackTime < _lastAttackCooldown));
 
 		protected abstract void DefaultAttack();
 		protected abstract void SpecialAttack();
+		protected abstract float GetDamageMultiplier(bool isSpecial);
 		public abstract RectTransform GetInformationPopup();
 		public abstract int GetKibryValue();
-
 		public abstract string GetWeaponName();
 
 		[Server] public void SetIsGrounded(bool state) => IsGrounded = state;
@@ -104,8 +115,20 @@ namespace Entity.DynamicEntity.Weapon {
 		// Validation checks before attacking
 		// Only the player with authority on the object can call this method
 		[Server] public void UseWeapon(bool fireOneButton, bool fireTwoButton) {
-			if (fireOneButton) DefaultAttack();
-			else if (fireTwoButton && Holder.HasEnoughEnergy(specialAttackCost)) SpecialAttack();
+			_lastAttackTime = Time.time;
+			_lastAttackCooldown = Holder ? Holder.ApplyCooldownBonuses(Speed) : Speed;
+			
+			if (fireOneButton) {
+				_isSpecial = false;
+				DefaultAttack();
+				TargetLaunchAttackCooldown(connectionToClient, _lastAttackCooldown, _lastAttackTime, false);
+			}
+			else if (fireTwoButton && Holder.HasEnoughEnergy(specialAttackCost)) {
+				Holder.ReduceEnergy(specialAttackCost);
+				_isSpecial = true;
+				SpecialAttack();
+				TargetLaunchAttackCooldown(connectionToClient, _lastAttackCooldown, _lastAttackTime, true);
+			}
 		}
 
 		[Server] public void LinkToPlayer(Player player) {
@@ -149,6 +172,18 @@ namespace Entity.DynamicEntity.Weapon {
 		[TargetRpc] private void TargetSetClientAuthority(NetworkConnection target, bool state) {
 			if (TryGetComponent(out NetworkTransform netTransform))
 				netTransform.clientAuthority = state;
+		}
+
+		[TargetRpc]
+		private void TargetLaunchAttackCooldown(NetworkConnection target, float duration, float startTime, bool isSpecial) {
+			_lastAttackTime = startTime;
+			_lastAttackCooldown = duration;
+			float timeLeft = duration + startTime - Time.time;
+			
+			if (!isSpecial)
+				Manager.playerInfoManager.StartDefaultAttackCooldown(timeLeft);
+			else
+				Manager.playerInfoManager.StartSpecialAttackCooldown(timeLeft);
 		}
 
 		// Called on client every time this object is spawned (especially when new players join)

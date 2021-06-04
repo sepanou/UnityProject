@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entity.Collectibles;
+using Entity.DynamicEntity.Projectile;
 using Entity.DynamicEntity.Weapon;
 using Entity.DynamicEntity.Weapon.MeleeWeapon;
 using Entity.DynamicEntity.Weapon.RangedWeapon;
@@ -10,19 +11,23 @@ using Random = UnityEngine.Random;
 namespace DataBanks {
 	[CreateAssetMenu(fileName = "WeaponGeneratorDB", menuName = "DataBanks/WeaponGenerator", order = 2)]
 	public class WeaponGeneratorDB: ScriptableObject {
-		// Charms
+		[Header("Charms")]
 		[SerializeField] private GameObject charmModel;
 		[SerializeField] private Sprite[] charmSprites;
 		
-		// Bows
+		[Header("Bows")]
 		[SerializeField] private GameObject bowModel;
 		[SerializeField] private Sprite[] bowSprites;
 		
-		// Staffs
+		[Header("Staffs")]
 		[SerializeField] private GameObject staffModel;
 		[SerializeField] private Sprite[] staffSprites;
-		
-		// Swords
+
+		[Header("Projectiles")] 
+		[SerializeField] private Projectile[] bowProjectiles;
+		[SerializeField] private Projectile[] staffProjectiles;
+
+		[Header("Swords")]
 		[SerializeField] private GameObject swordModel;
 		[SerializeField] private Sprite[] swordSprites;
 		
@@ -317,5 +322,9 @@ namespace DataBanks {
 			result.GetSpriteRenderer().sprite = GetRandomInArray(swordSprites, out result.SpriteIndex);
 			return result;
 		}
+
+		public Projectile GetBowProjectile() => GetRandomInArray(bowProjectiles, out _);
+		
+		public Projectile GetStaffProjectile() => GetRandomInArray(staffProjectiles, out _);
 	}
 }

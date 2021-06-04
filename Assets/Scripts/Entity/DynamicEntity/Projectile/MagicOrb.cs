@@ -10,11 +10,5 @@ namespace Entity.DynamicEntity.Projectile {
 			RigidBody.velocity = FacingDirection * Speed;
 			// Add specific behaviour here -> Perlin noise?
 		}
-
-		[ServerCallback] private void OnCollisionEnter2D(Collision2D other) {
-			if (other.gameObject.TryGetComponent(out LivingEntity.LivingEntity entity))
-				entity.GetAttacked(FromWeapon.GetDamage());
-			NetworkServer.Destroy(gameObject);
-		}
 	}
 }

@@ -103,11 +103,12 @@ MonoBehaviour:
   syncInterval: 0.1
   spriteRenderer: {fileID: -5727337771764513854}
   interactionCollider: {fileID: 7887381192874093965}
-  speed: 0
+  speed: 1.25
   compatibleClass: 2
-  defaultDamage: 1
-  specialAttackCost: 10
   defaultCoordsWhenLikedToPlayer: {x: 0, y: 0.25, z: 0}
+  defaultDamage: 1
+  specialDamage: 1
+  specialAttackCost: 10
   launchPoint: {fileID: 8642561507799599230}
   projectile: {fileID: -3282971848471082322, guid: f253105defb28994f8f1ab558d129c39,
     type: 3}

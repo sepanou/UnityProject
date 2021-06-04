@@ -18,7 +18,7 @@ MonoBehaviour:
       type: 3}
     healthBar: {fileID: 21300000, guid: 7ff9cb275541945488b957b73a97d7e4, type: 3}
     powerBar: {fileID: 21300000, guid: b365079ef6a84224d802a3650b522f77, type: 3}
-    classIcon: {fileID: 0}
+    classIcon: {fileID: 21300000, guid: 1c7c078480faa8e4985a9b8589697291, type: 3}
     defaultAttackIcon: {fileID: 21300000, guid: 703fd73ec331004478a7a7ff7e7625f3,
       type: 3}
     specialAttackIcon: {fileID: 21300000, guid: 09a0bb04e73ad8d4da6df7a1ee34cab8,
@@ -31,7 +31,7 @@ MonoBehaviour:
       type: 3}
     healthBar: {fileID: 21300000, guid: c691a10ab7f179c469bf26e34e44e29f, type: 3}
     powerBar: {fileID: 21300000, guid: b365079ef6a84224d802a3650b522f77, type: 3}
-    classIcon: {fileID: 0}
+    classIcon: {fileID: 21300000, guid: 79cc519ae4e906d47923f057aaa304bd, type: 3}
     defaultAttackIcon: {fileID: 21300000, guid: 4d7331b074b549d458ab92fcb6bcaddd,
       type: 3}
     specialAttackIcon: {fileID: 21300000, guid: 19e59a878b70df4439e1bc428edf77b1,
@@ -44,7 +44,7 @@ MonoBehaviour:
       type: 3}
     healthBar: {fileID: 21300000, guid: b7eced2b026aaa843a71e8a8012895f6, type: 3}
     powerBar: {fileID: 21300000, guid: 8292d9ee7d3926149a08e55cb5a2171a, type: 3}
-    classIcon: {fileID: 0}
+    classIcon: {fileID: 21300000, guid: af111cac685ad5345a2fab151920fbec, type: 3}
     defaultAttackIcon: {fileID: 21300000, guid: d5a6bd7a5ffa50e43b4d70035ae56307,
       type: 3}
     specialAttackIcon: {fileID: 21300000, guid: d0e50f410c65e5446a5e695c56b86ab6,

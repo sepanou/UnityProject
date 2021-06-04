@@ -21,18 +21,17 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 				MouseCursor.Instance.OrientateObjectTowardsMouse(Vector2.up, out Vector2 orient);
 			CmdUpdateOrientation(orient);
 		}
+		
+		[Server] protected override void SetProjectile() => Projectile = WeaponGenerator.GetStaffProjectile();
 
 		[Server] protected override void DefaultAttack() {
 			RpcAttackAnimation(false);
-			Projectile.Projectile.SpawnProjectile(this, launchPoint.position);
-			LastAttackTime = Time.time;
+			global::Entity.DynamicEntity.Projectile.Projectile.SpawnProjectiles(this, launchPoint.position, false);
 		}
 
 		[Server] protected override void SpecialAttack() {
 			RpcAttackAnimation(true);
-			Projectile.Projectile.SpawnProjectile(this, launchPoint.position);
-			Holder.ReduceEnergy(specialAttackCost);
-			LastAttackTime = Time.time;
+			global::Entity.DynamicEntity.Projectile.Projectile.SpawnProjectiles(this, launchPoint.position, true);
 		}
 
 		[ClientRpc] // By default, attack anims are fast -> no need for persistent NetworkAnimator
