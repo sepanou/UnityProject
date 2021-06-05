@@ -68,14 +68,14 @@ namespace Entity.StaticEntity {
 			foreach (Player p in CustomNetworkManager.Instance.PlayerPrefabs)
 				playerClassValidation[(byte) p.playerClass] = true;
 			if (playerClassValidation.Count(valid => valid) != networkManager.numPlayers) {
-				PrintToAll(networkManager, "Remember that everyone should have a different class to master...");
+				PrintToAll(networkManager, LanguageManager["#rule-one"]);
 				return;
 			}
 			
 			// Verify that all players are near the door, ready to get to the forest
 			if (!networkManager.PlayerPrefabs.All(VerifyInteractionWith)) {
 				PrintToAll(networkManager, 
-					$"{player.playerName} is itching to dive into Paimpont Forest!\nCome to the gates!");
+					$"{player.playerName}" + LanguageManager["#player-itch"]);
 				return;
 			}
 

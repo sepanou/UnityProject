@@ -168,6 +168,114 @@
         {
             "fieldKey": "allow-multiplayer",
             "translation": "Autoriser le multijoueur"
+        },
+        {
+            "fieldKey": "merge",
+            "translation": "Fusionner"
+        },
+        {
+            "fieldKey": "smith",
+            "translation": "Forgeron"
+        },
+        {
+            "fieldKey": "#collector-start",
+            "translation": "Bienvenue cher aventurier, je voie que vous souhaiteriez commercer !\nJe peux sentir d'ici le parfum des reliques que vous transportez!\nVenez donc."
+        },
+        {
+            "fieldKey": "#collector-stop",
+            "translation": "Bon voyage et bonne fortune.\nEt... si vous trouvez de curieuses reliques, vous savez où me trouver !"
+        },
+        {
+            "fieldKey": "#smith-start",
+            "translation": "Mmmhh, que voulez-vous donc ?\nTant que vous avez des talismans à fusionner, je suis votre homme !\nEn fusionner deux vous coûtera 5 kibry, trois fera 10 kibry, etc. Compris ?"
+        },
+        {
+            "fieldKey": "#smith-stop",
+            "translation": "Au revoir, et n'oubliez pas de conserver tous les talismans que vous trouvez...\nIls peuvent être décisifs lors des combats."
+        },
+        {
+            "fieldKey": "#trade-completed",
+            "translation": "C'est toujours un plaisir de faire affaire avec vous !"
+        },
+        {
+            "fieldKey": "#want-more",
+            "translation": "Désireriez-vous autre chose ?"
+        },
+        {
+            "fieldKey": "collector",
+            "translation": "Collectionneur"
+        },
+        {
+            "fieldKey": "sell",
+            "translation": "Vendre"
+        },
+        {
+            "fieldKey": "buy",
+            "translation": "Acheter"
+        },
+        {
+            "fieldKey": "innkeeper",
+            "translation": "Tavernier"
+        },
+        {
+            "fieldKey": "#innkeeper-start",
+            "translation": "Bienvenue dans ma taverne !\nJ'ai de nombreux objets de valeur qui, je suis sûre vous intéresserons.\nJetez-y donc un oeil."
+        },
+        {
+            "fieldKey": "#innkeeper-stop",
+            "translation": "Je vous souhaite bonne chance dans votre entreprise\nÀ bientôt."
+        },
+        {
+            "fieldKey": "switch-weapon",
+            "translation": "Changer d'arme"
+        },
+        {
+            "fieldKey": "#no-NPC-interaction",
+            "translation": "Vous n'êtes plus en train d'intéragir avec ce PNJ !"
+        },
+        {
+            "fieldKey": "#nothing-trade",
+            "translation": "Il n'y a rien à échanger..."
+        },
+        {
+            "fieldKey": "#more-kibry",
+            "translation": "Vous n'avez pas assez de Kibrient..."
+        },
+        {
+            "fieldKey": "#already-sold",
+            "translation": "Trop tard...\nCet item a déjà été vendu !"
+        },
+        {
+            "fieldKey": "#more-charms",
+            "translation": "Il n'y a pas assez de talismans à fusionner, veuillez en ajouter."
+        },
+        {
+            "fieldKey": "#rule-one",
+            "translation": "Pour rappel, aucun joueur ne peux maîtriser la même classe..."
+        },
+        {
+            "fieldKey": "#player-itch",
+            "translation": " s'impatiente de pénétrer dans la forêt de Paimpont !\nApprochez-vous des portes !"
+        },
+        {
+            "fieldKey": "#class-incompatible",
+            "translation": "Votre classe n'est pas compatible avec cette arme."
+        },
+        {
+            "fieldKey": "#pseudo-validation",
+            "translation": "Le pseudo doit avoir une taille comprise entre 4 et 16 caractères !"
+        },
+        {
+            "fieldKey": "#time-out",
+            "translation": "Délai d'attente expiré après n'avoir reçu aucun message...\nConnexion échouée !"
+        },
+        {
+            "fieldKey": "#client-server-started",
+            "translation": "Client ou Serveur déjà lancé..."
+        },
+        {
+            "fieldKey": "#invalid-IP",
+            "translation": "Format d'adresse IP invalide !"
         }
     ]
 }

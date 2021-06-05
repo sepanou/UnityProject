@@ -16,10 +16,8 @@ namespace Entity.StaticEntity.Npcs {
         [TargetRpc] private void TargetMergeSuccessful(NetworkConnection target, Charm finalCharm) {
             Inventory.ClearInventory();
 			
-            if (!InventoryManager.playerInventory.TryRemoveItem(finalCharm)) {
-                Debug.Log("Unsuccessful");
-                return;
-            } // Should not happen
+            if (!InventoryManager.playerInventory.TryRemoveItem(finalCharm))
+                return; // Should not happen
 			
             PrintDialog(new[] { "#trade-completed", "#want-more" }, null, true);
             GetInventory<SmithInventory>().SetResultSlot(finalCharm);
@@ -31,17 +29,17 @@ namespace Entity.StaticEntity.Npcs {
             if (sender != player.connectionToClient) return;
 			
             if (!VerifyInteractionWith(player)) {
-                player.TargetPrintWarning(sender, "You are no longer interacting with this NPC!");
+                player.TargetPrintWarning(sender, LanguageManager["#no-NPC-interaction"]);
                 return;
             }
 			
             if (toMerge.Length <= 1) {
-                player.TargetPrintInfoMessage(sender, "Not enough charms to merge - add more");
+                player.TargetPrintInfoMessage(sender, LanguageManager["#more-charms"]);
                 return;
             }
 			
             if (!player.TryReduceKibrient(KibryCostPerCharm * (toMerge.Length - 1))) {
-                player.TargetPrintInfoMessage(sender, "You need more Kibrient...");
+                player.TargetPrintInfoMessage(sender, LanguageManager["#more-kibry"]);
                 return;
             }
 			

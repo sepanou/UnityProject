@@ -165,3 +165,24 @@ MonoBehaviour:
         (We should change this dialog...)'
     - fieldKey: switch-weapon
       translation: Switch Weapon
+    - fieldKey: '#no-NPC-interaction'
+      translation: You are no longer interacting with this NPC!
+    - fieldKey: '#nothing-trade'
+      translation: There is nothing to trade...
+    - fieldKey: '#more-kibry'
+      translation: You need more Kibrient...
+    - fieldKey: '#already-sold'
+      translation: 'Too late...
+
+        This item has already been sold!'
+    - fieldKey: '#more-charms'
+      translation: Not enough charms to merge - add more
+    - fieldKey: '#rule-one'
+      translation: Remember that everyone should have a different class to master...
+    - fieldKey: '#player-itch'
+      translation: ' is itching to dive into Paimpont Forest!
+
+        Come to the
+        gates!'
+    - fieldKey: '#class-incompatible'
+      translation: Your class is not compatible with this weapon.
