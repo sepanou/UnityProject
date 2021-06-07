@@ -41,16 +41,17 @@ namespace Entity.StaticEntity{
                         break;
                 }
             }
+            ++_count;
         }
 
-        [ClientRpc]
+        [Server]
         private void GenerateBow() {
             Bow bow = WeaponGenerator.GenerateBow(Random.Range(0, 9) < 1);
             bow.transform.position = _chestCoordinates + new Vector3(_count % 3 - 1, -1, 0);
             NetworkServer.Spawn(bow.gameObject);
         }
 
-        [ClientRpc]
+        [Server]
         private void GenerateSword() {
             MeleeWeapon meleeWeapon = WeaponGenerator.GenerateSword(Random.Range(0, 9) < 1);
             meleeWeapon.transform.position = _chestCoordinates + new Vector3(_count % 3 - 1, -1, 0);
@@ -58,7 +59,7 @@ namespace Entity.StaticEntity{
 
         }
 
-        [ClientRpc]
+        [Server]
         private void GenerateStaff() {
             Staff staff = WeaponGenerator.GenerateStaff(Random.Range(0, 9) < 1);
             staff.transform.position = _chestCoordinates + new Vector3(_count % 3 - 1, -1, 0);
