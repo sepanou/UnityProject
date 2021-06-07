@@ -1,4 +1,5 @@
 using Mirror;
+using UnityEngine;
 
 namespace Generation{
     public class RoomInGame: NetworkBehaviour{
