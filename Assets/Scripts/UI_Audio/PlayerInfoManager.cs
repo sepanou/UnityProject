@@ -83,6 +83,7 @@ namespace UI_Audio {
 			
 			// Player Class UI
 			Player.OnLocalPlayerClassChange += ChangeLocalPlayerClassInfo;
+			UpdateCurrentWeapon(null);
 		}
 
 		/// <summary>
@@ -217,15 +218,11 @@ namespace UI_Audio {
 		}
 
 		private static IEnumerator FadeCooldown(float duration, Image img, float delay = 0.05f) {
-			img.fillAmount = 1f;
-			yield return null;
-			
-			for (; duration > 0; duration -= delay) {
-				img.fillAmount = duration;
+			for (float remainingTime = duration; remainingTime > 0; remainingTime -= delay) {
+				img.fillAmount = 1f - remainingTime / duration;
 				yield return new WaitForSeconds(delay);
 			}
-
-			img.fillAmount = 0f;
+			img.fillAmount = 1f;
 		}
 		
 		public void UpdateCurrentWeapon(Weapon wp) {

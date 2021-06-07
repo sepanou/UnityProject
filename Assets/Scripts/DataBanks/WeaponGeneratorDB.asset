@@ -86,6 +86,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 61c8e1035766c584e8e422ce4545df3e, type: 3}
   - {fileID: 21300000, guid: a6a7b14611755354896fb37d6629bc68, type: 3}
   - {fileID: 21300000, guid: 69bec3b331a011f468ab61b328d5ba95, type: 3}
+  bowProjectiles:
+  - {fileID: -3282971848471082322, guid: f253105defb28994f8f1ab558d129c39, type: 3}
+  staffProjectiles:
+  - {fileID: 1991940731706197007, guid: fd6892582960c4644bcaf1e8d18ab1f2, type: 3}
+  - {fileID: -1884307828703802254, guid: f1790528367cd12448fa82f4c50c7d30, type: 3}
+  - {fileID: 4763598332264258481, guid: 04751a18bbba38640ab0b6e6ee6cb34b, type: 3}
+  - {fileID: 7653220188292722912, guid: fdb2f9d715a8b2a46aab0c82e661abda, type: 3}
+  - {fileID: 4834052715714686721, guid: c20fc59d71e09cc4f841a72cce40188b, type: 3}
   swordModel: {fileID: 3427838936398561976, guid: 982a241209a47f04cb5a7e825a1f3fdd,
     type: 3}
   swordSprites:

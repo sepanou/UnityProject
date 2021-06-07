@@ -26,15 +26,17 @@ namespace Entity {
 		private IEnumerator _checkInteractionCoroutine;
 		private IInteractiveEntity _interactive;
 
-		[NonSerialized] protected static LocalGameManager Manager;
-		[NonSerialized] protected static InputManager InputManager;
-		[NonSerialized] protected static PlayerInfoManager PlayerInfoManager;
-		[NonSerialized] protected static WeaponGeneratorDB WeaponGenerator;
-		[NonSerialized] protected static InventoryManager InventoryManager;
+		protected static LocalGameManager Manager;
+		protected static LanguageManager LanguageManager;
+		protected static InputManager InputManager;
+		protected static PlayerInfoManager PlayerInfoManager;
+		protected static WeaponGeneratorDB WeaponGenerator;
+		protected static InventoryManager InventoryManager;
 
 		public static void InitClass(LocalGameManager manager) {
 			if (Manager) throw new Exception("InitClass called multiple times");
 			Manager = manager;
+			LanguageManager = Manager.languageManager;
 			PlayerInfoManager = Manager.playerInfoManager;
 			InputManager = Manager.inputManager;
 			InventoryManager = Manager.inventoryManager;

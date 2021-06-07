@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Entity.DynamicEntity.LivingEntity.Mob;
 using Mirror;
 using UI_Audio;
 using UnityEngine;
@@ -65,6 +66,7 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 
 		public override void OnStartServer() {
 			base.OnStartServer();
+			transform.localScale *= meleeData.weaponSizeMultiplier;
 			Instantiate();
 		}
 
@@ -72,6 +74,9 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			base.OnStartClient();
 			if (!isServer) Instantiate();
 		}
+
+		protected override float GetDamageMultiplier(bool isSpecial) =>
+			isSpecial ? meleeData.specialDamageMultiplier : meleeData.defaultDamageMultiplier;
 
 		public override RectTransform GetInformationPopup() 
 			=> PlayerInfoManager.ShowMeleeWeaponDescription(meleeData);
@@ -87,13 +92,10 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 
 		[Server] protected override void DefaultAttack() {
 			TargetProcessAttack(Holder.connectionToClient);
-			LastAttackTime = Time.time;
 		}
 
 		[Server] protected override void SpecialAttack() {
 			TargetProcessAttack(Holder.connectionToClient);
-			Holder.ReduceEnergy(specialAttackCost);
-			LastAttackTime = Time.time;
 		}
 
 		[Client] private void SetLocalPosition() {
@@ -116,6 +118,7 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 		private IEnumerator ProcessAttack() {
 			SetLocalPosition();
 			_animating = true;
+			CmdSetAnimating(true);
 			MouseCursor.Instance.OrientateObjectTowardsMouse(Vector3.up, out Vector2 orientation);
 			int targetAngle = (int) Vector2.SignedAngle(Vector2.up, orientation);
 			int signX = transform.localPosition.x < 0f ? -1 : 1;
@@ -136,16 +139,26 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			}
 			
 			_animating = false;
+			CmdSetAnimating(false);
 			transform.rotation = Quaternion.identity;
 		}
 
 		[Command] private void CmdSetSpriteFlipX(bool state) => RpcSetSpriteFlipX(state);
+
+		[Command] private void CmdSetAnimating(bool state) => _animating = state;
 
 		[ClientRpc] private void RpcSetSpriteFlipX(bool state) => spriteRenderer.flipX = state;
 
 		[TargetRpc] private void TargetProcessAttack(NetworkConnection target) {
 			StopAllCoroutines();
 			StartCoroutine(ProcessAttack());
+		}
+		
+		[ServerCallback] protected override void OnTriggerEnter2D(Collider2D other) {
+			base.OnTriggerEnter2D(other);
+			if (!_animating || !other.gameObject.TryGetComponent(out Mob mob)) return;
+			mob.GetAttacked(GetDamage());
+			mob.TakeKnockBack(transform.position, meleeData.knockbackMultiplier);
 		}
 	}
 }

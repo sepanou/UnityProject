@@ -24,12 +24,12 @@ namespace Entity.StaticEntity.Npcs {
             if (sender != player.connectionToClient) return;
 			
             if (!VerifyInteractionWith(player)) {
-                player.TargetPrintWarning(sender, "You are no longer interacting with this NPC!");
+                player.TargetPrintWarning(sender, LanguageManager["#no-NPC-interaction"]);
                 return;
             }
 			
             if (itemsToSell.Length == 0) {
-                player.TargetPrintInfoMessage(sender, "There is nothing to trade...");
+                player.TargetPrintInfoMessage(sender, LanguageManager["#nothing-trade"]);
                 return;
             }
 

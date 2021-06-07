@@ -140,6 +140,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: -8419967646815761865}
   interactionCollider: {fileID: 0}
   speed: 5
+  projectileOrientation: {x: 0, y: 1}
 --- !u!114 &2388094846923333019
 MonoBehaviour:
   m_ObjectHideFlags: 0

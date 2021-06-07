@@ -22,8 +22,8 @@ namespace Entity.DynamicEntity.LivingEntity {
 		
 		protected int DefaultMaxHealth { get; private set; }
 		[SyncVar(hook = nameof(SyncHealthChanged))] [SerializeField] protected int maxHealth;
-		[SyncVar(hook = nameof(SyncHealthChanged))] [ShowInInspector] private int _health;
-		private void SyncHealthChanged(int o, int n) => OnHealthChange?.Invoke(_health / (float) maxHealth);
+		[SyncVar(hook = nameof(SyncHealthChanged))] [ShowInInspector] protected int Health;
+		private void SyncHealthChanged(int o, int n) => OnHealthChange?.Invoke(Health / (float) maxHealth);
 
 		public event HealthChanged OnHealthChange;
 		public delegate void HealthChanged(float ratio);
@@ -36,7 +36,7 @@ namespace Entity.DynamicEntity.LivingEntity {
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
 			base.OnSerialize(writer, initialState);
 			writer.WriteInt32(maxHealth);
-			writer.WriteInt32(_health);
+			writer.WriteInt32(Health);
 			return true;
 		}
 
@@ -44,10 +44,10 @@ namespace Entity.DynamicEntity.LivingEntity {
 			base.OnDeserialize(reader, initialState);
 			int newMaxHealth = reader.ReadInt32();
 			int newHealth = reader.ReadInt32();
-			if (newHealth == _health && newMaxHealth == maxHealth) return;
+			if (newHealth == Health && newMaxHealth == maxHealth) return;
 			maxHealth = newMaxHealth;
-			SyncHealthChanged(_health, newHealth);
-			_health = newHealth;
+			SyncHealthChanged(Health, newHealth);
+			Health = newHealth;
 		}
 
 		protected abstract void RpcDying();
@@ -67,15 +67,22 @@ namespace Entity.DynamicEntity.LivingEntity {
 			
 			if (isServer) {
 				DefaultMaxHealth = maxHealth;
-				_health = maxHealth;
+				Health = maxHealth;
 			}
 			
-			SyncHealthChanged(_health, _health);
+			SyncHealthChanged(Health, Health);
 			entityUI.SetNameTagField(nameTag);
 		}
 		
-		public void TakeKnockBack() {
-			throw new NotImplementedException();
+		/// <summary>
+		/// Apply a knockback force resulting of an attack, with a given velocity.
+		/// </summary>
+		/// <param name="source">The location where the attack has been performed</param>
+		/// <param name="velocity">How much should the entity back up?</param>
+		[Server] public void TakeKnockBack(Vector3 source, float velocity) {
+			Vector2 knockbackDirection = transform.position - source;
+			knockbackDirection.Normalize();
+			_rigidBody.AddForce(knockbackDirection * velocity, ForceMode2D.Impulse);
 		}
 
 		[ClientRpc] private void RpcApplyAnimationStates(int animationState, bool isIdle, Vector2 velocity) {
@@ -116,10 +123,9 @@ namespace Entity.DynamicEntity.LivingEntity {
 
 		[Server] public void GetAttacked(int atk) {
 			if (!_isAlive || atk == 0) return;
-			_health = Mathf.Max(_health - atk, 0);
-			SyncHealthChanged(_health, _health);
-			// TakeKnockback(); Needs to be implemented
-			_isAlive = _health > 0;
+			Health = Mathf.Max(Health - atk, 0);
+			SyncHealthChanged(Health, Health);
+			_isAlive = Health > 0;
 			if (!_isAlive) RpcDying();
 		}
 

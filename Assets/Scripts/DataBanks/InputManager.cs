@@ -46,15 +46,21 @@ namespace DataBanks {
 		private void LoadData() {
 			try {
 				InputEntry[] temp = JsonSerializer.FromJsonArray<InputEntry>(File.ReadAllText(_path));
-				if (temp.Length == 0) {
+				if (temp.Length == entries.Length) 
+					SetEntries(temp);
+				else {
 					// By default, entries already contains the default keymap!
 					// Thus, if there is no file -> SetEntries(entries) then SaveData() to create the file
 					_modified = true;
 					SetEntries(entries);
+					
+					// If it is true, then the file already exists but controls are missing or have been added
+					if (temp.Length != 0 && temp.Length != entries.Length)
+						SetEntries(temp);
+					
+					UpdateEntries();
 					SaveData();
 				}
-				else
-					SetEntries(temp);
 			} catch (Exception) {
 				// Same reason as before
 				_modified = true;
@@ -104,7 +110,6 @@ namespace DataBanks {
 			if (!_modified) return;
 			_modified = false;
 			UpdateEntries();
-			Debug.Log("Saving entries");
 			string data = JsonSerializer.ToJsonArray(entries);
 			File.WriteAllText(_path, data);
 		}

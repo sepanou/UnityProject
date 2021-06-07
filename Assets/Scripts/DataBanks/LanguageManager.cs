@@ -86,7 +86,7 @@ namespace DataBanks {
 			foreach (FileInfo file in directory.EnumerateFiles("*.json")) {
 				try {
 					// No need to load this specific file (hard coded)
-					if (file.Name == "English-UK.json")
+					if (file.Name == "English-UK.json" || file.Name == "French.json")
 						continue;
 					Language language = JsonUtility.FromJson<Language>(File.ReadAllText(file.FullName));
 					if (language is null)

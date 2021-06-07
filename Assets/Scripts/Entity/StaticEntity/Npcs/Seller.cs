@@ -8,7 +8,7 @@ namespace Entity.StaticEntity.Npcs {
     public abstract class Seller : ShopKeeper {
         
         [ShowInInspector]
-        private readonly CustomSyncList<IInventoryItem> _items = new CustomSyncList<IInventoryItem>();
+        protected readonly CustomSyncList<IInventoryItem> Items = new CustomSyncList<IInventoryItem>();
 
         protected bool IsLootEpic;
 
@@ -22,12 +22,14 @@ namespace Entity.StaticEntity.Npcs {
 
         protected abstract void ReducePlayerCurrency(Player player, int cost);
 
+        protected abstract void GenerateInventory();
+
         protected new void Instantiate() {
             if (isClient) {
-                _items.Callback += ItemsOnChanged;
+                Items.Callback += ItemsOnChanged;
                 // SyncList callbacks are not invoked when the game object starts
                 // For late joining clients notably
-                foreach (IInventoryItem item in _items) {
+                foreach (IInventoryItem item in Items) {
                     Inventory.TryAddItem(item);
                     (item as Entity)?.SetSpriteRendererVisible(false);
                 }
@@ -40,53 +42,29 @@ namespace Entity.StaticEntity.Npcs {
             base.OnStartServer();
         }
 
-        [Server] private void GenerateInventory() {
-            for (int i = 0; i < Inventory.Size; i++) {
-                Entity generated;
-                int rdm = Random.Range(0, 4);
-
-                if (rdm == 0)
-                    generated = WeaponGenerator.GenerateCharm();
-                else if (rdm == 1)
-                    generated = WeaponGenerator.GenerateBow(IsLootEpic);
-                else if (rdm == 2)
-                    generated = WeaponGenerator.GenerateStaff(IsLootEpic);
-                else
-                    generated = WeaponGenerator.GenerateSword(IsLootEpic);
-
-                generated.DisableInteraction(null);
-                generated.transform.parent = transform;
-                NetworkServer.Spawn(generated.gameObject);
-
-                if (generated is Charm charm) {
-                    charm.SetIsGrounded(false);
-                    _items.Add(charm);
-                }
-                else if (generated is Weapon wp) {
-                    wp.SetIsGrounded(false);
-                    _items.Add(wp);
-                }
-            }
-        }
-
         [Command(requiresAuthority = false)]
         public void CmdBuyItem(IInventoryItem item, Player player, NetworkConnectionToClient sender = null) {
             // Check for cheats, potential incorrect args and the possibility to proceed...
             if (sender != player.connectionToClient || item is null) return;
 			
             if (!VerifyInteractionWith(player)) {
-                player.TargetPrintWarning(sender, "You are no longer interacting with this NPC!");
+                player.TargetPrintWarning(sender, LanguageManager["#no-NPC-interaction"]);
                 return;
             }
 
+            if (item is Weapon weapon && weapon.compatibleClass != player.playerClass) {
+                player.TargetPrintInfoMessage(sender, LanguageManager["#class-incompatible"]);
+                return;
+            }
+            
             int cost = GetCost(item);
             if (!HasEnoughCurrency(player, cost)) {
                 SendNotEnoughCurrencyMessage(player, sender);
                 return;
             }
 
-            if (!_items.Remove(item)) {
-                player.TargetPrintWarning(sender, "Too late...\nThis item has already been sold!");
+            if (!Items.Remove(item)) {
+                player.TargetPrintWarning(sender, LanguageManager["#already-sold"]);
                 return;
             }
 

@@ -170,11 +170,12 @@ MonoBehaviour:
   syncInterval: 0.1
   spriteRenderer: {fileID: 3427838935283703077}
   interactionCollider: {fileID: 2883538419739573123}
-  speed: 0
+  speed: 1.5
   compatibleClass: 1
-  defaultDamage: 10
-  specialAttackCost: 10
   defaultCoordsWhenLikedToPlayer: {x: 0, y: 0, z: 0}
+  defaultDamage: 10
+  specialDamage: 0
+  specialAttackCost: 10
   meleeData:
     knockbackMultiplier: 0
     weaponSizeMultiplier: 0

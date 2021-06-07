@@ -72,14 +72,14 @@ namespace UI_Audio {
 		public void ValidatePseudo() {
 			pseudoFields.gameObject.SetActive(false);
 			
-			if (pseudoInput.text.Length >= 4) {
+			if (pseudoInput.text.Length >= 4 && pseudoInput.text.Length <= 16) {
 				gameModeFields.gameObject.SetActive(true);
 				return;
 			}
 			
 			void Activate() => pseudoFields.gameObject.SetActive(true);
 			InfoManger.SetWarningButtonActions(Activate);
-			InfoManger.SetWarningText("Pseudo length must be greater or equal to four...");
+			InfoManger.SetWarningText(LocalGameManager.Instance.languageManager["#pseudo-validation"]);
 			InfoManger.OpenWarningBox();
 		}
 
@@ -98,8 +98,7 @@ namespace UI_Audio {
 						void Activate() => currentFields.gameObject.SetActive(true);
 						InfoManger.SetWarningButtonActions(Activate);
 					}
-					InfoManger.SetWarningText("Timed out after not receiving any message...\n" +
-											  "Connection Failed!");
+					InfoManger.SetWarningText(LocalGameManager.Instance.languageManager["#time-out"]);
 					InfoManger.OpenWarningBox();
 					yield break;
 				}
@@ -121,7 +120,7 @@ namespace UI_Audio {
     
 		public void HostServerAndClient() {
 			if (NetworkServer.active || NetworkClient.active) {
-				PlayerInfoManager.Instance.SetWarningText("Client or Server already started...");
+				PlayerInfoManager.Instance.SetWarningText(LocalGameManager.Instance.languageManager["#client-server-started"]);
 				PlayerInfoManager.Instance.OpenWarningBox();
 				return;
 			}
@@ -152,7 +151,7 @@ namespace UI_Audio {
 
 			string address = ipAddressField.text.ToLower().Replace(" ", "").Replace("\n", "");
 			if (!ValidateIPAddressInput(address)) {
-				PlayerInfoManager.Instance.SetWarningText("Invalid IP address format!");
+				PlayerInfoManager.Instance.SetWarningText(LocalGameManager.Instance.languageManager["#invalid-IP"]);
 				PlayerInfoManager.Instance.OpenWarningBox();
 				return;
 			}
