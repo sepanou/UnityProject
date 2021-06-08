@@ -105,7 +105,7 @@ namespace UI_Audio {
 				yield return null;
 			}
 
-			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.InGame);
+			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Hub);
 		}
 		
 		private static IEnumerator ServerLaunchProcedure(RectTransform currentFields) {
@@ -115,7 +115,7 @@ namespace UI_Audio {
 			while (!NetworkServer.active)
 				yield return null;
 			
-			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.InGame);
+			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Hub);
 		}
     
 		public void HostServerAndClient() {

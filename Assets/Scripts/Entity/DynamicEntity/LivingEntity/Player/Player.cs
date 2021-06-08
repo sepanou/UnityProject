@@ -63,6 +63,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private PlayerUI _playerUI;
 		private Weapon.Weapon Weapon => _weapons[_weaponId]; 
 		
+		public Collider2D Collider2D { get; private set; }
+		
 		public int Kibrient {
 			get => _kibrient;
 			[Server] set => _kibrient = value;
@@ -141,6 +143,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		private void Start() {
 			DontDestroyOnLoad(this);
+			Collider2D = GetComponent<Collider2D>();
 			Instantiate();
 
 			if (isServer) {

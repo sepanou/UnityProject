@@ -73,7 +73,7 @@ namespace Entity.StaticEntity {
 			}
 			
 			// Verify that all players are near the door, ready to get to the forest
-			if (!networkManager.PlayerPrefabs.All(VerifyInteractionWith)) {
+			if (!networkManager.PlayerPrefabs.All(IsPlayerInsideTrigger)) {
 				PrintToAll(networkManager, 
 					$"{player.playerName}" + LanguageManager["#player-itch"]);
 				return;

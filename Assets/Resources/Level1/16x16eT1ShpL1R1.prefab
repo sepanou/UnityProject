@@ -28672,6 +28672,7 @@ GameObject:
   - component: {fileID: 2688884646983659389}
   - component: {fileID: 7217694430696024472}
   - component: {fileID: 5525936790322310443}
+  - component: {fileID: 3178523799523362280}
   m_Layer: 0
   m_Name: 16x16eT1ShpL1R1
   m_TagString: Untagged
@@ -28731,6 +28732,34 @@ MonoBehaviour:
   syncInterval: 0.1
   hasBeenDiscovered: 0
   hasBeenCleared: 0
+  cover: {fileID: 8518247844841686303}
+  triggerZone: {fileID: 3178523799523362280}
+--- !u!61 &3178523799523362280
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8314062332767323627}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.7}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 22, y: 21.01}
+  m_EdgeRadius: 0
 --- !u!1 &8327956759306513263
 GameObject:
   m_ObjectHideFlags: 0
@@ -29528,10 +29557,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3696945770758305533}
   - component: {fileID: 1924097441111282777}
-  - component: {fileID: 7504478106193009012}
   - component: {fileID: 4918139423382398642}
-  - component: {fileID: 4932163606583787112}
-  - component: {fileID: 7018247056761327851}
   m_Layer: 0
   m_Name: Cover
   m_TagString: Untagged
@@ -29603,32 +29629,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &7504478106193009012
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8518247844841686303}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 7.21, y: 6.51}
-    newSize: {x: 7.21, y: 6.51}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 6.4, y: 5.6}
-  m_EdgeRadius: 0
 --- !u!61 &4918139423382398642
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -29655,37 +29655,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 5.173259, y: 4.463297}
   m_EdgeRadius: 0
---- !u!114 &4932163606583787112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8518247844841686303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 
-  hasSpawned: 0
---- !u!114 &7018247056761327851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8518247844841686303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d8c94f3558c2e64c8d04ef07a7688fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
 --- !u!1 &8572104950784182733
 GameObject:
   m_ObjectHideFlags: 0

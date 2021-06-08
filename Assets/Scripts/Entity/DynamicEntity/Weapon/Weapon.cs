@@ -21,6 +21,7 @@ namespace Entity.DynamicEntity.Weapon {
 		[SerializeField] public Vector3 defaultCoordsWhenLikedToPlayer;
 		[SerializeField] protected int defaultDamage, specialDamage;
 		[SerializeField] protected int specialAttackCost;
+		[SerializeField] private NetworkTransform networkTransform;
 		private float _lastAttackTime; // For cooldown purposes
 		// Makes sure that the cooldown of the last attack is not modified if the player removes / add Charms
 		private float _lastAttackCooldown;
@@ -149,30 +150,27 @@ namespace Entity.DynamicEntity.Weapon {
 
 		[Server] public void Drop(Player player) {
 			if (!Holder) return;
-			// Interactions
-			IsGrounded = true;
-			_playerFound = false;
-			EnableInteraction();
-			RpcEnableInteraction();
 			// Target authority for synchronization of networkTransforms
-			if (TryGetComponent(out NetworkTransform netTransform))
-				netTransform.clientAuthority = false;
+			networkTransform.clientAuthority = false;
 			TargetSetClientAuthority(connectionToClient, false);
 			netIdentity.RemoveClientAuthority();
+			// Set owner
+			Holder.RemoveWeapon(this);
+			Holder = null;
 			// Transform
 			Transform current = transform;
 			current.SetParent(null, false);
 			current.localPosition = Vector3.zero;
 			current.position = player.transform.position;
-			// Set owner
-			Holder.RemoveWeapon(this);
-			Holder = null;
+			// Interactions
+			IsGrounded = true;
+			_playerFound = false;
+			EnableInteraction();
+			RpcEnableInteraction();
 		}
 
-		[TargetRpc] private void TargetSetClientAuthority(NetworkConnection target, bool state) {
-			if (TryGetComponent(out NetworkTransform netTransform))
-				netTransform.clientAuthority = state;
-		}
+		[TargetRpc] private void TargetSetClientAuthority(NetworkConnection target, bool state) 
+			=> networkTransform.clientAuthority = state;
 
 		[TargetRpc]
 		private void TargetLaunchAttackCooldown(NetworkConnection target, float duration, float startTime, bool isSpecial) {

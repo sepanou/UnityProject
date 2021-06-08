@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace DataBanks{
     [CreateAssetMenu(fileName = "InputTexturesDB", menuName = "DataBanks/InputTexturesDB", order = 1)]
-    public class InputTexturesDB: ScriptableObject{
+    public class InputTexturesDB: ScriptableObject {
         public InputTexture[] entries;
         public readonly Dictionary<string, InputTexture> Textures = new Dictionary<string, InputTexture>();
 
         public void SetEntries() {
+            if (Textures.Count != 0) return; // == already initialized
             foreach (InputTexture inputTexture in entries) {
                 Textures.Add(inputTexture.keyName, inputTexture);
             }

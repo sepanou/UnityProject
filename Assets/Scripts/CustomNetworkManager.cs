@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
-using UI_Audio;
 using UnityEngine;
 
 public class CustomNetworkManager: NetworkManager {
@@ -12,7 +10,7 @@ public class CustomNetworkManager: NetworkManager {
 	[SerializeField] private Animator sceneAnimator;
 	
 	[Header("Forest Scene")]
-	[SerializeField] private string forestSceneName;
+	[SerializeField] [Scene] private string forestScene;
 	[SerializeField] private Vector3[] forestSpawnPoints;
 	
 	public readonly List<Player> PlayerPrefabs = new List<Player>();
@@ -39,20 +37,17 @@ public class CustomNetworkManager: NetworkManager {
 
 	public override void OnServerSceneChanged(string sceneName) {
 		base.OnServerSceneChanged(sceneName);
-		if (sceneAnimator)
-			sceneAnimator.Play("EndTransition");
-		if (networkSceneName != forestSceneName) return;
-		AudioDB.PlayMusic("ForestMusic");
+		if (sceneAnimator) sceneAnimator.Play("EndTransition");
+		if (networkSceneName != forestScene) return;
 		SetPlayerSpawnPoints(forestSpawnPoints);
-			
+		LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Forest);
 	}
 
 	public override void OnClientSceneChanged(NetworkConnection conn) {
 		base.OnClientSceneChanged(conn);
-		if (sceneAnimator)
-			sceneAnimator.Play("EndTransition");
-		if (networkSceneName == forestSceneName)
-			AudioDB.PlayMusic("ForestMusic");
+		if (sceneAnimator) sceneAnimator.Play("EndTransition");
+		if (IsSceneActive(forestScene))
+			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Forest);
 	}
 
 	public override void OnStopClient() {

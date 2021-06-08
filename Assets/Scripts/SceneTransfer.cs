@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class SceneTransfer: NetworkBehaviour { 
 	[Header("Destination Scene")]
-	[SerializeField] private string sceneToGo;
-
-	private Coroutine _sceneTransitionCoroutine;
+	[SerializeField] [Scene] private string sceneToGo;
+	
 	private CustomNetworkManager _networkManager;
 
 	private void Start() => _networkManager = CustomNetworkManager.Instance;
@@ -20,15 +19,15 @@ public class SceneTransfer: NetworkBehaviour {
 	[ClientRpc] private void RpcStartSceneTransition() 
 		=> _networkManager.PlaySceneTransitionAnimation("StartTransition");
 
-	[Server] private IEnumerator LoadingSceneTransition(float delay = 1f) {
-		RpcStartSceneTransition();
+	[Server]
+	private IEnumerator WaitAndChangeScene(float delay) {
 		yield return new WaitForSeconds(delay);
 		_networkManager.ServerChangeScene(sceneToGo);
-		_sceneTransitionCoroutine = null;
 	}
-	
+
 	[Command(requiresAuthority = false)] private void CmdStartSceneTransition() {
-		if (_sceneTransitionCoroutine != null) return;
-		_sceneTransitionCoroutine = StartCoroutine(LoadingSceneTransition());
+		RpcStartSceneTransition();
+		_networkManager.PlaySceneTransitionAnimation("StartTransition");
+		StartCoroutine(WaitAndChangeScene(1f));
 	}
 }

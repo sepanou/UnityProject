@@ -109,9 +109,8 @@ MonoBehaviour:
   defaultDamage: 1
   specialDamage: 1
   specialAttackCost: 10
+  networkTransform: {fileID: 5900744793733015568}
   launchPoint: {fileID: 8642561507799599230}
-  projectile: {fileID: -3282971848471082322, guid: f253105defb28994f8f1ab558d129c39,
-    type: 3}
   orientation: {x: 0, y: 0}
   rangeData:
     projectileSpeedMultiplier: 0

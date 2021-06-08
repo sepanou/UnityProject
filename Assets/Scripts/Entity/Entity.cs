@@ -119,7 +119,7 @@ namespace Entity {
 		[Command(requiresAuthority = false)]
 		private void CmdApplyLayers(NetworkConnectionToClient target = null) {
 			if (spriteRenderer)
-				TargetSetSortingLayer(target, spriteRenderer.sortingLayerID, gameObject.layer);
+				TargetSetSortingLayer(target, spriteRenderer.sortingLayerID, spriteRenderer.sortingOrder, gameObject.layer);
 		}
 
 		[TargetRpc]
@@ -128,9 +128,12 @@ namespace Entity {
 			=> SetRenderingLayersInChildren(sortingLayerID, sortingLayerName, layerMask, gameObject);
 		
 		[TargetRpc]
-		private void TargetSetSortingLayer(NetworkConnection target, int sortingLayerId, int layerMaskId) {
-			if (spriteRenderer)
+		private void TargetSetSortingLayer(NetworkConnection target, int sortingLayerId, int sortingOrder, int layerMaskId) {
+			if (spriteRenderer) {
 				spriteRenderer.sortingLayerID = sortingLayerId;
+				spriteRenderer.sortingOrder = sortingOrder;
+			}
+			
 			gameObject.layer = layerMaskId;
 		}
 
@@ -188,6 +191,11 @@ namespace Entity {
 
 		protected bool VerifyInteractionWith(Player player) 
 			=> _playerPool.ContainsKey(player) && _playerPool[player];
+
+		protected bool IsPlayerInsideTrigger(Player player)
+			=> interactionCollider 
+			   && player.Collider2D
+			   && interactionCollider.IsTouching(player.Collider2D);
 
 		public void DisableInteraction(Player player) {
 			if (interactionCollider)

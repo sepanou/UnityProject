@@ -176,6 +176,7 @@ MonoBehaviour:
   defaultDamage: 10
   specialDamage: 0
   specialAttackCost: 10
+  networkTransform: {fileID: 8419308335598235565}
   meleeData:
     knockbackMultiplier: 0
     weaponSizeMultiplier: 0

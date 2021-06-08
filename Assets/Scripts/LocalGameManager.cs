@@ -5,7 +5,7 @@ using UI_Audio;
 using UI_Audio.Inventories;
 using UnityEngine;
 
-public enum LocalGameStates { Start, InGame, Quit, None }
+public enum LocalGameStates { Start, Hub, Forest, Quit, None }
 
 public class LocalGameManager: MonoBehaviour {
 	[Header("DataBanks")] public InputManager inputManager;
@@ -46,7 +46,7 @@ public class LocalGameManager: MonoBehaviour {
 		if (!Application.isBatchMode)
 			SetLocalGameState(LocalGameStates.Start);
 		else {
-			LocalState = LocalGameStates.InGame;
+			LocalState = LocalGameStates.Hub;
 			worldCamera.transform.SetParent(transform);
 			menuSettingsManager.CloseMenu();
 			startMenuManager.CloseStartMenu();
@@ -69,7 +69,7 @@ public class LocalGameManager: MonoBehaviour {
 
 	public void SetLocalGameState(LocalGameStates state) {
 		if (state == LocalState) return;
-		Debug.Log("Changed Local State to " + state);
+		Debug.Log($"Changed Local State from {LocalState} to " + state);
 		LocalState = state;
 
 		switch (LocalState) {
@@ -82,12 +82,19 @@ public class LocalGameManager: MonoBehaviour {
 				menuSettingsManager.CloseMenu();
 				startMenuManager.OpenStartMenu();
 				playerInfoManager.HidePlayerClassUI();
+				playerInfoManager.displayKey.StopDisplay();
 				break;
-			case LocalGameStates.InGame:
+			case LocalGameStates.Hub:
 				AudioDB.PlayMusic("HubMusic");
 				menuSettingsManager.CloseMenu();
 				startMenuManager.CloseStartMenu();
 				playerInfoManager.ShowPlayerClassUI();
+				break;
+			case LocalGameStates.Forest:
+				AudioDB.PlayMusic("ForestMusic");
+				menuSettingsManager.CloseMenu();
+				startMenuManager.CloseStartMenu();
+				playerInfoManager.displayKey.StopDisplay();
 				break;
 		}
 	}

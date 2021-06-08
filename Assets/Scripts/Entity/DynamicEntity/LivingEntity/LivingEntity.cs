@@ -113,7 +113,7 @@ namespace Entity.DynamicEntity.LivingEntity {
 				transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(AdvancedMoves[(int) LastAnimationState], direction));
 			return (LastAnimationState, false, _rigidBody.velocity);
 		}
-
+		
 		[Command] protected void CmdMove(float x, float y) => Move(x, y);
 		
 		[Server] protected void Move(float x, float y) {

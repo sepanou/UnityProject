@@ -160,9 +160,10 @@ MonoBehaviour:
 
         Come, take a look...'
     - fieldKey: '#innkeeper-stop'
-      translation: 'See you soon big baboon ;)
+      translation: 'I wish you good fortune in your endeavor.
 
-        (We should change this dialog...)'
+        See you next
+        time.'
     - fieldKey: switch-weapon
       translation: Switch Weapon
     - fieldKey: '#no-NPC-interaction'
@@ -186,3 +187,14 @@ MonoBehaviour:
         gates!'
     - fieldKey: '#class-incompatible'
       translation: Your class is not compatible with this weapon.
+    - fieldKey: '#pseudo-validation'
+      translation: Pseudo must have between 4 and 16 characters...
+    - fieldKey: '#time-out'
+      translation: 'Timed out after not receiving any message...
+
+        Connection
+        Failed!'
+    - fieldKey: '#client-server-started'
+      translation: Client or Server already started...
+    - fieldKey: '#invalid-IP'
+      translation: Invalid IP address format!
