@@ -1724,8 +1724,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  hasBeenDiscovered: 0
-  hasBeenCleared: 0
+  hasBeenDiscovered: 1
+  hasBeenCleared: 1
 --- !u!1 &7794852700302337317
 GameObject:
   m_ObjectHideFlags: 0
@@ -7416,6 +7416,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6939341127837764787, guid: 99597c7b4aa47494fb2b6061505735da,
+        type: 3}
+      propertyPath: m_AssetId
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99597c7b4aa47494fb2b6061505735da, type: 3}

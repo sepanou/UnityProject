@@ -12,6 +12,7 @@ namespace Generation {
 		private static readonly Random Random = new Random();
 		private static List<Room> _recentlyAddedRooms;
 		private static List<Room> _roomsToTreat;
+		private static int _uniqueIds;
 		
 		[Server]
 		// ReSharper disable once UnusedMember.Local
@@ -64,38 +65,60 @@ namespace Generation {
 				_roomsToTreat.Shuffle();
 			}
 			List<Room> oldRooms = new List<Room>(lMap);
-			foreach (Room room in oldRooms) {
-				if (AreExitsOccupied(rMap, room)) continue;
-				foreach ((char dir, int nbDir) in room._exits) {
-					if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
-					(x, y) = room.UCoords;
-					(int uH, int uW) = room.UDim;
-					bool placedRoom;
-					switch (dir) {
-						case 'T':
-							placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('B'), x + nbDir - 1, y - uH);
-							break;
-						case 'B':
-							placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('T'), x + nbDir - 1, y + 1);
-							break;
-						case 'L':
-							placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('R'), x - 1, y - nbDir + 1);
-							break;
-						case 'R':
-							placedRoom =TryAddRoom(lMap, rMap, FindDeadEnd('L'), x + uW, y - nbDir + 1);
-							break;
-						default:
-							throw new ArgumentException("Wrong letter");
-					}
-
-					if (!placedRoom) { // This is ugly but it does work :p
-						foreach (Room roomToReplace in _availableRooms[RoomType.Standard]) {
-							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y - uH) ||
-							     dir == 'B' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y + 1) ||
-							     dir == 'L' && TryAddRoom(lMap, rMap, roomToReplace, x - 1, y - nbDir + 1) ||
-							     dir == 'R' && TryAddRoom(lMap, rMap, roomToReplace, x + uW, y - nbDir + 1))
-							) break;
+			List<Room> standardAddedRooms = new List<Room>();
+			while (true) {
+				foreach (Room room in oldRooms) {
+					if (AreExitsOccupied(rMap, room)) continue;
+					foreach ((char dir, int nbDir) in room._exits) {
+						if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
+						(x, y) = room.UCoords;
+						(int uH, int uW) = room.UDim;
+						bool placedRoom;
+						switch (dir) {
+							case 'T':
+								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('B'), x + nbDir - 1, y - uH);
+								break;
+							case 'B':
+								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('T'), x + nbDir - 1, y + 1);
+								break;
+							case 'L':
+								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('R'), x - 1, y - nbDir + 1);
+								break;
+							case 'R':
+								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('L'), x + uW, y - nbDir + 1);
+								break;
+							default:
+								throw new ArgumentException("Wrong letter");
 						}
+
+						if (!placedRoom) {
+							// This is ugly but it does work :p
+							List<Room> rooms = new List<Room>(_availableRooms[RoomType.Standard]);
+							rooms.Shuffle();
+							foreach (Room roomToReplace in rooms) {
+								if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y - uH) ||
+								     dir == 'B' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y + 1) ||
+								     dir == 'L' && TryAddRoom(lMap, rMap, roomToReplace, x - 1, y - nbDir + 1) ||
+								     dir == 'R' && TryAddRoom(lMap, rMap, roomToReplace, x + uW, y - nbDir + 1))
+								) {
+									standardAddedRooms.Add(roomToReplace);
+									break;
+								}
+							}
+						}
+					}
+				}
+
+				if (standardAddedRooms.Count == 0) break;
+				(standardAddedRooms, oldRooms) = (new List<Room>(), standardAddedRooms);
+			}
+			//Filling phase
+			foreach (Room room in lMap) {
+				(x, y) = room.UCoords;
+				(int uW, int uH) = room.UDim;
+				for (int i = y + 1; i >= y - uH; --i) {
+					for (int j = x - 1; j <= x + uW; j++) {
+						if (rMap[i,j] == null) AddPrefab(j*20, i*-20, "Filler");
 					}
 				}
 			}
@@ -105,7 +128,8 @@ namespace Generation {
 		[Server]
 		private static Room FindDeadEnd(char dir) {
 			foreach (Room room in _availableRooms[RoomType.DeadEnd]) {
-				if (room._exits[0].Item1 == dir) return new Room(room);
+				++_uniqueIds;
+				if (room._exits[0].Item1 == dir) return new Room(room, _uniqueIds);
 			}
 			throw new ArgumentException("FindDeadEnd: Room not found");
 		}
@@ -162,7 +186,8 @@ namespace Generation {
 				? RoomType.Chest
 				: RoomType.Standard
 			;
-			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)]);
+			++_uniqueIds;
+			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)], _uniqueIds);
 		}
 		
 		[Server]
@@ -201,16 +226,16 @@ namespace Generation {
 			}
 			for (int i = uY; i > uY - uH; i--) {
 				for (int j = uX; j < uW + uX; j++) {
-					if (!(rMap[i + 1, j] == null || rMap[i + 1, j] == room ||
-					      (SubFunction(rMap, j, i + 1, 'T') == SubFunction2(room, j, i,'B', uX, uY))))
+					if (!(rMap[i + 1, j] == null || rMap[i + 1, j].UniqueId == room.UniqueId ||
+					      (SubFunction(rMap, j, i + 1, 'T') == SubFunction2(room, j, i, 'B', uX, uY))))
 						return false;
-					if (!(rMap[i - 1, j] == null || rMap[i - 1, j] == room ||
+					if (!(rMap[i - 1, j] == null || rMap[i - 1, j].UniqueId == room.UniqueId ||
 					      (SubFunction(rMap, j, i - 1, 'B') == SubFunction2(room, j, i, 'T', uX, uY))))
 						return false;
-					if (!(rMap[i, j + 1] == null || rMap[i, j + 1] == room ||
+					if (!(rMap[i, j + 1] == null || rMap[i, j + 1].UniqueId == room.UniqueId ||
 					      (SubFunction(rMap, j + 1, i, 'L') == SubFunction2(room, j, i, 'R', uX, uY))))
 						return false;
-					if (!(rMap[i, j - 1] == null || rMap[i, j - 1] == room ||
+					if (!(rMap[i, j - 1] == null || rMap[i, j - 1].UniqueId == room.UniqueId ||
 					      (SubFunction(rMap, j - 1, i, 'R') == SubFunction2(room, j, i, 'L', uX, uY))))
 						return false;
 				}

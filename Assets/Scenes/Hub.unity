@@ -5777,7 +5777,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.7
+  m_fontSize: 21.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10042,7 +10042,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.75
+  m_fontSize: 22.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -59208,6 +59208,30 @@ MonoBehaviour:
   - {fileID: 2375817997351732174, guid: 04751a18bbba38640ab0b6e6ee6cb34b, type: 3}
   - {fileID: 7737981464072272741, guid: fdb2f9d715a8b2a46aab0c82e661abda, type: 3}
   - {fileID: 5698889285121029488, guid: c20fc59d71e09cc4f841a72cce40188b, type: 3}
+  - {fileID: 8841231930346740224, guid: ec38f12bc1da30d4f86750688f2b3b7b, type: 3}
+  - {fileID: 8955530836771261006, guid: 14a7ad02405f0734cb3e6b8d748dec2e, type: 3}
+  - {fileID: 8812893370885884946, guid: a6f9c153861f34b43ae4ec03ab8a2181, type: 3}
+  - {fileID: 1935697939217014977, guid: c4bede4bbeb0d8345857c7b0051d9707, type: 3}
+  - {fileID: 3309823785316955653, guid: e9f0035b3e3eb3249b6eae587a504e3b, type: 3}
+  - {fileID: 4124669178632101849, guid: 8ea0f8a340c7e684db2cef350ecff9e7, type: 3}
+  - {fileID: 6733676306721429470, guid: cebf674a267b67b41b166ee8c52dfb99, type: 3}
+  - {fileID: 374521240791038425, guid: be3bb27c66f4e7a43ad00f191bfb9fce, type: 3}
+  - {fileID: 5456982988470666653, guid: 203640f85477f5a4f98acef0a145a72f, type: 3}
+  - {fileID: 2626143877236688492, guid: 8e1a066e68add8845ab68f1e1a3a70db, type: 3}
+  - {fileID: 5893810741364519867, guid: 418635a73cc7ac54bb6275c38d6aec44, type: 3}
+  - {fileID: 3828394172002237411, guid: aaaeb84da3febd545b954449f613d1f0, type: 3}
+  - {fileID: 5867867617381955515, guid: 7855439c6b71c5e49b2108b3cc9493b3, type: 3}
+  - {fileID: 2098384411339774376, guid: 831764044494bb849856f586e4d83c20, type: 3}
+  - {fileID: 5234850521725045302, guid: d1b640512ea7dde49a50aeefbd11a579, type: 3}
+  - {fileID: 3838957759764257897, guid: 8bf35ee88d96d9846a4bbd1d26b2125b, type: 3}
+  - {fileID: 1467143784056585425, guid: ebc4e7191d93f0f4c89ab3e6bc6c03b4, type: 3}
+  - {fileID: 7409369686559491840, guid: 194d76a7e59dfa24db4d84320fd67535, type: 3}
+  - {fileID: 5459360261207926799, guid: 8c98dd7e7cb3c9940aea27a0393ddcdf, type: 3}
+  - {fileID: 4910831099622987284, guid: b3ee6408e161a0c4ebcae110dbfcb509, type: 3}
+  - {fileID: 8314062332767323627, guid: 6b50cb92cd925aa44b8f0ca785bae7be, type: 3}
+  - {fileID: 1733667786638382375, guid: 5fa306789996a9042bef29a4ac65aa5d, type: 3}
+  - {fileID: 7263529758465572001, guid: 171696fda2f925946a4d2fb90f6ea3d3, type: 3}
+  - {fileID: 4723886518689639218, guid: 27c57c3925fc5564eb4786a60337094c, type: 3}
   sceneAnimator: {fileID: 807742234}
   forestSceneName: Level1Creation
   forestSpawnPoints:
@@ -78394,6 +78418,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6939341127837764787, guid: 99597c7b4aa47494fb2b6061505735da,
+        type: 3}
+      propertyPath: sceneId
+      value: 422942747
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99597c7b4aa47494fb2b6061505735da, type: 3}
 --- !u!4 &1144376438 stripped
@@ -83200,6 +83229,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6939341127837764787, guid: 99597c7b4aa47494fb2b6061505735da,
+        type: 3}
+      propertyPath: sceneId
+      value: 1683393729
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99597c7b4aa47494fb2b6061505735da, type: 3}
 --- !u!4 &1281273125 stripped
@@ -84136,7 +84170,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.4
+  m_fontSize: 20
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -84391,7 +84425,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.75
+  m_fontSize: 22.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -87872,7 +87906,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.4
+  m_fontSize: 20
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -97377,6 +97411,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6939341127837764787, guid: 99597c7b4aa47494fb2b6061505735da,
+        type: 3}
+      propertyPath: sceneId
+      value: 3942017845
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99597c7b4aa47494fb2b6061505735da, type: 3}
@@ -108407,7 +108446,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.4
+  m_fontSize: 20
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -111232,6 +111271,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6939341127837764787, guid: 99597c7b4aa47494fb2b6061505735da,
+        type: 3}
+      propertyPath: sceneId
+      value: 1900062386
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99597c7b4aa47494fb2b6061505735da, type: 3}
@@ -114665,7 +114709,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 146.8
+  m_fontSize: 143
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -114978,7 +115022,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47.2
+  m_fontSize: 48.45
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1

@@ -154,7 +154,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   levelId: 1
-  lvlName: zda
+  lvlName: Forest
   alreadyGenerated: 0
 --- !u!114 &455078638
 MonoBehaviour:

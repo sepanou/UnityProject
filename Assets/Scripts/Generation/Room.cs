@@ -20,6 +20,7 @@ namespace Generation {
 		public (int, int) Coordinates; // Left of the Room
 		public (int, int) UDim;
 		public (int, int) UCoords;
+		public int UniqueId;
 
 		// ReSharper disable once UnusedMember.Local
 		private void Start() {
@@ -36,7 +37,7 @@ namespace Generation {
 			UDim = p.uDim;
 		}
 
-		public Room(Room room) {
+		public Room(Room room, int uniqueID) {
 			Dimensions = room.Dimensions;
 			_exits = new List<(char, int)>(room._exits);
 			Type = room.Type;
@@ -44,11 +45,12 @@ namespace Generation {
 			_id = room._id;
 			Name = room.Name;
 			UDim = room.UDim;
+			UniqueId = uniqueID;
 		}
 
 		public static ((int, int), List<(char, int)>, RoomType, int, int, (int,int)) Generate(string name) {
+			if (name == "Filler") return ((16, 16), new List<(char, int)>(), RoomType.Other, 1, 1, (1, 1));
 			List<(char, int)> exits = new List<(char, int)>();
-			Debug.Log(name);
 			string dimensions = name.TakeWhile(c => c != 'e').Aggregate("", (current, c) => current + c);
 			string[] tmp = dimensions.Split('x');
 			(int, int) dim = (int.Parse(tmp[0]), int.Parse(tmp[1]));
@@ -90,8 +92,6 @@ namespace Generation {
 				if (name[i] == ' ' || name[i] == '(') break;//When you place 2 times the same room you get "[Name] (x)"
 				levelAndId += name[i];
 			}
-
-			Debug.Log(levelAndId);
 			int level = 0;
 			string nb = "";
 			for (int i = 1; i < levelAndId.Length; i++) {
@@ -113,7 +113,6 @@ namespace Generation {
 				if (ux == (16 + 2) * i) uuy = i;
 			}
 			return (dim, exits, type, level, id, (uux, uuy));
-			//Debug.Log(Name + '\n' + $"{Dimensions}" + '\n' + $"{_exits}" + "\n" + $"{Type}" + '\n' + $"{_level}" + '\n' + $"{_id}");
 		}
 	}
 }
