@@ -6,6 +6,8 @@ jobs:
   check-commit:
     name: Deploy Check
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.group1 }}
     steps:
       - name: Extract version number
         id: version
@@ -62,7 +64,7 @@ jobs:
   #         repo_token: ${{ secrets.GITHUB_TOKEN }}
   #         file: Build.zip
   #         asset_name: ${{ matrix.platform }}.zip
-  #         tag: ${{ jobs.check-commit.steps.version.outputs.group1 }}
+  #         tag: ${{ needs.check-commit.outputs.version }}
   build-server-runtime:
     name: Server Build
     runs-on: ubuntu-latest
@@ -99,7 +101,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: Build.zip
           asset_name: Server.zip
-          tag: ${{ jobs.check-commit.steps.version.outputs.group1 }}
+          tag: ${{ needs.check-commit.outputs.version }}
       - name: Upload Dockerfile
         uses: actions/upload-artifact@v2
         with:
