@@ -51,12 +51,6 @@ jobs:
   #         UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
   #       with:
   #         targetPlatform: ${{ matrix.platform }}
-  #     - name: Extract version number
-  #       id: version
-  #       uses: actions-ecosystem/action-regex-match@v2
-  #       with:
-  #         text: ${{ github.event.head_commit.message }}
-  #         regex: ${{ env.VERSION_REGEX }}
   #     - name: Zip
   #       uses: papeloto/action-zip@v1
   #       with:
@@ -68,7 +62,7 @@ jobs:
   #         repo_token: ${{ secrets.GITHUB_TOKEN }}
   #         file: Build.zip
   #         asset_name: ${{ matrix.platform }}.zip
-  #         tag: ${{ steps.version.outputs.group1 }}
+  #         tag: ${{ jobs.check-commit.steps.version.outputs.group1 }}
   build-server-runtime:
     name: Server Build
     runs-on: ubuntu-latest
@@ -94,12 +88,6 @@ jobs:
         with:
           buildMethod: Build.ServerBuild
           targetPlatform: StandaloneLinux64
-      - name: Extract version number
-        id: version
-        uses: actions-ecosystem/action-regex-match@v2
-        with:
-          text: ${{ github.event.head_commit.message }}
-          regex: ${{ env.VERSION_REGEX }}
       - name: Zip
         uses: papeloto/action-zip@v1
         with:
@@ -111,7 +99,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: Build.zip
           asset_name: Server.zip
-          tag: ${{ steps.version.outputs.group1 }}
+          tag: ${{ jobs.check-commit.steps.version.outputs.group1 }}
       - name: Upload Dockerfile
         uses: actions/upload-artifact@v2
         with:
