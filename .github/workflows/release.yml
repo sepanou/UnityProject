@@ -1,16 +1,20 @@
 name: Create a release
 on: [push]
+env:
+  VERSION_REGEX: '.*(v.+?\..+?\..+?).*'
 jobs:
   check-commit:
     name: Deploy Check
     runs-on: ubuntu-latest
-    steps: 
+    outputs:
+      version: ${{ steps.version.outputs.group1 }}
+    steps:
       - name: Extract version number
         id: version
         uses: actions-ecosystem/action-regex-match@v2
         with:
           text: ${{ github.event.head_commit.message }}
-          regex: '.*(v\d+\.\d+\.\d+).*'
+          regex: ${{ env.VERSION_REGEX }}
       - name: Stop CI if not release
         if: ${{ steps.version.outputs.match == '' }}
         uses: andymckay/cancel-action@0.2
@@ -49,12 +53,6 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           targetPlatform: ${{ matrix.platform }}
-      - name: Extract version number
-        id: version
-        uses: actions-ecosystem/action-regex-match@v2
-        with:
-          text: ${{ github.event.head_commit.message }}
-          regex: '.*(v\d+\.\d+\.\d+).*'
       - name: Zip
         uses: papeloto/action-zip@v1
         with:
@@ -66,8 +64,8 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: Build.zip
           asset_name: ${{ matrix.platform }}.zip
-          tag: ${{ steps.version.outputs.group1 }}
-  build-server:
+          tag: ${{ needs.check-commit.outputs.version }}
+  build-server-runtime:
     name: Server Build
     runs-on: ubuntu-latest
     needs: check-commit
@@ -92,12 +90,6 @@ jobs:
         with:
           buildMethod: Build.ServerBuild
           targetPlatform: StandaloneLinux64
-      - name: Extract version number
-        id: version
-        uses: actions-ecosystem/action-regex-match@v2
-        with:
-          text: ${{ github.event.head_commit.message }}
-          regex: '.*(v\d+\.\d+\.\d+).*'
       - name: Zip
         uses: papeloto/action-zip@v1
         with:
@@ -109,4 +101,37 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: Build.zip
           asset_name: Server.zip
-          tag: ${{ steps.version.outputs.group1 }}
+          tag: ${{ needs.check-commit.outputs.version }}
+      - name: Upload Dockerfile
+        uses: actions/upload-artifact@v2
+        with:
+          name: server-dockerfile
+          path: Assets/Server/Dockerfile
+          retention-days: 1
+      - name: Upload Server Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: server-build
+          path: build/
+          retention-days: 1
+  build-server-docker:
+    name: Build Server Docker Image
+    runs-on: ubuntu-latest
+    needs: build-server-runtime
+    steps:
+      - name: Download dockerfile
+        uses: actions/download-artifact@v2
+        with:
+          name: server-dockerfile
+      - name: Download server build
+        uses: actions/download-artifact@v2
+        with:
+          name: server-build
+          path: build/
+      - name: Debug
+        run: ls -lsa
+      - name: Build and Publish Docker image
+        uses: pmorelli92/github-container-registry-build-push@2.0.0
+        with:
+          github-push-secret: ${{secrets.GITHUB_TOKEN}}
+          docker-image-name: unity-server
