@@ -10042,7 +10042,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.8
+  m_fontSize: 22.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -84425,7 +84425,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.8
+  m_fontSize: 22.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -102571,6 +102571,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputManager: {fileID: 11400000, guid: a9c1c0329fc40ca47b81d3dbcfcaef84, type: 2}
   inputTexturesDB: {fileID: 11400000, guid: 156f2304a993d504ba673e578cbbcf8d, type: 2}
+  image: {fileID: 1808074337}
 --- !u!114 &1808074337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114709,7 +114710,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 146.85
+  m_fontSize: 146.8
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1

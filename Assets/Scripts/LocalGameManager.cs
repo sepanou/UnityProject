@@ -81,8 +81,8 @@ public class LocalGameManager: MonoBehaviour {
 				AudioDB.PlayMusic("MainMenuMusic");
 				menuSettingsManager.CloseMenu();
 				startMenuManager.OpenStartMenu();
+				playerInfoManager.Initialize();
 				playerInfoManager.HidePlayerClassUI();
-				playerInfoManager.displayKey.StopDisplay();
 				break;
 			case LocalGameStates.Hub:
 				AudioDB.PlayMusic("HubMusic");

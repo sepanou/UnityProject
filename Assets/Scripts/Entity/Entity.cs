@@ -169,9 +169,12 @@ namespace Entity {
 			=> SetIsInteractive(player, state);
 
 		[Command(requiresAuthority = false)] private void CmdTryInteract(Player player) {
+			Debug.Log($"{this} + {AutoStopInteracting} + :)");
 			if (InteractionCondition != null && !InteractionCondition(player))
 				return;
+			Debug.Log("interaction condition passed !");
 			if (AutoStopInteracting) {
+				Debug.Log("autostop");
 				_interactive.Interact(player);
 				return;
 			}
@@ -203,24 +206,20 @@ namespace Entity {
 			if (netId == 0) return; // == not networked yet
 			if (_checkInteractionCoroutine != null)
 				StopCoroutine(_checkInteractionCoroutine);
-			_playerPool.Clear();
-			if (!player.isLocalPlayer) return;
+			_playerPool?.Clear();
+			if (!player || !player.isLocalPlayer) return;
 			_canInteract = false;
 			PlayerInfoManager.displayKey.StopDisplay();
 		}
 
 		protected void EnableInteraction() {
-			if (interactionCollider)
-				interactionCollider.enabled = true;
+			if (!interactionCollider || _interactive == null) return;
+			interactionCollider.enabled = true;
+			if (Manager.LocalPlayer && IsPlayerInsideTrigger(Manager.LocalPlayer))
+				PlayerEnter(Manager.LocalPlayer);
 		}
 
-		[ClientRpc] protected void RpcDisableInteraction(Player player) => DisableInteraction(player);
-
-		[ClientRpc] protected void RpcEnableInteraction() => EnableInteraction();
-
-		protected virtual void OnTriggerEnter2D(Collider2D other) {
-			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))
-				return;
+		private void PlayerEnter(Player player) {
 			if (InteractionCondition != null && !InteractionCondition(player))
 				return;
 			_playerPool[player] = false;
@@ -231,6 +230,12 @@ namespace Entity {
 				StopCoroutine(_checkInteractionCoroutine);
 			_checkInteractionCoroutine = CheckInteraction(player);
 			StartCoroutine(_checkInteractionCoroutine);
+		}
+
+		protected virtual void OnTriggerEnter2D(Collider2D other) {
+			if (_interactive == null || !other.gameObject.TryGetComponent(out Player player))
+				return;
+			PlayerEnter(player);
 		}
 		
 		protected virtual void OnTriggerExit2D(Collider2D other) {

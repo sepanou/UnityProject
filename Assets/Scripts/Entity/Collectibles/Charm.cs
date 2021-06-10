@@ -70,8 +70,16 @@ namespace Entity.Collectibles {
 			=> spriteRenderer.sprite = WeaponGenerator.GetCharmSprite(n);
 		
 		[SyncVar(hook = nameof(SyncIsGroundedChanged))] private bool _isGrounded = true;
-		private void SyncIsGroundedChanged(bool o, bool n) => SetSpriteRendererVisible(n);
+		private void SyncIsGroundedChanged(bool o, bool n) {
+			SetSpriteRendererVisible(n);
+			if (n) EnableInteraction();
+			else DisableInteraction(null);
+		}
 
+		private new void Instantiate() {
+			base.Instantiate();
+			AutoStopInteracting = true;
+		}
 		public override void OnStartServer() {
 			base.OnStartServer();
 			Instantiate();
@@ -117,18 +125,12 @@ namespace Entity.Collectibles {
 			=> StartCoroutine(OnTargetDetected(this, player));
 
 		[Server] public void LinkToPlayer(Player player) {
-			// Interactions
-			DisableInteraction(player);
-			RpcDisableInteraction(player);
 			_isGrounded = false;
 			// Transform
 			transform.SetParent(player.transform, false);
 		}
 		
 		[Server] public void Drop(Player player) {
-			// Interactions
-			EnableInteraction();
-			RpcEnableInteraction();
 			_isGrounded = true;
 			// Transform
 			Transform current = transform;

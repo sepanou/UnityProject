@@ -478,8 +478,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				return;
 			}
 			
-			CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
-				InputManager.GetKeyDown("SpecialAttack"));
+			if (!_inventory.IsOpen)
+				CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
+					InputManager.GetKeyDown("SpecialAttack"));
 
 			if (isServer && Input.GetKeyDown(KeyCode.B)) {
 				NetworkServer.Spawn(WeaponGenerator.GenerateBow().gameObject);

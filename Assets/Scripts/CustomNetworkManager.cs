@@ -32,12 +32,14 @@ public class CustomNetworkManager: NetworkManager {
 	public override void OnServerAddPlayer(NetworkConnection conn) {
 		GameObject player = Instantiate(playerPrefab, startPositions[startPositionIndex].position, Quaternion.identity);
 		NetworkServer.AddPlayerForConnection(conn, player);
-		PlayerPrefabs.Add(player.GetComponent<Player>());
+		Player p = player.GetComponent<Player>();
+		p.playerClass = PlayerPrefabs.Count == 0 ? PlayerClasses.Archer :
+			PlayerPrefabs.Count == 2 ? PlayerClasses.Mage : PlayerClasses.Warrior;
+		PlayerPrefabs.Add(p);
 	}
 
 	public override void OnServerSceneChanged(string sceneName) {
 		base.OnServerSceneChanged(sceneName);
-		if (sceneAnimator) sceneAnimator.Play("EndTransition");
 		if (networkSceneName != forestScene) return;
 		SetPlayerSpawnPoints(forestSpawnPoints);
 		LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Forest);
@@ -45,9 +47,17 @@ public class CustomNetworkManager: NetworkManager {
 
 	public override void OnClientSceneChanged(NetworkConnection conn) {
 		base.OnClientSceneChanged(conn);
-		if (sceneAnimator) sceneAnimator.Play("EndTransition");
 		if (IsSceneActive(forestScene))
 			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Forest);
+	}
+
+	public override void OnServerDisconnect(NetworkConnection conn) {
+		for (int i = 0; i < PlayerPrefabs.Count; i++) {
+			if (PlayerPrefabs[i].connectionToClient != conn) continue;
+			PlayerPrefabs.RemoveAt(i);
+			return;
+		}
+		base.OnClientDisconnect(conn);
 	}
 
 	public override void OnStopClient() {

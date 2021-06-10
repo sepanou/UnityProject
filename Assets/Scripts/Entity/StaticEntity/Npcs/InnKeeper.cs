@@ -48,17 +48,15 @@ namespace Entity.StaticEntity.Npcs {
                     else
                         generated = WeaponGenerator.GenerateSword(IsLootEpic);
                     
-                    generated.DisableInteraction(null);
                     generated.transform.parent = transform;
-                    NetworkServer.Spawn(generated.gameObject);
                     ((Weapon) generated).SetIsGrounded(false);
+                    NetworkServer.Spawn(generated.gameObject);
                 }
                 else {
                     generated = WeaponGenerator.GenerateCharm();
-                    generated.DisableInteraction(null);
                     generated.transform.parent = transform;
-                    NetworkServer.Spawn(generated.gameObject);
                     ((Charm) generated).SetIsGrounded(false);
+                    NetworkServer.Spawn(generated.gameObject);
                 }
 
                 Items.Add((IInventoryItem) generated);

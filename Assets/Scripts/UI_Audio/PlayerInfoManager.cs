@@ -84,6 +84,9 @@ namespace UI_Audio {
 			// Player Class UI
 			Player.OnLocalPlayerClassChange += ChangeLocalPlayerClassInfo;
 			UpdateCurrentWeapon(null);
+			
+			// Display Key
+			displayKey.StopDisplay();
 		}
 
 		/// <summary>

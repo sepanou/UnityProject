@@ -75,6 +75,11 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			if (!isServer) Instantiate();
 		}
 
+		public override void OnStopAuthority() {
+			StopAllCoroutines();
+			base.OnStopAuthority();
+		}
+
 		protected override float GetDamageMultiplier(bool isSpecial) =>
 			isSpecial ? meleeData.specialDamageMultiplier : meleeData.defaultDamageMultiplier;
 
@@ -116,6 +121,7 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 
 		[Client] // Only run by the owner -> networkTransform automatically synchronizes everything
 		private IEnumerator ProcessAttack() {
+			Debug.Log("attack");
 			SetLocalPosition();
 			_animating = true;
 			CmdSetAnimating(true);
@@ -154,9 +160,12 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			StartCoroutine(ProcessAttack());
 		}
 		
-		[ServerCallback] protected override void OnTriggerEnter2D(Collider2D other) {
-			base.OnTriggerEnter2D(other);
-			if (!_animating || !other.gameObject.TryGetComponent(out Mob mob)) return;
+		protected override void OnTriggerEnter2D(Collider2D other) {
+			if (isClient)
+				base.OnTriggerEnter2D(other); // Only useful for interactions (client side)
+			
+			if (!isServer || !_animating || !other.gameObject.TryGetComponent(out Mob mob)) return;
+			// Server code
 			mob.GetAttacked(GetDamage());
 			mob.TakeKnockBack(transform.position, meleeData.knockbackMultiplier);
 		}
