@@ -253,7 +253,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6616623769990430028}
   - component: {fileID: 7671151982589995449}
-  - component: {fileID: 6959060413103462608}
   m_Layer: 8
   m_Name: PF Props Bush T5 (2)
   m_TagString: Untagged
@@ -326,25 +325,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6959060413103462608
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1507050571251085442}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2654281343005784625
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,7 +449,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5439740985360711031}
   - component: {fileID: 2373145678932398890}
-  - component: {fileID: 5503408192863609129}
   m_Layer: 8
   m_Name: PF Props Tree T1 (6)
   m_TagString: Untagged
@@ -520,25 +499,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &5503408192863609129
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3949406295464046114}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4427717480364432813
 GameObject:
   m_ObjectHideFlags: 0
@@ -690,7 +650,6 @@ GameObject:
   - component: {fileID: 6449952902072008292}
   - component: {fileID: 6449952901104889601}
   - component: {fileID: 6449952901104889602}
-  - component: {fileID: 6449952901104889603}
   m_Layer: 8
   m_Name: PF Props Bush T6 (7)
   m_TagString: Untagged
@@ -789,25 +748,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.45743656, y: 0.20798206}
   m_EdgeRadius: 0
---- !u!95 &6449952901104889603
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901104889660}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901108923835
 GameObject:
   m_ObjectHideFlags: 0
@@ -1061,7 +1001,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902931131380}
   - component: {fileID: 6449952901135559175}
-  - component: {fileID: 6449952901135559168}
   m_Layer: 8
   m_Name: PF Props Bush T2 (4)
   m_TagString: Untagged
@@ -1134,25 +1073,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952901135559168
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901135559169}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901138280741
 GameObject:
   m_ObjectHideFlags: 0
@@ -1949,7 +1869,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902658030322}
   - component: {fileID: 6449952901171045301}
-  - component: {fileID: 6449952901171045302}
   m_Layer: 8
   m_Name: PF Props Tree T1
   m_TagString: Untagged
@@ -2000,25 +1919,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952901171045302
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901171045303}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901173482025
 GameObject:
   m_ObjectHideFlags: 0
@@ -2029,7 +1929,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901438847498}
   - component: {fileID: 6449952901173482031}
-  - component: {fileID: 6449952901173482024}
   m_Layer: 8
   m_Name: PF Props Tree T2 (5)
   m_TagString: Untagged
@@ -2080,25 +1979,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952901173482024
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901173482025}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901178493385
 GameObject:
   m_ObjectHideFlags: 0
@@ -2795,7 +2675,6 @@ GameObject:
   - component: {fileID: 6449952902283198507}
   - component: {fileID: 6449952901225830825}
   - component: {fileID: 6449952901225830826}
-  - component: {fileID: 6449952901225830827}
   m_Layer: 8
   m_Name: PF Props Bush T6 (2)
   m_TagString: Untagged
@@ -2894,25 +2773,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.45743656, y: 0.20798206}
   m_EdgeRadius: 0
---- !u!95 &6449952901225830827
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901225830820}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901227771477
 GameObject:
   m_ObjectHideFlags: 0
@@ -2923,7 +2783,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902169663932}
   - component: {fileID: 6449952901227771483}
-  - component: {fileID: 6449952901227771476}
   m_Layer: 8
   m_Name: PF Props Tree T1 (4)
   m_TagString: Untagged
@@ -2974,25 +2833,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952901227771476
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901227771477}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901234341277
 GameObject:
   m_ObjectHideFlags: 0
@@ -3739,7 +3579,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901536839991}
   - component: {fileID: 6449952901269808010}
-  - component: {fileID: 6449952901269808011}
   m_Layer: 8
   m_Name: PF Props Tree T1
   m_TagString: Untagged
@@ -3790,25 +3629,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952901269808011
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901269808004}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901281742093
 GameObject:
   m_ObjectHideFlags: 0
@@ -3819,7 +3639,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902217618230}
   - component: {fileID: 6449952901281742099}
-  - component: {fileID: 6449952901281742092}
   m_Layer: 8
   m_Name: PF Props Tree T2 (3)
   m_TagString: Untagged
@@ -3870,25 +3689,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952901281742092
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901281742093}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901284993632
 GameObject:
   m_ObjectHideFlags: 0
@@ -4221,7 +4021,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952903244575476}
   - component: {fileID: 6449952901301445022}
-  - component: {fileID: 6449952901301445023}
   m_Layer: 8
   m_Name: PF Props Tree T2
   m_TagString: Untagged
@@ -4272,25 +4071,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952901301445023
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901301445016}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901301636411
 GameObject:
   m_ObjectHideFlags: 0
@@ -4542,7 +4322,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902750725173}
   - component: {fileID: 6449952901308842117}
-  - component: {fileID: 6449952901308842118}
   m_Layer: 8
   m_Name: PF Props Bush T4 (1)
   m_TagString: Untagged
@@ -4615,25 +4394,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952901308842118
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901308842119}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901317595675
 GameObject:
   m_ObjectHideFlags: 0
@@ -5572,7 +5332,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902187646374}
   - component: {fileID: 6449952901457008119}
-  - component: {fileID: 6449952901457008112}
   m_Layer: 8
   m_Name: PF Props Bush T2 (3)
   m_TagString: Untagged
@@ -5645,25 +5404,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952901457008112
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901457008113}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901457032601
 GameObject:
   m_ObjectHideFlags: 0
@@ -7108,7 +6848,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902199779761}
   - component: {fileID: 6449952901667551457}
-  - component: {fileID: 6449952901667551458}
   m_Layer: 8
   m_Name: PF Props Tree T1 (7)
   m_TagString: Untagged
@@ -7159,25 +6898,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952901667551458
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901667551459}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901677238308
 GameObject:
   m_ObjectHideFlags: 0
@@ -7694,7 +7414,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902864652620}
   - component: {fileID: 6449952901717631946}
-  - component: {fileID: 6449952901717631947}
   m_Layer: 8
   m_Name: PF Props Bush T2
   m_TagString: Untagged
@@ -7767,25 +7486,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952901717631947
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901717631940}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901718500924
 GameObject:
   m_ObjectHideFlags: 0
@@ -7877,7 +7577,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902852628576}
   - component: {fileID: 6449952901718589258}
-  - component: {fileID: 6449952901718589259}
   m_Layer: 8
   m_Name: PF Props Bush T1
   m_TagString: Untagged
@@ -7950,25 +7649,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952901718589259
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901718589252}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901748182375
 GameObject:
   m_ObjectHideFlags: 0
@@ -7979,7 +7659,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902145107786}
   - component: {fileID: 6449952901748182373}
-  - component: {fileID: 6449952901748182374}
   m_Layer: 8
   m_Name: PF Props Tree T2
   m_TagString: Untagged
@@ -8030,25 +7709,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952901748182374
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901748182375}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901774235021
 GameObject:
   m_ObjectHideFlags: 0
@@ -8867,7 +8527,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901913058579}
   - component: {fileID: 6449952901830286010}
-  - component: {fileID: 6449952901830286011}
   m_Layer: 8
   m_Name: PF Props Tree T1
   m_TagString: Untagged
@@ -8918,25 +8577,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952901830286011
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901830286004}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901833289819
 GameObject:
   m_ObjectHideFlags: 0
@@ -9146,7 +8786,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901202374243}
   - component: {fileID: 6449952901860812554}
-  - component: {fileID: 6449952901860812555}
   m_Layer: 8
   m_Name: PF Props Tree T1
   m_TagString: Untagged
@@ -9197,25 +8836,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952901860812555
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901860812548}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901864159240
 GameObject:
   m_ObjectHideFlags: 0
@@ -9366,7 +8986,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901232617955}
   - component: {fileID: 6449952901908522039}
-  - component: {fileID: 6449952901908522032}
   m_Layer: 8
   m_Name: PF Props Bush T2 (1)
   m_TagString: Untagged
@@ -9439,25 +9058,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952901908522032
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901908522033}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901955194807
 GameObject:
   m_ObjectHideFlags: 0
@@ -9711,7 +9311,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902211185489}
   - component: {fileID: 6449952901970306696}
-  - component: {fileID: 6449952901970306697}
   m_Layer: 8
   m_Name: PF Props Tree T2 (4)
   m_TagString: Untagged
@@ -9762,25 +9361,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952901970306697
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952901970306698}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952901971963055
 GameObject:
   m_ObjectHideFlags: 0
@@ -10314,7 +9894,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902604469771}
   - component: {fileID: 6449952902040713725}
-  - component: {fileID: 6449952902040713726}
   m_Layer: 8
   m_Name: PF Props Tree T1 (2)
   m_TagString: Untagged
@@ -10365,25 +9944,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952902040713726
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902040713727}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902043794362
 GameObject:
   m_ObjectHideFlags: 0
@@ -11357,7 +10917,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902987590155}
   - component: {fileID: 6449952902105426563}
-  - component: {fileID: 6449952902105426620}
   m_Layer: 8
   m_Name: PF Props Tree T1 (3)
   m_TagString: Untagged
@@ -11408,25 +10967,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952902105426620
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902105426621}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902117430839
 GameObject:
   m_ObjectHideFlags: 0
@@ -12930,7 +12470,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901827541114}
   - component: {fileID: 6449952902297697838}
-  - component: {fileID: 6449952902297697839}
   m_Layer: 8
   m_Name: PF Props Bush T2
   m_TagString: Untagged
@@ -13003,25 +12542,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952902297697839
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902297697832}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902300676524
 GameObject:
   m_ObjectHideFlags: 0
@@ -13195,7 +12715,6 @@ GameObject:
   - component: {fileID: 6449952903046982706}
   - component: {fileID: 6449952902350914135}
   - component: {fileID: 6449952902350914128}
-  - component: {fileID: 6449952902350914129}
   m_Layer: 8
   m_Name: PF Props Bush T6 (6)
   m_TagString: Untagged
@@ -13294,25 +12813,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.45743656, y: 0.20798206}
   m_EdgeRadius: 0
---- !u!95 &6449952902350914129
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902350914130}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902352961498
 GameObject:
   m_ObjectHideFlags: 0
@@ -13969,7 +13469,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902415653578}
   - component: {fileID: 6449952902399897757}
-  - component: {fileID: 6449952902399897758}
   m_Layer: 8
   m_Name: PF Props Tree T1 (8)
   m_TagString: Untagged
@@ -14020,25 +13519,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952902399897758
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902399897759}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902400738355
 GameObject:
   m_ObjectHideFlags: 0
@@ -14130,7 +13610,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901929583948}
   - component: {fileID: 6449952902401241456}
-  - component: {fileID: 6449952902401241457}
   m_Layer: 8
   m_Name: PF Props Bush T1 (1)
   m_TagString: Untagged
@@ -14203,25 +13682,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952902401241457
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902401241458}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902401788631
 GameObject:
   m_ObjectHideFlags: 0
@@ -14395,7 +13855,6 @@ GameObject:
   - component: {fileID: 6449952903017644593}
   - component: {fileID: 6449952902405205114}
   - component: {fileID: 6449952902405205115}
-  - component: {fileID: 6449952902405205108}
   m_Layer: 8
   m_Name: PF Props Bush T6 (3)
   m_TagString: Untagged
@@ -14494,25 +13953,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.45743656, y: 0.20798206}
   m_EdgeRadius: 0
---- !u!95 &6449952902405205108
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902405205109}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902427100770
 GameObject:
   m_ObjectHideFlags: 0
@@ -14523,7 +13963,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952903103312181}
   - component: {fileID: 6449952902427100768}
-  - component: {fileID: 6449952902427100769}
   m_Layer: 8
   m_Name: PF Props Tree T3
   m_TagString: Untagged
@@ -14574,25 +14013,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.34558892, y: 0.24378252}
   m_EdgeRadius: 0
---- !u!95 &6449952902427100769
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902427100770}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902428070288
 GameObject:
   m_ObjectHideFlags: 0
@@ -14603,7 +14023,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902759180665}
   - component: {fileID: 6449952902428070294}
-  - component: {fileID: 6449952902428070295}
   m_Layer: 8
   m_Name: PF Props Bush T4
   m_TagString: Untagged
@@ -14676,25 +14095,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952902428070295
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902428070288}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902430755412
 GameObject:
   m_ObjectHideFlags: 0
@@ -14946,7 +14346,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952903061727975}
   - component: {fileID: 6449952902441960643}
-  - component: {fileID: 6449952902441960700}
   m_Layer: 8
   m_Name: PF Props Bush T3 (1)
   m_TagString: Untagged
@@ -15019,25 +14418,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952902441960700
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902441960701}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902442175032
 GameObject:
   m_ObjectHideFlags: 0
@@ -15675,7 +15055,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902951913799}
   - component: {fileID: 6449952902527204206}
-  - component: {fileID: 6449952902527204207}
   m_Layer: 8
   m_Name: PF Props Tree T1
   m_TagString: Untagged
@@ -15726,25 +15105,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952902527204207
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902527204200}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902530935475
 GameObject:
   m_ObjectHideFlags: 0
@@ -16683,7 +16043,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901915126414}
   - component: {fileID: 6449952902633644190}
-  - component: {fileID: 6449952902633644191}
   m_Layer: 8
   m_Name: PF Props Tree T2 (7)
   m_TagString: Untagged
@@ -16734,25 +16093,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952902633644191
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902633644184}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902636263488
 GameObject:
   m_ObjectHideFlags: 0
@@ -17924,7 +17264,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902764588518}
   - component: {fileID: 6449952902751232592}
-  - component: {fileID: 6449952902751232593}
   m_Layer: 8
   m_Name: PF Props Tree T2 (6)
   m_TagString: Untagged
@@ -17975,25 +17314,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952902751232593
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902751232594}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902753287806
 GameObject:
   m_ObjectHideFlags: 0
@@ -18405,7 +17725,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902709488775}
   - component: {fileID: 6449952902784688809}
-  - component: {fileID: 6449952902784688810}
   m_Layer: 8
   m_Name: PF Props Bush T2
   m_TagString: Untagged
@@ -18478,25 +17797,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952902784688810
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902784688811}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902791397203
 GameObject:
   m_ObjectHideFlags: 0
@@ -18588,7 +17888,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901849973295}
   - component: {fileID: 6449952902798060526}
-  - component: {fileID: 6449952902798060527}
   m_Layer: 8
   m_Name: PF Props Tree T2
   m_TagString: Untagged
@@ -18639,25 +17938,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952902798060527
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902798060520}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902801271189
 GameObject:
   m_ObjectHideFlags: 0
@@ -18808,7 +18088,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901436608780}
   - component: {fileID: 6449952902816400549}
-  - component: {fileID: 6449952902816400550}
   m_Layer: 8
   m_Name: PF Props Bush T3
   m_TagString: Untagged
@@ -18881,25 +18160,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952902816400550
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902816400551}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902823017982
 GameObject:
   m_ObjectHideFlags: 0
@@ -19315,7 +18575,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902402247183}
   - component: {fileID: 6449952902879829692}
-  - component: {fileID: 6449952902879829693}
   m_Layer: 8
   m_Name: PF Props Tree T2
   m_TagString: Untagged
@@ -19366,25 +18625,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952902879829693
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902879829694}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902884158831
 GameObject:
   m_ObjectHideFlags: 0
@@ -20021,7 +19261,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901234666232}
   - component: {fileID: 6449952902939719649}
-  - component: {fileID: 6449952902939719650}
   m_Layer: 8
   m_Name: PF Props Tree T2 (1)
   m_TagString: Untagged
@@ -20072,25 +19311,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952902939719650
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952902939719651}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952902940048356
 GameObject:
   m_ObjectHideFlags: 0
@@ -20870,7 +20090,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901475169265}
   - component: {fileID: 6449952903012378668}
-  - component: {fileID: 6449952903012378669}
   m_Layer: 8
   m_Name: PF Props Tree T2
   m_TagString: Untagged
@@ -20921,25 +20140,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952903012378669
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952903012378670}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952903017193994
 GameObject:
   m_ObjectHideFlags: 0
@@ -21091,7 +20291,6 @@ GameObject:
   - component: {fileID: 6449952902297434656}
   - component: {fileID: 6449952903027949673}
   - component: {fileID: 6449952903027949674}
-  - component: {fileID: 6449952903027949675}
   m_Layer: 8
   m_Name: PF Props Bush T6 (1)
   m_TagString: Untagged
@@ -21190,25 +20389,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.45743656, y: 0.20798206}
   m_EdgeRadius: 0
---- !u!95 &6449952903027949675
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952903027949668}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952903035136217
 GameObject:
   m_ObjectHideFlags: 0
@@ -21786,7 +20966,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901864947826}
   - component: {fileID: 6449952903081078094}
-  - component: {fileID: 6449952903081078095}
   m_Layer: 8
   m_Name: PF Props Bush T1
   m_TagString: Untagged
@@ -21859,25 +21038,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952903081078095
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952903081078088}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952903081911453
 GameObject:
   m_ObjectHideFlags: 0
@@ -21947,7 +21107,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952901951912586}
   - component: {fileID: 6449952903082635099}
-  - component: {fileID: 6449952903082635092}
   m_Layer: 8
   m_Name: PF Props Tree T1 (1)
   m_TagString: Untagged
@@ -21998,25 +21157,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952903082635092
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952903082635093}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952903095192585
 GameObject:
   m_ObjectHideFlags: 0
@@ -22028,7 +21168,6 @@ GameObject:
   - component: {fileID: 6449952901249667400}
   - component: {fileID: 6449952903095192590}
   - component: {fileID: 6449952903095192591}
-  - component: {fileID: 6449952903095192584}
   m_Layer: 8
   m_Name: PF Props Bush T6 (4)
   m_TagString: Untagged
@@ -22127,25 +21266,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.45743656, y: 0.20798206}
   m_EdgeRadius: 0
---- !u!95 &6449952903095192584
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952903095192585}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952903104669397
 GameObject:
   m_ObjectHideFlags: 0
@@ -22157,7 +21277,6 @@ GameObject:
   - component: {fileID: 6449952901186298567}
   - component: {fileID: 6449952903104669402}
   - component: {fileID: 6449952903104669403}
-  - component: {fileID: 6449952903104669396}
   m_Layer: 8
   m_Name: PF Props Bush T6
   m_TagString: Untagged
@@ -22256,25 +21375,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.45743656, y: 0.20798206}
   m_EdgeRadius: 0
---- !u!95 &6449952903104669396
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952903104669397}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952903109208114
 GameObject:
   m_ObjectHideFlags: 0
@@ -23094,7 +22194,6 @@ GameObject:
   - component: {fileID: 6449952902861724185}
   - component: {fileID: 6449952903201549036}
   - component: {fileID: 6449952903201549037}
-  - component: {fileID: 6449952903201549038}
   m_Layer: 8
   m_Name: PF Props Bush T6 (5)
   m_TagString: Untagged
@@ -23193,25 +22292,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.45743656, y: 0.20798206}
   m_EdgeRadius: 0
---- !u!95 &6449952903201549038
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952903201549039}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952903209517206
 GameObject:
   m_ObjectHideFlags: 0
@@ -23222,7 +22302,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902252881236}
   - component: {fileID: 6449952903209517204}
-  - component: {fileID: 6449952903209517205}
   m_Layer: 8
   m_Name: PF Props Tree T1 (5)
   m_TagString: Untagged
@@ -23273,25 +22352,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26862642, y: 0.1860609}
   m_EdgeRadius: 0
---- !u!95 &6449952903209517205
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952903209517206}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952903212893046
 GameObject:
   m_ObjectHideFlags: 0
@@ -23685,7 +22745,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902376915769}
   - component: {fileID: 6449952903219520139}
-  - component: {fileID: 6449952903219520132}
   m_Layer: 8
   m_Name: PF Props Tree T2 (8)
   m_TagString: Untagged
@@ -23736,25 +22795,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.28382158, y: 0.15820336}
   m_EdgeRadius: 0
---- !u!95 &6449952903219520132
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952903219520133}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 885791d6dc4ee754f8c982cd1f575c3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952903227289606
 GameObject:
   m_ObjectHideFlags: 0
@@ -23765,7 +22805,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6449952902671645830}
   - component: {fileID: 6449952903227289604}
-  - component: {fileID: 6449952903227289605}
   m_Layer: 8
   m_Name: PF Props Bush T5 (1)
   m_TagString: Untagged
@@ -23838,25 +22877,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6449952903227289605
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6449952903227289606}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c210c73830dcd0548859d4b4cf29e58e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6449952903228592953
 GameObject:
   m_ObjectHideFlags: 0
