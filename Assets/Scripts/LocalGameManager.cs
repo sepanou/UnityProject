@@ -8,6 +8,10 @@ using UnityEngine;
 public enum LocalGameStates { Start, Hub, Forest, Quit, None }
 
 public class LocalGameManager: MonoBehaviour {
+	[Header("Forest Visibility")]
+	[SerializeField] [Tooltip("The time is in seconds")] [Range(0.1f, 10f)]
+	public float visibilityUpdateDelay;
+
 	[Header("DataBanks")] public InputManager inputManager;
 	public LanguageManager languageManager;
 	public WeaponGeneratorDB weaponGenerator;
@@ -106,4 +110,9 @@ public class LocalGameManager: MonoBehaviour {
 		camTransform.localPosition = new Vector3(0, 0, -10);
 		return worldCamera;
 	}
+}
+
+public static class CameraExtension {
+	public static bool IsObjectVisible(this Camera camera, Renderer renderer)
+		=> GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(camera), renderer.bounds);
 }

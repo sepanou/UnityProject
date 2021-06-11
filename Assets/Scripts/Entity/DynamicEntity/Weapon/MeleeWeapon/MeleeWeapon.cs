@@ -91,7 +91,7 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 		public override string GetWeaponName() => meleeData.name;
 
 		[ClientCallback] private void FixedUpdate() {
-			if (!hasAuthority || !Equipped || IsGrounded || !MouseCursor.Instance) return;
+			if (!NetworkClient.ready || !hasAuthority || !Equipped || IsGrounded || !MouseCursor.Instance) return;
 			if (!_animating) SetLocalPosition();
 		}
 
@@ -121,7 +121,6 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 
 		[Client] // Only run by the owner -> networkTransform automatically synchronizes everything
 		private IEnumerator ProcessAttack() {
-			Debug.Log("attack");
 			SetLocalPosition();
 			_animating = true;
 			CmdSetAnimating(true);

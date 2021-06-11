@@ -12,7 +12,7 @@ public class CustomNetworkManager: NetworkManager {
 	[Header("Forest Scene")]
 	[SerializeField] [Scene] private string forestScene;
 	[SerializeField] private Vector3[] forestSpawnPoints;
-	
+
 	public readonly List<Player> PlayerPrefabs = new List<Player>();
 	private Coroutine _sceneTransitionCoroutine;
 

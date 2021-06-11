@@ -5,10 +5,9 @@ using UnityEngine;
 public class GlowStonesTrigger: MonoBehaviour {
 	[SerializeField] private GameObject[] glowingSymbols;
 	[SerializeField] private float delay;
-	private List<SpriteRenderer> _renderers;
+	private readonly List<SpriteRenderer> _renderers = new List<SpriteRenderer>();
 
 	private void Start() {
-		_renderers = new List<SpriteRenderer>();
 		foreach (GameObject symbol in glowingSymbols)
 			if (symbol.TryGetComponent(out SpriteRenderer spriteRenderer))
 				_renderers.Add(spriteRenderer);

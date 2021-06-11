@@ -169,12 +169,9 @@ namespace Entity {
 			=> SetIsInteractive(player, state);
 
 		[Command(requiresAuthority = false)] private void CmdTryInteract(Player player) {
-			Debug.Log($"{this} + {AutoStopInteracting} + :)");
 			if (InteractionCondition != null && !InteractionCondition(player))
 				return;
-			Debug.Log("interaction condition passed !");
 			if (AutoStopInteracting) {
-				Debug.Log("autostop");
 				_interactive.Interact(player);
 				return;
 			}

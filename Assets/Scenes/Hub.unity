@@ -3955,6 +3955,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4abcfc2cb70f0141a5a1b95858c58ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visibilityUpdateDelay: 1
   inputManager: {fileID: 11400000, guid: a9c1c0329fc40ca47b81d3dbcfcaef84, type: 2}
   languageManager: {fileID: 11400000, guid: 447576c189fcca04c90d5bcd60368906, type: 2}
   weaponGenerator: {fileID: 11400000, guid: e5e5295fd017fc64e83b09cabc106492, type: 2}
@@ -59153,7 +59154,6 @@ GameObject:
   - component: {fileID: 770805806}
   - component: {fileID: 770805803}
   - component: {fileID: 770805804}
-  - component: {fileID: 770805805}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -59260,22 +59260,6 @@ MonoBehaviour:
   debugLog: 0
   statisticsGUI: 0
   statisticsLog: 0
---- !u!114 &770805805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 770805802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39adc6e09d5544ed955a50ce8600355a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visRange: 80
-  rebuildInterval: 1
-  checkMethod: 1
-  showSlider: 0
 --- !u!4 &770805806
 Transform:
   m_ObjectHideFlags: 0

@@ -28880,7 +28880,7 @@ Transform:
   m_LocalScale: {x: 3.1, y: 3.35567, z: 1}
   m_Children: []
   m_Father: {fileID: 6141809600817627857}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6189707848404074895
 SpriteRenderer:
@@ -28990,7 +28990,7 @@ Transform:
   - {fileID: 8191925916446314080}
   - {fileID: 3438739585318582966}
   m_Father: {fileID: 6141809600817627857}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &3255526471962719728
 Grid:
@@ -29097,7 +29097,7 @@ GameObject:
   - component: {fileID: -4175215863866803604}
   - component: {fileID: -6823359011342069860}
   - component: {fileID: 1459272009952774284}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: 16x16eL1DenL1R1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29115,8 +29115,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 7341205005231520683}
   - {fileID: 1481271589403842531}
+  - {fileID: 7341205005231520683}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -29153,8 +29153,10 @@ MonoBehaviour:
   syncInterval: 0.1
   hasBeenDiscovered: 0
   hasBeenCleared: 0
-  cover: {fileID: 4873111390426330986}
+  graphicsGo: {fileID: 5043965977595563411}
+  cover: {fileID: 6189707848404074895}
   triggerZone: {fileID: 1459272009952774284}
+  visibilityRadius: 24
 --- !u!61 &1459272009952774284
 BoxCollider2D:
   m_ObjectHideFlags: 0
