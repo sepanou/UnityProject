@@ -157,8 +157,8 @@ namespace UI_Audio {
 			}
 			
 			try {
-				manager.StartClient();
 				manager.networkAddress = address;
+				manager.StartClient();
 				StopAllCoroutines();
 				StartCoroutine(ClientConnectionProcedure(multiPlayerFields));
 			} catch (Exception e) {

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
@@ -33,6 +35,7 @@ public class CustomNetworkManager: NetworkManager {
 		GameObject player = Instantiate(playerPrefab, startPositions[startPositionIndex].position, Quaternion.identity);
 		NetworkServer.AddPlayerForConnection(conn, player);
 		Player p = player.GetComponent<Player>();
+		// Can't put a switch because Unity won't accept it (source: Maxence), I know it sucks..
 		p.playerClass = PlayerPrefabs.Count == 0 ? PlayerClasses.Archer :
 			PlayerPrefabs.Count == 2 ? PlayerClasses.Mage : PlayerClasses.Warrior;
 		PlayerPrefabs.Add(p);
@@ -52,11 +55,12 @@ public class CustomNetworkManager: NetworkManager {
 	}
 
 	public override void OnServerDisconnect(NetworkConnection conn) {
-		for (int i = 0; i < PlayerPrefabs.Count; i++) {
-			if (PlayerPrefabs[i].connectionToClient != conn) continue;
-			PlayerPrefabs.RemoveAt(i);
-			return;
+		try {
+			Player player = PlayerPrefabs.Find(search => search.connectionToClient == conn);
+			FileStorage.SavePlayerOrchid(player.playerName, player.Orchid);
+			PlayerPrefabs.Remove(player);
 		}
+		catch (ArgumentNullException){}
 		base.OnClientDisconnect(conn);
 	}
 

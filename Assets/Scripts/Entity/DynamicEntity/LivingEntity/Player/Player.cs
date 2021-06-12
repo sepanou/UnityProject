@@ -72,7 +72,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		public int Orchid {
 			get => _orchid;
-			[Server] set => _orchid = value;
+			[Server]
+			set {
+				_orchid = value;
+				FileStorage.SavePlayerOrchid(playerName, value);
+			} 
 		}
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
@@ -383,7 +387,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			Debug.Log("Player " + playerName + " is dead !");
 		}
 
-		[Command] private void CmdSetPseudo(string pseudo) => playerName = pseudo;
+		[Command]
+		private void CmdSetPseudo(string pseudo) {
+			playerName = pseudo;
+			_orchid = FileStorage.GetPlayerOrchid(pseudo);
+		}
 
 		[Command] public void CmdSwitchPlayerClass(PlayerClasses @class) => playerClass = @class;
 
