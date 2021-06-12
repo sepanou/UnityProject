@@ -1923,7 +1923,7 @@ GameObject:
   - component: {fileID: 3598881815656132308}
   - component: {fileID: 8035593007870906467}
   - component: {fileID: 8999371378622679520}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: 16x16eB1R1StdL1R1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1979,8 +1979,10 @@ MonoBehaviour:
   syncInterval: 0.1
   hasBeenDiscovered: 0
   hasBeenCleared: 0
-  cover: {fileID: 5959232369079426045}
+  graphicsGo: {fileID: 3309823785711027754}
+  cover: {fileID: 4265484140806462801}
   triggerZone: {fileID: 8999371378622679520}
+  visibilityRadius: 24
 --- !u!61 &8999371378622679520
 BoxCollider2D:
   m_ObjectHideFlags: 0

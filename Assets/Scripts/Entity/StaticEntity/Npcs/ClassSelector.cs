@@ -7,8 +7,8 @@ namespace Entity.StaticEntity.Npcs {
         [SerializeField] private PlayerClasses classType;
 
         private void Start() => Instantiate();
-        
-        [TargetRpc] protected override void TargetInteract(NetworkConnection target, Player player) {
+
+        [Client] protected override void ClientInteract(Player player) {
             switch (classType) {
                 case PlayerClasses.Archer:
                     PlayerInfoManager.PrintDialog(new [] {"#archer-selector"}, () => StopInteracting(player));

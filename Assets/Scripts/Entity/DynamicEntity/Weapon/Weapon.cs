@@ -6,17 +6,24 @@ using UnityEngine.SceneManagement;
 
 namespace Entity.DynamicEntity.Weapon {
 	public abstract class Weapon: DynamicEntity, IInventoryItem, IInteractiveEntity {
-		[SyncVar] protected Player Holder;
 		[SyncVar] public PlayerClasses compatibleClass;
 		[SyncVar] private bool _playerFound; // Has the player collected the item?
 		
+		[SyncVar(hook = nameof(SyncHolderChanged))] protected Player Holder;
+		private void SyncHolderChanged(Player o, Player n) 
+			=> transform.SetParent(n ? n.transform : null, false);
+
 		// Index of the sprite in the WPGenerator array -> Mirror can't serialize sprites
 		[SyncVar(hook = nameof(SyncSpriteIndexChanged))] [NonSerialized] public int SpriteIndex; 
 		private void SyncSpriteIndexChanged(int o, int n) 
 			=> spriteRenderer.sprite = WeaponGenerator.GetWeaponSprite(this, n);
-		
-		[SyncVar(hook = nameof(SyncIsGroundedChanged))] protected bool IsGrounded;
-		private void SyncIsGroundedChanged(bool o, bool n) => SetSpriteRendererVisible(n);
+
+		[SyncVar(hook = nameof(SyncIsGroundedChanged))] protected bool IsGrounded = true;
+		private void SyncIsGroundedChanged(bool o, bool n) {
+			SetSpriteRendererVisible(n);
+			if (n) EnableInteraction();
+			else DisableInteraction(null);
+		}
 		
 		[SerializeField] public Vector3 defaultCoordsWhenLikedToPlayer;
 		[SerializeField] protected int defaultDamage, specialDamage;
@@ -42,13 +49,18 @@ namespace Entity.DynamicEntity.Weapon {
 
 		public override void OnDeserialize(NetworkReader reader, bool initialState) {
 			base.OnDeserialize(reader, initialState);
-			Holder = reader.ReadPlayer();
+			Player newHolder = reader.ReadPlayer();
 			compatibleClass = (PlayerClasses) reader.ReadByte();
 			bool newIsGrounded = reader.ReadBoolean();
 			_lastAttackTime = reader.ReadSingle();
 			_playerFound = reader.ReadBoolean();
 			int newSpriteIndex = reader.ReadInt32();
 
+			if (Holder != newHolder) {
+				SyncHolderChanged(Holder, newHolder);
+				Holder = newHolder;
+			}
+			
 			if (IsGrounded != newIsGrounded) {
 				SyncIsGroundedChanged(IsGrounded, newIsGrounded);
 				IsGrounded = newIsGrounded;
@@ -67,7 +79,6 @@ namespace Entity.DynamicEntity.Weapon {
 			base.Instantiate();
 			
 			if (isServer) {
-				IsGrounded = true; // By default, weapon on the ground !
 				_playerFound = false;
 				_lastAttackTime = -1f;
 			}
@@ -86,8 +97,8 @@ namespace Entity.DynamicEntity.Weapon {
 		}
 
 		protected int GetDamage() => (int) ((Holder
-			? Holder.ApplyDamageBonuses(_isSpecial ? specialDamage : defaultDamage, _isSpecial)
-			: _isSpecial ? specialDamage : defaultDamage) * GetDamageMultiplier(_isSpecial));
+			                                    ? Holder.ApplyDamageBonuses(_isSpecial ? specialDamage : defaultDamage, _isSpecial)
+			                                    : _isSpecial ? specialDamage : defaultDamage) * GetDamageMultiplier(_isSpecial));
 		
 		// Used for projectile - they have a bool telling whether they were launched on a special or default attack
 		public int GetDamage(bool isSpecial) => (int) ((Holder
@@ -118,17 +129,17 @@ namespace Entity.DynamicEntity.Weapon {
 		[Server] public void UseWeapon(bool fireOneButton, bool fireTwoButton) {
 			_lastAttackTime = Time.time;
 			_lastAttackCooldown = Holder ? Holder.ApplyCooldownBonuses(Speed) : Speed;
-			
+
 			if (fireOneButton) {
 				_isSpecial = false;
 				DefaultAttack();
-				TargetLaunchAttackCooldown(connectionToClient, _lastAttackCooldown, _lastAttackTime, false);
+				TargetLaunchAttackCooldown(connectionToClient, _lastAttackCooldown, false);
 			}
 			else if (fireTwoButton && Holder.HasEnoughEnergy(specialAttackCost)) {
 				Holder.ReduceEnergy(specialAttackCost);
 				_isSpecial = true;
 				SpecialAttack();
-				TargetLaunchAttackCooldown(connectionToClient, _lastAttackCooldown, _lastAttackTime, true);
+				TargetLaunchAttackCooldown(connectionToClient, _lastAttackCooldown, true);
 			}
 		}
 
@@ -136,10 +147,6 @@ namespace Entity.DynamicEntity.Weapon {
 			// Interactions + Authority
 			netIdentity.AssignClientAuthority(player.netIdentity.connectionToClient);
 			IsGrounded = false;
-			DisableInteraction(player);
-			RpcDisableInteraction(player);
-			// Transform
-			transform.SetParent(player.transform, false);
 			// Set owner
 			Holder = player;
 			// Target authority for synchronization of networkTransforms
@@ -149,7 +156,7 @@ namespace Entity.DynamicEntity.Weapon {
 		}
 
 		[Server] public void Drop(Player player) {
-			if (!Holder) return;
+			if (!Holder || player != Holder) return;
 			// Target authority for synchronization of networkTransforms
 			networkTransform.clientAuthority = false;
 			TargetSetClientAuthority(connectionToClient, false);
@@ -165,23 +172,19 @@ namespace Entity.DynamicEntity.Weapon {
 			// Interactions
 			IsGrounded = true;
 			_playerFound = false;
-			EnableInteraction();
-			RpcEnableInteraction();
 		}
 
 		[TargetRpc] private void TargetSetClientAuthority(NetworkConnection target, bool state) 
 			=> networkTransform.clientAuthority = state;
 
 		[TargetRpc]
-		private void TargetLaunchAttackCooldown(NetworkConnection target, float duration, float startTime, bool isSpecial) {
-			_lastAttackTime = startTime;
+		private void TargetLaunchAttackCooldown(NetworkConnection target, float duration, bool isSpecial) {
+			_lastAttackTime = Time.time;
 			_lastAttackCooldown = duration;
-			float timeLeft = duration + startTime - Time.time;
-			
 			if (!isSpecial)
-				Manager.playerInfoManager.StartDefaultAttackCooldown(timeLeft);
+				Manager.playerInfoManager.StartDefaultAttackCooldown(duration);
 			else
-				Manager.playerInfoManager.StartSpecialAttackCooldown(timeLeft);
+				Manager.playerInfoManager.StartSpecialAttackCooldown(duration);
 		}
 
 		// Called on client every time this object is spawned (especially when new players join)
