@@ -198,3 +198,108 @@ MonoBehaviour:
       translation: Client or Server already started...
     - fieldKey: '#invalid-IP'
       translation: Invalid IP address format!
+    - fieldKey: '#welcomer-1'
+      translation: Hi traveler, I can see that you are not from here, are you?
+    - fieldKey: '#welcomer-2'
+      translation: "I suppose that you are like all the others before you, you have
+        come this far in hopes of defeating the Great Khrom.\nOnly those with great
+        strength dare to enter those woods.\nThey are called the \u201CPaimpont Forest\u201D."
+    - fieldKey: '#welcomer-3'
+      translation: "The only thing I know is that long before, Khrom was a famous,
+        kind and respected king!\nBut for some reason, one day, madness took hold
+        of him, and he entered the forest \u2013 never to be seen again\u2026"
+    - fieldKey: '#welcomer-4'
+      translation: 'This is all I know but should you require additional information,
+        you can talk to the three elders.
+
+        They are brothers and they have
+        lived long enough to see how everything started!'
+    - fieldKey: '#welcomer-5'
+      translation: "Maybe they will be able to shed some light on Khrom\u2019s history
+        for you.\nOne elder is always praying at the cemetery next to the stronghold
+        market. You should go check if he is here\u2026"
+    - fieldKey: '#elder1-1'
+      translation: "HhhhhHHHhhhhhmmmmmm\u2026."
+    - fieldKey: '#elder1-2'
+      translation: "HhhhhhhhmmmmMMMMMmmMMmMmmMMmmmmmm\u2026\u2026\u2026\u2026........................................."
+    - fieldKey: '#elder1-3'
+      translation: "Oh, good afternoon traveler \u2013 I did not see you coming.\nWhat
+        is that? You want to learn more about Khrom\u2019s history\u2026 Well, I
+        can tell you how it started if you would like."
+    - fieldKey: '#elder1-4'
+      translation: "Long ago Khrom was a king but, although he was feared, he was
+        also recognized and respected by all the lords and people. Indeed, this whole
+        stronghold was his palace!\nBut one day, his wife died of a fatal disease\u2026"
+    - fieldKey: '#elder1-5'
+      translation: "Khrom could not bear the unfortunate loss of his beloved.\nLost
+        in his sorrows, he called upon Derketo the goddess of Death, to whom he asked
+        to bring her back to him. \r\nAnd then\u2026...\nWell..."
+    - fieldKey: '#elder1-6'
+      translation: "I forgot; my memory is not what it was \u2013 but you can ask
+        my twin brother; he will probably remember it better than I do.\r\nHe lives
+        by the river, west of this location.\r"
+    - fieldKey: '#elder2-1'
+      translation: "\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026."
+    - fieldKey: '#elder2-2'
+      translation: "\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026.."
+    - fieldKey: '#elder2-3'
+      translation: "Who dares to disrupt me during my meditation session?\r\nHave
+        you talked to my brother? I suppose he did not remember part of the story\u2026.\r"
+    - fieldKey: '#elder2-4'
+      translation: 'Well, Khrom asked the goddess of Death to bring his wife back.
+
+        She
+        accepted his request but on one very condition: he shall become her servant.
+
+        Khrom,
+        without thinking about what that could mean, acquiesced straightaway.'
+    - fieldKey: '#elder2-5'
+      translation: "He barely had time to look at his dead wife when he felt his
+        skin burn from the inside!\nThe soul of the previous goddess\u2019s servant,
+        a flame wizard, was taking possession of Khrom\u2019s body - and that was
+        the beginning of the end\u2026"
+    - fieldKey: '#elder2-6'
+      translation: "Go talk to my other brother, he lives on the mountain where this
+        water comes from.\nHe will tell you what remains to be known\u2026"
+    - fieldKey: '#elder3-1'
+      translation: "On top of this mountain, reigns peace and silence.\nWhat of those
+        reasons bring you here?\r\nOf course, the end of Khrom\u2019s story\u2026\r"
+    - fieldKey: '#elder3-2'
+      translation: "Khrom should have given more thought to the goddess\u2019s proposal.\nIndeed,
+        Derketo is the goddess of Death, not the one of Life.\nShe could not possibly
+        bring his beloved back to life \u2013 indeed, what she meant when she accepted
+        Khrom\u2019s request was that he would see her back in the Afterlife."
+    - fieldKey: '#elder3-3'
+      translation: "From then on, Khrom was possessed by the demonic soul of the
+        flame wizard whose spirit was consumed by power and hatred.\nFortunately,
+        five of the greatest mages the world had ever known came to this stronghold
+        to exile Khrom inside the forest as well as to cast a powerful and lasting
+        spell on the castle to protect the people and contain Khrom\u2019s madness
+        inside Paimpont Forest."
+    - fieldKey: '#elder3-4'
+      translation: "It is said that the one who succeed in killing him would not
+        only be crowned New King, but also appease Khrom\u2019s restless soul by
+        finally giving him the chance to see her wife again."
+    - fieldKey: '#elder3-5'
+      translation: "That is how it all started, and I hope I will still be alive
+        when it ends\u2026\nFarewell traveler, and may you succeed in all your endeavors."
+    - fieldKey: orchidologist
+      translation: Orchidologist
+    - fieldKey: '#orchidologist-start'
+      translation: 'Welcome to my shop!
+
+        I have weapons for every class to
+        sell but I only accept orchid sprigs in exchange.
+
+        Go on, take a
+        look...'
+    - fieldKey: '#orchidologist-stop'
+      translation: 'Come back later if you would like.
+
+        And don''t forget
+        to clear the forest from the monstrosities it shelters.
+
+        It is the
+        best way to collect those orchid sprigs! Good luck.'
+    - fieldKey: '#more-orchid'
+      translation: You need more Orchid Sprigs...

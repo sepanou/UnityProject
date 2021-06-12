@@ -6,10 +6,11 @@ using UnityEngine;
 namespace DataBanks {
     using PlayerData = Dictionary<string, string>;
 
-    public class FileStorage {
+    public static class FileStorage {
         private static readonly string FILE_PATH = Application.dataPath + "/players.json";
 
         public static int GetPlayerOrchid(string username) {
+            Debug.Log(FILE_PATH);
             CreateFileIfNotExist();
             Dictionary<string, PlayerData> accounts = LoadUserAccounts();
 

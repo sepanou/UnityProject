@@ -276,6 +276,110 @@
         {
             "fieldKey": "#invalid-IP",
             "translation": "Format d'adresse IP invalide !"
+        },
+        {
+            "fieldKey": "#welcomer-1",
+            "translation": "Bien le bonjour voyageur, Je peux voir que vous n'êtes pas d'ici..."
+        },
+        {
+            "fieldKey": "#welcomer-2",
+            "translation": "Quelque chose me dit que vous êtes comme tous les autres avant vous... Vous êtes venus dans l'espoir de défaire le Grand Khrom.\nSeuls les plus forts et courageux osent s'aventurer dans ces bois !\nOn les appelle la “Forêt de Paimpont”."
+        },
+        {
+            "fieldKey": "#welcomer-3",
+            "translation": "La seule chose que je sache est qu'il y a bien longtemps, Khrom était un roi célèbre, tendre et respecté !\nMais pour une raison que j'ignore, un jour, la folie s'empara de lui et il pénétra dans la forêt, sans que personne ne le revis."
+        },
+        {
+            "fieldKey": "#welcomer-4",
+            "translation": "C'est là tout ce que je sais, mais si vous avez besoin de plus ample informations, vous pouvez aller parler aux anciens.\nCe sont des frères et ils ont vécu assez longtemps pour voir comment tout cela a commencé !"
+        },
+        {
+            "fieldKey": "#welcomer-5",
+            "translation": "Peut-être qu'ils pourront vous éclairer sur l'histoire du roi Khrom.\nUn des anciens est toujours en train de prier au cimetière à côté du marché de ce bastion. Vous devriez aller voir s'il s'y trouve…"
+        },
+        {
+            "fieldKey": "#elder1-1",
+            "translation": "HhhhhHHHhhhhhmmmmmm…."
+        },
+        {
+            "fieldKey": "#elder1-2",
+            "translation": "HhhhhhhhmmmmMMMMMmmMMmMmmMMmmmmmm…………........................................."
+        },
+        {
+            "fieldKey": "#elder1-3",
+            "translation": "Oh, bienvenue voyageur – je ne vous ai pas vu arriver.\nQu'est ce que ...? Vous voulez en apprendre plus sur l'histoire de Khrom… Eh bien, je peux vous conter comment cela a commencé."
+        },
+        {
+            "fieldKey": "#elder1-4",
+            "translation": "Il y a fort longtemps, Khrom était un roi mais, bien que craint, il était aussi reconnu et respecté de tous les seigneurs et du peuple. En effet, l'entièreté de cette place forte était son palais !\nMais un jour, sa femme mourru d'une maladie mortelle…"
+        },
+        {
+            "fieldKey": "#elder1-5",
+            "translation": "Khrom ne pu se remettre de l'insupportable perte de sa bien-aimée.\nPerdu dans son chagrin, il fit appel à Derketo, déesse de la Mort, pour lui demander de lui rendre sa femme. \nEt ensuite... Eh bien..."
+        },
+        {
+            "fieldKey": "#elder1-6",
+            "translation": "Je ne m'en souviens plus. Ma mémoire n'est plus ce qu'elle était. Mais vous pouvez toujours demander à mon frère jumeau ; il s'en souviendra surement mieux que moi.\nIl vis près de la rivère, à l'ouest d'ici."
+        },
+        {
+            "fieldKey": "#elder2-1",
+            "translation": "……………………………………………………………."
+        },
+        {
+            "fieldKey": "#elder2-2",
+            "translation": "………………………………………………………………………………………………………….."
+        },
+        {
+            "fieldKey": "#elder2-3",
+            "translation": "Qui ose me déranger lors de ma session de méditation ?\nAvez-vous parlé à mon frère ? J'image qu'il ne se souviens plus de la suite de l'histoire…"
+        },
+        {
+            "fieldKey": "#elder2-4",
+            "translation": "Khrom demanda à la déesse de la Mort de lui rendre sa femme.\nElle accepta sa requête mais à une unique condition : qu'il devienne son servant.\nKhrom, sans songer plus en profondeur à ce que cela signifiait, acquiesca aussitôt."
+        },
+        {
+            "fieldKey": "#elder2-5",
+            "translation": "Il eût à peine le temps de jeter un dernier regard au corps sans vie de sa femme qu'il sentit sa peau brûler de l'intérieur !\nL'âme du précédent servant de la déesse, un mage de feu, était en train de prendre possession du corps de Khrom. Et cela marqua le début de la fin…"
+        },
+        {
+            "fieldKey": "#elder2-6",
+            "translation": "Allez donc parler à mon autre frère, il vit sur la montagne d'où provient l'eau de cette rivière.\nIl vous contera tout ce qu'il reste à savoir…"
+        },
+        {
+            "fieldKey": "#elder3-1",
+            "translation": "Au sommet de cette montagne règne la Paix et le Silence.\nLaquelle de ces raisons vous amène ici ?\nBien sûr, la fin de l'histoire du roi Khrom…"
+        },
+        {
+            "fieldKey": "#elder3-2",
+            "translation": "Khrom aura dû réfléchir plus sérieusement à la proposition de la déesse.\nEn effet, Derketo est la déesse de la Mort, non pas celle de la Vie.\nElle ne pouvait donc évidemment pas ramener sa bien-aimée à la vie. En effet, ce qu'elle sous-entendait lorsqu'elle accepta la demande de Khrom était qu'il la reverrait dans l'Au-Delà."
+        },
+        {
+            "fieldKey": "#elder3-3",
+            "translation": "Dès lors, Khrom fût possédé par l'âme démoniaque du mage de feu dont l'esprit était consummé par le pouvoir et la haine.\nFort heureusement, cinq des plus grands mage que le monde ait jamais conny se rendirent ici dans le but d'exiler Khrom dans la forêt, et de jeter un puissant sort sur le château pour protéger les habitants et pour contenir la folie de Khrom dans la Forêt de Paimpont."
+        },
+        {
+            "fieldKey": "#elder3-4",
+            "translation": "Il paraîtrait que celui qui arriverait à tuer Khrom se verrait couronner Nouveau Roi, mais appaiserait aussi l'âme tourmentée de Khrom en lui permettant finalement de revoir sa femme."
+        },
+        {
+            "fieldKey": "#elder3-5",
+            "translation": "Voici comment tout cela a commencé ; et j'espère que je serais toujours en vie lorsque tout cela finira…\nAdieu voyageur et puissiez-vous réussir dans toutes les quêtes que vous entreprendrez."
+        },
+        {
+            "fieldKey": "orchidologist",
+            "translation": "Orchidologue"
+        },
+        {
+            "fieldKey": "#orchidologist-start",
+            "translation": "Bienvenue mystérieux aventurier !\nJe possède des armes pour chaque classe mais je n'accepte que les brins d'orchidée en échange.\nAllez-y, jetez-y un oeil..."
+        },
+        {
+            "fieldKey": "#orchidologist-stop",
+            "translation": "Revenez plus tard si le coeur vous en dit.\nEt n'oubliez pas de débarasser la forêt des monstruosités qui y habitent.\nC'est le meilleur moyen de pourvoir récolter ces précieux brins d'orchidée ! Bonne chance."
+        },
+        {
+            "fieldKey": "#more-orchid",
+            "translation": "Vous n'avez pas assez de Brins d'Orchidée..."
         }
     ]
 }

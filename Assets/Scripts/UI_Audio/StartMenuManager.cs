@@ -14,6 +14,7 @@ namespace UI_Audio {
 		[SerializeField] private RectTransform soloFields;
 		[SerializeField] private RectTransform multiPlayerFields;
 		[SerializeField] private RectTransform pseudoFields;
+		[SerializeField] private RectTransform creditsFields;
 		[SerializeField] private TMP_InputField pseudoInput;
 		[SerializeField] private Toggle allowMultiPlayerToggle;
 
@@ -50,6 +51,7 @@ namespace UI_Audio {
 			soloFields.gameObject.SetActive(false);
 			multiPlayerFields.gameObject.SetActive(false);
 			pseudoFields.gameObject.SetActive(false);
+			creditsFields.gameObject.SetActive(false);
 		}
 
 		public void CloseStartMenu() {
