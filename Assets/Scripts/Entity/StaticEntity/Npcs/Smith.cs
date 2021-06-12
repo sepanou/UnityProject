@@ -2,7 +2,6 @@
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UI_Audio.Inventories;
-using UnityEngine;
 
 namespace Entity.StaticEntity.Npcs {
     public class Smith : ShopKeeper {
@@ -59,7 +58,7 @@ namespace Entity.StaticEntity.Npcs {
             TargetMergeSuccessful(sender, finalCharm);
         }
         
-        [TargetRpc] protected override void TargetInteract(NetworkConnection target, Player player) 
+        [Client] protected override void ClientInteract(Player player)
             => PrintDialog(new[] {"#smith-start"}, OpenInventory);
     }
 }

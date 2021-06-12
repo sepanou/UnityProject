@@ -110,6 +110,7 @@ namespace UI_Audio {
 
 			foreach (string dialogKey in dialogKeys) {
 				string toPrint = LanguageManager[dialogKey];
+				dialogText.text = "";
 				
 				foreach (char chr in toPrint) {
 					dialogText.text += chr;
@@ -122,11 +123,9 @@ namespace UI_Audio {
 				}
 
 				yield return new WaitUntil(() => InputManager.GetKeyDown("Interact"));
+				yield return new WaitUntil(() => InputManager.GetKeyUp("Interact"));
 			}
-			
-			while (!InputManager.GetKeyDown("Interact"))
-				yield return null;
-			
+
 			dialogBox.gameObject.SetActive(false);
 			callback?.Invoke();
 		}

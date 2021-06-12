@@ -83,6 +83,10 @@ MonoBehaviour:
   syncInterval: 0.1
   spriteRenderer: {fileID: 1790875015414698496}
   interactionCollider: {fileID: 4790644212840856083}
+  north: {fileID: -8625451853094235002, guid: 3078173ee03245b40a864a763c211ae6, type: 3}
+  south: {fileID: -6396275734832242969, guid: 3078173ee03245b40a864a763c211ae6, type: 3}
+  east: {fileID: -2685930207754986108, guid: 3078173ee03245b40a864a763c211ae6, type: 3}
+  west: {fileID: -3527722448498544201, guid: 3078173ee03245b40a864a763c211ae6, type: 3}
 --- !u!212 &1790875015414698496
 SpriteRenderer:
   m_ObjectHideFlags: 0

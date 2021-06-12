@@ -23,7 +23,7 @@ namespace Entity.StaticEntity.Npcs {
 
         protected override bool HasEnoughCurrency(Player player, int cost) => player.HasEnoughKibrient(cost);
 
-        [TargetRpc] protected override void TargetInteract(NetworkConnection target, Player player) 
+        [Client] protected override void ClientInteract(Player player) 
             => PrintDialog(new[] {"#innkeeper-start"}, OpenInventory);
         
         [TargetRpc] protected override void TargetItemBought(NetworkConnection target) {
