@@ -1,5 +1,6 @@
+using System;
 using System.Collections;
-using System.Linq;
+using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
@@ -7,19 +8,18 @@ using UnityEngine;
 namespace Generation{
     public class RoomInGame: NetworkBehaviour {
         public bool hasBeenDiscovered;
-        public bool hasBeenCleared;
-        public Room Room;
+        [SyncVar(hook = nameof(SyncHasBeenClearedChanged))] public bool hasBeenCleared;
 
         [SerializeField] private GameObject graphicsGo;
         [SerializeField] private SpriteRenderer cover;
         [SerializeField] private Collider2D triggerZone;
         [SerializeField] private GameObject doorsColliders;
         [SerializeField] private GameObject doorsTrees;
+        private InputManager _inputManager;
 
         private void Start() {
-            hasBeenCleared = false;
-            hasBeenDiscovered = false;
             graphicsGo.SetActive(true);
+            RpcChangeWalls(0);
             StartCoroutine(VisibilityChecker());
         }
 
@@ -33,10 +33,16 @@ namespace Generation{
                 Destroy(box);
             Destroy(triggerZone);
             RpcHideCover();
+            if (hasBeenCleared) return;
             foreach (Collider2D col in doorsColliders.GetComponents<Collider2D>()) {
                 col.isTrigger = false;
             }
-            doorsTrees.transform.localScale = new Vector3(1, 1, 0);
+            RpcChangeWalls(1);
+        }
+
+        [ClientRpc]
+        private void RpcChangeWalls(int scale) {
+            doorsTrees.transform.localScale = new Vector3(1, scale, 0);
         }
 
         [ClientRpc] private void RpcHideCover() {
@@ -53,6 +59,33 @@ namespace Generation{
             while ((localPlayer = LocalGameManager.Instance.LocalPlayer) != null && localPlayer && cover) {
                 graphicsGo.SetActive(localPlayer.IsSpriteVisible(cover));
                 yield return new WaitForSeconds(LocalGameManager.Instance.visibilityUpdateDelay);
+            }
+        }
+
+        [Server]
+        private void Update() {
+            if (!hasBeenCleared && Input.GetKeyDown(KeyCode.P) && hasBeenDiscovered) {
+                hasBeenCleared = true;
+            }
+        }
+
+        private void SyncHasBeenClearedChanged(bool oldHbc, bool hBC) {
+            if (hBC) {
+                Destroy(doorsColliders);
+                Destroy(doorsTrees);
+            }
+        }
+        public override bool OnSerialize(NetworkWriter writer, bool initialState) {
+            base.OnSerialize(writer, initialState);
+            writer.WriteBoolean(hasBeenCleared);
+            return true;
+        }
+        public override void OnDeserialize(NetworkReader reader, bool initialState) {
+            base.OnDeserialize(reader, initialState);
+            bool newHbc = reader.ReadBoolean();
+            if (newHbc != hasBeenCleared) {
+                SyncHasBeenClearedChanged(hasBeenCleared, newHbc);
+                hasBeenCleared = newHbc;
             }
         }
     }
