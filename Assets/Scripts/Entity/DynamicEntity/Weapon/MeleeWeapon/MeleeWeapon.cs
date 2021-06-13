@@ -95,13 +95,11 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			if (!_animating) SetLocalPosition();
 		}
 
-		[Server] protected override void DefaultAttack() {
-			TargetProcessAttack(Holder.connectionToClient);
-		}
+		[Server] protected override void DefaultAttack()
+			=> TargetProcessAttack(Holder.connectionToClient, false);
 
-		[Server] protected override void SpecialAttack() {
-			TargetProcessAttack(Holder.connectionToClient);
-		}
+		[Server] protected override void SpecialAttack() 
+			=> TargetProcessAttack(Holder.connectionToClient, true);
 
 		[Client] private void SetLocalPosition() {
 			if (!hasAuthority) return;
@@ -119,8 +117,36 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			}
 		}
 
+		[Client] private IEnumerator ProcessSpecialAttack(int turns, float delay = 0.01f) {
+			const float acceleration = 1.125f;
+			float anglePerUpdate = 5f;
+			float startAngle = 0f;
+			
+			// Acceleration
+			for (int i = 0; i < turns / 2; i++) {
+				startAngle = startAngle > 360 ? startAngle - 360 : 0;
+				while (startAngle < 360f) {
+					transform.Rotate(0, 0, anglePerUpdate);
+					startAngle += anglePerUpdate;
+					yield return new WaitForSeconds(delay);
+				}
+				anglePerUpdate *= acceleration;
+			}
+			
+			// Deceleration
+			for (int i = turns / 2; i < turns; i++) {
+				anglePerUpdate /= acceleration;
+				startAngle = startAngle > 360 ? startAngle - 360 : 0;
+				while (startAngle < 360f) {
+					transform.Rotate(0, 0, anglePerUpdate);
+					startAngle += anglePerUpdate;
+					yield return new WaitForSeconds(delay);
+				}
+			}
+		}
+
 		[Client] // Only run by the owner -> networkTransform automatically synchronizes everything
-		private IEnumerator ProcessAttack() {
+		private IEnumerator ProcessDefaultAttack() {
 			SetLocalPosition();
 			_animating = true;
 			CmdSetAnimating(true);
@@ -154,9 +180,9 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 
 		[ClientRpc] private void RpcSetSpriteFlipX(bool state) => spriteRenderer.flipX = state;
 
-		[TargetRpc] private void TargetProcessAttack(NetworkConnection target) {
+		[TargetRpc] private void TargetProcessAttack(NetworkConnection target, bool special) {
 			StopAllCoroutines();
-			StartCoroutine(ProcessAttack());
+			StartCoroutine(special ? ProcessSpecialAttack(10) : ProcessDefaultAttack());
 		}
 		
 		protected override void OnTriggerEnter2D(Collider2D other) {

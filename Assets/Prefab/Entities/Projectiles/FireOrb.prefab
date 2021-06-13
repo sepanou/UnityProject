@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -442981113929551766}
   - component: {fileID: -1884307828703802254}
   - component: {fileID: 4126538001226602082}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: FireOrb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4830,6 +4830,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   interactionCollider: {fileID: 0}
   speed: 3
+  projectileOrientation: {x: 0, y: 0}
 --- !u!114 &4126538001226602082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4862,7 +4863,7 @@ GameObject:
   - component: {fileID: 3931145846831559302}
   - component: {fileID: 3931145846831559300}
   - component: {fileID: 3931145846831559303}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -130,6 +130,13 @@ namespace DataBanks {
 		public static string ToJsonList<T>(List<T> list, bool prettyPrint = false)
 			=> JsonUtility.ToJson(new ListContainer<T> {list = list}, prettyPrint);
 
+		public static Dictionary<TKey, TValue> FromJsonDict<TKey, TValue>(string data)
+			=> JsonUtility.FromJson<ListContainer<KeyValuePair<TKey, TValue>>>(data).list
+				.ToDictionary(x => x.Key, x => x.Value);
+
+		public static string ToJsonDict<TKey, TValue>(Dictionary<TKey, TValue> dict, bool prettyPrint = false)
+			=> JsonUtility.ToJson(new ListContainer<KeyValuePair<TKey, TValue>> {list = dict.ToList()}, prettyPrint);
+
 		[Serializable]
 		private class ListContainer<T> {
 			public List<T> list;

@@ -10,7 +10,6 @@ namespace DataBanks {
         private static readonly string FILE_PATH = Application.dataPath + "/players.json";
 
         public static int GetPlayerOrchid(string username) {
-            Debug.Log(FILE_PATH);
             CreateFileIfNotExist();
             Dictionary<string, PlayerData> accounts = LoadUserAccounts();
 

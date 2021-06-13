@@ -20,9 +20,13 @@ namespace Entity.DynamicEntity.Weapon {
 
 		[SyncVar(hook = nameof(SyncIsGroundedChanged))] protected bool IsGrounded = true;
 		private void SyncIsGroundedChanged(bool o, bool n) {
-			SetSpriteRendererVisible(n);
-			if (n) EnableInteraction();
-			else DisableInteraction(null);
+			if (n) {
+				SetSpriteRendererVisible(true);
+				EnableInteraction();
+			} else {
+				if (!Holder) SetSpriteRendererVisible(false);
+				DisableInteraction(null);
+			}
 		}
 		
 		[SerializeField] public Vector3 defaultCoordsWhenLikedToPlayer;

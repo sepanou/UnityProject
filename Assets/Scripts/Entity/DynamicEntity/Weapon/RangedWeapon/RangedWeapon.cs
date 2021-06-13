@@ -54,7 +54,7 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 	
 	public abstract class RangedWeapon: Weapon {
 		[SerializeField] protected Transform launchPoint;
-		protected Projectile.Projectile Projectile;
+		protected Projectile.Projectile ProjectilePrefab;
 		
 		[SyncVar] [HideInInspector] public Vector2 orientation;
 		[SyncVar] [HideInInspector] public RangedWeaponData rangeData;
@@ -89,7 +89,7 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 			SetProjectile();
 		}
 
-		[Server] public Projectile.Projectile GetProjectile() => Projectile;
+		[Server] public Projectile.Projectile GetProjectile() => ProjectilePrefab;
 
 		public override string GetWeaponName() => rangeData.name;
 	}

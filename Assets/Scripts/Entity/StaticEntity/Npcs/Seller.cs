@@ -69,6 +69,7 @@ namespace Entity.StaticEntity.Npcs {
             }
 
             ReducePlayerCurrency(player, cost);
+            SetSameRenderingParameters(player, (Entity) item);
             if (item is Charm charm) player.CollectCharm(charm);
             else if (item is Weapon wp) player.CollectWeapon(wp);
             else return;
