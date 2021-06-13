@@ -1,6 +1,11 @@
 .idea
 bin
 
+#Those fuckers again
+Cursor&Particles.renderTexture
+Assets/Plugins/GitHub.meta
+Assets/players.json
+
 ## https://github.com/github/gitignore/blob/master/Unity.gitignore
 
 # This .gitignore file should be placed at the root of your Unity project directory
@@ -225,8 +230,3 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
-
-#Those fuckers again
-Cursor&Particles.renderTexture
-Assets/Plugins/GitHub.meta
-Assets/players.json
