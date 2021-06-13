@@ -2178,6 +2178,7 @@ MonoBehaviour:
   triggerZone: {fileID: 8999371378622679520}
   doorsColliders: {fileID: 1401264247586603305}
   doorsTrees: {fileID: 3979415631028286268}
+  prefabsToSpawn: []
 --- !u!61 &8999371378622679520
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9720,6 +9721,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5381505698596334609, guid: a057d93c135def243b5965aaffc69577,
         type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5381505698596334609, guid: a057d93c135def243b5965aaffc69577,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.5950144
       objectReference: {fileID: 0}
@@ -10544,6 +10550,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5381505698596334609, guid: a057d93c135def243b5965aaffc69577,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5381505698596334609, guid: a057d93c135def243b5965aaffc69577,
         type: 3}

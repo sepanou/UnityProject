@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 namespace Generation {
 	public class Level: NetworkBehaviour {
 		public int Chests { get; set; }
-		public bool Shop { get; set; } = false;
+		public bool Shop { get; set; }
 		[FormerlySerializedAs("LevelId")] [SerializeField] public int levelId;
 		[SerializeField] public string lvlName;
 		public Room[,] RoomsMap { get; } = new Room[101, 101];

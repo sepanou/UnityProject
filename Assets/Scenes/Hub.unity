@@ -59570,6 +59570,11 @@ MonoBehaviour:
   - {fileID: 1733667786638382375, guid: 5fa306789996a9042bef29a4ac65aa5d, type: 3}
   - {fileID: 7263529758465572001, guid: 171696fda2f925946a4d2fb90f6ea3d3, type: 3}
   - {fileID: 4723886518689639218, guid: 27c57c3925fc5564eb4786a60337094c, type: 3}
+  - {fileID: 6527053996501984771, guid: 7e7f34a8c326114458b3beee50324457, type: 3}
+  - {fileID: 1881837157385443890, guid: af7790c6d472d1f478434752a0d4ca7a, type: 3}
+  - {fileID: 3729219926689252608, guid: 8c559c450440eff4688c727c1c1471ff, type: 3}
+  - {fileID: 1882975997945534072, guid: d4ffbc94a856c3b49bffe2163cc761cd, type: 3}
+  - {fileID: 2055102311959635369, guid: 99597c7b4aa47494fb2b6061505735da, type: 3}
   sceneAnimator: {fileID: 807742234}
   forestScene: Assets/Scenes/Level1Creation.unity
   forestSpawnPoints:
@@ -116183,7 +116188,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48.3
+  m_fontSize: 51.6
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1
