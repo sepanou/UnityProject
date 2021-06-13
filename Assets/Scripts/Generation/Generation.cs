@@ -162,7 +162,7 @@ namespace Generation {
 				? RoomType.Shop
 				: isThereAShop && !placedPreBossRoom && lMap.Count >= 20 && seed.Next(100) <= -10 + lMap.Count * 2
 				? RoomType.PreBoss
-				: seed.Next(100) <= 5 / (chests + 1)
+				: seed.Next(100) <= 10 / (chests + 1)
 				? RoomType.Chest
 				: RoomType.Standard
 			;
