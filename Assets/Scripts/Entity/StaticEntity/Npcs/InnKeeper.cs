@@ -3,7 +3,6 @@ using Entity.DynamicEntity.LivingEntity.Player;
 using Entity.DynamicEntity.Weapon;
 using Mirror;
 using UI_Audio.Inventories;
-using UnityEngine;
 
 namespace Entity.StaticEntity.Npcs {
     public class InnKeeper : Seller {

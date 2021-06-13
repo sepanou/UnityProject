@@ -8,7 +8,7 @@ namespace UI_Audio.Inventories {
 		public SmithInventory smithInventory;
 		public CollectorInventory collectorInventory;
 		public InnKeeperInventory innKeeperInventory;
-		//public orchidologistInventory orchidologistInventory;
+		public OrchidologistInventory orchidologistInventory;
 
 		public void Initialize() => CloseAllInventories();
 
@@ -17,6 +17,7 @@ namespace UI_Audio.Inventories {
 			smithInventory.Close();
 			collectorInventory.Close();
 			innKeeperInventory.Close();
+			orchidologistInventory.Close();
 			sidedShopInventoriesRect.gameObject.SetActive(false);
 			middleShopInventoriesRect.gameObject.SetActive(false);
 			playerInventory.transform.SetParent(middlePlayerInventoryRect, false);
@@ -27,6 +28,7 @@ namespace UI_Audio.Inventories {
 			smithInventory.ClearInventory();
 			collectorInventory.ClearInventory();
 			innKeeperInventory.ClearInventory();
+			orchidologistInventory.ClearInventory();
 		}
 
 		public void OpenSidedInventory() {
