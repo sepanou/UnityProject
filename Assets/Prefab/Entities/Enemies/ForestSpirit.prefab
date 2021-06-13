@@ -182,7 +182,8 @@ MonoBehaviour:
   spriteRenderer: {fileID: 3364234204132942050}
   interactionCollider: {fileID: 0}
   speed: 2.5
-  entityUI: {fileID: 0}
+  entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
+    type: 3}
   nameTag: Forest Spirit
   maxHealth: 30
   advancedMoves: 0
