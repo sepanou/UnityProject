@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1882545377149301592
+--- !u!1 &434579038753847930
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,28 +8,27 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5745206146399255130}
-  - component: {fileID: 3645632500934994368}
-  - component: {fileID: 4318850049197968617}
-  - component: {fileID: 1577055696238205313}
-  - component: {fileID: 1046630096238927370}
-  - component: {fileID: 6038989504838677754}
-  - component: {fileID: 1628151982279526521}
-  - component: {fileID: 154962634339220198}
+  - component: {fileID: 6024928799795049336}
+  - component: {fileID: 3364234204132942050}
+  - component: {fileID: 2866657034023388619}
+  - component: {fileID: 703997032750223523}
+  - component: {fileID: 1342542010380490536}
+  - component: {fileID: 2162083991844697028}
+  - component: {fileID: 8204045168405220868}
   m_Layer: 0
-  m_Name: Cow
+  m_Name: ForestSpirit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5745206146399255130
+--- !u!4 &6024928799795049336
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1882545377149301592}
+  m_GameObject: {fileID: 434579038753847930}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -37,13 +36,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &3645632500934994368
+--- !u!212 &3364234204132942050
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1882545377149301592}
+  m_GameObject: {fileID: 434579038753847930}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -76,25 +75,25 @@ SpriteRenderer:
   m_SortingLayerID: -1281448579
   m_SortingLayer: 1
   m_SortingOrder: 2
-  m_Sprite: {fileID: -855298285791758126, guid: 50dbf781f29ae37408a731cd2b59d525,
+  m_Sprite: {fileID: -5493061851817071206, guid: 15a5b4d2341824449a21e4284aed86e5,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.4230769, y: 1}
+  m_Size: {x: 1.882353, y: 0.9411765}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!114 &4318850049197968617
+--- !u!114 &2866657034023388619
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1882545377149301592}
+  m_GameObject: {fileID: 434579038753847930}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
@@ -105,13 +104,13 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &1577055696238205313
+--- !u!114 &703997032750223523
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1882545377149301592}
+  m_GameObject: {fileID: 434579038753847930}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
@@ -126,14 +125,14 @@ MonoBehaviour:
   compressRotation: 0
   interpolateScale: 1
   syncScale: 1
---- !u!50 &1046630096238927370
+--- !u!50 &1342542010380490536
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1882545377149301592}
+  m_GameObject: {fileID: 434579038753847930}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -147,65 +146,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!61 &6038989504838677754
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1882545377149301592}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 1.4230769, y: 1}
-    newSize: {x: 1.4230769, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
---- !u!114 &1628151982279526521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1882545377149301592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 509f96af7be446ba9ab19becce4a8b47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  spriteRenderer: {fileID: 3645632500934994368}
-  interactionCollider: {fileID: 0}
-  speed: 3
-  entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
-    type: 3}
-  nameTag: Enraged Cow
-  maxHealth: 10
-  advancedMoves: 1
---- !u!95 &154962634339220198
+--- !u!95 &2162083991844697028
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1882545377149301592}
+  m_GameObject: {fileID: 434579038753847930}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 99c12e7ebbc6d0144a5f194416ca8bdb, type: 2}
+  m_Controller: {fileID: 22100000, guid: 74092482c30373d4dbc29325ba9def6f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -214,3 +165,24 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8204045168405220868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434579038753847930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2979c2bae6e477180a18719eccdd5e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  spriteRenderer: {fileID: 3364234204132942050}
+  interactionCollider: {fileID: 0}
+  speed: 2.5
+  entityUI: {fileID: 0}
+  nameTag: Forest Spirit
+  maxHealth: 30
+  advancedMoves: 0
