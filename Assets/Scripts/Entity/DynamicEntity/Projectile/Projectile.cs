@@ -1,3 +1,4 @@
+using System.Collections;
 using Entity.DynamicEntity.LivingEntity.Mob;
 using Entity.DynamicEntity.Weapon.RangedWeapon;
 using Mirror;
@@ -14,7 +15,7 @@ namespace Entity.DynamicEntity.Projectile {
 		private bool _fromSpecialAttack;
 		private float _spawnTime; // The time when the projectile was spawned
 		
-		public new void Instantiate() {
+		protected new void Instantiate() {
 			base.Instantiate();
 			if (TryGetComponent(out RigidBody)) RigidBody.bodyType = netIdentity.isServer
 				? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
@@ -22,27 +23,40 @@ namespace Entity.DynamicEntity.Projectile {
 		
 		protected abstract void Move();
 
-		[Server] public static void SpawnProjectiles(RangedWeapon source, Vector2 position, bool fromSpecial, 
-			float velocityLossPerSpawn = 0.7f) {
-			Projectile projectilePrefab = source.GetProjectile();
-			
-			Quaternion localRotation = Quaternion.Euler(
+		private static Projectile BuildProjectile(Projectile projectilePrefab, RangedWeapon source, Transform launchPoint, bool special) {
+			Projectile projectile = Instantiate(projectilePrefab, launchPoint.position, Quaternion.Euler(
 				new Vector3(0, 0, Vector2.SignedAngle(projectilePrefab.projectileOrientation, source.orientation))
-			);
-			
-			float initialVelocity = source.rangeData.projectileSpeedMultiplier;
+			));
+			projectile._fromWeapon = source;
+			projectile.FacingDirection = source.orientation;
+			projectile._fromSpecialAttack = special;
+			projectile.Speed *= source.rangeData.projectileSpeedMultiplier;
+			projectile.transform.localScale *= source.rangeData.projectileSizeMultiplier;
+			projectile._spawnTime = Time.fixedTime;
+			projectile.Instantiate();
+			SetSameRenderingParameters(source, projectile);
+			return projectile;
+		}
+		
+		// Default attack function
+		[Server] public static IEnumerator SpawnProjectiles(RangedWeapon source, Transform launchPoint, float delayPerSpawn = 0.1f) {
+			Projectile projectilePrefab = source.GetProjectile();
 			for (int i = 0; i < source.rangeData.projectileNumber; i++) {
-				Projectile projectile = Instantiate(projectilePrefab, position, localRotation);
-				projectile._fromWeapon = source;
-				projectile.FacingDirection = source.orientation;
-				projectile._fromSpecialAttack = fromSpecial;
-				projectile.Speed *= initialVelocity;
-				projectile.transform.localScale *= source.rangeData.projectileSizeMultiplier;
-				projectile._spawnTime = Time.fixedTime;
-				projectile.Instantiate();
-				SetSameRenderingParameters(source, projectile);
+				Projectile projectile = BuildProjectile(projectilePrefab, source, launchPoint, false);
 				NetworkServer.Spawn(projectile.gameObject);
-				initialVelocity *= velocityLossPerSpawn;
+				yield return new WaitForSeconds(delayPerSpawn);
+			}
+		}
+
+		// Special attack function
+		[Server] public static IEnumerator WaveOfProjectiles(RangedWeapon source, Transform launchPoint, float duration) {
+			Projectile projectilePrefab = source.GetProjectile();
+
+			float startTime = Time.time;
+			while (Time.time - startTime < duration) {
+				Projectile projectile = BuildProjectile(projectilePrefab, source, launchPoint, true);
+				NetworkServer.Spawn(projectile.gameObject);
+				yield return new WaitForSeconds(0.2f);
 			}
 		}
 

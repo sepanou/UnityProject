@@ -55,13 +55,21 @@ public class CustomNetworkManager: NetworkManager {
 	}
 
 	public override void OnServerDisconnect(NetworkConnection conn) {
+		if (PlayerPrefabs.Count == 0) {
+			// When client+host mode -> called 2 times even though it is the same person
+			// => NullPointerException for the player
+			base.OnServerDisconnect(conn);
+			return;
+		}
+		
 		try {
 			Player player = PlayerPrefabs.Find(search => search.connectionToClient == conn);
 			FileStorage.SavePlayerOrchid(player.playerName, player.Orchid);
 			PlayerPrefabs.Remove(player);
 		}
-		catch (ArgumentNullException){}
-		base.OnClientDisconnect(conn);
+		catch (ArgumentNullException) {}
+		
+		base.OnServerDisconnect(conn);
 	}
 
 	public override void OnStopClient() {

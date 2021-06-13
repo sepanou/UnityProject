@@ -22,14 +22,16 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 			CmdUpdateOrientation(orient);
 		}
 		
-		[Server] protected override void SetProjectile() => Projectile = WeaponGenerator.GetBowProjectile();
+		[Server] protected override void SetProjectile() => ProjectilePrefab = WeaponGenerator.GetBowProjectile();
 
 		[Server] protected override void DefaultAttack() {
-			global::Entity.DynamicEntity.Projectile.Projectile.SpawnProjectiles(this, launchPoint.position, false);
+			StopAllCoroutines();
+			StartCoroutine(Projectile.Projectile.SpawnProjectiles(this, launchPoint));
 		}
 
 		[Server] protected override void SpecialAttack() {
-			global::Entity.DynamicEntity.Projectile.Projectile.SpawnProjectiles(this, launchPoint.position, true);
+			StopAllCoroutines();
+			StartCoroutine(Projectile.Projectile.WaveOfProjectiles(this, launchPoint, 5f));
 		}
 
 		[Command] // Authority does not change the fact that sync vars must be updated on the server
