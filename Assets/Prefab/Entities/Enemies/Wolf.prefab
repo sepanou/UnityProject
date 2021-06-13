@@ -142,7 +142,8 @@ MonoBehaviour:
   spriteRenderer: {fileID: 4008218599854732905}
   interactionCollider: {fileID: 0}
   speed: 3
-  entityUI: {fileID: 0}
+  entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
+    type: 3}
   nameTag: Furious wolf
   maxHealth: 50
   advancedMoves: 1
