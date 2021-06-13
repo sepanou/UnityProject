@@ -103,7 +103,6 @@ MonoBehaviour:
   graphicsGo: {fileID: 1935697939593749852}
   cover: {fileID: 4561037938411857356}
   triggerZone: {fileID: 9096189001914637848}
-  visibilityRadius: 24
 --- !u!61 &9096189001914637848
 BoxCollider2D:
   m_ObjectHideFlags: 0
