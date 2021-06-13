@@ -109,8 +109,6 @@ namespace Entity.DynamicEntity.Weapon {
 			? Holder.ApplyDamageBonuses(isSpecial ? specialDamage : defaultDamage, isSpecial)
 			: _isSpecial ? specialDamage : defaultDamage) * GetDamageMultiplier(isSpecial));
 
-		public int GetSpecialAttackCost() => specialAttackCost;
-
 		public bool CanAttack()
 			=> Holder && Equipped && (_lastAttackTime < 0 || !(Time.time - _lastAttackTime < _lastAttackCooldown));
 
