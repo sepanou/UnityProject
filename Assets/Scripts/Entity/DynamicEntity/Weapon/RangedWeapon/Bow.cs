@@ -15,7 +15,7 @@ namespace Entity.DynamicEntity.Weapon.RangedWeapon {
 		}
 
 		[ClientCallback] private void FixedUpdate() {
-			if (!hasAuthority|| !Equipped || IsGrounded || !MouseCursor.Instance) return;
+			if (!NetworkClient.ready || !hasAuthority|| !Equipped || IsGrounded || !MouseCursor.Instance) return;
 			// Only run by the weapon's owner (client)
 			gameObject.transform.localRotation =
 				MouseCursor.Instance.OrientateObjectTowardsMouse(Vector2.right, out Vector2 orient);

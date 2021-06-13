@@ -23,7 +23,7 @@ namespace Entity.StaticEntity.Npcs {
 
         protected override bool HasEnoughCurrency(Player player, int cost) => player.HasEnoughKibrient(cost);
 
-        [TargetRpc] protected override void TargetInteract(NetworkConnection target, Player player) 
+        [Client] protected override void ClientInteract(Player player) 
             => PrintDialog(new[] {"#innkeeper-start"}, OpenInventory);
         
         [TargetRpc] protected override void TargetItemBought(NetworkConnection target) {
@@ -48,17 +48,15 @@ namespace Entity.StaticEntity.Npcs {
                     else
                         generated = WeaponGenerator.GenerateSword(IsLootEpic);
                     
-                    generated.DisableInteraction(null);
                     generated.transform.parent = transform;
-                    NetworkServer.Spawn(generated.gameObject);
                     ((Weapon) generated).SetIsGrounded(false);
+                    NetworkServer.Spawn(generated.gameObject);
                 }
                 else {
                     generated = WeaponGenerator.GenerateCharm();
-                    generated.DisableInteraction(null);
                     generated.transform.parent = transform;
-                    NetworkServer.Spawn(generated.gameObject);
                     ((Charm) generated).SetIsGrounded(false);
+                    NetworkServer.Spawn(generated.gameObject);
                 }
 
                 Items.Add((IInventoryItem) generated);

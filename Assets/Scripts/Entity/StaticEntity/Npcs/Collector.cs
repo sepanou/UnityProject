@@ -50,7 +50,7 @@ namespace Entity.StaticEntity.Npcs {
             TargetTransactionCompleted(sender);
         }
         
-        [TargetRpc] protected override void TargetInteract(NetworkConnection target, Player player) 
+        [Client] protected override void ClientInteract(Player player) 
             => PrintDialog(new[] {"#collector-start"}, OpenInventory);
     }
 }

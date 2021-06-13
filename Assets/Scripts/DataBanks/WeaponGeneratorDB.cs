@@ -284,6 +284,7 @@ namespace DataBanks {
 			result.bonuses = data ?? GenerateCharmData();
 			result.bonuses.name = GenerateName(CharmNames);
 			result.GetSpriteRenderer().sprite = GetRandomInArray(charmSprites, out result.SpriteIndex);
+			result.SetIsGrounded(true);
 			return result;
 		}
 
@@ -293,6 +294,7 @@ namespace DataBanks {
 			result.rangeData = GenerateRangeData(epic);
 			result.rangeData.name = GenerateName(BowNames);
 			result.GetSpriteRenderer().sprite = GetRandomInArray(bowSprites, out result.SpriteIndex);
+			result.SetIsGrounded(true);
 			return result;
 		}
 		
@@ -311,6 +313,7 @@ namespace DataBanks {
 			
 			result.rangeData.name = staffName + " " + adj + " " + cName;
 			result.GetSpriteRenderer().sprite = GetRandomInArray(staffSprites, out result.SpriteIndex);
+			result.SetIsGrounded(true);
 			return result;
 		}
 		
@@ -320,6 +323,7 @@ namespace DataBanks {
 			result.meleeData = GenerateMeleeData(epic);
 			result.meleeData.name = GenerateName(MeleeNames);
 			result.GetSpriteRenderer().sprite = GetRandomInArray(swordSprites, out result.SpriteIndex);
+			result.SetIsGrounded(true);
 			return result;
 		}
 

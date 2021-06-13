@@ -1569,6 +1569,16 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -3.55
       objectReference: {fileID: 0}
+    - target: {fileID: 5423274196933005654, guid: 6b50cb92cd925aa44b8f0ca785bae7be,
+        type: 3}
+      propertyPath: m_AssetId
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5525936790322310443, guid: 6b50cb92cd925aa44b8f0ca785bae7be,
+        type: 3}
+      propertyPath: graphicsGO
+      value: 
+      objectReference: {fileID: 8177635468246589718}
     - target: {fileID: 6482345213272831805, guid: 6b50cb92cd925aa44b8f0ca785bae7be,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1612,7 +1622,7 @@ PrefabInstance:
     - target: {fileID: 8314062332767323627, guid: 6b50cb92cd925aa44b8f0ca785bae7be,
         type: 3}
       propertyPath: m_Name
-      value: 16x16e1LShpL1R1
+      value: 16x16eL1ShpL1R1
       objectReference: {fileID: 0}
     - target: {fileID: 8511152372298728399, guid: 6b50cb92cd925aa44b8f0ca785bae7be,
         type: 3}
@@ -4852,3 +4862,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b50cb92cd925aa44b8f0ca785bae7be, type: 3}
+--- !u!1 &8177635468246589718 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5307121180628525408, guid: 6b50cb92cd925aa44b8f0ca785bae7be,
+    type: 3}
+  m_PrefabInstance: {fileID: 4096695361180631158}
+  m_PrefabAsset: {fileID: 0}

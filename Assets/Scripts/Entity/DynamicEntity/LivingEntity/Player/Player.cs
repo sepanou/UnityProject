@@ -72,7 +72,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		public int Orchid {
 			get => _orchid;
-			[Server] set => _orchid = value;
+			[Server]
+			set {
+				_orchid = value;
+				FileStorage.SavePlayerOrchid(playerName, value);
+			} 
 		}
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
@@ -233,6 +237,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			return initialCooldown * (1 - _currentCharmBonus.cooldownReduction);
 		}
 
+		public bool IsSpriteVisible(SpriteRenderer sprite) => _mainCamera.IsObjectVisible(sprite);
+
 		[Client]
 		private void OnWeaponsUpdated(SyncList<uint>.Operation op, int index, Weapon.Weapon item) {
 			switch (op) {
@@ -381,7 +387,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			Debug.Log("Player " + playerName + " is dead !");
 		}
 
-		[Command] private void CmdSetPseudo(string pseudo) => playerName = pseudo;
+		[Command]
+		private void CmdSetPseudo(string pseudo) {
+			playerName = pseudo;
+			_orchid = FileStorage.GetPlayerOrchid(pseudo);
+		}
 
 		[Command] public void CmdSwitchPlayerClass(PlayerClasses @class) => playerClass = @class;
 
@@ -416,7 +426,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[ClientCallback] private void FixedUpdate() {
 			// For physics
-			if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen || !NetworkClient.ready) return;
+			if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen || !NetworkClient.ready)
+				return;
+			
 			int horizontal = 0;
 			int vertical = 0;
 			if (InputManager.GetKeyPressed("Forward"))
@@ -427,12 +439,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				horizontal--;
 			if (InputManager.GetKeyPressed("Right"))
 				horizontal++;
+			
 			CmdMove(horizontal, vertical);
 		}
 
 		[ClientCallback] private void Update() {
 			// For inputs
-			if (!isLocalPlayer || !NetworkClient.ready) return;
+			if (!isLocalPlayer || !NetworkClient.ready)
+				return;
 			
 			if (InputManager.GetKeyDown("OpenMenu")) {
 				if (!Manager.menuSettingsManager.isOpen)
@@ -478,17 +492,24 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				return;
 			}
 			
-			CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
-				InputManager.GetKeyDown("SpecialAttack"));
+			if (!_inventory.IsOpen)
+				CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
+					InputManager.GetKeyDown("SpecialAttack"));
 
 			if (isServer && Input.GetKeyDown(KeyCode.B)) {
-				NetworkServer.Spawn(WeaponGenerator.GenerateBow().gameObject);
+				GameObject obj = WeaponGenerator.GenerateBow().gameObject;
+				obj.transform.position = transform.position;
+				NetworkServer.Spawn(obj);
 			}
 			if (isServer && Input.GetKeyDown(KeyCode.K)) {
-				NetworkServer.Spawn(WeaponGenerator.GenerateSword().gameObject);
+				GameObject obj = WeaponGenerator.GenerateSword().gameObject;
+				obj.transform.position = transform.position;
+				NetworkServer.Spawn(obj);
 			}
 			if (isServer && Input.GetKeyDown(KeyCode.L)) {
-				NetworkServer.Spawn(WeaponGenerator.GenerateStaff().gameObject);
+				GameObject obj = WeaponGenerator.GenerateStaff().gameObject;
+				obj.transform.position = transform.position;
+				NetworkServer.Spawn(obj);
 			}
 			
 			if (isServer && Input.GetKeyDown(KeyCode.F)) {
@@ -496,7 +517,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			}
 
 			if (isServer && Input.GetKeyDown(KeyCode.V)) {
-				NetworkServer.Spawn(WeaponGenerator.GenerateCharm().gameObject);
+				GameObject obj = WeaponGenerator.GenerateCharm().gameObject;
+				obj.transform.position = transform.position;
+				NetworkServer.Spawn(obj);
 			}
 		}
 	}

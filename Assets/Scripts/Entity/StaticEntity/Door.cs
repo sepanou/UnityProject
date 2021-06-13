@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace Entity.StaticEntity {
 	public class Door: Entity, IInteractiveEntity {
-		private SpriteRenderer _spriteRenderer;
 		private int _sortingLayerId, _layerMaskId;
 
 		[SerializeField] private Collider2D doorCollider;
@@ -18,8 +17,8 @@ namespace Entity.StaticEntity {
 
 		private void Start() {
 			Instantiate();
-			_spriteRenderer = GetComponent<SpriteRenderer>();
 			InteractionCondition = player => !isOpen;
+			AutoStopInteracting = true;
 			_sortingLayerId = SortingLayer.NameToID("HubLayer1");
 			_layerMaskId = LayerMask.NameToLayer("LAYER1");
 		}
@@ -48,7 +47,7 @@ namespace Entity.StaticEntity {
 
 		[ClientRpc] private void RpcToggleSprite(bool isOpen2) {
 			AudioDB.PlayUISound("WoodenDoor");
-			_spriteRenderer.sprite = isOpen2 ? closed : opened;
+			spriteRenderer.sprite = isOpen2 ? closed : opened;
 			doorCollider.enabled = isOpen2;
 			isOpen = !isOpen2;
 		}

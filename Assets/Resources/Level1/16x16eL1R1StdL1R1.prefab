@@ -255,7 +255,7 @@ GameObject:
   - component: {fileID: -5888428514816442949}
   - component: {fileID: 5418150091578916456}
   - component: {fileID: 8567683635324226347}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: 16x16eL1R1StdL1R1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,8 +311,10 @@ MonoBehaviour:
   syncInterval: 0.1
   hasBeenDiscovered: 0
   hasBeenCleared: 0
-  cover: {fileID: 5374775103154805659}
+  graphicsGo: {fileID: 374521241899057912}
+  cover: {fileID: 4414917401418793164}
   triggerZone: {fileID: 8567683635324226347}
+  visibilityRadius: 24
 --- !u!61 &8567683635324226347
 BoxCollider2D:
   m_ObjectHideFlags: 0

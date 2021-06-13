@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
@@ -12,7 +14,7 @@ public class CustomNetworkManager: NetworkManager {
 	[Header("Forest Scene")]
 	[SerializeField] [Scene] private string forestScene;
 	[SerializeField] private Vector3[] forestSpawnPoints;
-	
+
 	public readonly List<Player> PlayerPrefabs = new List<Player>();
 	private Coroutine _sceneTransitionCoroutine;
 
@@ -32,12 +34,15 @@ public class CustomNetworkManager: NetworkManager {
 	public override void OnServerAddPlayer(NetworkConnection conn) {
 		GameObject player = Instantiate(playerPrefab, startPositions[startPositionIndex].position, Quaternion.identity);
 		NetworkServer.AddPlayerForConnection(conn, player);
-		PlayerPrefabs.Add(player.GetComponent<Player>());
+		Player p = player.GetComponent<Player>();
+		// Can't put a switch because Unity won't accept it (source: Maxence), I know it sucks..
+		p.playerClass = PlayerPrefabs.Count == 0 ? PlayerClasses.Archer :
+			PlayerPrefabs.Count == 2 ? PlayerClasses.Mage : PlayerClasses.Warrior;
+		PlayerPrefabs.Add(p);
 	}
 
 	public override void OnServerSceneChanged(string sceneName) {
 		base.OnServerSceneChanged(sceneName);
-		if (sceneAnimator) sceneAnimator.Play("EndTransition");
 		if (networkSceneName != forestScene) return;
 		SetPlayerSpawnPoints(forestSpawnPoints);
 		LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Forest);
@@ -45,9 +50,18 @@ public class CustomNetworkManager: NetworkManager {
 
 	public override void OnClientSceneChanged(NetworkConnection conn) {
 		base.OnClientSceneChanged(conn);
-		if (sceneAnimator) sceneAnimator.Play("EndTransition");
 		if (IsSceneActive(forestScene))
 			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Forest);
+	}
+
+	public override void OnServerDisconnect(NetworkConnection conn) {
+		try {
+			Player player = PlayerPrefabs.Find(search => search.connectionToClient == conn);
+			FileStorage.SavePlayerOrchid(player.playerName, player.Orchid);
+			PlayerPrefabs.Remove(player);
+		}
+		catch (ArgumentNullException){}
+		base.OnClientDisconnect(conn);
 	}
 
 	public override void OnStopClient() {
