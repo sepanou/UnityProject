@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
@@ -12,6 +13,8 @@ namespace Generation{
         [SerializeField] private GameObject graphicsGo;
         [SerializeField] private SpriteRenderer cover;
         [SerializeField] private Collider2D triggerZone;
+        [SerializeField] private GameObject doorsColliders;
+        [SerializeField] private GameObject doorsTrees;
 
         private void Start() {
             hasBeenCleared = false;
@@ -30,6 +33,10 @@ namespace Generation{
                 Destroy(box);
             Destroy(triggerZone);
             RpcHideCover();
+            foreach (Collider2D col in doorsColliders.GetComponents<Collider2D>()) {
+                col.isTrigger = false;
+            }
+            doorsTrees.transform.localScale = new Vector3(1, 1, 0);
         }
 
         [ClientRpc] private void RpcHideCover() {
