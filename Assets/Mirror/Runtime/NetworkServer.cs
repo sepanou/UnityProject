@@ -826,6 +826,7 @@ namespace Mirror
             }
         }
 
+        // ReSharper disable Unity.PerformanceAnalysis
         static void SpawnObject(GameObject obj, NetworkConnection ownerConnection)
         {
             // verify if we an spawn this
