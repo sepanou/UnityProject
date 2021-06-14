@@ -59583,6 +59583,10 @@ MonoBehaviour:
   - {fileID: 589641168408172694, guid: 8d738464ab389d64d88e438cdb5623a2, type: 3}
   - {fileID: 2514552040777696733, guid: 4aea074adae2dd44698500b28c680468, type: 3}
   - {fileID: 1891248537526793985, guid: b37df23ef65154447912e2a56afea529, type: 3}
+  - {fileID: 2240483566647815409, guid: df3346988f8f18441bf5917ff001c826, type: 3}
+  - {fileID: 434579038753847930, guid: 469050cb43e2e80418676e8c0e1380c0, type: 3}
+  - {fileID: 1882545377149301592, guid: a7c12a540bbfc5e439e178af2569ad74, type: 3}
+  - {fileID: 8544300360355896215, guid: 11217b883a2f47646806d763e677c8e9, type: 3}
   sceneAnimator: {fileID: 807742234}
   forestScene: Assets/Scenes/Level1Creation.unity
   forestSpawnPoints:
