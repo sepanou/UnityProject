@@ -1,9 +1,8 @@
 .idea
 bin
-
-#Those fuckers again
-Cursor&Particles.renderTexture
+*.renderTexture
 Assets/Plugins/GitHub.meta
+Assets/Plugins.meta
 Assets/players.json
 
 ## https://github.com/github/gitignore/blob/master/Unity.gitignore
