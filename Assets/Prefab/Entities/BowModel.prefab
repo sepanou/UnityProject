@@ -106,9 +106,9 @@ MonoBehaviour:
   speed: 1.25
   compatibleClass: 2
   defaultCoordsWhenLikedToPlayer: {x: 0, y: 0.25, z: 0}
-  defaultDamage: 1
-  specialDamage: 1
-  specialAttackCost: 10
+  defaultDamage: 3
+  specialDamage: 6
+  specialAttackCost: 50
   networkTransform: {fileID: 5900744793733015568}
   launchPoint: {fileID: 8642561507799599230}
   orientation: {x: 0, y: 0}

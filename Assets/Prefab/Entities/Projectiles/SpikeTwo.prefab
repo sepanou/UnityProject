@@ -4835,7 +4835,7 @@ MonoBehaviour:
   syncInterval: 0.1
   spriteRenderer: {fileID: 0}
   interactionCollider: {fileID: 0}
-  speed: 3
+  speed: 4
   projectileOrientation: {x: 1, y: 0}
 --- !u!114 &4002679212030742339
 MonoBehaviour:

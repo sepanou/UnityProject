@@ -153,9 +153,9 @@ MonoBehaviour:
   speed: 1.5
   compatibleClass: 1
   defaultCoordsWhenLikedToPlayer: {x: 0, y: 0, z: 0}
-  defaultDamage: 10
-  specialDamage: 0
-  specialAttackCost: 10
+  defaultDamage: 4
+  specialDamage: 8
+  specialAttackCost: 50
   networkTransform: {fileID: 8419308335598235565}
   meleeData:
     knockbackMultiplier: 0
