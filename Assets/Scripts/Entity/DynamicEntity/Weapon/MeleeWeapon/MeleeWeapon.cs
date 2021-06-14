@@ -128,6 +128,7 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			// Acceleration
 			for (int i = 0; i < turns / 2; i++) {
 				startAngle = startAngle > 360 ? startAngle - 360 : 0;
+				AudioDB.PlayUISound("swordSpecialAttack");
 				while (startAngle < 360f) {
 					transform.Rotate(0, 0, anglePerUpdate);
 					startAngle += anglePerUpdate;
@@ -138,6 +139,7 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			
 			// Deceleration
 			for (int i = turns / 2; i < turns; i++) {
+				AudioDB.PlayUISound("swordSpecialAttack");
 				anglePerUpdate /= acceleration;
 				startAngle = startAngle > 360 ? startAngle - 360 : 0;
 				while (startAngle < 360f) {
@@ -161,6 +163,7 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			int signX = transform.localPosition.x < 0f ? -1 : 1;
 			int signZ = targetAngle < 0 ? -1 : 1;
 			CmdSetSpriteFlipX(signZ == 1);
+			AudioDB.PlayUISound("swordSimpleAttack");
 
 			for (int k = 1; k < 7; k++) {
 				yield return new WaitForSeconds(0.01f);

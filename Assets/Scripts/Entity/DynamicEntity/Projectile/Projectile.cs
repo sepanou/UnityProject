@@ -2,6 +2,7 @@ using System.Collections;
 using Entity.DynamicEntity.LivingEntity.Mob;
 using Entity.DynamicEntity.Weapon.RangedWeapon;
 using Mirror;
+using UI_Audio;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Projectile {
@@ -42,6 +43,8 @@ namespace Entity.DynamicEntity.Projectile {
 		[Server] public static IEnumerator SpawnProjectiles(RangedWeapon source, Transform launchPoint, float delayPerSpawn = 0.1f) {
 			Projectile projectilePrefab = source.GetProjectile();
 			for (int i = 0; i < source.rangeData.projectileNumber; i++) {
+				if (source is Bow _) AudioDB.PlayUISound("shotArrow");
+				else AudioDB.PlayUISound("magicSimpleAttack"); // Wizard
 				Projectile projectile = BuildProjectile(projectilePrefab, source, launchPoint, false);
 				NetworkServer.Spawn(projectile.gameObject);
 				yield return new WaitForSeconds(delayPerSpawn);
@@ -54,6 +57,8 @@ namespace Entity.DynamicEntity.Projectile {
 
 			float startTime = Time.time;
 			while (Time.time - startTime < duration) {
+				if (source is Bow _) AudioDB.PlayUISound("shotArrow");
+				else AudioDB.PlayUISound("magicSpecialAttack"); // Wizard
 				Projectile projectile = BuildProjectile(projectilePrefab, source, launchPoint, true);
 				NetworkServer.Spawn(projectile.gameObject);
 				yield return new WaitForSeconds(0.2f);

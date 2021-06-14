@@ -1,5 +1,6 @@
 using System;
 using Mirror;
+using UI_Audio;
 using UI_Audio.LivingEntityUI;
 using UnityEngine;
 
@@ -125,6 +126,7 @@ namespace Entity.DynamicEntity.LivingEntity {
 			Health = Mathf.Max(Health - atk, 0);
 			SyncHealthChanged(Health, Health);
 			_isAlive = Health > 0;
+			AudioDB.PlayUISound("damageTaken");
 			if (!_isAlive) RpcDying();
 		}
 
