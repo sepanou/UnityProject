@@ -14,6 +14,11 @@ namespace Entity.StaticEntity {
 			_animator = GetComponent<Animator>();
 		}
 		
+		public override void OnStartClient() {
+			base.OnStartClient();
+			CmdSynchronizePosition();
+		}
+		
 		protected new void OnTriggerEnter2D(Collider2D other) {
 			if (_nbOfPlayers <= 0) {
 				_animator.Play("Opening");

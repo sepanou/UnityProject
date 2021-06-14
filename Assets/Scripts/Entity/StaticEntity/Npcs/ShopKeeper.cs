@@ -15,6 +15,11 @@ namespace Entity.StaticEntity.Npcs {
             Inventory.SetNpcOwner(this);
             Inventory.Close();
         }
+        
+        public override void OnStartClient() {
+            base.OnStartClient();
+            CmdSynchronizePosition();
+        }
 
         [Client] protected void OpenInventory() {
             Player localPlayer = LocalGameManager.Instance.LocalPlayer;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using DataBanks;
 using Entity.Collectibles;
 using Mirror;
@@ -12,6 +13,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 	
 	public class Player: LivingEntity {
 		private const int MaxItemInInventory = 20;
+		private const int PassiveEnergyRegen = 2;
 		public static event LocalPlayerClassChanged OnLocalPlayerClassChange;
 		public static event RemotePlayerClassChanged OnRemotePlayerClassChange;
 		public delegate void LocalPlayerClassChanged(ClassData data);
@@ -57,6 +59,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private readonly CustomSyncList<Weapon.Weapon> _weapons = new CustomSyncList<Weapon.Weapon>();
 		[ShowInInspector]
 		private readonly CustomSyncList<Charm> _charms = new CustomSyncList<Charm>();
+		private Coroutine _passiveEnergyRegenCoroutine;
 		private Inventory _inventory;
 		private ContainerInventory _containerInventory;
 		private SellerInventory _sellerInventory;
@@ -205,6 +208,16 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[Client] public void SetSellerInventory(SellerInventory inventory)
 			=> _sellerInventory = inventory;
 
+		[Server] private IEnumerator PassiveEnergyRegeneration() {
+			while (_energy + PassiveEnergyRegen < maxEnergy) {
+				yield return new WaitForSeconds(1f);
+				_energy += PassiveEnergyRegen;
+			}
+
+			_energy = maxEnergy;
+			_passiveEnergyRegenCoroutine = null;
+		}
+		
 		private void ChangeAnimator(ClassData data) {
 			if (Animator) Animator.runtimeAnimatorController = data.animatorController;
 			if (spriteRenderer) spriteRenderer.sprite = data.defaultSprite;
@@ -341,6 +354,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (amount == 0) return;
 			_energy = Math.Max(_energy - amount, 0);
 			OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
+			if (_passiveEnergyRegenCoroutine is null)
+				_passiveEnergyRegenCoroutine = StartCoroutine(PassiveEnergyRegeneration());
 		}
 		
 		[Server] private void SwitchWeapon(Weapon.Weapon newWeapon) {
@@ -368,8 +383,9 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			}
 
 			switch (collectible) {
-				case Money _:
-					// TODO
+				case Kibry kibry:
+					Kibrient += kibry.amount;
+					NetworkServer.Destroy(kibry.gameObject);
 					return;
 				case Weapon.Weapon wp:
 					CollectWeapon(wp);
