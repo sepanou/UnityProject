@@ -35,6 +35,7 @@ namespace Generation {
 				x = Random.Next(rMaxX);
 				y = Random.Next(rMaxY);
 			}
+			Debug.Log("Generation placed 1st room");
 			bool placedPreBossRoom = false;
 			while (!placedPreBossRoom) {
 				foreach (Room room in _roomsToTreat) {
@@ -50,8 +51,15 @@ namespace Generation {
 							     dir == 'R' && TryAddRoom(lMap, rMap, roomToAdd, rtcX + uW, rtcY - nbDir + 1))
 							) {
 								if (roomToAdd.Type == RoomType.Chest) ++level.Chests;
-								if (roomToAdd.Type == RoomType.Shop) level.Shop = true;
-								if (roomToAdd.Type == RoomType.PreBoss) placedPreBossRoom = true;
+								if (roomToAdd.Type == RoomType.Shop) {
+									level.Shop = true;
+									Debug.Log("Placed shop");
+								}
+
+								if (roomToAdd.Type == RoomType.PreBoss) {
+									placedPreBossRoom = true;
+									Debug.Log("PLaced Pre Boss Room");
+								}
 								_recentlyAddedRooms.Add(roomToAdd);
 								break;
 							}
@@ -62,10 +70,12 @@ namespace Generation {
 					if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
 				}
 
-				if (_recentlyAddedRooms.Count == 0) break;
+				if (_recentlyAddedRooms.Count == 0) Debug.Log("Ptn mec ça marche pas enft");
 				(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
 				_roomsToTreat.Shuffle();
 			}
+
+			Debug.Log("Phase 1 complétée");
 			List<Room> oldRooms = new List<Room>(lMap);
 			List<Room> standardAddedRooms = new List<Room>();
 			while (true) {
@@ -106,6 +116,7 @@ namespace Generation {
 				if (standardAddedRooms.Count == 0) break;
 				(standardAddedRooms, oldRooms) = (new List<Room>(), standardAddedRooms);
 			}
+			Debug.Log("Phase 2 complétée");
 			//Filling phase
 			foreach (Room room in lMap) {
 				(x, y) = room.UCoords;
@@ -118,6 +129,7 @@ namespace Generation {
 				}
 			}
 			level.alreadyGenerated = true;
+			Debug.Log("terminé xptdr");
 		}
 
 		[Server]
@@ -170,14 +182,16 @@ namespace Generation {
 
 		[Server]
 		private static Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap, bool placedPreBossRoom) {
-			RoomType roomType = !isThereAShop && seed.Next(100) <= 10 + lMap.Count / 2
-				? RoomType.Shop
-				: isThereAShop && !placedPreBossRoom && lMap.Count >= 20 && seed.Next(100) <= -10 + lMap.Count * 2
-				? RoomType.PreBoss
-				: seed.Next(100) <= 10 / (chests + 1)
-				? RoomType.Chest
-				: RoomType.Standard
-			;
+			RoomType roomType =
+					!isThereAShop && seed.Next(100) <= (10 + lMap.Count / 2 >= 100 ? 80 : 10 + lMap.Count / 2)
+						? RoomType.Shop
+						: isThereAShop && !placedPreBossRoom && lMap.Count >= 20 &&
+						  seed.Next(100) <= (-10 + lMap.Count * 2 >= 100 ? 80 : -10 + lMap.Count * 2)
+							? RoomType.PreBoss
+							: seed.Next(100) <= 10 / (chests + 1)
+								? RoomType.Chest
+								: RoomType.Standard
+				;
 			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)], ++_uniqueIds);
 		}
 		
