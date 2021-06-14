@@ -1,8 +1,6 @@
 .idea
 bin
-
-#Those fuckers again
-Cursor&Particles.renderTexture
+*.renderTexture
 Assets/Plugins/GitHub.meta
 Assets/Plugins.meta
 Assets/players.json
