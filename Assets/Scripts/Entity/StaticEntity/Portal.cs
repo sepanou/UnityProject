@@ -1,5 +1,6 @@
 ﻿using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
+using UI_Audio;
 using UnityEngine;
 
 namespace Entity.StaticEntity {
@@ -22,6 +23,7 @@ namespace Entity.StaticEntity {
 		protected new void OnTriggerEnter2D(Collider2D other) {
 			if (_nbOfPlayers <= 0) {
 				_animator.Play("Opening");
+				AudioDB.PlayUISound("portal");
 				_animator.SetBool(IsPlayerHere, true);
 			}
 			_nbOfPlayers++;

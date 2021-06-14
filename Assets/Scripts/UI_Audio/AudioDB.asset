@@ -55,3 +55,52 @@ MonoBehaviour:
     maxDistance: 10
     loop: 0
     key: WoodenDoor
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: 17f07c19a28d1e5409758c8760824190, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 0
+    key: swordSimpleAttack
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: b66f999cf43e35241b1da83c88e8576f, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 0
+    key: swordSpecialAttack
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: 79cacff19d023df48b5b28369fe0a56a, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 0
+    key: damageTaken
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: 7cdc0defc56a5c04baacb47e62ea64f8, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 0
+    key: shotArrow
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: a21f196030b1a38429fb48a2ab5ab6b2, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 0
+    key: portal
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: 3f1c32461a99ce8409fc1fb9877c7a55, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 0
+    key: magicSimpleAttack
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: ef05e676b4b291640928468b8c6e562f, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 0
+    key: magicSpecialAttack

@@ -5,6 +5,7 @@ using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Mob;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
+using UI_Audio;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -28,6 +29,7 @@ namespace Generation{
             if (!hbd) return;
             HideCover();
             if (!hasBeenCleared) {
+                AudioDB.PlayUISound("treesDoorsLowering");
                 StartCoroutine(StartRaiseWalls());
                 if (isServer) CustomNetworkManager.Instance.PlayerPrefabs.ForEach(player => player.Orchid++);
             }
@@ -36,6 +38,7 @@ namespace Generation{
         [SyncVar(hook = nameof(SyncHasBeenClearedChanged))] public bool hasBeenCleared;
         private void SyncHasBeenClearedChanged(bool oldHbc, bool hbc) {
             if (!hbc) return;
+            AudioDB.PlayUISound("treesDoorsRaising");
             Destroy(doorsColliders);
             StartCoroutine(StartLowerWalls());
         }
@@ -106,7 +109,7 @@ namespace Generation{
                 foreach (Transform child in doorsTrees.transform) {
                     child.localScale = new Vector3(1, count, 0);
                 }
-                yield return new WaitForSeconds(0.004f);
+                yield return new WaitForSeconds(0.016f);
             }
         }
 
@@ -117,7 +120,7 @@ namespace Generation{
                 foreach (Transform child in doorsTrees.transform) {
                     child.localScale = new Vector3(1, count, 0);
                 }
-                yield return new WaitForSeconds(0.004f);
+                yield return new WaitForSeconds(0.016f);
             }
             Destroy(doorsTrees);
         }
