@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1212942924722325032}
   - component: {fileID: 9132157671300315048}
   - component: {fileID: 842611164572598691}
+  - component: {fileID: 4845972101475803723}
   - component: {fileID: 509301846843745615}
   m_Layer: 0
   m_Name: Wolf
@@ -168,6 +169,32 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!61 &4845972101475803723
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2240483566647815409}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.47058824}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 1.882353, y: 0.9411765}
+    newSize: {x: 1.882353, y: 0.9411765}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.882353, y: 0.9411765}
+  m_EdgeRadius: 0
 --- !u!95 &509301846843745615
 Animator:
   serializedVersion: 3

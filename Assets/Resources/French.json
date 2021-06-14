@@ -380,6 +380,10 @@
         {
             "fieldKey": "#more-orchid",
             "translation": "Vous n'avez pas assez de Brins d'Orchidée..."
+        },
+        {
+            "fieldKey": "all-credits",
+            "translation": "Tous les Crédits"
         }
     ]
 }

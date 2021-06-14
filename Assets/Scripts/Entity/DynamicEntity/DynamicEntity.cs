@@ -29,7 +29,7 @@ namespace Entity.DynamicEntity {
 		
 		protected float Speed {
 			get => speed;
-			[Server] set => speed = value <= 0f ? 0f : value >= 12.5f ? 12.5f : speed;
+			[Server] set => speed = value <= 0f ? 0f : value;
 		}
 	}
 }

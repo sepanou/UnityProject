@@ -303,3 +303,5 @@ MonoBehaviour:
         best way to collect those orchid sprigs! Good luck.'
     - fieldKey: '#more-orchid'
       translation: You need more Orchid Sprigs...
+    - fieldKey: all-credits
+      translation: All Credits

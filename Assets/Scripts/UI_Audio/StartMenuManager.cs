@@ -183,6 +183,8 @@ namespace UI_Audio {
 				manager.StopServer();
 		}
 
+		public void OpenCreditsLink() => Application.OpenURL("https://github.com/sepanou/UnityProject");
+
 		public void QuitApplication() {
 			StopServerAndOrClient();
 #if UNITY_EDITOR

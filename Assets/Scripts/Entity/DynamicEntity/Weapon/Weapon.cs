@@ -119,6 +119,8 @@ namespace Entity.DynamicEntity.Weapon {
 		public abstract int GetKibryValue();
 		public abstract string GetWeaponName();
 
+		[Server] public void SetPlayerFound(bool state) => _playerFound = state;
+		
 		[Server] public void SetIsGrounded(bool state) => IsGrounded = state;
 		
 		[Server] public void Interact(Player player) {

@@ -378,6 +378,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (!entityIdentity.gameObject.TryGetComponent(out Entity collectible)) return;
 
 			if (IsFullInventory()) {
+				if (collectible is Weapon.Weapon wp) wp.SetPlayerFound(false);
 				TargetPrintInfoMessage(connectionToClient, "Your inventory is full");
 				return;
 			}
