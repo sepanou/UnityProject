@@ -5923,7 +5923,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.7
+  m_fontSize: 21.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10194,7 +10194,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.8
+  m_fontSize: 22.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -84674,7 +84674,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.4
+  m_fontSize: 20
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -88395,7 +88395,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.4
+  m_fontSize: 20
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -98903,7 +98903,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: "Un jeu par :\nS\xE9panou \n-------------\nMembres  :\nLO Jean-Pierre -
+    TCHEKACHEV David - MICHOT Maxence - MICHALON Lo\xEFc\n-------------\nRemerciements
+    sp\xE9ciaux :\nSprites & Bo\xEEtier : Timoth\xE9\nMusiques : Madgenta\n-------------\nN'h\xE9sitez
+    pas \xE0 cliquer sur \"Tous les cr\xE9dits\" pour la liste compl\xE8te\n\nMerci
+    d'avoir jou\xE9 !"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5a99ab5873449334db9be090c351d396, type: 2}
   m_sharedMaterial: {fileID: 7164874370238670303, guid: 5a99ab5873449334db9be090c351d396,
@@ -98938,7 +98942,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -106955,8 +106959,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 997788941}
   m_HandleRect: {fileID: 997788940}
   m_Direction: 2
-  m_Value: 0.99999994
-  m_Size: 0.1183329
+  m_Value: 1
+  m_Size: 0.115869276
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -109432,7 +109436,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.4
+  m_fontSize: 20
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -116203,7 +116207,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 146.9
+  m_fontSize: 143.45
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -116517,7 +116521,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50.4
+  m_fontSize: 51.6
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1
