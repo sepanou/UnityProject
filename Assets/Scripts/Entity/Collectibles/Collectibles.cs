@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Entity.Collectibles {
 	[RequireComponent(typeof(SpriteRenderer))]
 	[RequireComponent(typeof(Collider2D))]
-	public class Collectibles: Entity {
+	public abstract class Collectibles: Entity, IInteractiveEntity {
 		[Server] public static IEnumerator OnTargetDetected(Entity collectible, Player target, float speed = 5f) {
 			while (collectible.Position - target.Position != Vector2.zero) {
 				collectible.Position = Vector2.MoveTowards(
@@ -18,5 +18,7 @@ namespace Entity.Collectibles {
 			}
 			target.Collect(collectible.netId);
 		}
+
+		public abstract void Interact(Player player);
 	}
 }
