@@ -303,3 +303,8 @@ MonoBehaviour:
         best way to collect those orchid sprigs! Good luck.'
     - fieldKey: '#more-orchid'
       translation: You need more Orchid Sprigs...
+    - fieldKey: all-credits
+      translation: All Credits
+    - fieldKey: '#respawn'
+      translation: You've been taken back to the spawn because you cannot change
+        class while the door to Paimpont forest is opened!

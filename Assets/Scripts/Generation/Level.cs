@@ -32,7 +32,7 @@ namespace Generation {
 
 		public void Start() {
 			if (!isServer) return;
-			Generation.GenerateLevel(this);
+			StartCoroutine(Generation.GenerateLevel(this));
 		}
 	}
 }

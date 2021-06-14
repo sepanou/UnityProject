@@ -380,6 +380,14 @@
         {
             "fieldKey": "#more-orchid",
             "translation": "Vous n'avez pas assez de Brins d'Orchidée..."
+        },
+        {
+            "fieldKey": "all-credits",
+            "translation": "Tous les Crédits"
+        },
+        {
+            "fieldKey": "#respawn",
+            "translation": "Vous avez été téléporté au spawn car vous ne pouvez pas changer de classe lorsque la porte vers la forêt de Paimpont est ouverte !"
         }
     ]
 }

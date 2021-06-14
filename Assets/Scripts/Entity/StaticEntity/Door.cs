@@ -29,9 +29,10 @@ namespace Entity.StaticEntity {
 			Player.OnLocalPlayerClassChange += CheckNotOpened;
 		}
 
-		[Server] private void CheckNotOpened(ClassData data) {
+		[Server]
+		private void CheckNotOpened(ClassData data) {
 			if (!isOpen) return; // If already closed, ignored
-			
+
 			// Else, replace all players to their spawn points
 			CustomNetworkManager networkManager = CustomNetworkManager.Instance;
 			foreach (Player player in networkManager.PlayerPrefabs) {
@@ -39,7 +40,9 @@ namespace Entity.StaticEntity {
 				player.TargetSetRenderingLayersInChildren(player.connectionToClient, _sortingLayerId, "HubLayer1",
 					_layerMaskId);
 			}
-			
+
+			PrintToAll(networkManager, LanguageManager["#respawn"]);
+
 			// Close the door again
 			RpcToggleSprite(isOpen);
 			isOpen = !isOpen;

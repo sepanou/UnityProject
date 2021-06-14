@@ -193,7 +193,7 @@ MonoBehaviour:
   entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
     type: 3}
   nameTag: Enraged Cow
-  maxHealth: 10
+  maxHealth: 35
   advancedMoves: 1
 --- !u!95 &154962634339220198
 Animator:
@@ -205,7 +205,7 @@ Animator:
   m_GameObject: {fileID: 1882545377149301592}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 99c12e7ebbc6d0144a5f194416ca8bdb, type: 2}
+  m_Controller: {fileID: 22100000, guid: c8a5396df93e2564fb10340e5b181d80, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -122,6 +122,9 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 			float anglePerUpdate = 5f;
 			float startAngle = 0f;
 			
+			_animating = true;
+			CmdSetAnimating(true);
+			
 			// Acceleration
 			for (int i = 0; i < turns / 2; i++) {
 				startAngle = startAngle > 360 ? startAngle - 360 : 0;
@@ -143,6 +146,9 @@ namespace Entity.DynamicEntity.Weapon.MeleeWeapon {
 					yield return new WaitForSeconds(delay);
 				}
 			}
+			
+			_animating = false;
+			CmdSetAnimating(false);
 		}
 
 		[Client] // Only run by the owner -> networkTransform automatically synchronizes everything

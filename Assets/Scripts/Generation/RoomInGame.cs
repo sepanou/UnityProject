@@ -1,9 +1,13 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DataBanks;
+using Entity.DynamicEntity.LivingEntity.Mob;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
+using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Generation{
     public class RoomInGame: NetworkBehaviour {
@@ -23,7 +27,10 @@ namespace Generation{
         private void SyncHasBeenDiscoveredChanged(bool oldHbd, bool hbd) {
             if (!hbd) return;
             HideCover();
-            if (!hasBeenCleared) StartCoroutine(StartRaiseWalls());
+            if (!hasBeenCleared) {
+                StartCoroutine(StartRaiseWalls());
+                if (isServer) CustomNetworkManager.Instance.PlayerPrefabs.ForEach(player => player.Orchid++);
+            }
         }
         
         [SyncVar(hook = nameof(SyncHasBeenClearedChanged))] public bool hasBeenCleared;
@@ -39,6 +46,10 @@ namespace Generation{
         [SerializeField] private GameObject doorsColliders;
         [SerializeField] private GameObject doorsTrees;
         [SerializeField] private SpawnObjects[] prefabsToSpawn;
+        [SerializeField] private MobsPrefabsDB mobsAvailable;
+        [SerializeField] private GameObject[] mobsSpawnGO;
+        private Vector3[] _mobSpawns;
+        private List<GameObject> _mobs;
         private InputManager _inputManager;
 
         private void Start() {
@@ -46,6 +57,12 @@ namespace Generation{
             doorsTrees.transform.localScale = new Vector3(1, 1, 0);
             foreach (Transform child in doorsTrees.transform)
                 child.localScale = new Vector3(1, 0, 0);
+            _mobSpawns = new Vector3[mobsSpawnGO.Length];
+            for (int i = 0; i < _mobSpawns.Length; i++) {
+                _mobSpawns[i] = mobsSpawnGO[i].transform.position;
+            }
+
+            _mobs = new List<GameObject>();
         }
 
         public override void OnStartServer() {
@@ -105,11 +122,6 @@ namespace Generation{
             Destroy(doorsTrees);
         }
 
-        private void SetGlobalScale(Transform transformObj, Vector3 globalScale) {
-            transformObj.localScale = Vector3.one;
-            transformObj.localScale = new Vector3 (1, globalScale.y/transformObj.lossyScale.y, 0);
-        }
-
         [Client] private void HideCover() {
             if (cover) {
                 cover.color = new Color(255, 255, 255, 0);
@@ -117,6 +129,19 @@ namespace Generation{
                     Destroy(box);
             }
             if (triggerZone) Destroy(triggerZone);
+        }
+
+        [Server]
+        private void SpawnMobs() {
+            bool placedOne = false;
+            foreach (Vector3 pos in _mobSpawns) {
+                if (!(!placedOne || Random.Range(0, 100) <= 90)) continue;
+                placedOne = true;
+                GameObject mobGO = mobsAvailable.mobsPrefabs[Random.Range(0, mobsAvailable.mobsPrefabs.Length)];
+                GameObject mob = Instantiate(mobGO, pos, quaternion.identity);
+                _mobs.Add(mob);
+                NetworkServer.Spawn(mob);
+            }
         }
 
         private IEnumerator VisibilityChecker() {
@@ -128,9 +153,9 @@ namespace Generation{
         }
 
         [ServerCallback] private void Update() {
-            if (hasBeenCleared || !Input.GetKeyDown(KeyCode.P) || !hasBeenDiscovered) return;
+            if (Input.GetKeyDown(KeyCode.P) && hasBeenDiscovered) hasBeenCleared = true;
+            if (!(!hasBeenCleared && hasBeenDiscovered && _mobs.TrueForAll(mob => !mob))) return;
             hasBeenCleared = true;
-            CustomNetworkManager.Instance.PlayerPrefabs.ForEach(player => player.Orchid++);
         }
         
         [ServerCallback] private void OnTriggerEnter2D(Collider2D other) {
@@ -147,6 +172,7 @@ namespace Generation{
             if (hasBeenCleared) return;
             foreach (Collider2D col in doorsColliders.GetComponents<Collider2D>())
                 col.isTrigger = false;
+            SpawnMobs();
         }
     }
 }
