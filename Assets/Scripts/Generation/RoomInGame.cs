@@ -68,11 +68,8 @@ namespace Generation{
         public override void OnStartServer() {
             base.OnStartServer();
             graphicsGo.SetActive(true);
-            foreach ((GameObject pos, GameObject toSpawn) in prefabsToSpawn) {
-                GameObject obj = Instantiate(toSpawn, pos.transform.position, Quaternion.identity);
-                obj.transform.SetParent(pos.transform);
-                NetworkServer.Spawn(obj);
-            }
+            foreach ((GameObject pos, GameObject toSpawn) in prefabsToSpawn)
+                NetworkServer.Spawn(Instantiate(toSpawn, pos.transform.position, Quaternion.identity));
         }
 
         public override void OnStartClient() {
