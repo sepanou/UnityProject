@@ -14,6 +14,7 @@ namespace Generation {
 		private static List<Room> _roomsToTreat;
 		private static int _uniqueIds;
 		
+		// ReSharper disable Unity.PerformanceAnalysis
 		[Server]
 		// ReSharper disable once UnusedMember.Local
 		public static IEnumerator GenerateLevel(Level level) {
@@ -39,12 +40,14 @@ namespace Generation {
 			bool placedPreBossRoom = false;
 			while (!placedPreBossRoom) {
 				foreach (Room room in _roomsToTreat) {
+					if (placedPreBossRoom) break;
 					foreach ((char dir, int nbDir) in room._exits) {
+						if (placedPreBossRoom) break;
 						if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
 						(int rtcX, int rtcY) = room.UCoords;
 						(int uW, int uH) = room.UDim;
 						while (true) {
-							Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap, placedPreBossRoom);
+							Room roomToAdd = GenerateRoom(level.Shop, level.Chests, Random, lMap, false);
 							if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToAdd, rtcX + nbDir - 1, rtcY - uH) ||
 							     dir == 'B' && TryAddRoom(lMap, rMap, roomToAdd, rtcX + nbDir - 1, rtcY + 1) ||
 							     dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcX - 1, rtcY - nbDir + 1) ||
@@ -70,7 +73,7 @@ namespace Generation {
 					if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
 				}
 
-				if (_recentlyAddedRooms.Count == 0) Debug.Log("Ptn mec ça marche pas enft");
+				if (_recentlyAddedRooms.Count == 0) Debug.LogWarning("Ptn mec ça marche pas enft");
 				(_roomsToTreat, _recentlyAddedRooms) = (_recentlyAddedRooms, new List<Room>());
 				_roomsToTreat.Shuffle();
 			}
