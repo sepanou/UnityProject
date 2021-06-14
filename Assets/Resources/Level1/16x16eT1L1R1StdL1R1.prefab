@@ -2074,6 +2074,7 @@ MonoBehaviour:
   triggerZone: {fileID: 2933380902277684501}
   doorsColliders: {fileID: 9200069986892810398}
   doorsTrees: {fileID: 4159529424376353839}
+  prefabsToSpawn: []
 --- !u!61 &2933380902277684501
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3502,7 +3503,7 @@ GameObject:
   - component: {fileID: 7409369686741371657}
   - component: {fileID: 7409369686741371656}
   - component: {fileID: 7409369686741371659}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Lake
   m_TagString: Untagged
   m_Icon: {fileID: 0}

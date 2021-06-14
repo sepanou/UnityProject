@@ -12763,7 +12763,7 @@ GameObject:
   - component: {fileID: 7263529757252266546}
   - component: {fileID: 7263529757252266549}
   - component: {fileID: 7263529757252266547}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: River
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34055,7 +34055,7 @@ GameObject:
   - component: {fileID: 7263529757789841309}
   - component: {fileID: 7263529757789841307}
   - component: {fileID: 7263529757789841306}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: River2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66002,6 +66002,7 @@ MonoBehaviour:
   triggerZone: {fileID: 1313176215458247190}
   doorsColliders: {fileID: 3225255246433075337}
   doorsTrees: {fileID: 3742452611933389102}
+  prefabsToSpawn: []
 --- !u!61 &1313176215458247190
 BoxCollider2D:
   m_ObjectHideFlags: 0
