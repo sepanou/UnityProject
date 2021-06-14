@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4076060016518188913}
   - component: {fileID: 8626735461722791248}
   - component: {fileID: 4937135704010088961}
+  - component: {fileID: 3595148226594853928}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Untagged
@@ -168,3 +169,25 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
+--- !u!114 &3595148226594853928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4076060016518188907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 858bdd6565ed4124a190b3e02a0a7eb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  spriteRenderer: {fileID: 4076060016518188916}
+  interactionCollider: {fileID: 0}
+  speed: 2.5
+  entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
+    type: 3}
+  nameTag: Robert the Slime
+  maxHealth: 10
+  advancedMoves: 0

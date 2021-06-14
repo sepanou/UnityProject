@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3769502420860260534}
   - component: {fileID: 8137456381494979122}
   - component: {fileID: 7701030294266730648}
+  - component: {fileID: 1165635106654535428}
   m_Layer: 0
   m_Name: Khrom
   m_TagString: Untagged
@@ -169,3 +170,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2228662, y: 2.876011}
   m_EdgeRadius: 0
+--- !u!114 &1165635106654535428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498433533527175071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5cd4e6d962140d088cac42bf9d09166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  spriteRenderer: {fileID: 5215461214401745811}
+  interactionCollider: {fileID: 0}
+  speed: 2.5
+  entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
+    type: 3}
+  nameTag: Great Khrom
+  maxHealth: 100
+  advancedMoves: 0

@@ -25,8 +25,7 @@ namespace Entity.DynamicEntity.LivingEntity {
 		[SyncVar(hook = nameof(SyncHealthChanged))] [ShowInInspector] protected int Health;
 		private void SyncHealthChanged(int o, int n) => OnHealthChange?.Invoke(Health / (float) maxHealth);
 
-		public event HealthChanged OnHealthChange;
-		public delegate void HealthChanged(float ratio);
+		public readonly CustomEvent<float> OnHealthChange = new CustomEvent<float>();
 		public AnimationState LastAnimationState { get; private set; }
 		private Rigidbody2D _rigidBody;
 		private bool _isAlive = true;
@@ -63,7 +62,7 @@ namespace Entity.DynamicEntity.LivingEntity {
 			entityUI = Instantiate(entityUI, PlayerInfoManager.transform);
 			entityUI.transform.SetSiblingIndex(0);
 			entityUI.Initialize(this);
-			OnHealthChange += entityUI.SetHealthBarValue;
+			OnHealthChange.AddListener(entityUI.SetHealthBarValue);
 			
 			if (isServer) {
 				DefaultMaxHealth = maxHealth;
@@ -130,7 +129,7 @@ namespace Entity.DynamicEntity.LivingEntity {
 		}
 
 		private void OnDestroy() {
-			if (entityUI) entityUI.Destroy();
+			if (entityUI && entityUI.isActiveAndEnabled) entityUI.Destroy();
 		}
 	}
 }
