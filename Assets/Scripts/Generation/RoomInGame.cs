@@ -5,6 +5,7 @@ using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Mob;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -26,7 +27,10 @@ namespace Generation{
         private void SyncHasBeenDiscoveredChanged(bool oldHbd, bool hbd) {
             if (!hbd) return;
             HideCover();
-            if (!hasBeenCleared) StartCoroutine(StartRaiseWalls());
+            if (!hasBeenCleared) {
+                StartCoroutine(StartRaiseWalls());
+                if (isServer) CustomNetworkManager.Instance.PlayerPrefabs.ForEach(player => player.Orchid++);
+            }
         }
         
         [SyncVar(hook = nameof(SyncHasBeenClearedChanged))] public bool hasBeenCleared;
@@ -45,7 +49,7 @@ namespace Generation{
         [SerializeField] private MobsPrefabsDB mobsAvailable;
         [SerializeField] private GameObject[] mobsSpawnGO;
         private Vector3[] _mobSpawns;
-        private List<Mob> _mobs;
+        private List<GameObject> _mobs;
         private InputManager _inputManager;
 
         private void Start() {
@@ -58,7 +62,7 @@ namespace Generation{
                 _mobSpawns[i] = mobsSpawnGO[i].transform.position;
             }
 
-            _mobs = new List<Mob>();
+            _mobs = new List<GameObject>();
         }
 
         public override void OnStartServer() {
@@ -134,9 +138,9 @@ namespace Generation{
                 if (!(!placedOne || Random.Range(0, 100) <= 90)) continue;
                 placedOne = true;
                 GameObject mobGO = mobsAvailable.mobsPrefabs[Random.Range(0, mobsAvailable.mobsPrefabs.Length)];
-                Mob mob = mobGO.GetComponent<Mob>();
+                GameObject mob = Instantiate(mobGO, pos, quaternion.identity);
                 _mobs.Add(mob);
-                NetworkServer.Spawn(mobGO);
+                NetworkServer.Spawn(mob);
             }
         }
 
@@ -149,10 +153,9 @@ namespace Generation{
         }
 
         [ServerCallback] private void Update() {
-            if (Input.GetKeyDown(KeyCode.P)) hasBeenCleared = 1 == 1;
-            if (hasBeenCleared || !hasBeenDiscovered || !_mobs.TrueForAll(mob => !mob)) return;
+            if (Input.GetKeyDown(KeyCode.P) && hasBeenDiscovered) hasBeenCleared = true;
+            if (!(!hasBeenCleared && hasBeenDiscovered && _mobs.TrueForAll(mob => !mob))) return;
             hasBeenCleared = true;
-            CustomNetworkManager.Instance.PlayerPrefabs.ForEach(player => player.Orchid++);
         }
         
         [ServerCallback] private void OnTriggerEnter2D(Collider2D other) {
