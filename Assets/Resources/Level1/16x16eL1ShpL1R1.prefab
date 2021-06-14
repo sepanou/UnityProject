@@ -1616,9 +1616,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5525936790322310443, guid: 6b50cb92cd925aa44b8f0ca785bae7be,
         type: 3}
+      propertyPath: mobs
+      value: 
+      objectReference: {fileID: 11400000, guid: 025d0caf7d3e12148b57e17141339f2c,
+        type: 2}
+    - target: {fileID: 5525936790322310443, guid: 6b50cb92cd925aa44b8f0ca785bae7be,
+        type: 3}
       propertyPath: graphicsGO
       value: 
       objectReference: {fileID: 8177635468246589718}
+    - target: {fileID: 5525936790322310443, guid: 6b50cb92cd925aa44b8f0ca785bae7be,
+        type: 3}
+      propertyPath: mobsAvailable
+      value: 
+      objectReference: {fileID: 11400000, guid: 025d0caf7d3e12148b57e17141339f2c,
+        type: 2}
     - target: {fileID: 6482345213272831805, guid: 6b50cb92cd925aa44b8f0ca785bae7be,
         type: 3}
       propertyPath: m_LocalPosition.x

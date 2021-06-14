@@ -252,6 +252,8 @@ MonoBehaviour:
   - spawnPos: {fileID: 5331389060219265737}
     prefabToSpawn: {fileID: 1891248537526793985, guid: b37df23ef65154447912e2a56afea529,
       type: 3}
+  mobsAvailable: {fileID: 11400000, guid: 025d0caf7d3e12148b57e17141339f2c, type: 2}
+  mobsSpawnGO: []
 --- !u!61 &9096189001914637848
 BoxCollider2D:
   m_ObjectHideFlags: 0
