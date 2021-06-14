@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3378038944226407271
 Transform:
   m_ObjectHideFlags: 0
@@ -4442,6 +4442,7 @@ MonoBehaviour:
   triggerZone: {fileID: 5282832430081685794}
   doorsColliders: {fileID: 9000766518009098148}
   doorsTrees: {fileID: 8666359731936798177}
+  prefabsToSpawn: []
 --- !u!61 &5282832430081685794
 BoxCollider2D:
   m_ObjectHideFlags: 0
