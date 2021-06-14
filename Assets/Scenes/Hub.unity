@@ -98875,8 +98875,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -900.6756}
-  m_SizeDelta: {x: 0, y: 1801.3507}
+  m_AnchoredPosition: {x: 0, y: -2750}
+  m_SizeDelta: {x: 0, y: 5500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1666216215
 MonoBehaviour:
@@ -98897,49 +98897,46 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-    feugiat nec magna in congue. Ut pulvinar luctus blandit. Nam hendrerit, risus
-    placerat porta imperdiet, ipsum augue hendrerit augue, tincidunt mollis urna
-    metus sit amet sapien. Etiam dignissim, metus ut interdum eleifend, ante odio
-    scelerisque justo, non aliquam sapien quam nec libero. Quisque enim magna, malesuada
-    non varius vel, viverra sed purus. Aliquam accumsan mauris arcu, at suscipit
-    ex imperdiet at. Praesent placerat elit eget auctor pulvinar. Suspendisse bibendum
-    velit consectetur semper tempus. Nulla ornare ex vitae massa maximus pharetra.\r\n\r\nVivamus
-    dignissim at lacus quis egestas. In mauris urna, pellentesque vitae massa at,
-    tincidunt tincidunt metus. Aliquam dictum feugiat est, in bibendum risus dictum
-    at. Nullam ultrices arcu id eros finibus, vel tempus quam feugiat. Aliquam erat
-    volutpat. Praesent malesuada, felis a gravida molestie, elit justo mollis arcu,
-    ut finibus sem justo eget ligula. Nullam ipsum justo, placerat nec erat id, vehicula
-    fermentum est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-    posuere cubilia curae; Mauris convallis viverra metus, eu egestas sapien laoreet
-    ut. Curabitur sollicitudin, ex et vestibulum eleifend, nunc mi hendrerit risus,
-    ut congue arcu lacus condimentum lectus. Sed nec tincidunt justo. Donec ultrices
-    velit et turpis lacinia elementum. Nunc nec nulla eget nisl semper venenatis.
-    Aliquam sit amet urna ante. Nulla cursus dui mauris, gravida scelerisque nibh
-    suscipit nec. Maecenas sollicitudin rutrum dapibus.\r\n\r\nPellentesque nunc
-    felis, aliquam vel ipsum ac, fermentum pharetra mauris. Curabitur malesuada sapien
-    at sagittis suscipit. Aenean a pretium augue, ac tincidunt ipsum. Morbi tincidunt
-    dapibus odio, in efficitur ligula malesuada convallis. Nulla accumsan faucibus
-    lectus, faucibus aliquam arcu pretium nec. In hac habitasse platea dictumst.
-    Donec congue, ipsum imperdiet dictum aliquam, augue magna bibendum mauris, quis
-    consectetur velit dui id sem.\r\n\r\nInteger quis nisl eu odio tempus fermentum.
-    Donec diam magna, consequat quis lacus id, fringilla mattis nisi. Curabitur in
-    turpis at libero finibus dignissim. Aenean vel efficitur odio. Nulla sit amet
-    cursus erat. Ut consequat tincidunt sem ut ornare. Aliquam tristique hendrerit
-    eleifend. Praesent pellentesque ipsum vitae turpis eleifend, at vestibulum lectus
-    hendrerit. Integer laoreet eu tortor sed ullamcorper. Quisque feugiat nulla ac
-    arcu ultrices, vel fringilla quam convallis. Aliquam erat volutpat. Suspendisse
-    eros risus, congue sit amet dictum a, tristique ut risus. Vivamus cursus diam
-    nec nunc rutrum, sit amet placerat sem semper. Morbi non massa ac nibh dictum
-    auctor. Proin vestibulum elementum magna, eget lacinia est mattis eget. Mauris
-    dolor nisl, dictum quis augue vitae, dapibus eleifend ante.\r\n\r\nDonec ut dolor
-    eros. In hac habitasse platea dictumst. Vivamus lacinia dolor imperdiet nulla
-    bibendum, ut aliquam turpis viverra. Praesent commodo ex erat. Proin et sem est.
-    Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
-    himenaeos. Pellentesque vel lectus nec mi laoreet vulputate eu et nulla. Donec
-    cursus ut mauris in suscipit. Nam iaculis lacus cursus, auctor purus lobortis,
-    hendrerit dolor. Vestibulum auctor vulputate urna, sit amet cursus massa hendrerit
-    ut. Aenean vel purus neque. \n"
+  m_text: "--------------------------\r--------\nLPC Asset Guide\r\n--------------------------\r--------\nhttps://lpc.opengameart.org/static/lpc-style-guide/assets.html\r\nCC
+    BY-SA 3.0 - GPL 3.0\r\n\r\n--------------------------\r--------\nFarming tilesets,
+    magic animations and UI elements\r\n--------------------------\r--------\nLPC
+    submission by Daniel Eddeland\r\nPlantation and grass tileset - Daniel Eddeland
+    (include link)\r\nCC-BY-SA 3.0 - GPL 3.0\r\nhttps://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements\r\n\r\n--------------------------\r--------\nDungeon
+    Crawl Soup - CC0\r\n--------------------------\r--------\nhttps://opengameart.org/content/dungeon-crawl-32x32-tiles
+    \r\nhttps://opengameart.org/content/dungeon-crawl-32x32-tiles-supplemental\r\n\r\n--------------------------\r--------\nOrchidologist
+    NPC\r\n--------------------------\r--------\nfilename,notes,authors,licenses,url1,url2,url3,url4,url5,status\r\nbody/female/woman-olive.png,,\"Stephen
+    Challener (Redshrike), Johannes Sj\xF6lund (wulax), Matthew Krohn (makrohn)\",\"GPL
+    3.0, CC-BY-SA 3.0\",https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles,https://opengameart.org/content/lpc-medieval-fantasy-character-sprites,https://opengameart.org/content/lpc-ladies\r\nbody/female/eyes/purple.png,,\"David
+    Conway Jr. (JaidynReiman), Matthew Krohn (makrohn), Stephen Challener (Redshrike)\",\"GPL
+    3.0, CC-BY-SA 3.0\",https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles\r\nfeet/ghillies_female_no_th-sh.png,,\"Thane
+    Brimhall (pennomi), laetissima, Matthew Krohn (makrohn)\",\"GPL 3.0, CC-BY-SA
+    3.0\",https://opengameart.org/content/lpc-2-characters\r\ntorso/shirts/dress/TightDress_red.png,,\"Nila122,
+    Johannes Sj\xF6lund (wulax), Stephen Challener (Redshrike)\",\"GPL 2.0, GPL 3.0,
+    CC-BY-SA 3.0\",https://opengameart.org/content/lpc-clothes-and-hair\r\nfeet/shoes/LongBoots_dark.png,,\"Nila122,
+    Johannes Sj\xF6lund (wulax), Stephen Challener (Redshrike)\",\"GPL 2.0, GPL 3.0,
+    CC-BY-SA 3.0\",https://opengameart.org/content/lpc-clothes-and-hair\r\ntorso/shirts/blouse/blouse_blue.png,,\"ElizaWy,
+    Lanea Zimmerman (Sharm)\",\"GPL 3.0, CC-BY-SA 3.0\",https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles,https://opengameart.org/content/lpc-7-womens-shirts\r\nhair/female/LongHairBack_red.png,duplicate
+    of hair/female/xlong/*,\"Nila122, Johannes Sj\xF6lund (wulax), Stephen Challener
+    (Redshrike)\",\"GPL 2.0, GPL 3.0, CC-BY-SA 3.0\",https://opengameart.org/content/lpc-clothes-and-hair\r\n\r\n--------------------------\r--------\nStory
+    Teller\r NPC\n--------------------------\r--------\nfilename,notes,authors,licenses,url1,url2,url3,url4,url5,status\r\nbody/male/dark2.png,,\"Stephen
+    Challener (Redshrike), Johannes Sj\xF6lund (wulax), Marcel van de Steeg (MadMarcel),
+    Mark Weyer\",\"GPL 3.0, CC-BY-SA 3.0\",https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles,https://opengameart.org/content/lpc-medieval-fantasy-character-sprites\r\nbody/male/eyes/brown.png,,\"Matthew
+    Krohn (makrohn), Stephen Challener (Redshrike)\",\"GPL 3.0, CC-BY-SA 3.0\",https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles\r\nfacial/male/beard/white.png,,\"David
+    Conway Jr. (JaidynReiman), Carlo Enrico Victoria (Nemisys)\",\"GPL 3.0, CC-BY-SA
+    3.0\",https://opengameart.org/content/lpc-brunet-mustache\r\nfeet/shoes/Male_sandals.png,,\"Nila122,
+    David Conway Jr. (JaidynReiman), Matthew Krohn (makrohn), Johannes Sj\xF6lund
+    (wulax)\",\"GPL 2.0, GPL 3.0, CC-BY-SA 3.0\",https://opengameart.org/content/lpc-roman-armor\r\nlegs/skirt/male_robe_bottom_white.png,,Johannes
+    Sj\xF6lund (wulax),\"GPL 3.0, CC-BY-SA 3.0\",https://opengameart.org/content/lpc-medieval-fantasy-character-sprites\r\ntorso/chain/tabard/male_tabard_yellow.png,?recolor,Johannes
+    Sj\xF6lund (wulax),\"GPL 3.0, CC-BY-SA 3.0\",https://opengameart.org/content/lpc-medieval-fantasy-character-sprites\r\ntorso/leather/SingleBauldron.png,,Nila122,\"GPL
+    2.0, GPL 3.0, CC-BY-SA 3.0\",https://opengameart.org/content/more-lpc-clothes-and-hair\r\nbelt/cloth/male/white_cloth_male.png,originally
+    BELT_rope.png,Johannes Sj\xF6lund (wulax),\"GPL 3.0, CC-BY-SA 3.0\",https://opengameart.org/content/lpc-medieval-fantasy-character-sprites\r\nbehind_body/cape/normal/female/cape_gray.png,,David
+    Conway Jr. (JaidynReiman),\"GPL 3.0, CC-BY-SA 3.0\",https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more\r\n\r\n--------------------------\r--------\nMageSelector
+    & WarriorSelector NPCs\n--------------------------\r--------\n CC-BY 3.0 CC-BY-SA
+    3.0 OGA-BY 3.0\r\nhttps://opengameart.org/content/four-characters-my-lpc-entries\r\n\r\n--------------------------\r--------\nBat
+    - bagzie - OGA-BY 3.0\r\n--------------------------\r--------\nhttps://opengameart.org/content/bat-sprite\r\n\r\n--------------------------\r--------\nWolf\n--------------------------\r--------\nStephen
+    \"Redshrike\" Challener as graphic artist and William.Thompsonj as contributor\nCC-BY
+    4.0 CC-BY 3.0 GPL 3.0 GPL 2.0 OGA-BY 3.0 GPL 3.0\r\nhttps://opengameart.org/content/lpc-wolf-animation\r\n\r\n--------------------------\r--------\nTileset
+    for the Hub & Forest Biom - Cainos - Pixel Art Top Down - Basic\r\n--------------------------\r--------\nhttps://assetstore.unity.com/packages/2d/environments/pixel-art-top-down-basic-187605\r\n\r\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5a99ab5873449334db9be090c351d396, type: 2}
   m_sharedMaterial: {fileID: 7164874370238670303, guid: 5a99ab5873449334db9be090c351d396,
@@ -98974,7 +98971,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -106641,8 +106638,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 997788941}
   m_HandleRect: {fileID: 997788940}
   m_Direction: 2
-  m_Value: 1.0000001
-  m_Size: 0.29060066
+  m_Value: 0.99999994
+  m_Size: 0.1183329
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -115876,7 +115873,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 146.85
+  m_fontSize: 146.9
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -116190,7 +116187,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50.35
+  m_fontSize: 50.4
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -116557,6 +116554,75 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1001 &6228648485024466538
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1498433533527175071, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_Name
+      value: Khrom
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.8259766
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3573771276175063671, guid: 2a0627d394dc469448722475f3847748,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2a0627d394dc469448722475f3847748, type: 3}
 --- !u!1001 &6406294989493578821
 PrefabInstance:
   m_ObjectHideFlags: 0
