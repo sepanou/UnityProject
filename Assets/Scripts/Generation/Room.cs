@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Generation {
-	public enum RoomType { Standard, Chest, Shop, Start, Exit, Boss, PreBoss, DeadEnd, Other }
+	public enum RoomType { Standard, Chest, Shop, Start, Exit, Boss, PreBoss, DeadEnd, DeadEndChest, Other }
 
 	public class Room {
-		public bool IsDiscovered { get; private set; } = false;
 		public (int, int) Dimensions;
 		public string Name { get; private set; }
 		public RoomType Type { get; private set; }
@@ -21,11 +19,6 @@ namespace Generation {
 		public (int, int) UDim;
 		public (int, int) UCoords;
 		public int UniqueId;
-
-		// ReSharper disable once UnusedMember.Local
-		private void Start() {
-			IsDiscovered = false;
-		}
 
 		public Room(((int, int) dim, List<(char, int)> exits, RoomType type, int lvl, int id, (int,int) uDim) p, string name) {
 			Dimensions = p.dim;
@@ -84,6 +77,7 @@ namespace Generation {
 				: typeStr == "Fbo" ? RoomType.Boss
 				: typeStr == "Pfb" ? RoomType.PreBoss
 				: typeStr == "Den" ? RoomType.DeadEnd
+				: typeStr == "Dec" ? RoomType.DeadEndChest
 				: RoomType.Other
 			;
 

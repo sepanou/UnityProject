@@ -49,7 +49,7 @@ namespace Generation {
 							     dir == 'L' && TryAddRoom(lMap, rMap, roomToAdd, rtcX - 1, rtcY - nbDir + 1) ||
 							     dir == 'R' && TryAddRoom(lMap, rMap, roomToAdd, rtcX + uW, rtcY - nbDir + 1))
 							) {
-								if (roomToAdd.Type == RoomType.Chest) level.Chests += 1;
+								if (roomToAdd.Type == RoomType.Chest) ++level.Chests;
 								if (roomToAdd.Type == RoomType.Shop) level.Shop = true;
 								if (roomToAdd.Type == RoomType.PreBoss) placedPreBossRoom = true;
 								_recentlyAddedRooms.Add(roomToAdd);
@@ -73,37 +73,27 @@ namespace Generation {
 						if (IsExitOccupied(rMap, room, dir, nbDir)) continue;
 						(x, y) = room.UCoords;
 						(int uH, int uW) = room.UDim;
-						bool placedRoom;
-						switch (dir) {
-							case 'T':
-								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('B'), x + nbDir - 1, y - uH);
-								break;
-							case 'B':
-								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('T'), x + nbDir - 1, y + 1);
-								break;
-							case 'L':
-								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('R'), x - 1, y - nbDir + 1);
-								break;
-							case 'R':
-								placedRoom = TryAddRoom(lMap, rMap, FindDeadEnd('L'), x + uW, y - nbDir + 1);
-								break;
-							default:
-								throw new ArgumentException("Wrong letter");
+						Room placedRoom;
+						bool didPlacedRoom = dir == 'T' ? TryAddRoom(lMap, rMap, FindDeadEnd('B', out placedRoom), x + nbDir - 1, y - uH)
+							: dir == 'B' ? TryAddRoom(lMap, rMap, FindDeadEnd('T', out placedRoom), x + nbDir - 1, y + 1)
+							: dir == 'L' ? TryAddRoom(lMap, rMap, FindDeadEnd('R', out placedRoom), x - 1, y - nbDir + 1)
+							: dir == 'R' ? TryAddRoom(lMap, rMap, FindDeadEnd('L', out placedRoom), x + uW, y - nbDir + 1)
+							: throw new ArgumentException("Wrong letter");
+						if (didPlacedRoom) {
+							if (placedRoom.Type == RoomType.DeadEndChest) ++level.Chests;
+							continue;
 						}
-
-						if (!placedRoom) {
-							// This is ugly but it does work :p
-							List<Room> rooms = new List<Room>(_availableRooms[RoomType.Standard]);
-							rooms.Shuffle();
-							foreach (Room roomToReplace in rooms) {
-								if ((dir == 'T' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y - uH) ||
-								     dir == 'B' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y + 1) ||
-								     dir == 'L' && TryAddRoom(lMap, rMap, roomToReplace, x - 1, y - nbDir + 1) ||
-								     dir == 'R' && TryAddRoom(lMap, rMap, roomToReplace, x + uW, y - nbDir + 1))
-								) {
-									standardAddedRooms.Add(roomToReplace);
-									break;
-								}
+						// This is ugly but it does work :p
+						List<Room> rooms = new List<Room>(_availableRooms[RoomType.Standard]);
+						rooms.Shuffle();
+						foreach (Room roomToReplace in rooms) {
+							if (dir == 'T' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y - uH) ||
+								dir == 'B' && TryAddRoom(lMap, rMap, roomToReplace, x + nbDir - 1, y + 1) ||
+								dir == 'L' && TryAddRoom(lMap, rMap, roomToReplace, x - 1, y - nbDir + 1) ||
+								dir == 'R' && TryAddRoom(lMap, rMap, roomToReplace, x + uW, y - nbDir + 1)
+							) {
+								standardAddedRooms.Add(roomToReplace);
+								break;
 							}
 						}
 					}
@@ -126,10 +116,14 @@ namespace Generation {
 		}
 
 		[Server]
-		private static Room FindDeadEnd(char dir) {
-			foreach (Room room in _availableRooms[RoomType.DeadEnd]) {
+		private static Room FindDeadEnd(char dir, out Room room) {
+			RoomType type = Random.Next(100) <= 25 ? RoomType.DeadEndChest : RoomType.DeadEnd;
+			foreach (Room roomToPlace in _availableRooms[type]) {
 				++_uniqueIds;
-				if (room._exits[0].Item1 == dir) return new Room(room, _uniqueIds);
+				if (roomToPlace._exits[0].Item1 == dir) {
+					room = new Room(roomToPlace, _uniqueIds);
+					return room;
+				}
 			}
 			throw new ArgumentException("FindDeadEnd: Room not found");
 		}
@@ -162,32 +156,24 @@ namespace Generation {
 		private static bool IsExitOccupied(Room[,] rMap, Room room, char dir, int nbDir) {
 			(int x, int y) = room.UCoords;
 			(int uW, int uH) = room.UDim;
-			switch (dir) {
-				case 'T':
-					return rMap[y - uH, x + nbDir - 1] != null;
-				case 'B':
-					return rMap[y + 1, x + nbDir - 1] != null;
-				case 'R':
-					return rMap[y - nbDir + 1, x + uW] != null;
-				case 'L':
-					return rMap[y - nbDir + 1, x - 1] != null;
-				default:
-					throw new ArgumentException("IsExitOccupied: wrong letter");
-			}
+			return dir == 'T' ? rMap[y - uH, x + nbDir - 1] != null
+				: dir == 'B' ? rMap[y + 1, x + nbDir - 1] != null
+				: dir == 'R' ? rMap[y - nbDir + 1, x + uW] != null
+				: dir == 'L' ? rMap[y - nbDir + 1, x - 1] != null
+				: throw new ArgumentException("IsExitOccupied: wrong letter");
 		}
 
 		[Server]
 		private static Room GenerateRoom(bool isThereAShop, int chests, Random seed, ICollection lMap, bool placedPreBossRoom) {
 			RoomType roomType = !isThereAShop && seed.Next(100) <= 10 + lMap.Count / 2
 				? RoomType.Shop
-				: isThereAShop && !placedPreBossRoom && lMap.Count >= 20 && seed.Next(100) <= -10 + lMap.Count*2
+				: isThereAShop && !placedPreBossRoom && lMap.Count >= 20 && seed.Next(100) <= -10 + lMap.Count * 2
 				? RoomType.PreBoss
-				: seed.Next(100) <= 5 / (chests + 1)
+				: seed.Next(100) <= 10 / (chests + 1)
 				? RoomType.Chest
 				: RoomType.Standard
 			;
-			++_uniqueIds;
-			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)], _uniqueIds);
+			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)], ++_uniqueIds);
 		}
 		
 		[Server]
@@ -303,7 +289,6 @@ namespace Generation {
 		/// <exception cref="ArgumentException"></exception>
 		[Server]
 		private static bool SubSubFunction(Room room, int toX, int toY, char dir, int nbDir, int x = -1, int y = -1) {
-			
 			if (x == y && y == -1)
 				(x, y) = room.UCoords;
 			(int uW, int uH) = room.UDim;
@@ -324,7 +309,7 @@ namespace Generation {
 		[Server]
 		private static Dictionary<RoomType, List<Room>> GetLevels() {
 			Dictionary<RoomType, List<Room>> ans = new Dictionary<RoomType, List<Room>>();
-			for (int i = 0; i < 9; i++)
+			for (int i = 0; i < 10; i++)
 				ans.Add((RoomType) i, new List<Room>());
 			foreach (Object o in Resources.LoadAll("Level1", typeof(GameObject))) {
 				string roomName = o.name;
@@ -346,20 +331,17 @@ namespace Generation {
 		}
 		
 		/// <summary>
-		/// Shuffles a list, thanks Stack Overflow !
+		/// Shuffles a list, thanks ~Stack Overflow~ !
+		/// (It's better when you understand what you do instead of copy-pasting from Stack Overflow...)
 		/// </summary>
 		/// <param name="list"></param>
 		/// <typeparam name="T"></typeparam>
 		[Server]
-		private static void Shuffle<T>(this IList<T> list) {  
-			int n = list.Count;  
-			while (n > 1) {  
-				n--;  
-				int k = Random.Next(n + 1);  
-				T value = list[k];  
-				list[k] = list[n];  
-				list[n] = value;  
-			}  
+		private static void Shuffle<T>(this IList<T> list) {
+			for (int i = 0; i < list.Count; ++i) {
+				int j = Random.Next(list.Count);
+				(list[i], list[j]) = (list[j], list[i]);
+			}
 		}
 	}
 }

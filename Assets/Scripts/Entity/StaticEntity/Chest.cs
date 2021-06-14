@@ -12,6 +12,7 @@ namespace Entity.StaticEntity{
         [SerializeField] private Sprite spriteOpened;
         private int _count;
         private Vector3 _chestCoordinates;
+        [SerializeField] private bool starterChest;
 
         public void Start() {
             Instantiate();
@@ -27,7 +28,7 @@ namespace Entity.StaticEntity{
 
         [Server]
         private void GenerateLoot(Player player) {
-            if (Random.Range(0,9) < 5) GenerateCharm();
+            if (!starterChest && Random.Range(0,9) < 5) GenerateCharm();
             else {
                 switch (player.playerClass) {
                     case PlayerClasses.Archer:
@@ -65,7 +66,7 @@ namespace Entity.StaticEntity{
             staff.transform.position = _chestCoordinates + new Vector3(_count % 3 - 1, -1, 0);
             NetworkServer.Spawn(staff.gameObject);
         }
-        [ClientRpc]
+        [Server]
         private void GenerateCharm() {
             Charm charm = WeaponGenerator.GenerateCharm();
             charm.transform.position = _chestCoordinates + new Vector3(_count % 3 - 1, -1, 0);
