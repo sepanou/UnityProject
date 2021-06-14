@@ -4443,6 +4443,8 @@ MonoBehaviour:
   doorsColliders: {fileID: 9000766518009098148}
   doorsTrees: {fileID: 8666359731936798177}
   prefabsToSpawn: []
+  mobsAvailable: {fileID: 11400000, guid: 025d0caf7d3e12148b57e17141339f2c, type: 2}
+  mobsSpawnGO: []
 --- !u!61 &5282832430081685794
 BoxCollider2D:
   m_ObjectHideFlags: 0
