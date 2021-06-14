@@ -16,8 +16,8 @@ namespace Generation {
 		
 		[Server]
 		// ReSharper disable once UnusedMember.Local
-		public static void GenerateLevel(Level level) {
-			if (level.alreadyGenerated) return;
+		public static IEnumerator GenerateLevel(Level level) {
+			if (level.alreadyGenerated) yield break;
 			Room[,] rMap = level.RoomsMap;
 			List<Room> lMap = level.RoomsList;
 			_recentlyAddedRooms = new List<Room>();
@@ -55,6 +55,8 @@ namespace Generation {
 								_recentlyAddedRooms.Add(roomToAdd);
 								break;
 							}
+
+							yield return null;
 						}
 					}
 					if (!AreExitsOccupied(rMap, room)) _recentlyAddedRooms.Add(room);
@@ -95,6 +97,8 @@ namespace Generation {
 								standardAddedRooms.Add(roomToReplace);
 								break;
 							}
+							
+							yield return null;
 						}
 					}
 				}
@@ -109,6 +113,7 @@ namespace Generation {
 				for (int i = y + 1; i >= y - uH; --i) {
 					for (int j = x - 1; j <= x + uW; j++) {
 						if (rMap[i,j] == null) AddPrefab(j*20, i*-20, "Filler");
+						yield return null;
 					}
 				}
 			}
