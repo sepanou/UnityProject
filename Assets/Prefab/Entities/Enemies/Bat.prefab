@@ -139,11 +139,11 @@ MonoBehaviour:
   syncInterval: 0.1
   spriteRenderer: {fileID: 1123504932087464526}
   interactionCollider: {fileID: 0}
-  speed: 2.5
+  speed: 4
   entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
     type: 3}
   nameTag: Wandering Bat
-  maxHealth: 15
+  maxHealth: 25
   advancedMoves: 0
 --- !u!50 &-3441231215060595727
 Rigidbody2D:

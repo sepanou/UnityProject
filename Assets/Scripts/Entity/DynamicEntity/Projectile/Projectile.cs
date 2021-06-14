@@ -70,9 +70,10 @@ namespace Entity.DynamicEntity.Projectile {
 		}
 		
 		[ServerCallback] private void OnCollisionEnter2D(Collision2D other) {
-			if (other.gameObject.TryGetComponent(out Mob mob))
+			if (other.gameObject.TryGetComponent(out Mob mob)) {
+				Debug.Log(_fromWeapon.GetDamage(_fromSpecialAttack));
 				mob.GetAttacked(_fromWeapon.GetDamage(_fromSpecialAttack));
-			if (other.gameObject.GetComponent<Projectile>()) return;
+			}
 			NetworkServer.Destroy(gameObject);
 		}
 	}

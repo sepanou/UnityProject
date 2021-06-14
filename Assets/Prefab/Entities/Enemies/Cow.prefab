@@ -193,7 +193,7 @@ MonoBehaviour:
   entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
     type: 3}
   nameTag: Enraged Cow
-  maxHealth: 10
+  maxHealth: 35
   advancedMoves: 1
 --- !u!95 &154962634339220198
 Animator:
