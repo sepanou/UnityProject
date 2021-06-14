@@ -122,6 +122,13 @@ namespace Entity {
 				TargetSetSortingLayer(target, spriteRenderer.sortingLayerID, spriteRenderer.sortingOrder, gameObject.layer);
 		}
 
+		[Command(requiresAuthority = false)]
+		protected void CmdSynchronizePosition(NetworkConnectionToClient target = null) =>
+			TargetSynchronizePosition(target, transform.position);
+
+		[TargetRpc] private void TargetSynchronizePosition(NetworkConnection target, Vector3 position) =>
+			transform.position = position;
+		
 		[TargetRpc]
 		public void TargetSetRenderingLayersInChildren(NetworkConnection target, int sortingLayerID,
 			string sortingLayerName, int layerMask) 

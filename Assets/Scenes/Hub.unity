@@ -5923,7 +5923,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.25
+  m_fontSize: 20.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10188,7 +10188,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.25
+  m_fontSize: 22.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -59574,7 +59574,9 @@ MonoBehaviour:
   - {fileID: 1881837157385443890, guid: af7790c6d472d1f478434752a0d4ca7a, type: 3}
   - {fileID: 3729219926689252608, guid: 8c559c450440eff4688c727c1c1471ff, type: 3}
   - {fileID: 1882975997945534072, guid: d4ffbc94a856c3b49bffe2163cc761cd, type: 3}
-  - {fileID: 2055102311959635369, guid: 99597c7b4aa47494fb2b6061505735da, type: 3}
+  - {fileID: 589641168408172694, guid: 8d738464ab389d64d88e438cdb5623a2, type: 3}
+  - {fileID: 2514552040777696733, guid: 4aea074adae2dd44698500b28c680468, type: 3}
+  - {fileID: 1891248537526793985, guid: b37df23ef65154447912e2a56afea529, type: 3}
   sceneAnimator: {fileID: 807742234}
   forestScene: Assets/Scenes/Level1Creation.unity
   forestSpawnPoints:
@@ -84666,7 +84668,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
+  m_fontSize: 20.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -88387,7 +88389,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
+  m_fontSize: 20.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -106640,7 +106642,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 997788940}
   m_Direction: 2
   m_Value: 1.0000001
-  m_Size: 0.2857877
+  m_Size: 0.290492
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -109116,7 +109118,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
+  m_fontSize: 20.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -115874,7 +115876,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 143.45
+  m_fontSize: 146.75
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -116188,7 +116190,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51.6
+  m_fontSize: 50.35
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1

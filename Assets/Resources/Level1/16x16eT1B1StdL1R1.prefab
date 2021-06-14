@@ -24535,6 +24535,7 @@ MonoBehaviour:
   triggerZone: {fileID: 534116853519325533}
   doorsColliders: {fileID: 3675183928871826399}
   doorsTrees: {fileID: 8957598175585827731}
+  prefabsToSpawn: []
 --- !u!61 &534116853519325533
 BoxCollider2D:
   m_ObjectHideFlags: 0

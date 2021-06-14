@@ -21,13 +21,14 @@ namespace Entity.StaticEntity{
             _count = 1;
         }
 
-        [ClientRpc]
-        private void RpcToggleSprite() {
-            spriteRenderer.sprite = spriteOpened;
+        public override void OnStartClient() {
+            base.OnStartClient();
+            CmdSynchronizePosition();
         }
 
-        [Server]
-        private void GenerateLoot(Player player) {
+        [ClientRpc] private void RpcToggleSprite() => spriteRenderer.sprite = spriteOpened;
+
+        [Server] private void GenerateLoot(Player player) {
             if (!starterChest && Random.Range(0,9) < 5) GenerateCharm();
             else {
                 switch (player.playerClass) {
@@ -45,42 +46,37 @@ namespace Entity.StaticEntity{
             ++_count;
         }
 
-        [Server]
-        private void GenerateBow() {
+        [Server] private void GenerateBow() {
             Bow bow = WeaponGenerator.GenerateBow(Random.Range(0, 9) < 1);
             bow.transform.position = _chestCoordinates + new Vector3(_count % 3 - 1, -1, 0);
             NetworkServer.Spawn(bow.gameObject);
         }
 
-        [Server]
-        private void GenerateSword() {
+        [Server] private void GenerateSword() {
             MeleeWeapon meleeWeapon = WeaponGenerator.GenerateSword(Random.Range(0, 9) < 1);
             meleeWeapon.transform.position = _chestCoordinates + new Vector3(_count % 3 - 1, -1, 0);
             NetworkServer.Spawn(meleeWeapon.gameObject);
 
         }
 
-        [Server]
-        private void GenerateStaff() {
+        [Server] private void GenerateStaff() {
             Staff staff = WeaponGenerator.GenerateStaff(Random.Range(0, 9) < 1);
             staff.transform.position = _chestCoordinates + new Vector3(_count % 3 - 1, -1, 0);
             NetworkServer.Spawn(staff.gameObject);
         }
-        [Server]
-        private void GenerateCharm() {
+        
+        [Server] private void GenerateCharm() {
             Charm charm = WeaponGenerator.GenerateCharm();
             charm.transform.position = _chestCoordinates + new Vector3(_count % 3 - 1, -1, 0);
             NetworkServer.Spawn(charm.gameObject);
         }
 
-        [Server]
-        public void Interact(Player player) {
+        [Server] public void Interact(Player player) {
             if (_isOpen) return;
             RpcToggleSprite();
             CustomNetworkManager customNetworkManager = CustomNetworkManager.Instance;
             customNetworkManager.PlayerPrefabs.ForEach(GenerateLoot);
             _isOpen = true;
-
         }
     }
 }

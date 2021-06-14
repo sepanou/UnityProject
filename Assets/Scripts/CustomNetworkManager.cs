@@ -32,6 +32,12 @@ public class CustomNetworkManager: NetworkManager {
 
 	// Event methods
 	public override void OnServerAddPlayer(NetworkConnection conn) {
+		if (LocalGameManager.Instance.LocalState != LocalGameStates.Hub) {
+			// The game has already started
+			conn.Disconnect();
+			return;
+		}
+		
 		GameObject player = Instantiate(playerPrefab, startPositions[startPositionIndex].position, Quaternion.identity);
 		NetworkServer.AddPlayerForConnection(conn, player);
 		Player p = player.GetComponent<Player>();

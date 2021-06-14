@@ -4457,7 +4457,7 @@ MonoBehaviour:
   doorsTrees: {fileID: 1337682876549471755}
   prefabsToSpawn:
   - spawnPos: {fileID: 8534585986785514768}
-    prefabToSpawn: {fileID: 2055102311959635369, guid: 99597c7b4aa47494fb2b6061505735da,
+    prefabToSpawn: {fileID: 589641168408172694, guid: 8d738464ab389d64d88e438cdb5623a2,
       type: 3}
 --- !u!61 &401876448777236791
 BoxCollider2D:
