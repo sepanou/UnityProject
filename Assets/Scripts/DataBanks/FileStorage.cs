@@ -7,7 +7,7 @@ namespace DataBanks {
     using PlayerData = Dictionary<string, string>;
 
     public static class FileStorage {
-        private static readonly string FILE_PATH = Application.dataPath + "/players.json";
+        private static readonly string FILE_PATH = Application.persistentDataPath + "/players.json";
 
         public static int GetPlayerOrchid(string username) {
             CreateFileIfNotExist();

@@ -61,7 +61,7 @@ namespace Entity.Collectibles {
 		}
 	}
 	
-	public class Charm: Collectibles, IInventoryItem, IInteractiveEntity {
+	public class Charm: Collectibles, IInventoryItem {
 		[SyncVar] [ShowInInspector] public CharmData bonuses;
 		
 		// Index of the sprite in the WPGenerator array -> Mirror can't serialize sprites
@@ -80,6 +80,7 @@ namespace Entity.Collectibles {
 			base.Instantiate();
 			AutoStopInteracting = true;
 		}
+		
 		public override void OnStartServer() {
 			base.OnStartServer();
 			Instantiate();
@@ -121,7 +122,7 @@ namespace Entity.Collectibles {
 
 		[Server] public void SetIsGrounded(bool state) => _isGrounded = state;
 
-		[Server] public void Interact(Player player)
+		[Server] public override void Interact(Player player)
 			=> StartCoroutine(OnTargetDetected(this, player));
 
 		[Server] public void LinkToPlayer(Player player) {
