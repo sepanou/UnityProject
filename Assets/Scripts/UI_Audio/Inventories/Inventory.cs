@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UnityEngine;
@@ -19,6 +20,11 @@ namespace UI_Audio.Inventories {
 		private int _count;
 		public int Size => slots.Length;
 		public bool IsOpen { get; private set; }
+
+		protected void Start() {
+			foreach (InventorySlot slot in slots)
+				slot.SetInventory(this);
+		}
 
 		public bool Contains(IInventoryItem item)
 			=> slots.Any(slot => slot.GetSlotItem() == item);

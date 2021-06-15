@@ -388,6 +388,10 @@
         {
             "fieldKey": "#respawn",
             "translation": "Vous avez été téléporté au spawn car vous ne pouvez pas changer de classe lorsque la porte vers la forêt de Paimpont est ouverte !"
+        },
+        {
+            "fieldKey": "#credits",
+            "translation": "Un jeu par :\nSépanou \n-------------\nMembres :\nLO Jean-Pierre - TCHEKACHEV David - MICHOT Maxence - MICHALON Loïc\n-------------\nRemerciements spéciaux :\nSprites & Boîtier - Timothé\nMusiques - Madgenta\n-------------\nMontagnes, cascades & rivières - LPC Asset Guide\nCC BY-SA 3.0 - GPL 3.0\nhttps://lpc.opengameart.org/static/lpc-style-guide/assets.html\n-------------\nPlantations - LPC submission par Daniel Eddeland\nCC-BY-SA 3.0 - GPL 3.0\nhttps://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements\n-------------\nIcônes - Dungeon Crawl Soup - CC0\nhttps://opengameart.org/content/dungeon-crawl-32x32-tiles\nhttps://opengameart.org/content/dungeon-crawl-32x32-tiles-supplemental\n-------------\nPNJs sélecteurs de classe - LPC submission par Stephen \"Redshrike\" Challener\nCC-BY 3.0 CC-BY-SA 3.0 OGA-BY 3.0\nhttps://opengameart.org/content/four-characters-my-lpc-entries\n-------------\nChauve-souris -  bagzie\nOGA-BY 3.0\nhttps://opengameart.org/content/bat-sprite\n-------------\nLoup - Stephen \"Redshrike\" Challener (graphismes) & William Thompsonj (contributeur)\nCC-BY 4.0 CC-BY 3.0 GPL 3.0 GPL 2.0 OGA-BY 3.0 GPL 3.0\nhttps://opengameart.org/content/lpc-wolf-animation\n-------------\nTextures du Hub & de la Forêt - Cainos - Pixel Art Top Down - Basic\nhttps://assetstore.unity.com/packages/2d/environments/pixel-art-top-down-basic-187605\n-------------\n\nN'hésitez pas à cliquer sur \"Tous les crédits\" pour la liste complète.\n\nMerci d'avoir joué !"
         }
     ]
 }

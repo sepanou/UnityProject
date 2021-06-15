@@ -98863,6 +98863,7 @@ GameObject:
   - component: {fileID: 1666216214}
   - component: {fileID: 1666216216}
   - component: {fileID: 1666216215}
+  - component: {fileID: 1666216217}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -98886,8 +98887,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -2750}
-  m_SizeDelta: {x: 0, y: 5500}
+  m_AnchoredPosition: {x: 0, y: -1000}
+  m_SizeDelta: {x: 0, y: 2000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1666216215
 MonoBehaviour:
@@ -98908,11 +98909,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Un jeu par :\nS\xE9panou \n-------------\nMembres  :\nLO Jean-Pierre -
-    TCHEKACHEV David - MICHOT Maxence - MICHALON Lo\xEFc\n-------------\nRemerciements
-    sp\xE9ciaux :\nSprites & Bo\xEEtier : Timoth\xE9\nMusiques : Madgenta\n-------------\nN'h\xE9sitez
-    pas \xE0 cliquer sur \"Tous les cr\xE9dits\" pour la liste compl\xE8te\n\nMerci
-    d'avoir jou\xE9 !"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5a99ab5873449334db9be090c351d396, type: 2}
   m_sharedMaterial: {fileID: 7164874370238670303, guid: 5a99ab5873449334db9be090c351d396,
@@ -98976,7 +98973,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: -0.33363733, z: 0, w: -1.6994807}
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -98990,6 +98987,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1666216213}
   m_CullTransparentMesh: 0
+--- !u!114 &1666216217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666216213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77b35aec710b94441b1cc4f5b972308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fieldKey: '#credits'
+  formatText: 
+  upperCase: 0
+  lowerCase: 0
 --- !u!1001 &1667060384
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -106965,7 +106978,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 997788940}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.11823937
+  m_Size: 0.26941186
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -86,19 +86,32 @@ namespace UI_Audio.Inventories {
 	/// </summary>
 	public abstract class SellerInventory : NpcInventory {
 		[SerializeField] private RectTransform infoDisplay;
-		private InventorySlot _lastCostPrinted, _lastSelected;
+		private InventorySlot _lastSelected, _lastHovered;
+		private bool _hasSelectedBeenDisplayed;
 		
 		// If item is null => display '0'
 		public abstract void DisplayPrice(IInventoryItem item);
 
-		public void Start() {
-			InventorySlot.OnItemSlotClick += OnInventorySlotClick;
+		protected new void Start() {
+			base.Start();
+			InventorySlot.OnItemSlotClick.AddListener(OnInventorySlotClick);
+			InventorySlot.OnSlotHoveredChange.AddListener(OnHoveredSlotChanged);
 			DisplayPrice(null);
 		}
 
 		private void OnInventorySlotClick(InventorySlot slot) {
 			if (!slot || !slot.IsOccupied || !Contains(slot.GetSlotItem())) return;
 			_lastSelected = slot;
+			IInventoryItem item = _lastSelected.GetSlotItem();
+			item.GetInformationPopup().gameObject.transform.SetParent(infoDisplay.transform, false);
+			infoDisplay.gameObject.SetActive(true);
+			DisplayPrice(item);
+		}
+
+		private void OnHoveredSlotChanged(InventorySlot slot) {
+			if (!slot || !slot.IsOccupied) return;
+			DisplayPrice(slot.GetSlotItem());
+			_lastHovered = slot;
 		}
 
 		public void OnBuyButtonClick() {
@@ -106,21 +119,9 @@ namespace UI_Audio.Inventories {
 			GetNpcOwner<Seller>().CmdBuyItem(_lastSelected.GetSlotItem(), LocalGameManager.Instance.LocalPlayer);
 		}
 		
-		public void Update() {
-			if (!InventorySlot.LastHovered
-			    || !InventorySlot.LastHovered.IsOccupied
-			    || !InventorySlot.LastHovered.IsMouseOver()) {
-				if (!_lastSelected || _lastSelected == _lastCostPrinted || !_lastSelected.IsOccupied) return;
-				IInventoryItem item = _lastSelected.GetSlotItem();
-				item.GetInformationPopup().gameObject.transform.SetParent(infoDisplay.transform, false);
-				infoDisplay.gameObject.SetActive(true);
-				DisplayPrice(item);
-				_lastCostPrinted = _lastSelected;
-				return;
-			}
-            
-			DisplayPrice(InventorySlot.LastHovered.GetSlotItem());
-			_lastCostPrinted = InventorySlot.LastHovered != _lastSelected ? InventorySlot.LastHovered : null;
+		public void FixedUpdate() {
+			if (IsOpen && _lastSelected && _lastHovered && !_lastHovered.IsMouseOver())
+				OnInventorySlotClick(_lastSelected);
 		}
 	}
 }
