@@ -162,11 +162,16 @@ namespace Generation{
         } 
 
         [ServerCallback] private void Update() {
+            if (hasBeenCleared && Input.GetKeyDown(KeyCode.T)) {
+                CustomNetworkManager.Instance.AlivePlayers.ForEach(playerToTp => {
+                    playerToTp.transform.position = new Vector3(11, -7, 0);
+                });
+            }
             // Kills EVERYTHING :)
             if (!Input.GetKeyDown(KeyCode.P) || !hasBeenDiscovered) return;
             // Don't change to foreach or whatever otherwise, _mobs while be modified during the loop :/
             for (int i = 0; i < _mobs.Count; i = 0)
-                _mobs[i].GetAttacked(10000);
+                _mobs[i].GetAttacked(int.MaxValue);
         }
         
         [ServerCallback] private void OnTriggerEnter2D(Collider2D other) {
