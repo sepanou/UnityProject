@@ -7,10 +7,10 @@ namespace Behaviour {
 	}
 	
 	public abstract class Behaviour<TEntity>: IBehaviour where TEntity: Entity.Entity {
-		protected readonly TEntity Entity;
+		public readonly TEntity entity;
 
 		protected Behaviour(TEntity entity) {
-			Entity = entity;
+			this.entity = entity;
 		}
 
 		public abstract Vector2 NextDirection();
@@ -21,10 +21,10 @@ namespace Behaviour {
 	}
 	
 	public abstract class TargetedBehaviour<TEntity, TTargeter>: Behaviour<TEntity> where TEntity: Entity.Entity where TTargeter: ITargeter {
-		protected readonly TTargeter Targeter;
+		public readonly TTargeter targeter;
 
 		protected TargetedBehaviour(TEntity entity, TTargeter targeter): base(entity) {
-			Targeter = targeter;
+			this.targeter = targeter;
 		}
 	}
 	

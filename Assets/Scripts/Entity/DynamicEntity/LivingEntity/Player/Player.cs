@@ -60,9 +60,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private ContainerInventory _containerInventory;
 		private SellerInventory _sellerInventory;
 		private PlayerUI _playerUI;
-		private Weapon.Weapon Weapon => _weapons[_weaponId]; 
-		
-		public Collider2D Collider2D { get; private set; }
+		private Weapon.Weapon Weapon => _weapons[_weaponId];
 		
 		public int Kibrient {
 			get => _kibrient;
@@ -201,7 +199,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		private new void Instantiate() {
 			DontDestroyOnLoad(this);
-			Collider2D = GetComponent<Collider2D>();
 			base.Instantiate();
 		}
 

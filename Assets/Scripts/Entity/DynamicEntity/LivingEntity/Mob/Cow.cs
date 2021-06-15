@@ -1,17 +1,15 @@
 ﻿using Behaviour;
-using Mirror;
-using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public class Cow: Mob {
-		protected override void RpcDying() {
-			NetworkServer.Destroy(gameObject);
-			Debug.Log("Imma head out :(");
-		}
+		public override int cooldown { get; protected set; } = 60;
+		public override int atk { get; protected set; } = 20;
+		private const float MovMinDist = 0.25f;
+		private const float MovMaxDist = 16;
 
 		private void Start() {
 			Instantiate();
-			Behaviour = new NearestPlayerStraightFollower(this);
+			behaviour = new DistanceNearestPlayerStraightFollower(this, MovMinDist, MovMaxDist);
 		}
 	}
 }

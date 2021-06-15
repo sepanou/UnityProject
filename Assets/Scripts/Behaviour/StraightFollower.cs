@@ -7,8 +7,8 @@ namespace Behaviour {
 		public StraightFollower(Entity.Entity source, TTargeter targeter): base(source, targeter) { }
 		
 		public override Vector2 NextDirection() {
-			Entity.Entity target = Targeter.AcquireTarget();
-			return target is null ? Vector2.zero : target.Position - Entity.Position;
+			Entity.Entity target = targeter.AcquireTarget();
+			return target is null ? Vector2.zero : target.Position - entity.Position;
 		}
 	}
 	

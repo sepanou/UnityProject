@@ -3,23 +3,23 @@ using Entity.DynamicEntity.LivingEntity.Player;
 
 namespace Behaviour.Targeter {
 	public class NearestTargeter<TEntity, TTarget>: ITargeter where TEntity: Entity.Entity where TTarget: Entity.Entity {
-		protected readonly TEntity Entity;
-		protected readonly Func<TEntity, TTarget, TTarget, bool> IsNearer;
+		public readonly TEntity entity;
+		public TTarget target { get; private set; }
+		public readonly Func<TEntity, TTarget, TTarget, bool> isNearer;
 		
 		public NearestTargeter(TEntity entity, Func<TEntity, TTarget, TTarget, bool> isNearer = null) {
-			Entity = entity;
-			IsNearer = isNearer
-				?? ((source, nearest, other) => !(nearest is null) && (source.Position - nearest.Position).sqrMagnitude <= (source.Position - other.Position).sqrMagnitude);
+			this.entity = entity;
+			this.isNearer = isNearer ?? ((source, nearest, other) => !(nearest is null) && (source.Position - nearest.Position).sqrMagnitude <= (source.Position - other.Position).sqrMagnitude);
 		}
 
 		public Entity.Entity AcquireTarget() {
 			TTarget[] entities = UnityEngine.Object.FindObjectsOfType<TTarget>();
-			TTarget nearest = null;
-			foreach (TTarget entity in entities) {
-				if (IsNearer(Entity, nearest, entity)) continue;
-				nearest = entity;
+			target = null;
+			foreach (TTarget targetEntity in entities) {
+				if (isNearer(entity, target, targetEntity)) continue;
+				target = targetEntity;
 			}
-			return nearest;
+			return target;
 		}
 	}
 	
