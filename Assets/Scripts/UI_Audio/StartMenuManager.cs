@@ -183,7 +183,7 @@ namespace UI_Audio {
 				manager.StopServer();
 		}
 
-		public void OpenCreditsLink() => Application.OpenURL("https://github.com/sepanou/UnityProject");
+		public void OpenCreditsLink() => Application.OpenURL("https://sepanou.github.io/credits.html");
 
 		public void QuitApplication() {
 			StopServerAndOrClient();
