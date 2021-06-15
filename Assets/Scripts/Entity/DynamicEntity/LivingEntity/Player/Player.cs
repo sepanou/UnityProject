@@ -438,7 +438,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[Server] private void SpectatorPlayer(LivingEntity living) {
 			_weaponId = -1;
 			Health = 0;
-			Position = Vector2.zero;
+			Position = new Vector2(1000, 1000);
 		}
 
 		[ClientRpc] protected override void RpcDying() {

@@ -45,7 +45,6 @@ public class CustomNetworkManager: NetworkManager {
 		if (!(entity is Player player) || LocalGameManager.Instance.LocalState == LocalGameStates.Hub)
 			return;
 		AlivePlayers.Remove(player);
-		Debug.Log(AlivePlayers.Count);
 		if (AlivePlayers.Count != 0) return;
 		// Everybody is dead :(
 		RemoveSpawnedObjects();
