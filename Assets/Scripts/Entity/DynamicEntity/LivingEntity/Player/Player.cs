@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using DataBanks;
 using Entity.Collectibles;
 using Mirror;
@@ -141,7 +143,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			SyncWeaponChanged(_weaponId, newWeaponId);
 			_weaponId = newWeaponId;
 		}
-
+		
 		public override void OnStartClient() {
 			base.OnStartClient();
 			
@@ -180,6 +182,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			OnHealthChange.AddListener(PlayerInfoManager.UpdatePlayerHealth);
 		}
 
+		public override void OnStopClient() {
+			if (!isLocalPlayer && Manager.WorldCameraHolder == this) {
+				Manager.worldCamera.transform.parent = transform.parent;
+				Manager.WorldCameraHolder = null;
+			}
+			base.OnStopClient();
+		}
+
 		public override void OnStartServer() {
 			base.OnStartServer();
 			
@@ -189,6 +199,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			}
 			
 			Instantiate();
+			OnEntityDie.AddListener(SpectatorPlayer);
 			OnPlayerClassChange.AddListener(ChangeAnimator);
 			SwitchClass(playerClass);
 			if (isLocalPlayer) _kibrient = 500;
@@ -417,39 +428,42 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					break;
 			}
 		}
+		
+		private IEnumerator DeathAnimation() {
+			Animator.SetTrigger(IsDeadId);
+			yield return new WaitForSeconds(0.3f);
+			SetSpriteRendererVisible(false);
+		}
+
+		[Server] private void SpectatorPlayer(LivingEntity living) {
+			_weaponId = -1;
+			Health = 0;
+			Position = Vector2.zero;
+		}
 
 		[ClientRpc] protected override void RpcDying() {
 			Debug.Log("Player " + playerName + " is dead !");
+			StartCoroutine(DeathAnimation());
 			if (!isLocalPlayer) return;
 			InventoryManager.CloseAllInventories();
-			CmdSpectateNextPlayer(0);
+			SpectateNextPlayer();
 			PlayerInfoManager.SetInfoText(LanguageManager["#switch-view"]);
 			PlayerInfoManager.OpenInfoBox();
 		}
 
-		[TargetRpc] private void TargetSpectate(NetworkConnection target, Player toSpectate) {
-			if (!toSpectate) return;
-			Manager.SetMainCameraToPlayer(toSpectate, true);
-			PlayerInfoManager.SetInfoText(LanguageManager["#teleport-to"] + toSpectate.name + ".");
+		private void SpectateNextPlayer() {
+			List<Player> players = FindObjectsOfType<Player>().ToList();
+			Player lastSpectating = Manager.WorldCameraHolder;
+			if (players.Count <= 1 || (players.Count <= 2 && lastSpectating != this))
+				return;
+			Player toLocate = players.Find(player => player != this && player != lastSpectating);
+			Manager.SetMainCameraToPlayer(toLocate);
+			PlayerInfoManager.SetInfoText(LanguageManager["#teleport-to"] + toLocate.playerName + ".");
 			PlayerInfoManager.OpenInfoBox();
-			StartCoroutine(PlayerInfoManager.DelayInfoBoxClosure(5)); // Auto close the info box
+			StartCoroutine(PlayerInfoManager.DelayInfoBoxClosure(5));
 		}
 
-		[Command] private void CmdSpectateNextPlayer(uint idSpectating) {
-			CustomNetworkManager netManager = CustomNetworkManager.Instance;
-			if (netManager.PlayerPrefabs.Count == 1) return;
-			int start = idSpectating != 0 ? netManager.PlayerPrefabs.FindIndex(p => p.netId == idSpectating) + 1 : 1;
-			
-			while (netManager.PlayerPrefabs[start % netManager.PlayerPrefabs.Count] == this)
-				start++;
-			
-			Player toSpectate = netManager.PlayerPrefabs[start % netManager.PlayerPrefabs.Count];
-			if (idSpectating != toSpectate.netId)
-				TargetSpectate(connectionToClient, toSpectate);
-		}
-
-		[Command]
-		private void CmdSetPseudo(string pseudo) {
+		[Command] private void CmdSetPseudo(string pseudo) {
 			playerName = pseudo;
 			_orchid = FileStorage.GetPlayerOrchid(pseudo);
 		}
@@ -484,7 +498,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			PlayerInfoManager.OpenInfoBox();
 			StartCoroutine(PlayerInfoManager.DelayInfoBoxClosure(5)); // Auto close the info box
 		}
-		
+
 
 		[ClientCallback] private void FixedUpdate() {
 			// For physics
@@ -506,7 +520,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			
 			CmdMove(horizontal, vertical);
 		}
-
+		
 		[ClientCallback] private void Update() {
 			// For inputs
 			if (!isLocalPlayer || !NetworkClient.ready)
@@ -521,8 +535,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			}
 			
 			if (!IsAlive) {
-				if (InputManager.GetKeyDown("SwitchWeapon") && _mainCamera.transform.parent.TryGetComponent(out Player spectate))
-					CmdSpectateNextPlayer(spectate.netId);
+				if (InputManager.GetKeyDown("SwitchWeapon"))
+					SpectateNextPlayer();
 				return;
 			}
 
