@@ -5923,7 +5923,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.25
+  m_fontSize: 20.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10194,7 +10194,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.25
+  m_fontSize: 22.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -59545,7 +59545,6 @@ MonoBehaviour:
   - {fileID: 3505082931880663599, guid: 05ce2b265c6ffec43a12b99efde3ede6, type: 3}
   - {fileID: 2670758541171800637, guid: e76075de44ddca24a99a7b36ae1c0398, type: 3}
   - {fileID: 6108967529495489962, guid: 70f284d083e5e85429437f7c3066fe4c, type: 3}
-  - {fileID: 1882545377149301592, guid: a7c12a540bbfc5e439e178af2569ad74, type: 3}
   - {fileID: 2198074381090187270, guid: f253105defb28994f8f1ab558d129c39, type: 3}
   - {fileID: 3931145845793517927, guid: f1790528367cd12448fa82f4c50c7d30, type: 3}
   - {fileID: 1087747426597687567, guid: fd6892582960c4644bcaf1e8d18ab1f2, type: 3}
@@ -59583,6 +59582,12 @@ MonoBehaviour:
   - {fileID: 589641168408172694, guid: 8d738464ab389d64d88e438cdb5623a2, type: 3}
   - {fileID: 2514552040777696733, guid: 4aea074adae2dd44698500b28c680468, type: 3}
   - {fileID: 1891248537526793985, guid: b37df23ef65154447912e2a56afea529, type: 3}
+  - {fileID: 2240483566647815409, guid: df3346988f8f18441bf5917ff001c826, type: 3}
+  - {fileID: 434579038753847930, guid: 469050cb43e2e80418676e8c0e1380c0, type: 3}
+  - {fileID: 1882545377149301592, guid: a7c12a540bbfc5e439e178af2569ad74, type: 3}
+  - {fileID: 8544300360355896215, guid: 11217b883a2f47646806d763e677c8e9, type: 3}
+  - {fileID: 1498433533527175071, guid: 2a0627d394dc469448722475f3847748, type: 3}
+  - {fileID: 4076060016518188907, guid: 693db6aa6019a7f4dbe08e2d8dbeda58, type: 3}
   sceneAnimator: {fileID: 807742234}
   forestScene: Assets/Scenes/Level1Creation.unity
   forestSpawnPoints:
@@ -84674,7 +84679,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
+  m_fontSize: 20.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -88395,7 +88400,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
+  m_fontSize: 20.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -98858,6 +98863,7 @@ GameObject:
   - component: {fileID: 1666216214}
   - component: {fileID: 1666216216}
   - component: {fileID: 1666216215}
+  - component: {fileID: 1666216217}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -98881,8 +98887,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -2750}
-  m_SizeDelta: {x: 0, y: 5500}
+  m_AnchoredPosition: {x: 0, y: -1000}
+  m_SizeDelta: {x: 0, y: 2000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1666216215
 MonoBehaviour:
@@ -98903,11 +98909,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Un jeu par :\nS\xE9panou \n-------------\nMembres  :\nLO Jean-Pierre -
-    TCHEKACHEV David - MICHOT Maxence - MICHALON Lo\xEFc\n-------------\nRemerciements
-    sp\xE9ciaux :\nSprites & Bo\xEEtier : Timoth\xE9\nMusiques : Madgenta\n-------------\nN'h\xE9sitez
-    pas \xE0 cliquer sur \"Tous les cr\xE9dits\" pour la liste compl\xE8te\n\nMerci
-    d'avoir jou\xE9 !"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5a99ab5873449334db9be090c351d396, type: 2}
   m_sharedMaterial: {fileID: 7164874370238670303, guid: 5a99ab5873449334db9be090c351d396,
@@ -98971,7 +98973,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: -0.33363733, z: 0, w: -1.6994807}
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -98985,6 +98987,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1666216213}
   m_CullTransparentMesh: 0
+--- !u!114 &1666216217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666216213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77b35aec710b94441b1cc4f5b972308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fieldKey: '#credits'
+  formatText: 
+  upperCase: 0
+  lowerCase: 0
 --- !u!1001 &1667060384
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -106960,7 +106978,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 997788940}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.115869276
+  m_Size: 0.26941186
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -109436,7 +109454,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
+  m_fontSize: 20.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -116207,7 +116225,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 143.45
+  m_fontSize: 146.75
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -116521,7 +116539,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51.6
+  m_fontSize: 50.35
   m_fontSizeBase: 148
   m_fontWeight: 400
   m_enableAutoSizing: 1

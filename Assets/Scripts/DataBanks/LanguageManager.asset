@@ -308,3 +308,18 @@ MonoBehaviour:
     - fieldKey: '#respawn'
       translation: You've been taken back to the spawn because you cannot change
         class while the door to Paimpont forest is opened!
+    - fieldKey: '#credits'
+      translation: "A videogame by:\nS\xE9panou\n-------------\nMembers:\nLO Jean-Pierre
+        - TCHEKACHEV David - MICHOT Maxence - MICHALON Lo\xEFc\n-------------\nSpecial
+        thanks:\nSprites & Game box - Timoth\xE9\nMusics - Madgenta\n-------------\nMontains,
+        waterfalls & rivers - LPC Asset Guide\nCC BY-SA 3.0 - GPL 3.0\nhttps://lpc.opengameart.org/static/lpc-style-guide/assets.html\n-------------\nFarming
+        tileset - LPC submission by Daniel Eddeland\nCC-BY-SA 3.0 - GPL 3.0\nhttps://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements\n-------------\nUI
+        Icons - Dungeon Crawl Soup - CC0\nhttps://opengameart.org/content/dungeon-crawl-32x32-tiles\nhttps://opengameart.org/content/dungeon-crawl-32x32-tiles-supplemental\n------------\nClass
+        selector NPCs - LPC submission by Stephen \"Redshrike\" Challener\nCC-BY
+        3.0 CC-BY-SA 3.0 OGA-BY 3.0\nhttps://opengameart.org/content/four-characters-my-lpc-entries\n-------------\nBat
+        - bagzie\nOGA-BY 3.0\nhttps://opengameart.org/content/bat-sprite\n-------------\nWolf
+        - Stephen \"Redshrike\" Challener (graphic artist) & William Thompsonj (contributor)\nCC-BY
+        4.0 CC-BY 3.0 GPL 3.0 GPL 2.0 OGA-BY 3.0 GPL 3.0\nhttps://opengameart.org/content/lpc-wolf-animation\n-------------\nHub
+        & Forest tileset - Cainos - Pixel Art Top Down - Basic\nhttps://assetstore.unity.com/packages/2d/environments/pixel-art-top-down-basic-187605\n-------------\n\nDo
+        not hesitate to click on \"All credits\" to display the complete acknowledgements
+        including those related to LPC characters.\n\nThanks for playing!"

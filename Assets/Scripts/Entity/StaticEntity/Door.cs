@@ -25,8 +25,8 @@ namespace Entity.StaticEntity {
 
 		public override void OnStartServer() {
 			base.OnStartServer();
-			Player.OnRemotePlayerClassChange += CheckNotOpened;
-			Player.OnLocalPlayerClassChange += CheckNotOpened;
+			Player.OnRemotePlayerClassChange.AddListener(CheckNotOpened);
+			Player.OnLocalPlayerClassChange.AddListener(CheckNotOpened);
 		}
 
 		[Server]

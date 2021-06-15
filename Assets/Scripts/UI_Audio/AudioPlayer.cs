@@ -16,6 +16,7 @@ namespace UI_Audio {
 		private static AudioSource _currentMusic;
 
 		[SerializeField] private string[] soundsKeys;
+		[SerializeField] private bool playOnAwake;
 		private readonly List<Sound> _sounds = new List<Sound>();
 		private bool _adjustingVolume;
 		private AudioListener _listener;
@@ -63,10 +64,11 @@ namespace UI_Audio {
 		}
 		
 		public void Start() {
-			_adjustingVolume = false;
 			_listener = LocalGameManager.Instance.worldCamera.gameObject.GetComponent<AudioListener>();
 			foreach (string soundKey in soundsKeys)
 				AddSound(soundKey);
+			if (playOnAwake)
+				_sounds.ForEach(sound => PlaySound(sound.key));
 		}
 
 		private bool ContainsSound(string key, out Sound sound) {
@@ -100,7 +102,7 @@ namespace UI_Audio {
 		}
 		
 		public void AddSound(string key) {
-			if (!AudioManager || !ContainsSound(key, out Sound _) || !AudioManager.TryGetSound(key, out Sound sound)) return;
+			if (!AudioManager || ContainsSound(key, out Sound _) || !AudioManager.TryGetSound(key, out Sound sound)) return;
 			AudioSource source = gameObject.AddComponent<AudioSource>();
 			sound.SetAudioSource(source);
 			sound.InitSource();
@@ -132,8 +134,7 @@ namespace UI_Audio {
 				source.volume = 0;
 				return;
 			}
-			normalizedGap = 1 - normalizedGap;
-			float attenuation = normalizedGap / (1 + normalizedGap * AttenuationConst);
+			float attenuation = (1 - normalizedGap) / (1 + normalizedGap * AttenuationConst);
 			source.volume = attenuation * sound.maxVolume;
 		}
 

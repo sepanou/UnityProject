@@ -82,7 +82,7 @@ namespace UI_Audio {
 			charmDescription.gameObject.SetActive(false);
 			
 			// Player Class UI
-			Player.OnLocalPlayerClassChange += ChangeLocalPlayerClassInfo;
+			Player.OnLocalPlayerClassChange.AddListener(ChangeLocalPlayerClassInfo);
 			UpdateCurrentWeapon(null);
 			
 			// Display Key

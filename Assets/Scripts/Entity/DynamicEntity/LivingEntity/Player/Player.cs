@@ -10,16 +10,13 @@ using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Player {
 	public enum PlayerClasses: byte { Mage, Warrior, Archer }
-	
+
 	public class Player: LivingEntity {
 		private const int MaxItemInInventory = 20;
 		private const int PassiveEnergyRegen = 2;
-		public static event LocalPlayerClassChanged OnLocalPlayerClassChange;
-		public static event RemotePlayerClassChanged OnRemotePlayerClassChange;
-		public delegate void LocalPlayerClassChanged(ClassData data);
-		public delegate void RemotePlayerClassChanged(ClassData data);
-		public event EnergyChanged OnEnergyChange;
-		public delegate void EnergyChanged(float ratio);
+		public static readonly CustomEvent<ClassData> OnRemotePlayerClassChange = new CustomEvent<ClassData>();
+		public static readonly CustomEvent<ClassData> OnLocalPlayerClassChange = new CustomEvent<ClassData>();
+		public readonly CustomEvent<float> OnEnergyChange = new CustomEvent<float>();
 
 		[Header("Player Fields")]
 		[SerializeField] private PlayerClassData classData;
@@ -149,6 +146,11 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		}
 
 		private void Start() {
+			if (isServer && Manager.LocalState != LocalGameStates.Hub) {
+				connectionToClient.Disconnect();
+				return;
+			}
+			
 			DontDestroyOnLoad(this);
 			Collider2D = GetComponent<Collider2D>();
 			Instantiate();
@@ -163,15 +165,15 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (isClient) _weapons.Callback += OnWeaponsUpdated;
 			
 			if (!isLocalPlayer) {
-				OnRemotePlayerClassChange += ChangeAnimator;
+				OnRemotePlayerClassChange.AddListener(ChangeAnimator);
 				_playerUI = (PlayerUI) entityUI;
 				if (!_playerUI) return;
 				_playerUI.SetNameTagField(playerName);
-				OnEnergyChange += _playerUI.SetEnergyBarValue;
+				OnEnergyChange.AddListener(_playerUI.SetEnergyBarValue);
 				SyncEnergyChanged(_energy, _energy);
 			}
 			else {
-				OnLocalPlayerClassChange += ChangeAnimator;
+				OnLocalPlayerClassChange.AddListener(ChangeAnimator);
 				_inventory = InventoryManager.playerInventory;
 				_mainCamera = Manager.SetMainCameraToPlayer(this);
 				_charms.Callback += OnCharmsUpdatedClient;
@@ -179,8 +181,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				entityUI.Destroy();
 				Manager.LocalPlayer = this;
 				PlayerInfoManager.UpdateMoneyAmount(this);
-				OnEnergyChange += PlayerInfoManager.UpdatePlayerPower;
-				OnHealthChange += PlayerInfoManager.UpdatePlayerHealth;
+				OnEnergyChange.AddListener(PlayerInfoManager.UpdatePlayerPower);
+				OnHealthChange.AddListener(PlayerInfoManager.UpdatePlayerHealth);
 			}
 			
 			SwitchClass(playerClass);

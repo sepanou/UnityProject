@@ -7,8 +7,8 @@ namespace UI_Audio.Inventories {
         [SerializeField] private TMP_Text orchidDisplay;
         
         private new void Start() {
-            Dialog = new[] {"#orchidologist-stop"};
             base.Start();
+            Dialog = new[] {"#orchidologist-stop"};
         }
 
         public override void DisplayPrice(IInventoryItem item) 

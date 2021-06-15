@@ -8,11 +8,13 @@ using Mirror;
 using UI_Audio;
 using UI_Audio.Inventories;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Entity {
 	public interface IInteractiveEntity {
 		[Server] void Interact(Player player);
 	}
+	[Serializable] public class CustomEvent<T> : UnityEvent<T> { } // Necessary class !
 	
 	public abstract class Entity: NetworkBehaviour, INetworkObject {
 		[SerializeField] protected SpriteRenderer spriteRenderer;

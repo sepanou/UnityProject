@@ -11,8 +11,11 @@ GameObject:
   - component: {fileID: 3573771276175063671}
   - component: {fileID: 5215461214401745811}
   - component: {fileID: 8494823918574344849}
+  - component: {fileID: 3769502420860260534}
   - component: {fileID: 8137456381494979122}
   - component: {fileID: 7701030294266730648}
+  - component: {fileID: 1165635106654535428}
+  - component: {fileID: 5272519618421089043}
   m_Layer: 0
   m_Name: Khrom
   m_TagString: Untagged
@@ -95,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 1498433533527175071}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e5e1f959779d5dc45a0ab3815f2d8bf6, type: 2}
+  m_Controller: {fileID: 22100000, guid: 06d2109488dc6d848b79f7c22bf5531a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -104,6 +107,23 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3769502420860260534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498433533527175071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
 --- !u!50 &8137456381494979122
 Rigidbody2D:
   serializedVersion: 4
@@ -151,3 +171,46 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2228662, y: 2.876011}
   m_EdgeRadius: 0
+--- !u!114 &1165635106654535428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498433533527175071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5cd4e6d962140d088cac42bf9d09166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  spriteRenderer: {fileID: 5215461214401745811}
+  interactionCollider: {fileID: 0}
+  speed: 2.5
+  entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
+    type: 3}
+  nameTag: Great Khrom
+  maxHealth: 100
+  advancedMoves: 0
+--- !u!114 &5272519618421089043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498433533527175071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  localPositionSensitivity: 0.01
+  localRotationSensitivity: 0.01
+  localScaleSensitivity: 0.01
+  compressRotation: 0
+  interpolateScale: 1
+  syncScale: 1
