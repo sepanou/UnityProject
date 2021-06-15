@@ -323,3 +323,7 @@ MonoBehaviour:
         & Forest tileset - Cainos - Pixel Art Top Down - Basic\nhttps://assetstore.unity.com/packages/2d/environments/pixel-art-top-down-basic-187605\n-------------\n\nDo
         not hesitate to click on \"All credits\" to display the complete acknowledgements
         including those related to LPC characters.\n\nThanks for playing!"
+    - fieldKey: '#switch-view'
+      translation: You can hit the 'Switch Weapon' key to switch between players.
+    - fieldKey: '#teleport-to'
+      translation: 'You are spectating '

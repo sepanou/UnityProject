@@ -23,13 +23,15 @@ public class CustomNetworkManager: NetworkManager {
 	[Header("Forest Scene")]
 	[SerializeField] [Scene] private string forestScene;
 	[SerializeField] private Vector3[] forestSpawnPoints;
-
+	
 	public readonly List<Player> PlayerPrefabs = new List<Player>();
+	public readonly List<Player> AlivePlayers = new List<Player>();
 	private Coroutine _sceneTransitionCoroutine;
 
 	public override void Start() {
 		base.Start();
 		Instance = this;
+		
 	}
 
 	private void SetPlayerSpawnPoints(IReadOnlyList<Vector3> spawnPoints) {
@@ -38,9 +40,12 @@ public class CustomNetworkManager: NetworkManager {
 	}
 
 	private void CheckAllPlayersAlive(LivingEntity entity) {
-		if (!(entity is Player _) || LocalGameManager.Instance.LocalState == LocalGameStates.Hub)
+		if (!(entity is Player player) || LocalGameManager.Instance.LocalState == LocalGameStates.Hub)
 			return;
-		if (!PlayerPrefabs.TrueForAll(p => !p.IsAlive)) return;
+		AlivePlayers.Remove(player);
+		
+		if (AlivePlayers.Count != 0) return;
+		// Everybody is dead :(
 		RemoveSpawnedObjects();
 		ServerChangeScene(onlineScene);
 		PlayerPrefabs.ForEach(p => p.TargetPrintInfoMessage(p.connectionToClient, "You have not survived Paimpont Forest!"));
@@ -58,6 +63,7 @@ public class CustomNetworkManager: NetworkManager {
 			PlayerPrefabs.Count == 1 ? PlayerClasses.Mage : PlayerClasses.Warrior;
 		p.OnEntityDie.AddListener(CheckAllPlayersAlive);
 		PlayerPrefabs.Add(p);
+		AlivePlayers.Add(p);
 	}
 
 	private void RemoveSpawnedObjects() {
@@ -81,6 +87,7 @@ public class CustomNetworkManager: NetworkManager {
 		} else if (networkSceneName == hubScene) {
 			SetPlayerSpawnPoints(hubSpawnPoints);
 			PlayerPrefabs.ForEach(p => p.ResetPlayer());
+			PlayerPrefabs.ForEach(p => AlivePlayers.Add(p));
 			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Hub);
 		}
 		base.OnServerSceneChanged(sceneName);

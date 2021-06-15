@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using DataBanks;
 using Entity.DynamicEntity.LivingEntity.Player;
 using UI_Audio;
@@ -103,12 +104,31 @@ public class LocalGameManager: MonoBehaviour {
 		}
 	}
 
-	public Camera SetMainCameraToPlayer(Player player) {
+	public Camera SetMainCameraToPlayer(Player player, bool smoothMove = false) {
 		Transform camTransform = worldCamera.transform;
+		Transform playerTransform = player.transform;
 		worldCamera.gameObject.SetActive(true);
-		camTransform.parent = player.transform;
-		camTransform.localPosition = new Vector3(0, 0, -10);
+		camTransform.SetParent(playerTransform, smoothMove);
+		
+		if (smoothMove) {
+			StopAllCoroutines();
+			StartCoroutine(SmoothMove(camTransform, playerTransform, -10));
+		} else camTransform.localPosition = new Vector3(0, 0, -10);
+		
 		return worldCamera;
+	}
+
+	private IEnumerator SmoothMove(Transform toMove, Transform toGo, int zAxis) {
+		Vector2 position, destination;
+		
+		do {
+			position = toMove.position;
+			destination = toGo.position;
+			toMove.position = Vector3.MoveTowards(position, destination, 0.25f) + Vector3.forward * zAxis;
+			yield return null;
+		} while (Vector2.Distance(position, destination) > 0.1f);
+		
+		toMove.localPosition = new Vector3(0, 0, zAxis);
 	}
 }
 
