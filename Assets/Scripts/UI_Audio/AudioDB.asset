@@ -85,7 +85,7 @@ MonoBehaviour:
     key: shotArrow
   - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
       type: 2}
-    clip: {fileID: 8300000, guid: a21f196030b1a38429fb48a2ab5ab6b2, type: 3}
+    clip: {fileID: 8300000, guid: 5d4b09e117e95fa49910e12f1cd5b9ea, type: 3}
     maxVolume: 0.1
     maxDistance: 10
     loop: 0
@@ -104,3 +104,17 @@ MonoBehaviour:
     maxDistance: 10
     loop: 0
     key: magicSpecialAttack
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: 260d1c73c1736054bb9c0a94b9f46ca7, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 0
+    key: treesDoorsRaising
+  - mixerGroup: {fileID: 3227888272782583923, guid: 484bce831452a6f43a8b5f6875f947d8,
+      type: 2}
+    clip: {fileID: 8300000, guid: 927b1ce201c79984b91d0dd5d4451e63, type: 3}
+    maxVolume: 0.1
+    maxDistance: 10
+    loop: 0
+    key: treesDoorsLowering
