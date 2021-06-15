@@ -1,12 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
+using UnityEngine.Events;
 
 public interface INetworkObject {
     NetworkIdentity GetNetworkIdentity();
     string GetName();
 }
+
+[Serializable] public class CustomEvent<T, TU, TV> : UnityEvent<T, TU, TV> { } // Necessary class !
 
 public class CustomSyncList<T> : SyncList<uint>, IEnumerable<T> where T : INetworkObject {
 
@@ -20,9 +24,8 @@ public class CustomSyncList<T> : SyncList<uint>, IEnumerable<T> where T : INetwo
             Index = index;
         }
     }
-    
-    public delegate void CustomSyncListChanged(Operation op, int index, T item);
-    public new event CustomSyncListChanged Callback;
+
+    public new readonly CustomEvent<Operation, int, T> Callback = new CustomEvent<Operation, int, T>();
     private const float DelayForNetworkSpawnInSeconds = 1f;
     private const int ChecksNbrForNetworkSpawn = 10;
 
@@ -84,7 +87,11 @@ public class CustomSyncList<T> : SyncList<uint>, IEnumerable<T> where T : INetwo
         return base.Remove(element.GetNetworkIdentity().netId);
     }
 
-    public new void Clear() => base.Clear();
+    public new void Clear() {
+        NetworkManager.singleton.StopAllCoroutines();
+        Callback?.Invoke(Operation.OP_CLEAR, -1, default);
+        base.Clear();
+    }
     
     public bool Contains(T element) => IsValid(element) && base.Contains(element.GetNetworkIdentity().netId);
 
