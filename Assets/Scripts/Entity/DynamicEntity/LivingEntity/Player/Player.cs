@@ -421,11 +421,18 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[ClientRpc] protected override void RpcDying() {
 			Debug.Log("Player " + playerName + " is dead !");
 			if (!isLocalPlayer) return;
+			InventoryManager.CloseAllInventories();
 			CmdSpectateNextPlayer(0);
+			PlayerInfoManager.SetInfoText(LanguageManager["#switch-view"]);
+			PlayerInfoManager.OpenInfoBox();
 		}
 
 		[TargetRpc] private void TargetSpectate(NetworkConnection target, Player toSpectate) {
-			if (toSpectate) Manager.SetMainCameraToPlayer(toSpectate);
+			if (!toSpectate) return;
+			Manager.SetMainCameraToPlayer(toSpectate, true);
+			PlayerInfoManager.SetInfoText(LanguageManager["#teleport-to"] + toSpectate.name + ".");
+			PlayerInfoManager.OpenInfoBox();
+			StartCoroutine(PlayerInfoManager.DelayInfoBoxClosure(5)); // Auto close the info box
 		}
 
 		[Command] private void CmdSpectateNextPlayer(uint idSpectating) {
@@ -483,12 +490,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen || !NetworkClient.ready)
 				return;
 
-			if (!IsAlive) {
-				if (InputManager.GetKeyDown("SwitchWeapon") && _mainCamera.transform.parent.TryGetComponent(out Player spectate))
-					CmdSpectateNextPlayer(spectate.netId);
-				return;
-			}
-			
 			int horizontal = 0;
 			int vertical = 0;
 			if (InputManager.GetKeyPressed("Forward"))
@@ -513,6 +514,12 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					Manager.menuSettingsManager.OpenMenu();
 				else
 					Manager.menuSettingsManager.CloseMenu();
+				return;
+			}
+			
+			if (!IsAlive) {
+				if (InputManager.GetKeyDown("SwitchWeapon") && _mainCamera.transform.parent.TryGetComponent(out Player spectate))
+					CmdSpectateNextPlayer(spectate.netId);
 				return;
 			}
 

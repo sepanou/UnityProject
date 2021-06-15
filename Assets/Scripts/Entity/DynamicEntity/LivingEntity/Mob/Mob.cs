@@ -28,8 +28,17 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 		}
 
 		protected virtual void Attack() {
-			if (!(behaviour is DistanceNearestPlayerStraightFollower distanceNearestPlayerStraightFollower)) return;
-			Player.Player target = distanceNearestPlayerStraightFollower.behaviour.targeter.target;
+			Player.Player target;
+			switch (behaviour) {
+				case DistanceNearestPlayerStraightFollower distanceNearestPlayerStraightFollower:
+					target = distanceNearestPlayerStraightFollower.behaviour.targeter.target;
+					break;
+				case EntityTargetedBehaviour<NearestPlayerTargeter> nearestPlayerBehaviour:
+					target = nearestPlayerBehaviour.targeter.target;
+					break;
+				default:
+					return;
+			}
 			Animator.SetBool(isAttacking, true);
 			target.GetAttacked(atk);
 			target.Animator.SetTrigger(hasBeenHit);
