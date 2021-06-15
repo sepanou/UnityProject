@@ -87,6 +87,7 @@ public class CustomNetworkManager: NetworkManager {
 		} else if (networkSceneName == hubScene) {
 			SetPlayerSpawnPoints(hubSpawnPoints);
 			PlayerPrefabs.ForEach(p => p.ResetPlayer());
+			AlivePlayers.Clear();
 			PlayerPrefabs.ForEach(p => AlivePlayers.Add(p));
 			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Hub);
 		}
