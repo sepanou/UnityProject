@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using Behaviour;
 using Behaviour.Targeter;
+using Entity.Collectibles;
 using Mirror;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
@@ -11,6 +11,18 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 		public abstract int cooldown { get; protected set; }
 		protected int cooldownCount = 0;
 		public abstract int atk { get; protected set; }
+
+		public override void OnStartServer() {
+			OnEntityDie.AddListener(OnDeath);
+			base.OnStartServer();
+		}
+
+		[Server] private void OnDeath(LivingEntity living) {
+			CustomNetworkManager.Instance.AlivePlayers.ForEach(p => p.AddHealth(5));
+			Kibry kibry = WeaponGenerator.GetRandomKibry();
+			kibry.transform.position = living.Position;
+			NetworkServer.Spawn(kibry.gameObject);
+		}
 
 		protected virtual bool CanAttack() {
 			Player.Player target = null;

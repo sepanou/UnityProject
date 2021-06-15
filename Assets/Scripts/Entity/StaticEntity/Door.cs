@@ -25,11 +25,10 @@ namespace Entity.StaticEntity {
 
 		public override void OnStartServer() {
 			base.OnStartServer();
-			CustomNetworkManager.Instance.PlayerPrefabs.ForEach(p => p.OnPlayerClassChange.AddListener(CheckNotOpened));
+			CustomNetworkManager.Instance.OnPlayerJoinServer.AddListener(p => CheckNotOpened(null));
 		}
 
-		[Server]
-		private void CheckNotOpened(ClassData data) {
+		[Server] private void CheckNotOpened(ClassData data) {
 			if (!isOpen) return; // If already closed, ignored
 
 			// Else, replace all players to their spawn points
@@ -79,7 +78,8 @@ namespace Entity.StaticEntity {
 					$"{player.playerName}" + LanguageManager["#player-itch"]);
 				return;
 			}
-
+			
+			networkManager.PlayerPrefabs.ForEach(p => p.OnPlayerClassChange.AddListener(CheckNotOpened));
 			doorCollider.enabled = isOpen;
 			RpcToggleSprite(isOpen);
 			isOpen = !isOpen;

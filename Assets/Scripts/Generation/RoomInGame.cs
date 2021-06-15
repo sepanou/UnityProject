@@ -172,7 +172,7 @@ namespace Generation{
         [ServerCallback] private void OnTriggerEnter2D(Collider2D other) {
             if (hasBeenDiscovered) return;
             
-            if (!CustomNetworkManager.Instance.PlayerPrefabs.TrueForAll(player =>
+            if (!CustomNetworkManager.Instance.AlivePlayers.TrueForAll(player =>
                 triggerZone.IsTouching(player.Collider2D)))
                 return;
             hasBeenDiscovered = true;

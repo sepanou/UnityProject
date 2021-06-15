@@ -27,7 +27,10 @@ namespace Entity.DynamicEntity.LivingEntity {
 		protected int DefaultMaxHealth { get; private set; }
 		[SyncVar(hook = nameof(SyncHealthChanged))] [SerializeField] protected int maxHealth;
 		[SyncVar(hook = nameof(SyncHealthChanged))] [ShowInInspector] protected int Health;
-		private void SyncHealthChanged(int o, int n) => OnHealthChange?.Invoke(Health / (float) maxHealth);
+		private void SyncHealthChanged(int o, int n) {
+			OnHealthChange?.Invoke(n / (float) maxHealth);
+			if (n <= 0) OnEntityDie?.Invoke(this);
+		}
 		
 		public readonly CustomEvent<LivingEntity> OnEntityDie = new CustomEvent<LivingEntity>();
 		public AnimationState LastAnimationState { get; private set; }
@@ -151,15 +154,22 @@ namespace Entity.DynamicEntity.LivingEntity {
 			RpcApplyAnimationStates((int) state, isIdle, velocity);
 		}
 
+		[Server] public void AddHealth(int amount) {
+			if (!IsAlive || amount <= 0) return;
+			Health = Math.Min(Health + amount, maxHealth);
+		}
+
 		[Server] public void GetAttacked(int atk) {
 			if (!IsAlive || atk == 0) return;
-			Health = Mathf.Max(Health - atk, 0);
+			Health = Math.Max(Health - atk, 0);
 			SyncHealthChanged(Health, Health);
 			AudioDB.PlayUISound("damageTaken");
 			StartCoroutine(GetAttackedAnimation());
 			if (IsAlive) return;
 			OnEntityDie?.Invoke(this);
+			Animator.SetTrigger(IsDeadId);
 			RpcDying();
+			_rigidBody.velocity = Vector2.zero;
 		}
 
 		private void OnDestroy() {

@@ -27,6 +27,7 @@ public class LocalGameManager: MonoBehaviour {
 
 	[Header("Cameras")] public Camera mouseAndParticlesCamera;
 	public Camera worldCamera; // = player's camera when he enters the game
+	[NonSerialized] public Player WorldCameraHolder;
 
 	[NonSerialized] public Player LocalPlayer;
 
@@ -90,6 +91,7 @@ public class LocalGameManager: MonoBehaviour {
 				playerInfoManager.HidePlayerClassUI();
 				break;
 			case LocalGameStates.Hub:
+				if (LocalPlayer) LocalPlayer.SetSpriteRendererVisible(true);
 				AudioDB.PlayMusic("HubMusic");
 				menuSettingsManager.CloseMenu();
 				startMenuManager.CloseStartMenu();
@@ -114,7 +116,8 @@ public class LocalGameManager: MonoBehaviour {
 			StopAllCoroutines();
 			StartCoroutine(SmoothMove(camTransform, playerTransform, -10));
 		} else camTransform.localPosition = new Vector3(0, 0, -10);
-		
+
+		WorldCameraHolder = player;
 		return worldCamera;
 	}
 
