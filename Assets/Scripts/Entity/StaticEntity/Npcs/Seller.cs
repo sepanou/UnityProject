@@ -25,17 +25,17 @@ namespace Entity.StaticEntity.Npcs {
         protected abstract void GenerateInventory();
 
         protected new void Instantiate() {
-            if (isClient) {
-                Inventory.ClearInventory();
-                Items.Callback.AddListener(ItemsOnChanged);
-                // SyncList callbacks are not invoked when the game object starts
-                // For late joining clients notably
-                foreach (IInventoryItem item in Items) {
-                    Inventory.TryAddItem(item);
-                    (item as Entity)?.SetSpriteRendererVisible(false);
-                }
-            }
             base.Instantiate();
+
+            if (!isClient) return;
+            Inventory.ClearInventory();
+            Items.Callback.AddListener(ItemsOnChanged);
+            // SyncList callbacks are not invoked when the game object starts
+            // For late joining clients notably
+            foreach (IInventoryItem item in Items) {
+                Inventory.TryAddItem(item);
+                (item as Entity)?.SetSpriteRendererVisible(false);
+            }
         }
 
         public override void OnStartServer() {

@@ -55,7 +55,7 @@ public class CustomNetworkManager: NetworkManager {
 		Player p = player.GetComponent<Player>();
 		// Can't put a switch because Unity won't accept it (source: Maxence), I know it sucks..
 		p.playerClass = PlayerPrefabs.Count == 0 ? PlayerClasses.Archer :
-			PlayerPrefabs.Count == 2 ? PlayerClasses.Mage : PlayerClasses.Warrior;
+			PlayerPrefabs.Count == 1 ? PlayerClasses.Mage : PlayerClasses.Warrior;
 		p.OnEntityDie.AddListener(CheckAllPlayersAlive);
 		PlayerPrefabs.Add(p);
 	}
@@ -95,20 +95,7 @@ public class CustomNetworkManager: NetworkManager {
 	}
 
 	public override void OnServerDisconnect(NetworkConnection conn) {
-		if (PlayerPrefabs.Count == 0) {
-			// When client+host mode -> called 2 times even though it is the same person
-			// => NullPointerException for the player
-			base.OnServerDisconnect(conn);
-			return;
-		}
-		
-		try {
-			Player player = PlayerPrefabs.Find(search => search.connectionToClient == conn);
-			FileStorage.SavePlayerOrchid(player.playerName, player.Orchid);
-			PlayerPrefabs.Remove(player);
-		}
-		catch (ArgumentNullException) {}
-		
+		PlayerPrefabs.Clear();
 		base.OnServerDisconnect(conn);
 	}
 
