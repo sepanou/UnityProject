@@ -1,5 +1,6 @@
 using System.Collections;
 using Entity.DynamicEntity.LivingEntity.Mob;
+using Entity.DynamicEntity.LivingEntity.Player;
 using Entity.DynamicEntity.Weapon.RangedWeapon;
 using Mirror;
 using UI_Audio;
@@ -9,9 +10,11 @@ namespace Entity.DynamicEntity.Projectile {
 	[RequireComponent(typeof(Rigidbody2D))]
 	public abstract class Projectile: DynamicEntity {
 		[SerializeField] private Vector2 projectileOrientation;
+		[SerializeField] private bool isPlayerProjectile;
 		
 		private const float LifeTime = 3f; // Maximum lifetime in seconds
 		private RangedWeapon _fromWeapon;
+		private Mob _fromMob;
 		private Rigidbody2D _rigidBody;
 		private Vector2 _facingDirection;
 		private bool _fromSpecialAttack;
@@ -28,11 +31,25 @@ namespace Entity.DynamicEntity.Projectile {
 			_rigidBody.velocity = _facingDirection * Speed;
 		}
 
-		private static Projectile BuildProjectile(Projectile projectilePrefab, RangedWeapon source, Transform launchPoint, bool special) {
+		private static Projectile BuildMobProjectile(Projectile projectilePrefab, Mob mob, Vector2 direction) {
+			Projectile projectile = Instantiate(projectilePrefab, mob.transform.position, Quaternion.Euler(
+				new Vector3(0, 0, Vector2.SignedAngle(projectilePrefab.projectileOrientation, direction))
+			));
+			projectile._fromWeapon = null;
+			projectile._fromMob = mob;
+			projectile._facingDirection = direction;
+			projectile._spawnTime = Time.fixedTime;
+			projectile.Instantiate();
+			SetSameRenderingParameters(mob, projectile);
+			return projectile;
+		}
+
+		private static Projectile BuildWeaponProjectile(Projectile projectilePrefab, RangedWeapon source, Transform launchPoint, bool special) {
 			Projectile projectile = Instantiate(projectilePrefab, launchPoint.position, Quaternion.Euler(
 				new Vector3(0, 0, Vector2.SignedAngle(projectilePrefab.projectileOrientation, source.orientation))
 			));
 			projectile._fromWeapon = source;
+			projectile._fromMob = null;
 			projectile._facingDirection = source.orientation;
 			projectile._fromSpecialAttack = special;
 			projectile.Speed *= source.rangeData.projectileSpeedMultiplier;
@@ -49,7 +66,7 @@ namespace Entity.DynamicEntity.Projectile {
 			for (int i = 0; i < source.rangeData.projectileNumber; i++) {
 				if (source is Bow _) AudioDB.PlayUISound("shotArrow");
 				else AudioDB.PlayUISound("magicSimpleAttack"); // Wizard
-				Projectile projectile = BuildProjectile(projectilePrefab, source, launchPoint, false);
+				Projectile projectile = BuildWeaponProjectile(projectilePrefab, source, launchPoint, false);
 				NetworkServer.Spawn(projectile.gameObject);
 				yield return new WaitForSeconds(delayPerSpawn);
 			}
@@ -63,7 +80,7 @@ namespace Entity.DynamicEntity.Projectile {
 			while (Time.time - startTime < duration) {
 				if (source is Bow _) AudioDB.PlayUISound("shotArrow");
 				else AudioDB.PlayUISound("magicSpecialAttack"); // Wizard
-				Projectile projectile = BuildProjectile(projectilePrefab, source, launchPoint, true);
+				Projectile projectile = BuildWeaponProjectile(projectilePrefab, source, launchPoint, true);
 				NetworkServer.Spawn(projectile.gameObject);
 				yield return new WaitForSeconds(0.2f);
 			}
@@ -79,8 +96,10 @@ namespace Entity.DynamicEntity.Projectile {
 		}
 		
 		[ServerCallback] private void OnCollisionEnter2D(Collision2D other) {
-			if (other.gameObject.TryGetComponent(out Mob mob))
+			if (_fromWeapon && other.gameObject.TryGetComponent(out Mob mob))
 				mob.GetAttacked(_fromWeapon.GetDamage(_fromSpecialAttack));
+			else if (_fromMob && other.gameObject.TryGetComponent(out Player player))
+				player.GetAttacked(_fromMob.atk);
 			NetworkServer.Destroy(gameObject);
 		}
 	}

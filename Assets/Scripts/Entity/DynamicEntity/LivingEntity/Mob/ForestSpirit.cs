@@ -1,5 +1,6 @@
 ﻿using Behaviour;
 using Behaviour.Targeter;
+using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public class ForestSpirit: Mob {
@@ -39,7 +40,6 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 				default:
 					return;
 			}
-			Animator.SetBool(isAttacking, true);
 			// TODO: spawn projectile
 		}
 	}

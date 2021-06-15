@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using Behaviour;
 using Behaviour.Targeter;
@@ -7,9 +8,6 @@ using Mirror;
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public abstract class Mob : LivingEntity {
 		protected IBehaviour behaviour = new Idle();
-		protected static readonly int hasBeenHit = Animator.StringToHash("HasBeenHit");
-		protected static readonly int isAttacking = Animator.StringToHash("IsAttacking");
-		protected static readonly int isDead = Animator.StringToHash("IsDead");
 		public abstract int cooldown { get; protected set; }
 		protected int cooldownCount = 0;
 		public abstract int atk { get; protected set; }
@@ -24,7 +22,7 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 					target = nearestPlayerBehaviour.targeter.target;
 					break;
 			}
-			return target && target.Collider2D.IsTouching(Collider2D) && !target.Animator.GetBool(hasBeenHit);
+			return target && target.Collider2D.IsTouching(Collider2D);
 		}
 
 		protected virtual void Attack() {
@@ -39,15 +37,15 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 				default:
 					return;
 			}
-			Animator.SetBool(isAttacking, true);
+
+			Animator.Play(AttackAnims[(int) LastAnimationState]);
 			target.GetAttacked(atk);
-			target.Animator.SetTrigger(hasBeenHit);
 		}
 
 		private IEnumerator DeathAnimation() {
 			behaviour = new Idle();
-			Animator.SetBool(isDead, true);
-			yield return new WaitUntil(() => !Animator.GetBool(isDead));
+			Animator.SetTrigger(IsDeadId);
+			yield return new WaitForSeconds(0.3f);
 			NetworkServer.Destroy(gameObject);
 		}
 		

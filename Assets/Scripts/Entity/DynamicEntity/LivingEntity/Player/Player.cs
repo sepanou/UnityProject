@@ -61,7 +61,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private SellerInventory _sellerInventory;
 		private PlayerUI _playerUI;
 		private Weapon.Weapon Weapon => _weapons[_weaponId];
-		
+
 		public int Kibrient {
 			get => _kibrient;
 			[Server] set => _kibrient = value;
@@ -484,11 +484,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			PlayerInfoManager.OpenInfoBox();
 			StartCoroutine(PlayerInfoManager.DelayInfoBoxClosure(5)); // Auto close the info box
 		}
+		
 
 		[ClientCallback] private void FixedUpdate() {
 			// For physics
 			if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen || !NetworkClient.ready)
 				return;
+			
+			if (!IsAlive) return;
 
 			int horizontal = 0;
 			int vertical = 0;

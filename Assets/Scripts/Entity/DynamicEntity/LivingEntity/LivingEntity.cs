@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Mirror;
 using UI_Audio;
 using UI_Audio.LivingEntityUI;
@@ -13,8 +14,10 @@ namespace Entity.DynamicEntity.LivingEntity {
 	}
 	
 	public abstract class LivingEntity: DynamicEntity {
+		protected static readonly int IsDeadId = Animator.StringToHash("IsDead");
 		private static readonly string[] IdleAnims = {"IdleN", "IdleW", "IdleS", "IdleE"};
 		private static readonly string[] WalkAnims = {"WalkN", "WalkW", "WalkS", "WalkE"};
+		protected static readonly string[] AttackAnims = {"AttackN", "AttackW", "AttackS", "AttackE"};
 		private static readonly Vector2[] AdvancedMoves = {Vector2.up, Vector2.left, Vector2.down, Vector2.right};
 		
 		[Header("LivingEntity Fields")]
@@ -31,6 +34,7 @@ namespace Entity.DynamicEntity.LivingEntity {
 		protected readonly CustomEvent<float> OnHealthChange = new CustomEvent<float>();
 		private Rigidbody2D _rigidBody;
 		public bool IsAlive => Health > 0;
+		protected bool IsBeingAttacked;
 
 		[SerializeField] private bool advancedMoves;
 
@@ -54,7 +58,27 @@ namespace Entity.DynamicEntity.LivingEntity {
 		}
 
 		protected abstract void RpcDying();
-		
+
+		private IEnumerator GetAttackedAnimation() {
+			IsBeingAttacked = true;
+			int x = 0;
+			float pixelValue;
+			while (x < 255) {
+				x += 15;
+				pixelValue = (255 - x) / 255f;
+				spriteRenderer.color = new Color(1f, pixelValue, pixelValue);
+				yield return new WaitForSeconds(0.0067f);
+			}
+			
+			while (x > 0) {
+				x -= 15;
+				pixelValue = (255 - x) / 255f;
+				spriteRenderer.color = new Color(1f, pixelValue, pixelValue);
+				yield return new WaitForSeconds(0.0067f);
+			}
+			IsBeingAttacked = false;
+		}
+
 		protected new void Instantiate() {
 			base.Instantiate();
 			
@@ -132,6 +156,7 @@ namespace Entity.DynamicEntity.LivingEntity {
 			Health = Mathf.Max(Health - atk, 0);
 			SyncHealthChanged(Health, Health);
 			AudioDB.PlayUISound("damageTaken");
+			StartCoroutine(GetAttackedAnimation());
 			if (IsAlive) return;
 			OnEntityDie?.Invoke(this);
 			RpcDying();

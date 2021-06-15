@@ -28,7 +28,7 @@ namespace Behaviour.Targeter {
 		public NearestPlayerTargeter(Entity.Entity entity, Func<Entity.Entity, Player, Player, bool> isNearer = null): base(entity, isNearer) { }
 		
 		public Entity.Entity AcquireTarget() {
-			List<Player> entities = CustomNetworkManager.Instance.PlayerPrefabs;
+			List<Player> entities = CustomNetworkManager.Instance.AlivePlayers;
 			target = null;
 			foreach (Player targetEntity in entities) {
 				if (isNearer(entity, target, targetEntity)) continue;
