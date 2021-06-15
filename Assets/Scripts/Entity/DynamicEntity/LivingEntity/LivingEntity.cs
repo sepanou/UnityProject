@@ -159,12 +159,14 @@ namespace Entity.DynamicEntity.LivingEntity {
 			Health = Math.Min(Health + amount, maxHealth);
 		}
 
+		[ClientRpc] private void RpcAttackedAnimation() => StartCoroutine(GetAttackedAnimation());
+
 		[Server] public void GetAttacked(int atk) {
 			if (!IsAlive || atk == 0) return;
 			Health = Math.Max(Health - atk, 0);
 			SyncHealthChanged(Health, Health);
 			AudioDB.PlayUISound("damageTaken");
-			StartCoroutine(GetAttackedAnimation());
+			RpcAttackedAnimation();
 			if (IsAlive) return;
 			OnEntityDie?.Invoke(this);
 			Animator.SetTrigger(IsDeadId);

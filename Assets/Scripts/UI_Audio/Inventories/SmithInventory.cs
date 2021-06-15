@@ -33,6 +33,7 @@ namespace UI_Audio.Inventories {
 			IInventoryItem toMove;
 			if (!resultSlot.IsMouseOver() || (toMove = resultSlot.GetSlotItem()) is null) return;
 
+			ItemsMoved.Remove(toMove);
 			playerInventory.TryAddItem(toMove);
 			resultSlot.ClearItem();
 		}
