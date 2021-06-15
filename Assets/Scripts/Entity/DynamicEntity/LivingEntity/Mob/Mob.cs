@@ -4,13 +4,16 @@ using Mirror;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public abstract class Mob: LivingEntity {
-		protected IBehaviour Behaviour = new Idle();
+		protected IBehaviour behaviour = new Idle();
+		
+		protected override void RpcDying() {
+			NetworkServer.Destroy(gameObject);
+		}
 
-		protected new void Instantiate() => base.Instantiate();
-
-		[ServerCallback] private void FixedUpdate() {
-			if (Behaviour is null) return;
-			Vector2 direction = Behaviour.NextDirection();
+		[ServerCallback]
+		private void FixedUpdate() {
+			if (behaviour is null) return;
+			Vector2 direction = behaviour.NextDirection();
 			Move(direction.x, direction.y);
 		}
 	}

@@ -11,7 +11,7 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 
         private void Start() {
             Instantiate();
-            Behaviour = new NearestPlayerStraightFollower(this);
+            behaviour = new NearestPlayerStraightFollower(this);
         }
     }
 }

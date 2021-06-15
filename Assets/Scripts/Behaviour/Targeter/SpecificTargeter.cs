@@ -3,9 +3,9 @@ using Entity.DynamicEntity.LivingEntity.Player;
 
 namespace Behaviour.Targeter {
 	public class SpecificTargeter<TEntity>: ITargeter where TEntity: Entity.Entity {
-		private readonly TEntity _entity;
-		public SpecificTargeter(TEntity entity) { _entity = entity; }
-		public Entity.Entity AcquireTarget() => _entity;
+		public readonly TEntity target;
+		public SpecificTargeter(TEntity entity) { target = entity; }
+		public Entity.Entity AcquireTarget() => target;
 	}
 	
 	public class SpecificEntityTargeter: SpecificTargeter<Entity.Entity> {

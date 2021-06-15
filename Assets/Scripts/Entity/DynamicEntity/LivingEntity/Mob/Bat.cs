@@ -1,15 +1,10 @@
 ﻿using Behaviour;
-using Mirror;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
-    public class Bat : Mob {
-        protected override void RpcDying() {
-            NetworkServer.Destroy(gameObject);
-        }
-
+    public class Bat: Mob {
         private void Start() {
             Instantiate();
-            Behaviour = new NearestPlayerStraightFollower(this);
+            behaviour = new NearestPlayerStraightFollower(this);
         }
     }
 }
