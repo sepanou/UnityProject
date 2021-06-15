@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DataBanks;
+using Entity;
 using Entity.Collectibles;
 using Entity.DynamicEntity.LivingEntity;
 using Entity.DynamicEntity.LivingEntity.Mob;
@@ -24,6 +25,7 @@ public class CustomNetworkManager: NetworkManager {
 	[SerializeField] [Scene] private string forestScene;
 	[SerializeField] private Vector3[] forestSpawnPoints;
 	
+	public readonly CustomEvent<Player> OnPlayerJoinServer = new CustomEvent<Player>();
 	public readonly List<Player> PlayerPrefabs = new List<Player>();
 	public readonly List<Player> AlivePlayers = new List<Player>();
 	private Coroutine _sceneTransitionCoroutine;
@@ -43,7 +45,7 @@ public class CustomNetworkManager: NetworkManager {
 		if (!(entity is Player player) || LocalGameManager.Instance.LocalState == LocalGameStates.Hub)
 			return;
 		AlivePlayers.Remove(player);
-		
+		Debug.Log(AlivePlayers.Count);
 		if (AlivePlayers.Count != 0) return;
 		// Everybody is dead :(
 		RemoveSpawnedObjects();
@@ -52,8 +54,7 @@ public class CustomNetworkManager: NetworkManager {
 	}
 
 	public void PlaySceneTransitionAnimation(string trigger) => sceneAnimator.Play(trigger);
-
-	// Event methods
+	
 	public override void OnServerAddPlayer(NetworkConnection conn) {
 		GameObject player = Instantiate(playerPrefab, startPositions[startPositionIndex].position, Quaternion.identity);
 		NetworkServer.AddPlayerForConnection(conn, player);
@@ -63,7 +64,7 @@ public class CustomNetworkManager: NetworkManager {
 			PlayerPrefabs.Count == 1 ? PlayerClasses.Mage : PlayerClasses.Warrior;
 		p.OnEntityDie.AddListener(CheckAllPlayersAlive);
 		PlayerPrefabs.Add(p);
-		AlivePlayers.Add(p);
+		OnPlayerJoinServer?.Invoke(p);
 	}
 
 	private void RemoveSpawnedObjects() {
@@ -83,12 +84,12 @@ public class CustomNetworkManager: NetworkManager {
 	public override void OnServerSceneChanged(string sceneName) {
 		if (networkSceneName == forestScene) {
 			SetPlayerSpawnPoints(forestSpawnPoints);
+			AlivePlayers.Clear();
+			PlayerPrefabs.ForEach(p => AlivePlayers.Add(p));
 			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Forest);
 		} else if (networkSceneName == hubScene) {
 			SetPlayerSpawnPoints(hubSpawnPoints);
 			PlayerPrefabs.ForEach(p => p.ResetPlayer());
-			AlivePlayers.Clear();
-			PlayerPrefabs.ForEach(p => AlivePlayers.Add(p));
 			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Hub);
 		}
 		base.OnServerSceneChanged(sceneName);
@@ -104,6 +105,7 @@ public class CustomNetworkManager: NetworkManager {
 
 	public override void OnServerDisconnect(NetworkConnection conn) {
 		PlayerPrefabs.Clear();
+		AlivePlayers.Clear();
 		base.OnServerDisconnect(conn);
 	}
 
