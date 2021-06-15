@@ -91,7 +91,10 @@ public class LocalGameManager: MonoBehaviour {
 				playerInfoManager.HidePlayerClassUI();
 				break;
 			case LocalGameStates.Hub:
-				if (LocalPlayer) LocalPlayer.SetSpriteRendererVisible(true);
+				if (LocalPlayer) {
+					LocalPlayer.SetSpriteRendererVisible(true);
+					SetMainCameraToPlayer(LocalPlayer);
+				}
 				AudioDB.PlayMusic("HubMusic");
 				menuSettingsManager.CloseMenu();
 				startMenuManager.CloseStartMenu();
