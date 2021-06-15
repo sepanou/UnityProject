@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Entity.DynamicEntity.LivingEntity.Player;
 
 namespace Behaviour.Targeter {
 	public class NearestTargeter<TEntity, TTarget>: ITargeter where TEntity: Entity.Entity where TTarget: Entity.Entity {
 		public readonly TEntity entity;
-		public TTarget target { get; private set; }
+		public TTarget target { get; protected set; }
 		public readonly Func<TEntity, TTarget, TTarget, bool> isNearer;
 		
 		public NearestTargeter(TEntity entity, Func<TEntity, TTarget, TTarget, bool> isNearer = null) {
@@ -25,5 +26,15 @@ namespace Behaviour.Targeter {
 	
 	public class NearestPlayerTargeter: NearestTargeter<Entity.Entity, Player> {
 		public NearestPlayerTargeter(Entity.Entity entity, Func<Entity.Entity, Player, Player, bool> isNearer = null): base(entity, isNearer) { }
+		
+		public Entity.Entity AcquireTarget() {
+			List<Player> entities = CustomNetworkManager.Instance.PlayerPrefabs;
+			target = null;
+			foreach (Player targetEntity in entities) {
+				if (isNearer(entity, target, targetEntity)) continue;
+				target = targetEntity;
+			}
+			return target;
+		}
 	}
 }

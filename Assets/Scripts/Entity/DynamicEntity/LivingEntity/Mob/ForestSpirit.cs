@@ -1,5 +1,5 @@
 ﻿using Behaviour;
-using UnityEngine;
+using Behaviour.Targeter;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public class ForestSpirit: Mob {
@@ -15,12 +15,32 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 		}
 
 		protected override bool CanAttack() {
-			Player.Player target = ((DistanceNearestPlayerStraightFollower)behaviour).behaviour.targeter.target;
+			Player.Player target = null;
+			switch (behaviour) {
+				case DistanceNearestPlayerStraightFollower distanceNearestPlayerStraightFollower:
+					target = distanceNearestPlayerStraightFollower.behaviour.targeter.target;
+					break;
+				case EntityTargetedBehaviour<NearestPlayerTargeter> nearestPlayerBehaviour:
+					target = nearestPlayerBehaviour.targeter.target;
+					break;
+			}
 			return target && (target.transform.position - transform.position).sqrMagnitude < AtkMaxDist * AtkMaxDist;
 		}
 
 		protected override void Attack() {
-			
+			Player.Player target;
+			switch (behaviour) {
+				case DistanceNearestPlayerStraightFollower distanceNearestPlayerStraightFollower:
+					target = distanceNearestPlayerStraightFollower.behaviour.targeter.target;
+					break;
+				case EntityTargetedBehaviour<NearestPlayerTargeter> nearestPlayerBehaviour:
+					target = nearestPlayerBehaviour.targeter.target;
+					break;
+				default:
+					return;
+			}
+			Animator.SetBool(isAttacking, true);
+			// TODO: spawn projectile
 		}
 	}
 }
