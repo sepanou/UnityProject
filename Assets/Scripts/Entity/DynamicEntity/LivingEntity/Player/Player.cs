@@ -406,6 +406,12 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (!NetworkIdentity.spawned.TryGetValue(entityNetId, out NetworkIdentity entityIdentity)) return;
 			if (!entityIdentity.gameObject.TryGetComponent(out Entity collectible)) return;
 
+			if (collectible is Kibry kibry) {
+				Kibrient += kibry.amount;
+				NetworkServer.Destroy(kibry.gameObject);
+				return;
+			}
+			
 			if (IsFullInventory()) {
 				if (collectible is Weapon.Weapon wp) wp.SetPlayerFound(false);
 				TargetPrintInfoMessage(connectionToClient, "Your inventory is full");
@@ -413,10 +419,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			}
 
 			switch (collectible) {
-				case Kibry kibry:
-					Kibrient += kibry.amount;
-					NetworkServer.Destroy(kibry.gameObject);
-					return;
 				case Weapon.Weapon wp:
 					CollectWeapon(wp);
 					break;
