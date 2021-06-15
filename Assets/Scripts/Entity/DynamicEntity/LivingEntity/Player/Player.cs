@@ -16,7 +16,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private const int PassiveEnergyRegen = 2;
 		public static readonly CustomEvent<ClassData> OnRemotePlayerClassChange = new CustomEvent<ClassData>();
 		public static readonly CustomEvent<ClassData> OnLocalPlayerClassChange = new CustomEvent<ClassData>();
-		public readonly CustomEvent<float> OnEnergyChange = new CustomEvent<float>();
+		private readonly CustomEvent<float> _onEnergyChange = new CustomEvent<float>();
 
 		[Header("Player Fields")]
 		[SerializeField] private PlayerClassData classData;
@@ -48,7 +48,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private int _defaultMaxEnergy;
 		[SyncVar(hook = nameof(SyncEnergyChanged))] [SerializeField] private int maxEnergy;
 		[SyncVar(hook = nameof(SyncEnergyChanged))] private int _energy;
-		private void SyncEnergyChanged(int o, int n) => OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
+		private void SyncEnergyChanged(int o, int n) => _onEnergyChange?.Invoke(_energy / (float) maxEnergy);
 
 		private CharmData _currentCharmBonus;
 		private Camera _mainCamera;
@@ -159,29 +159,29 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				if (isLocalPlayer) _kibrient = 500;
 				_defaultMaxEnergy = maxEnergy;
 				_energy = maxEnergy;
-				_charms.Callback += OnCharmsUpdatedServer;
+				_charms.Callback.AddListener(OnCharmsUpdatedServer);
 			}
 			
-			if (isClient) _weapons.Callback += OnWeaponsUpdated;
+			if (isClient) _weapons.Callback.AddListener(OnWeaponsUpdated);
 			
 			if (!isLocalPlayer) {
 				OnRemotePlayerClassChange.AddListener(ChangeAnimator);
 				_playerUI = (PlayerUI) entityUI;
 				if (!_playerUI) return;
 				_playerUI.SetNameTagField(playerName);
-				OnEnergyChange.AddListener(_playerUI.SetEnergyBarValue);
+				_onEnergyChange.AddListener(_playerUI.SetEnergyBarValue);
 				SyncEnergyChanged(_energy, _energy);
 			}
 			else {
 				OnLocalPlayerClassChange.AddListener(ChangeAnimator);
 				_inventory = InventoryManager.playerInventory;
 				_mainCamera = Manager.SetMainCameraToPlayer(this);
-				_charms.Callback += OnCharmsUpdatedClient;
+				_charms.Callback.AddListener(OnCharmsUpdatedClient);
 				// Only health / energy UI for the other players
 				entityUI.Destroy();
 				Manager.LocalPlayer = this;
 				PlayerInfoManager.UpdateMoneyAmount(this);
-				OnEnergyChange.AddListener(PlayerInfoManager.UpdatePlayerPower);
+				_onEnergyChange.AddListener(PlayerInfoManager.UpdatePlayerPower);
 				OnHealthChange.AddListener(PlayerInfoManager.UpdatePlayerHealth);
 			}
 			
@@ -191,6 +191,17 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		public override void OnStartLocalPlayer() {
 			base.OnStartLocalPlayer();
 			CmdSetPseudo(Manager.startMenuManager.GetPseudoText());
+		}
+
+		[Server] public void ResetPlayer() {
+			Health = DefaultMaxHealth;
+			_energy = _defaultMaxEnergy;
+			_charms.Clear();
+			_weapons.Clear();
+			_weaponId = -1;
+			_currentCharmBonus = null;
+			Kibrient = 0;
+			IsAlive = true;
 		}
 
 		// Can be executed by both client & server (Synced data analysis) -> double check
@@ -355,7 +366,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[Server] public void ReduceEnergy(int amount) {
 			if (amount == 0) return;
 			_energy = Math.Max(_energy - amount, 0);
-			OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
+			_onEnergyChange?.Invoke(_energy / (float) maxEnergy);
 			if (_passiveEnergyRegenCoroutine is null)
 				_passiveEnergyRegenCoroutine = StartCoroutine(PassiveEnergyRegeneration());
 		}
@@ -538,7 +549,12 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (isServer && Input.GetKeyDown(KeyCode.V)) {
 				GameObject obj = WeaponGenerator.GenerateCharm().gameObject;
 				obj.transform.position = transform.position;
+				Debug.Log($"{Health} + {_energy}");
 				NetworkServer.Spawn(obj);
+			}
+			
+			if (isServer && Input.GetKeyDown(KeyCode.O)) {
+				CustomNetworkManager.Instance.PlayerPrefabs.ForEach(p => p.GetAttacked(10000));
 			}
 		}
 	}

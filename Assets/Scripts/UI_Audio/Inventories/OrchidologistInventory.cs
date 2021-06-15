@@ -10,7 +10,7 @@ namespace UI_Audio.Inventories {
             base.Start();
             Dialog = new[] {"#orchidologist-stop"};
         }
-
+        
         public override void DisplayPrice(IInventoryItem item) 
             => orchidDisplay.text = item is null ? "0" : (item.GetKibryValue() / 5).ToString();
     }
