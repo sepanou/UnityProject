@@ -34,6 +34,8 @@ namespace Entity.DynamicEntity.LivingEntity {
 
 		[SerializeField] private bool advancedMoves;
 
+		public Collider2D Collider2D { get; private set; }
+
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
 			base.OnSerialize(writer, initialState);
 			writer.WriteInt32(maxHealth);
@@ -55,6 +57,9 @@ namespace Entity.DynamicEntity.LivingEntity {
 		
 		protected new void Instantiate() {
 			base.Instantiate();
+			
+			Collider2D = GetComponent<Collider2D>();
+			
 			if (TryGetComponent(out _rigidBody)) {
 				_rigidBody.bodyType = RigidbodyType2D.Dynamic;
 				_rigidBody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
