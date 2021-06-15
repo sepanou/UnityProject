@@ -31,6 +31,9 @@ namespace DataBanks {
 		[SerializeField] private GameObject swordModel;
 		[SerializeField] private Sprite[] swordSprites;
 		
+		[Header("Kibry")]
+		[SerializeField] private GameObject kibryModel;
+
 		// Used for name generation
 		private static readonly IReadOnlyList<(bool, string)> BowNames =
 			new List<(bool, string)> {
@@ -330,5 +333,12 @@ namespace DataBanks {
 		public Projectile GetBowProjectile() => GetRandomInArray(bowProjectiles, out _);
 		
 		public Projectile GetStaffProjectile() => GetRandomInArray(staffProjectiles, out _);
+		
+		public Kibry GetRandomKibry() {
+			GameObject obj = Instantiate(kibryModel);
+			Kibry result = obj.GetComponent<Kibry>();
+			result.amount = Random.Range(3, 6);
+			return result;
+		}
 	}
 }

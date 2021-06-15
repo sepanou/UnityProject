@@ -109,3 +109,5 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1888cadecbac5fe43b762c5b5499e3b8, type: 3}
   - {fileID: 21300000, guid: 5f20ea151665c6c45bed28d17ffd295b, type: 3}
   - {fileID: 21300000, guid: cabd27eecf118f8408d1860dd1183516, type: 3}
+  kibryModel: {fileID: 8156293139754361776, guid: 771c4bd4ce650a04185fcf141a216509,
+    type: 3}

@@ -154,9 +154,14 @@ namespace Entity.DynamicEntity.LivingEntity {
 			RpcApplyAnimationStates((int) state, isIdle, velocity);
 		}
 
+		[Server] public void AddHealth(int amount) {
+			if (!IsAlive || amount <= 0) return;
+			Health = Math.Min(Health + amount, maxHealth);
+		}
+
 		[Server] public void GetAttacked(int atk) {
 			if (!IsAlive || atk == 0) return;
-			Health = Mathf.Max(Health - atk, 0);
+			Health = Math.Max(Health - atk, 0);
 			SyncHealthChanged(Health, Health);
 			AudioDB.PlayUISound("damageTaken");
 			StartCoroutine(GetAttackedAnimation());
