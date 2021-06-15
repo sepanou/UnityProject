@@ -25,8 +25,7 @@ namespace Entity.StaticEntity {
 
 		public override void OnStartServer() {
 			base.OnStartServer();
-			Player.OnRemotePlayerClassChange.AddListener(CheckNotOpened);
-			Player.OnLocalPlayerClassChange.AddListener(CheckNotOpened);
+			CustomNetworkManager.Instance.PlayerPrefabs.ForEach(p => p.OnPlayerClassChange.AddListener(CheckNotOpened));
 		}
 
 		[Server]

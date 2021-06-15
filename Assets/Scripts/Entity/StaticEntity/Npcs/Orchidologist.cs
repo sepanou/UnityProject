@@ -51,6 +51,7 @@ namespace Entity.StaticEntity.Npcs {
                 generated.transform.parent = transform;
                 ((Weapon) generated).SetIsGrounded(false);
                 NetworkServer.Spawn(generated.gameObject);
+                
                 Items.Add((IInventoryItem) generated);
             }
         }

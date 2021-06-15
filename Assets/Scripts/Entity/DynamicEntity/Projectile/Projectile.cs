@@ -6,30 +6,34 @@ using UI_Audio;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Projectile {
+	[RequireComponent(typeof(Rigidbody2D))]
 	public abstract class Projectile: DynamicEntity {
 		[SerializeField] private Vector2 projectileOrientation;
 		
 		private const float LifeTime = 3f; // Maximum lifetime in seconds
 		private RangedWeapon _fromWeapon;
-		protected Rigidbody2D RigidBody;
-		protected Vector2 FacingDirection;
+		private Rigidbody2D _rigidBody;
+		private Vector2 _facingDirection;
 		private bool _fromSpecialAttack;
 		private float _spawnTime; // The time when the projectile was spawned
-		
+
 		protected new void Instantiate() {
 			base.Instantiate();
-			if (TryGetComponent(out RigidBody)) RigidBody.bodyType = netIdentity.isServer
+			if (TryGetComponent(out _rigidBody)) _rigidBody.bodyType = netIdentity.isServer
 				? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
 		}
 		
-		protected abstract void Move();
+		[Server] protected virtual void Move() {
+			if (_rigidBody.velocity != Vector2.zero) return;
+			_rigidBody.velocity = _facingDirection * Speed;
+		}
 
 		private static Projectile BuildProjectile(Projectile projectilePrefab, RangedWeapon source, Transform launchPoint, bool special) {
 			Projectile projectile = Instantiate(projectilePrefab, launchPoint.position, Quaternion.Euler(
 				new Vector3(0, 0, Vector2.SignedAngle(projectilePrefab.projectileOrientation, source.orientation))
 			));
 			projectile._fromWeapon = source;
-			projectile.FacingDirection = source.orientation;
+			projectile._facingDirection = source.orientation;
 			projectile._fromSpecialAttack = special;
 			projectile.Speed *= source.rangeData.projectileSpeedMultiplier;
 			projectile.transform.localScale *= source.rangeData.projectileSizeMultiplier;
@@ -75,10 +79,8 @@ namespace Entity.DynamicEntity.Projectile {
 		}
 		
 		[ServerCallback] private void OnCollisionEnter2D(Collision2D other) {
-			if (other.gameObject.TryGetComponent(out Mob mob)) {
-				Debug.Log(_fromWeapon.GetDamage(_fromSpecialAttack));
+			if (other.gameObject.TryGetComponent(out Mob mob))
 				mob.GetAttacked(_fromWeapon.GetDamage(_fromSpecialAttack));
-			}
 			NetworkServer.Destroy(gameObject);
 		}
 	}

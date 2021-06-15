@@ -25,19 +25,21 @@ namespace Entity.StaticEntity.Npcs {
         protected abstract void GenerateInventory();
 
         protected new void Instantiate() {
-            if (isClient) {
-                Items.Callback += ItemsOnChanged;
-                // SyncList callbacks are not invoked when the game object starts
-                // For late joining clients notably
-                foreach (IInventoryItem item in Items) {
-                    Inventory.TryAddItem(item);
-                    (item as Entity)?.SetSpriteRendererVisible(false);
-                }
-            }
             base.Instantiate();
+
+            if (!isClient) return;
+            Inventory.ClearInventory();
+            Items.Callback.AddListener(ItemsOnChanged);
+            // SyncList callbacks are not invoked when the game object starts
+            // For late joining clients notably
+            foreach (IInventoryItem item in Items) {
+                Inventory.TryAddItem(item);
+                (item as Entity)?.SetSpriteRendererVisible(false);
+            }
         }
 
         public override void OnStartServer() {
+            Items.Clear();
             GenerateInventory();
             base.OnStartServer();
         }
@@ -46,7 +48,7 @@ namespace Entity.StaticEntity.Npcs {
         public void CmdBuyItem(IInventoryItem item, Player player, NetworkConnectionToClient sender = null) {
             // Check for cheats, potential incorrect args and the possibility to proceed...
             if (sender != player.connectionToClient || item is null) return;
-			
+            
             if (!VerifyInteractionWith(player)) {
                 player.TargetPrintWarning(sender, LanguageManager["#no-NPC-interaction"]);
                 return;
@@ -87,6 +89,7 @@ namespace Entity.StaticEntity.Npcs {
                     break;
                 case SyncList<uint>.Operation.OP_CLEAR:
                     Inventory.ClearInventory();
+                    Debug.Log("cleared");
                     break;
                 case SyncList<uint>.Operation.OP_REMOVEAT:
                     Inventory.TryRemoveItem(item);

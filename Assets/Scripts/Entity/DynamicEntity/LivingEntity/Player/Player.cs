@@ -14,9 +14,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 	public class Player: LivingEntity {
 		private const int MaxItemInInventory = 20;
 		private const int PassiveEnergyRegen = 2;
-		public static readonly CustomEvent<ClassData> OnRemotePlayerClassChange = new CustomEvent<ClassData>();
-		public static readonly CustomEvent<ClassData> OnLocalPlayerClassChange = new CustomEvent<ClassData>();
-		public readonly CustomEvent<float> OnEnergyChange = new CustomEvent<float>();
+		public readonly CustomEvent<ClassData> OnPlayerClassChange = new CustomEvent<ClassData>();
+		private readonly CustomEvent<float> _onEnergyChange = new CustomEvent<float>();
 
 		[Header("Player Fields")]
 		[SerializeField] private PlayerClassData classData;
@@ -48,7 +47,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private int _defaultMaxEnergy;
 		[SyncVar(hook = nameof(SyncEnergyChanged))] [SerializeField] private int maxEnergy;
 		[SyncVar(hook = nameof(SyncEnergyChanged))] private int _energy;
-		private void SyncEnergyChanged(int o, int n) => OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
+		private void SyncEnergyChanged(int o, int n) => _onEnergyChange?.Invoke(_energy / (float) maxEnergy);
 
 		private CharmData _currentCharmBonus;
 		private Camera _mainCamera;
@@ -61,9 +60,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private ContainerInventory _containerInventory;
 		private SellerInventory _sellerInventory;
 		private PlayerUI _playerUI;
-		private Weapon.Weapon Weapon => _weapons[_weaponId]; 
-		
-		public Collider2D Collider2D { get; private set; }
+		private Weapon.Weapon Weapon => _weapons[_weaponId];
 		
 		public int Kibrient {
 			get => _kibrient;
@@ -145,52 +142,75 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			_weaponId = newWeaponId;
 		}
 
-		private void Start() {
-			if (isServer && Manager.LocalState != LocalGameStates.Hub) {
+		public override void OnStartClient() {
+			base.OnStartClient();
+			
+			if (isLocalPlayer) return;
+			if (!isServer) Instantiate();
+			
+			_weapons.Callback.AddListener(OnWeaponsUpdated);
+			OnPlayerClassChange.AddListener(ChangeAnimator);
+			_playerUI = (PlayerUI) entityUI;
+			if (!_playerUI) return;
+			_playerUI.SetNameTagField(playerName);
+			_onEnergyChange.AddListener(_playerUI.SetEnergyBarValue);
+			SyncEnergyChanged(_energy, _energy);
+			SwitchClass(playerClass);
+		}
+		
+		public override void OnStartLocalPlayer() {
+			base.OnStartLocalPlayer();
+			
+			if (!isServer) Instantiate();
+			
+			_weapons.Callback.AddListener(OnWeaponsUpdated);
+			OnPlayerClassChange.AddListener(ChangeAnimator);
+			OnPlayerClassChange.AddListener(PlayerInfoManager.ChangeLocalPlayerClassInfo);
+			SwitchClass(playerClass);
+			
+			CmdSetPseudo(Manager.startMenuManager.GetPseudoText());
+			_inventory = InventoryManager.playerInventory;
+			_mainCamera = Manager.SetMainCameraToPlayer(this);
+			_charms.Callback.AddListener(OnCharmsUpdatedClient);
+			// Only health / energy UI for the other players
+			entityUI.Destroy();
+			Manager.LocalPlayer = this;
+			PlayerInfoManager.UpdateMoneyAmount(this);
+			_onEnergyChange.AddListener(PlayerInfoManager.UpdatePlayerPower);
+			OnHealthChange.AddListener(PlayerInfoManager.UpdatePlayerHealth);
+		}
+
+		public override void OnStartServer() {
+			base.OnStartServer();
+			
+			if (Manager.LocalState != LocalGameStates.Hub) {
 				connectionToClient.Disconnect();
 				return;
 			}
 			
-			DontDestroyOnLoad(this);
-			Collider2D = GetComponent<Collider2D>();
 			Instantiate();
-
-			if (isServer) {
-				if (isLocalPlayer) _kibrient = 500;
-				_defaultMaxEnergy = maxEnergy;
-				_energy = maxEnergy;
-				_charms.Callback += OnCharmsUpdatedServer;
-			}
-			
-			if (isClient) _weapons.Callback += OnWeaponsUpdated;
-			
-			if (!isLocalPlayer) {
-				OnRemotePlayerClassChange.AddListener(ChangeAnimator);
-				_playerUI = (PlayerUI) entityUI;
-				if (!_playerUI) return;
-				_playerUI.SetNameTagField(playerName);
-				OnEnergyChange.AddListener(_playerUI.SetEnergyBarValue);
-				SyncEnergyChanged(_energy, _energy);
-			}
-			else {
-				OnLocalPlayerClassChange.AddListener(ChangeAnimator);
-				_inventory = InventoryManager.playerInventory;
-				_mainCamera = Manager.SetMainCameraToPlayer(this);
-				_charms.Callback += OnCharmsUpdatedClient;
-				// Only health / energy UI for the other players
-				entityUI.Destroy();
-				Manager.LocalPlayer = this;
-				PlayerInfoManager.UpdateMoneyAmount(this);
-				OnEnergyChange.AddListener(PlayerInfoManager.UpdatePlayerPower);
-				OnHealthChange.AddListener(PlayerInfoManager.UpdatePlayerHealth);
-			}
-			
+			OnPlayerClassChange.AddListener(ChangeAnimator);
 			SwitchClass(playerClass);
+			if (isLocalPlayer) _kibrient = 500;
+			_defaultMaxEnergy = maxEnergy;
+			_energy = maxEnergy;
+			_charms.Callback.AddListener(OnCharmsUpdatedServer);
 		}
 
-		public override void OnStartLocalPlayer() {
-			base.OnStartLocalPlayer();
-			CmdSetPseudo(Manager.startMenuManager.GetPseudoText());
+		private new void Instantiate() {
+			DontDestroyOnLoad(this);
+			base.Instantiate();
+		}
+
+		[Server] public void ResetPlayer() {
+			Health = DefaultMaxHealth;
+			_energy = _defaultMaxEnergy;
+			_charms.Clear();
+			_weapons.Clear();
+			_weaponId = -1;
+			_currentCharmBonus = null;
+			Kibrient = 0;
+			Manager.SetMainCameraToPlayer(this);
 		}
 
 		// Can be executed by both client & server (Synced data analysis) -> double check
@@ -230,11 +250,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		private void SwitchClass(PlayerClasses @class) {
 			ClassData data = @class == PlayerClasses.Warrior ? classData.warrior :
 				@class == PlayerClasses.Mage ? classData.mage : classData.archer;
-
-			if (isLocalPlayer)
-				OnLocalPlayerClassChange?.Invoke(data);
-			else
-				OnRemotePlayerClassChange?.Invoke(data);
+			OnPlayerClassChange?.Invoke(data);
 		}
 		
 		public int ApplyDamageBonuses(int damage, bool isSpecialAttack) {
@@ -355,7 +371,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		[Server] public void ReduceEnergy(int amount) {
 			if (amount == 0) return;
 			_energy = Math.Max(_energy - amount, 0);
-			OnEnergyChange?.Invoke(_energy / (float) maxEnergy);
+			_onEnergyChange?.Invoke(_energy / (float) maxEnergy);
 			if (_passiveEnergyRegenCoroutine is null)
 				_passiveEnergyRegenCoroutine = StartCoroutine(PassiveEnergyRegeneration());
 		}
@@ -404,6 +420,25 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[ClientRpc] protected override void RpcDying() {
 			Debug.Log("Player " + playerName + " is dead !");
+			if (!isLocalPlayer) return;
+			CmdSpectateNextPlayer(0);
+		}
+
+		[TargetRpc] private void TargetSpectate(NetworkConnection target, Player toSpectate) {
+			if (toSpectate) Manager.SetMainCameraToPlayer(toSpectate);
+		}
+
+		[Command] private void CmdSpectateNextPlayer(uint idSpectating) {
+			CustomNetworkManager netManager = CustomNetworkManager.Instance;
+			if (netManager.PlayerPrefabs.Count == 1) return;
+			int start = idSpectating != 0 ? netManager.PlayerPrefabs.FindIndex(p => p.netId == idSpectating) + 1 : 1;
+			
+			while (netManager.PlayerPrefabs[start % netManager.PlayerPrefabs.Count] == this)
+				start++;
+			
+			Player toSpectate = netManager.PlayerPrefabs[start % netManager.PlayerPrefabs.Count];
+			if (idSpectating != toSpectate.netId)
+				TargetSpectate(connectionToClient, toSpectate);
 		}
 
 		[Command]
@@ -447,6 +482,12 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			// For physics
 			if (!isLocalPlayer || MenuSettingsManager.Instance.isOpen || !NetworkClient.ready)
 				return;
+
+			if (!IsAlive) {
+				if (InputManager.GetKeyDown("SwitchWeapon") && _mainCamera.transform.parent.TryGetComponent(out Player spectate))
+					CmdSpectateNextPlayer(spectate.netId);
+				return;
+			}
 			
 			int horizontal = 0;
 			int vertical = 0;
@@ -539,6 +580,10 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				GameObject obj = WeaponGenerator.GenerateCharm().gameObject;
 				obj.transform.position = transform.position;
 				NetworkServer.Spawn(obj);
+			}
+			
+			if (isServer && Input.GetKeyDown(KeyCode.O)) {
+				CustomNetworkManager.Instance.PlayerPrefabs.ForEach(p => p.GetAttacked(10000));
 			}
 		}
 	}

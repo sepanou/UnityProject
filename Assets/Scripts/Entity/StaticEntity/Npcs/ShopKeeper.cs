@@ -12,6 +12,7 @@ namespace Entity.StaticEntity.Npcs {
         
         protected new void Instantiate() {
             base.Instantiate();
+            Inventory.ClearInventory();
             Inventory.SetNpcOwner(this);
             Inventory.Close();
         }

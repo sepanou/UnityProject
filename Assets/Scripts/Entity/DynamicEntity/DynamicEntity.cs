@@ -9,7 +9,7 @@ namespace Entity.DynamicEntity {
 		/// </summary>
 		[SyncVar] [SerializeField] private float speed;
 		protected float DefaultSpeed { get; private set; }
-		protected Animator Animator;
+		public Animator Animator { get; private set; }
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
 			writer.WriteSingle(speed);

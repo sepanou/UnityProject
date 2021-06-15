@@ -13,6 +13,7 @@ namespace Generation {
 		private static List<Room> _recentlyAddedRooms;
 		private static List<Room> _roomsToTreat;
 		private static int _uniqueIds;
+		private static bool _justTriedPfb;
 		
 		// ReSharper disable Unity.PerformanceAnalysis
 		[Server]
@@ -24,6 +25,7 @@ namespace Generation {
 			_recentlyAddedRooms = new List<Room>();
 			_roomsToTreat = new List<Room>();
 			_availableRooms = GetLevels();
+			_justTriedPfb = false;
 			int rMaxY = rMap.GetLength(0);
 			int rMaxX = rMap.GetLength(1);
 			int x = 50;
@@ -66,7 +68,6 @@ namespace Generation {
 								_recentlyAddedRooms.Add(roomToAdd);
 								break;
 							}
-
 							yield return null;
 						}
 					}
@@ -137,7 +138,7 @@ namespace Generation {
 
 		[Server]
 		private static Room FindDeadEnd(char dir, out Room room) {
-			RoomType type = Random.Next(100) <= 25 ? RoomType.DeadEndChest : RoomType.DeadEnd;
+			RoomType type = Random.Next(100) <= 75 ? RoomType.DeadEndChest : RoomType.DeadEnd;
 			foreach (Room roomToPlace in _availableRooms[type]) {
 				++_uniqueIds;
 				if (roomToPlace._exits[0].Item1 == dir) {
@@ -188,13 +189,15 @@ namespace Generation {
 			RoomType roomType =
 					!isThereAShop && seed.Next(100) <= (10 + lMap.Count / 2 >= 100 ? 80 : 10 + lMap.Count / 2)
 						? RoomType.Shop
-						: isThereAShop && !placedPreBossRoom && lMap.Count >= 20 &&
+						: isThereAShop && !placedPreBossRoom && !_justTriedPfb && lMap.Count >= 20 &&
 						  seed.Next(100) <= (-10 + lMap.Count * 2 >= 100 ? 80 : -10 + lMap.Count * 2)
 							? RoomType.PreBoss
 							: seed.Next(100) <= 10 / (chests + 1)
 								? RoomType.Chest
 								: RoomType.Standard
 				;
+			if (roomType == RoomType.PreBoss) _justTriedPfb = true;
+			else _justTriedPfb = false;
 			return new Room(_availableRooms[roomType][seed.Next(_availableRooms[roomType].Count)], ++_uniqueIds);
 		}
 		

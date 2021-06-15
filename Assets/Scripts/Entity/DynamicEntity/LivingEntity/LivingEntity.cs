@@ -25,13 +25,16 @@ namespace Entity.DynamicEntity.LivingEntity {
 		[SyncVar(hook = nameof(SyncHealthChanged))] [SerializeField] protected int maxHealth;
 		[SyncVar(hook = nameof(SyncHealthChanged))] [ShowInInspector] protected int Health;
 		private void SyncHealthChanged(int o, int n) => OnHealthChange?.Invoke(Health / (float) maxHealth);
-
-		public readonly CustomEvent<float> OnHealthChange = new CustomEvent<float>();
+		
+		public readonly CustomEvent<LivingEntity> OnEntityDie = new CustomEvent<LivingEntity>();
 		public AnimationState LastAnimationState { get; private set; }
+		protected readonly CustomEvent<float> OnHealthChange = new CustomEvent<float>();
 		private Rigidbody2D _rigidBody;
-		private bool _isAlive = true;
+		public bool IsAlive => Health > 0;
 
 		[SerializeField] private bool advancedMoves;
+
+		public Collider2D Collider2D { get; private set; }
 
 		public override bool OnSerialize(NetworkWriter writer, bool initialState) {
 			base.OnSerialize(writer, initialState);
@@ -54,6 +57,9 @@ namespace Entity.DynamicEntity.LivingEntity {
 		
 		protected new void Instantiate() {
 			base.Instantiate();
+			
+			Collider2D = GetComponent<Collider2D>();
+			
 			if (TryGetComponent(out _rigidBody)) {
 				_rigidBody.bodyType = RigidbodyType2D.Dynamic;
 				_rigidBody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
@@ -122,12 +128,13 @@ namespace Entity.DynamicEntity.LivingEntity {
 		}
 
 		[Server] public void GetAttacked(int atk) {
-			if (!_isAlive || atk == 0) return;
+			if (!IsAlive || atk == 0) return;
 			Health = Mathf.Max(Health - atk, 0);
 			SyncHealthChanged(Health, Health);
-			_isAlive = Health > 0;
 			AudioDB.PlayUISound("damageTaken");
-			if (!_isAlive) RpcDying();
+			if (IsAlive) return;
+			OnEntityDie?.Invoke(this);
+			RpcDying();
 		}
 
 		private void OnDestroy() {
