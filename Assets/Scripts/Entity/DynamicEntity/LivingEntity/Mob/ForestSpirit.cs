@@ -1,5 +1,7 @@
 ﻿using Behaviour;
 using Behaviour.Targeter;
+using DataBanks;
+using Mirror;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
@@ -40,7 +42,8 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 				default:
 					return;
 			}
-			// TODO: spawn projectile
+			Animator.Play(AttackAnims[(int) LastAnimationState]);
+			Projectile.Projectile.BuildMobProjectile(WeaponGenerator.GetStaffProjectile(), this, (target.transform.position - transform.position).normalized);
 		}
 	}
 }

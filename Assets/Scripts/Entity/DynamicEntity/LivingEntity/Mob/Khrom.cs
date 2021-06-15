@@ -19,7 +19,8 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 
         protected override void Attack() {
             Player.Player target = targeter.target;
-            // TODO: spawn projectile
+            Animator.Play(AttackAnims[(int) LastAnimationState]);
+            Projectile.Projectile.BuildMobProjectile(WeaponGenerator.GetStaffProjectile(), this, (target.transform.position - transform.position).normalized);
         }
     }
 }

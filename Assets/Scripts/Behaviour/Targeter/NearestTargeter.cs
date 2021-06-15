@@ -13,7 +13,7 @@ namespace Behaviour.Targeter {
 			this.isNearer = isNearer ?? ((source, nearest, other) => !(nearest is null) && (source.Position - nearest.Position).sqrMagnitude <= (source.Position - other.Position).sqrMagnitude);
 		}
 
-		public Entity.Entity AcquireTarget() {
+		public virtual Entity.Entity AcquireTarget() {
 			TTarget[] entities = UnityEngine.Object.FindObjectsOfType<TTarget>();
 			target = null;
 			foreach (TTarget targetEntity in entities) {
@@ -27,7 +27,7 @@ namespace Behaviour.Targeter {
 	public class NearestPlayerTargeter: NearestTargeter<Entity.Entity, Player> {
 		public NearestPlayerTargeter(Entity.Entity entity, Func<Entity.Entity, Player, Player, bool> isNearer = null): base(entity, isNearer) { }
 		
-		public Entity.Entity AcquireTarget() {
+		public override Entity.Entity AcquireTarget() {
 			List<Player> entities = CustomNetworkManager.Instance.AlivePlayers;
 			target = null;
 			foreach (Player targetEntity in entities) {
