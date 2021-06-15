@@ -127,6 +127,8 @@ namespace Generation{
                 cover.color = new Color(255, 255, 255, 0);
                 if (cover.TryGetComponent(out Collider2D box))
                     Destroy(box);
+                if (cover.TryGetComponent(out GameObject gO))
+                    Destroy(gO);
             }
             if (triggerZone) Destroy(triggerZone);
         }
