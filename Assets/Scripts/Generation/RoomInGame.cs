@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DataBanks;
+using Entity.DynamicEntity.LivingEntity;
 using Entity.DynamicEntity.LivingEntity.Mob;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
@@ -52,7 +53,7 @@ namespace Generation{
         [SerializeField] private MobsPrefabsDB mobsAvailable;
         [SerializeField] private GameObject[] mobsSpawnGO;
         private Vector3[] _mobSpawns;
-        private List<GameObject> _mobs;
+        private List<Mob> _mobs;
         private InputManager _inputManager;
 
         private void Start() {
@@ -65,7 +66,7 @@ namespace Generation{
                 _mobSpawns[i] = mobsSpawnGO[i].transform.position;
             }
 
-            _mobs = new List<GameObject>();
+            _mobs = new List<Mob>();
         }
 
         public override void OnStartServer() {
@@ -131,16 +132,16 @@ namespace Generation{
             if (triggerZone) Destroy(triggerZone);
         }
 
-        [Server]
-        private void SpawnMobs() {
+        [Server] private void SpawnMobs() {
             bool placedOne = false;
             foreach (Vector3 pos in _mobSpawns) {
                 if (!(!placedOne || Random.Range(0, 100) <= 90)) continue;
                 placedOne = true;
                 GameObject mobGO = mobsAvailable.mobsPrefabs[Random.Range(0, mobsAvailable.mobsPrefabs.Length)];
-                GameObject mob = Instantiate(mobGO, pos, quaternion.identity);
+                if (!Instantiate(mobGO, pos, quaternion.identity).TryGetComponent(out Mob mob)) return;
+                mob.OnEntityDie.AddListener(CheckRoomCleared);
                 _mobs.Add(mob);
-                NetworkServer.Spawn(mob);
+                NetworkServer.Spawn(mob.gameObject);
             }
         }
 
@@ -152,10 +153,18 @@ namespace Generation{
             }
         }
 
+        [Server] private void CheckRoomCleared(LivingEntity entity) {
+            if (hasBeenCleared || !hasBeenDiscovered) return;
+            _mobs.Remove(entity as Mob);
+            hasBeenCleared = _mobs.Count == 0;
+        } 
+
         [ServerCallback] private void Update() {
-            if (Input.GetKeyDown(KeyCode.P) && hasBeenDiscovered) hasBeenCleared = true;
-            if (!(!hasBeenCleared && hasBeenDiscovered && _mobs.TrueForAll(mob => !mob))) return;
-            hasBeenCleared = true;
+            // Kills EVERYTHING :)
+            if (!Input.GetKeyDown(KeyCode.P) || !hasBeenDiscovered) return;
+            // Don't change to foreach or whatever otherwise, _mobs while be modified during the loop :/
+            for (int i = 0; i < _mobs.Count; i = 0)
+                _mobs[i].GetAttacked(10000);
         }
         
         [ServerCallback] private void OnTriggerEnter2D(Collider2D other) {
