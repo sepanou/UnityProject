@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public class ForestSpirit: Mob {
-		public override int cooldown { get; protected set; } = 60;
-		public override int atk { get; protected set; } = 50;
+		public override int cooldown { get; protected set; } = 10;
+		public override int atk { get; protected set; } = 20;
 		private const float AtkMaxDist = 12;
-		private const float MovMinDist = 8;
+		private const float MovMinDist = 4;
 		private const float MovMaxDist = 16;
 
 		private void Start() {

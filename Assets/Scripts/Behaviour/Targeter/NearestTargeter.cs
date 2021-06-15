@@ -17,7 +17,7 @@ namespace Behaviour.Targeter {
 			TTarget[] entities = UnityEngine.Object.FindObjectsOfType<TTarget>();
 			target = null;
 			foreach (TTarget targetEntity in entities) {
-				if (isNearer(entity, target, targetEntity)) continue;
+				if (!targetEntity || isNearer(entity, target, targetEntity)) continue;
 				target = targetEntity;
 			}
 			return target;
@@ -31,7 +31,7 @@ namespace Behaviour.Targeter {
 			List<Player> entities = CustomNetworkManager.Instance.AlivePlayers;
 			target = null;
 			foreach (Player targetEntity in entities) {
-				if (isNearer(entity, target, targetEntity)) continue;
+				if (!targetEntity || !targetEntity.IsAlive || isNearer(entity, target, targetEntity)) continue;
 				target = targetEntity;
 			}
 			return target;
