@@ -30,7 +30,7 @@ namespace Entity.DynamicEntity.LivingEntity {
 		public AnimationState LastAnimationState { get; private set; }
 		protected readonly CustomEvent<float> OnHealthChange = new CustomEvent<float>();
 		private Rigidbody2D _rigidBody;
-		public bool IsAlive { get; [Server] protected set; } = true;
+		public bool IsAlive => Health > 0;
 
 		[SerializeField] private bool advancedMoves;
 
@@ -126,7 +126,6 @@ namespace Entity.DynamicEntity.LivingEntity {
 			if (!IsAlive || atk == 0) return;
 			Health = Mathf.Max(Health - atk, 0);
 			SyncHealthChanged(Health, Health);
-			IsAlive = Health > 0;
 			AudioDB.PlayUISound("damageTaken");
 			if (IsAlive) return;
 			OnEntityDie?.Invoke(this);

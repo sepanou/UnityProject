@@ -82,7 +82,6 @@ namespace UI_Audio {
 			charmDescription.gameObject.SetActive(false);
 			
 			// Player Class UI
-			Player.OnLocalPlayerClassChange.AddListener(ChangeLocalPlayerClassInfo);
 			UpdateCurrentWeapon(null);
 			
 			// Display Key
@@ -203,7 +202,7 @@ namespace UI_Audio {
 		public void OpenWarningBox() => warningBox.gameObject.SetActive(true);
 		
 		// Player Class information
-		private void ChangeLocalPlayerClassInfo(ClassData data) {
+		public void ChangeLocalPlayerClassInfo(ClassData data) {
 			if (classIcon)
 				classIcon.sprite = data.classIcon;
 			powerBar.sprite = data.powerBar;
