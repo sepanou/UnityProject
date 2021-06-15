@@ -1,5 +1,4 @@
 ﻿using Behaviour.Targeter;
-using Entity;
 using UnityEngine;
 
 namespace Behaviour {
@@ -8,7 +7,7 @@ namespace Behaviour {
 		
 		public override Vector2 NextDirection() {
 			Entity.Entity target = targeter.AcquireTarget();
-			return target is null ? Vector2.zero : target.Position - entity.Position;
+			return target ? target.Position - entity.Position : Vector2.zero;
 		}
 	}
 	
@@ -18,9 +17,5 @@ namespace Behaviour {
 	
 	public class SpecificStraightFollower<TEntity>: StraightFollower<SpecificTargeter<TEntity>> where TEntity: Entity.Entity {
 		public SpecificStraightFollower(Entity.Entity source, TEntity target): base(source, new SpecificTargeter<TEntity>(target)) { }
-	}
-	
-	public class SpecificMarkerStraightFollower: SpecificStraightFollower<Marker> {
-		public SpecificMarkerStraightFollower(Entity.Entity source, Marker target): base(source, target) { }
 	}
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Entity.DynamicEntity.LivingEntity;
+using UnityEngine;
 
 namespace Behaviour {
 	public class DistanceBehaviour<TEntity, TBehaviour>: Behaviour<TEntity> where TEntity: Entity.Entity where TBehaviour: Behaviour<TEntity> {

@@ -158,7 +158,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.104872525, y: -0.14624166}
+  m_Offset: {x: -0.119882375, y: -0.17125797}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -169,7 +169,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.2228662, y: 2.876011}
+  m_Size: {x: 1.0327411, y: 2.8259783}
   m_EdgeRadius: 0
 --- !u!114 &1165635106654535428
 MonoBehaviour:
@@ -187,11 +187,11 @@ MonoBehaviour:
   syncInterval: 0.1
   spriteRenderer: {fileID: 5215461214401745811}
   interactionCollider: {fileID: 0}
-  speed: 2.5
+  speed: 3
   entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
     type: 3}
   nameTag: Great Khrom
-  maxHealth: 100
+  maxHealth: 1000
   advancedMoves: 0
 --- !u!114 &5272519618421089043
 MonoBehaviour:

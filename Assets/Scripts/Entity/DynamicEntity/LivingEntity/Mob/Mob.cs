@@ -49,7 +49,6 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 				default:
 					return;
 			}
-
 			Animator.Play(AttackAnims[(int) LastAnimationState]);
 			target.GetAttacked(atk);
 		}

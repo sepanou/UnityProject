@@ -38,7 +38,7 @@ namespace Entity.StaticEntity {
 		}
 
 		[Server] public void Interact(Player player) {
-			CustomNetworkManager.Instance.PlayerPrefabs.ForEach(playerToTp => {
+			CustomNetworkManager.Instance.AlivePlayers.ForEach(playerToTp => {
 				playerToTp.transform.position = new Vector3(11, -7, 0);
 			});
 		}

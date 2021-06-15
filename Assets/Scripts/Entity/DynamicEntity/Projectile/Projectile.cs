@@ -31,7 +31,7 @@ namespace Entity.DynamicEntity.Projectile {
 			_rigidBody.velocity = _facingDirection * Speed;
 		}
 
-		private static Projectile BuildMobProjectile(Projectile projectilePrefab, Mob mob, Vector2 direction) {
+		public static Projectile BuildMobProjectile(Projectile projectilePrefab, Mob mob, Vector2 direction) {
 			Projectile projectile = Instantiate(projectilePrefab, mob.transform.position, Quaternion.Euler(
 				new Vector3(0, 0, Vector2.SignedAngle(projectilePrefab.projectileOrientation, direction))
 			));
@@ -41,6 +41,7 @@ namespace Entity.DynamicEntity.Projectile {
 			projectile._spawnTime = Time.fixedTime;
 			projectile.Instantiate();
 			SetSameRenderingParameters(mob, projectile);
+			NetworkServer.Spawn(projectile.gameObject);
 			return projectile;
 		}
 
