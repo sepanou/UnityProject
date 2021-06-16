@@ -52,6 +52,12 @@ public class CustomNetworkManager: NetworkManager {
 		PlayerPrefabs.ForEach(p => p.TargetPrintInfoMessage(p.connectionToClient, "You have not survived Paimpont Forest!"));
 	}
 
+	public void WonTheGame() {
+		RemoveSpawnedObjects();
+		ServerChangeScene(onlineScene);
+		PlayerPrefabs.ForEach(p => p.TargetPrintInfoMessage(p.connectionToClient, "You won the game!"));
+	}
+
 	public void PlaySceneTransitionAnimation(string trigger) => sceneAnimator.Play(trigger);
 	
 	public override void OnServerAddPlayer(NetworkConnection conn) {
