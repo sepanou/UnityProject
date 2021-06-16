@@ -151,8 +151,10 @@ namespace Entity.DynamicEntity.Weapon {
 			// Interactions + Authority
 			netIdentity.AssignClientAuthority(player.netIdentity.connectionToClient);
 			IsGrounded = false;
+			SyncIsGroundedChanged(true, false);
 			// Set owner
 			Holder = player;
+			SyncHolderChanged(null, player);
 			// Target authority for synchronization of networkTransforms
 			if (!TryGetComponent(out NetworkTransform netTransform)) return; // Should never happen
 			netTransform.clientAuthority = true;
@@ -168,6 +170,7 @@ namespace Entity.DynamicEntity.Weapon {
 			// Set owner
 			Holder.RemoveWeapon(this);
 			Holder = null;
+			SyncHolderChanged(null, null);
 			// Transform
 			Transform current = transform;
 			current.SetParent(null, false);
@@ -175,6 +178,7 @@ namespace Entity.DynamicEntity.Weapon {
 			current.position = player.transform.position;
 			// Interactions
 			IsGrounded = true;
+			SyncIsGroundedChanged(false, true);
 			_playerFound = false;
 		}
 

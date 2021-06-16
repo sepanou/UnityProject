@@ -85,7 +85,7 @@ namespace UI_Audio {
 			UpdateCurrentWeapon(null);
 			
 			// Display Key
-			displayKey.StopDisplay();
+			displayKey.Initialize();
 		}
 
 		/// <summary>

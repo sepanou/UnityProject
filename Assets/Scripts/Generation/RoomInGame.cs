@@ -28,11 +28,10 @@ namespace Generation{
         [SyncVar(hook = nameof(SyncHasBeenDiscoveredChanged))] public bool hasBeenDiscovered;
         private void SyncHasBeenDiscoveredChanged(bool oldHbd, bool hbd) {
             if (!hbd) return;
-            HideCover();
+            DestroyCover();
             if (!hasBeenCleared) {
                 AudioDB.PlayUISound("treesDoorsLowering");
                 StartCoroutine(StartRaiseWalls());
-                if (isServer) CustomNetworkManager.Instance.PlayerPrefabs.ForEach(player => player.Orchid++);
             }
         }
         
@@ -123,14 +122,8 @@ namespace Generation{
             Destroy(doorsTrees);
         }
 
-        [Client] private void HideCover() {
-            if (cover) {
-                cover.color = new Color(255, 255, 255, 0);
-                if (cover.TryGetComponent(out Collider2D box))
-                    Destroy(box);
-                if (cover.TryGetComponent(out GameObject gO))
-                    Destroy(gO);
-            }
+        private void DestroyCover() {
+            if (cover) Destroy(cover.gameObject);
             if (triggerZone) Destroy(triggerZone);
         }
 
@@ -159,6 +152,7 @@ namespace Generation{
             if (hasBeenCleared || !hasBeenDiscovered) return;
             _mobs.Remove(entity as Mob);
             hasBeenCleared = _mobs.Count == 0;
+            if (hasBeenCleared) Destroy(doorsColliders);
         }
 
         [Server] private void ClearRoom() {
@@ -191,10 +185,11 @@ namespace Generation{
             if (!CustomNetworkManager.Instance.AlivePlayers.TrueForAll(player =>
                 triggerZone.IsTouching(player.Collider2D)))
                 return;
+            
             hasBeenDiscovered = true;
-            if (cover.TryGetComponent(out Collider2D box))
-                Destroy(box);
-            Destroy(triggerZone);
+            CustomNetworkManager.Instance.PlayerPrefabs.ForEach(player => player.Orchid++);
+            
+            DestroyCover();
 
             if (hasBeenCleared) return;
             foreach (Collider2D col in doorsColliders.GetComponents<Collider2D>())

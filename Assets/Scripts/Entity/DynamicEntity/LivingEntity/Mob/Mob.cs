@@ -19,6 +19,7 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 		}
 
 		[Server] private void OnDeath(LivingEntity living) {
+			StartCoroutine(DeathAnimation());
 			CustomNetworkManager.Instance.AlivePlayers.ForEach(p => p.AddHealth(5));
 			Kibry kibry = WeaponGenerator.GetRandomKibry();
 			kibry.transform.position = living.Position;
@@ -38,7 +39,7 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 			return target && target.Collider2D.IsTouching(Collider2D);
 		}
 
-		protected virtual void Attack() {
+		[Server] protected virtual void Attack() {
 			Player.Player target;
 			switch (behaviour) {
 				case DistanceNearestPlayerStraightFollower distanceNearestPlayerStraightFollower:
@@ -51,29 +52,34 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 					return;
 			}
 			
+			// Don't change to the funny operator (not supported)
 			if (IsAttacking is null)
 				IsAttacking = StartCoroutine(AttackAnimation());
 			target.GetAttacked(atk);
 		}
+
+		[ClientRpc] private void RpcPlayAttackAnimation(int state) {
+			if (Animator) Animator.Play(AttackAnims[state]);
+		}
 		
-		protected IEnumerator AttackAnimation() {
+		[ClientRpc] protected override void RpcDying() {
+			if (Animator) Animator.SetTrigger(IsDeadId);
+		}
+
+		[Server] protected IEnumerator AttackAnimation() {
 			IBehaviour temp = behaviour;
 			behaviour = new Idle();
-			Animator.Play(AttackAnims[(int) LastAnimationState]);
+			RpcPlayAttackAnimation((int) LastAnimationState);
 			yield return new WaitForSeconds(0.3f);
 			behaviour = temp;
 			IsAttacking = null;
 		}
 
-		private IEnumerator DeathAnimation() {
+		[Server] private IEnumerator DeathAnimation() {
 			behaviour = new Idle();
 			Animator.SetTrigger(IsDeadId);
 			yield return new WaitForSeconds(0.5f);
 			NetworkServer.Destroy(gameObject);
-		}
-		
-		protected override void RpcDying() {
-			StartCoroutine(DeathAnimation());
 		}
 
 		[ServerCallback]

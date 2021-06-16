@@ -1,7 +1,9 @@
-﻿using Entity.Collectibles;
+﻿using System.Collections;
+using Entity.Collectibles;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using UI_Audio.Inventories;
+using UnityEngine;
 
 namespace Entity.StaticEntity.Npcs {
     public class Smith : ShopKeeper {
@@ -12,14 +14,22 @@ namespace Entity.StaticEntity.Npcs {
             Instantiate();
         }
 
+        [Client]
+        private IEnumerator WaitForFinalCharm(Charm finalCharm) {
+            for (int i = 0; i < 10; i++) {
+                if (InventoryManager.playerInventory.TryRemoveItem(finalCharm)) {
+                    PrintDialog(new[] { "#trade-completed", "#want-more" }, null, true);
+                    GetInventory<SmithInventory>().SetResultSlot(finalCharm);
+                    yield break;
+                }
+                
+                yield return new WaitForSeconds(0.2f);
+            }
+        }
+
         [TargetRpc] private void TargetMergeSuccessful(NetworkConnection target, Charm finalCharm) {
             Inventory.ClearInventory();
-			
-            if (!InventoryManager.playerInventory.TryRemoveItem(finalCharm))
-                return; // Should not happen
-			
-            PrintDialog(new[] { "#trade-completed", "#want-more" }, null, true);
-            GetInventory<SmithInventory>().SetResultSlot(finalCharm);
+            StartCoroutine(WaitForFinalCharm(finalCharm));
         }
         
         [Command(requiresAuthority = false)]

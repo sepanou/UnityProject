@@ -285,6 +285,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			switch (op) {
 				case SyncList<uint>.Operation.OP_ADD:
 					item.transform.SetParent(transform, false);
+					item.SetSpriteRendererVisible(false);
 					if (!isLocalPlayer) return;
 					item.transform.localPosition = item.defaultCoordsWhenLikedToPlayer;
 					if (!Weapon) CmdSwitchWeapon(item);
@@ -296,6 +297,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					break;
 				case SyncList<uint>.Operation.OP_REMOVEAT:
 					item.transform.SetParent(null, false);
+					item.SetSpriteRendererVisible(true);
 					if (!isLocalPlayer) return;
 					_inventory.TryRemoveItem(item);
 					break;
@@ -310,6 +312,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			switch (op) {
 				case SyncList<uint>.Operation.OP_ADD:
 					item.transform.SetParent(transform, false);
+					item.SetSpriteRendererVisible(false);
 					if (!isLocalPlayer) return;
 					_inventory.TryAddItem(item);
 					break;
@@ -318,6 +321,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					_inventory.ClearInventory();
 					break;
 				case SyncList<uint>.Operation.OP_REMOVEAT:
+					item.SetSpriteRendererVisible(true);
 					item.transform.SetParent(null, false);
 					if (!isLocalPlayer) return;
 					_inventory.TryRemoveItem(item);
@@ -355,6 +359,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					maxHealth -= item.bonuses.healthBonus;
 					Health = changedHealth <= 0 ? Health : changedHealth;
 					Speed = DefaultSpeed * (1 + _currentCharmBonus.speedBonus);
+					if (_charms.Count == 0)
+						_currentCharmBonus = null;
 					break;
 				default:
 					Debug.LogWarning("An error happened while updating the sync charm list (Server)");
@@ -444,7 +450,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[ClientRpc] protected override void RpcDying() {
 			Debug.Log("Player " + playerName + " is dead !");
-			StartCoroutine(DeathAnimation());
+			Animator.SetTrigger(IsDeadId);
 			if (!isLocalPlayer) return;
 			InventoryManager.CloseAllInventories();
 			SpectateNextPlayer();
@@ -468,11 +474,14 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			_orchid = FileStorage.GetPlayerOrchid(pseudo);
 		}
 
-		[Command] public void CmdSwitchPlayerClass(PlayerClasses @class) => playerClass = @class;
+		[Command] public void CmdSwitchPlayerClass(PlayerClasses @class) {
+			playerClass = @class;
+			SyncPlayerClassChanged(playerClass, playerClass);
+		}
 
-		[Command] private void CmdAttack(bool fireOneButton, bool fireTwoButton) {
-			if (!fireOneButton && !fireTwoButton) return;
-			if (Weapon && Weapon.CanAttack()) Weapon.UseWeapon(fireOneButton, fireTwoButton);
+		[Command] private void CmdAttack(bool defaultAttack, bool specialAttack) {
+			if (!defaultAttack && !specialAttack) return;
+			if (Weapon && Weapon.CanAttack()) Weapon.UseWeapon(defaultAttack, specialAttack);
 		}
 
 		[Command] private void CmdSwitchWeapon(Weapon.Weapon wp) {
@@ -505,29 +514,26 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[Command] private void CmdCheatCode(string code) {
 			if (playerName != CheatCodePseudo) return;
-			GameObject obj;
+			GameObject obj = null;
+			
 			switch (code) {
 				case "Bow":
 					obj = WeaponGenerator.GenerateBow().gameObject;
-					obj.transform.position = transform.position;
-					NetworkServer.Spawn(obj);
 					break;
 				case "Sword":
 					obj = WeaponGenerator.GenerateSword().gameObject;
-					obj.transform.position = transform.position;
-					NetworkServer.Spawn(obj);
 					break;
 				case "Staff":
 					obj = WeaponGenerator.GenerateStaff().gameObject;
-					obj.transform.position = transform.position;
-					NetworkServer.Spawn(obj);
 					break;
 				case "Charm":
 					obj = WeaponGenerator.GenerateCharm().gameObject;
-					obj.transform.position = transform.position;
-					NetworkServer.Spawn(obj);
 					break;
 			}
+			
+			if (obj is null) return;
+			obj.transform.position = transform.position;
+			NetworkServer.Spawn(obj);
 		}
 
 
@@ -602,14 +608,22 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				return;
 			}
 
+			if ((_sellerInventory && _sellerInventory.IsOpen)
+			    || (_containerInventory && _containerInventory.IsOpen)
+			    || _inventory.IsOpen)
+				return;
+
 			if (InputManager.GetKeyDown("SwitchWeapon")) {
 				CmdSwitchWeapon(null);
 				return;
 			}
 			
-			if (!_inventory.IsOpen)
-				CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
-					InputManager.GetKeyDown("SpecialAttack"));
+			if (!_inventory.IsOpen) {
+				bool defaultAttack = InputManager.GetKeyDown("DefaultAttack");
+				bool specialAttack = InputManager.GetKeyDown("SpecialAttack");
+				if (defaultAttack || specialAttack)
+					CmdAttack(defaultAttack,specialAttack);
+			}
 
 			if (playerName != CheatCodePseudo) return;
 			
@@ -617,6 +631,7 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			if (Input.GetKeyDown(KeyCode.K)) CmdCheatCode("Sword");
 			if (Input.GetKeyDown(KeyCode.L)) CmdCheatCode("Staff");
 			if (Input.GetKeyDown(KeyCode.V)) CmdCheatCode("Charm");
+			if (Input.GetKeyDown(KeyCode.O)) CmdCheatCode("Projectile");
 		}
 	}
 	

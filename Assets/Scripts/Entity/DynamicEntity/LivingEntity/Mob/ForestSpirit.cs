@@ -1,5 +1,6 @@
 ﻿using Behaviour;
 using Behaviour.Targeter;
+using Mirror;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public class ForestSpirit: Mob {
@@ -27,7 +28,7 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 			return target && (target.transform.position - transform.position).sqrMagnitude < AtkMaxDist * AtkMaxDist;
 		}
 
-		protected override void Attack() {
+		[Server] protected override void Attack() {
 			Player.Player target;
 			switch (behaviour) {
 				case DistanceNearestPlayerStraightFollower distanceNearestPlayerStraightFollower:
