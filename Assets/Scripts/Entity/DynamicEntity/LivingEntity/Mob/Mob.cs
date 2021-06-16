@@ -58,9 +58,13 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 			target.GetAttacked(atk);
 		}
 
-		[ClientRpc] private void RpcPlayAttackAnimation(int state) => Animator.Play(AttackAnims[state]);
+		[ClientRpc] private void RpcPlayAttackAnimation(int state) {
+			if (Animator) Animator.Play(AttackAnims[state]);
+		}
 		
-		[ClientRpc] protected override void RpcDying() => Animator.SetTrigger(IsDeadId);
+		[ClientRpc] protected override void RpcDying() {
+			if (Animator) Animator.SetTrigger(IsDeadId);
+		}
 
 		[Server] protected IEnumerator AttackAnimation() {
 			IBehaviour temp = behaviour;
