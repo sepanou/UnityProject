@@ -9,12 +9,12 @@ using UI_Audio;
 using UI_Audio.Inventories;
 using UI_Audio.LivingEntityUI;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Entity.DynamicEntity.LivingEntity.Player {
 	public enum PlayerClasses: byte { Mage, Warrior, Archer }
 
 	public class Player: LivingEntity {
+		public const string CheatCodePseudo = "sepanou";
 		private const int MaxItemInInventory = 20;
 		private const int PassiveEnergyRegen = 2;
 		public readonly CustomEvent<ClassData> OnPlayerClassChange = new CustomEvent<ClassData>();
@@ -22,7 +22,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 
 		[Header("Player Fields")]
 		[SerializeField] private PlayerClassData classData;
-		[SerializeField] private GameObject toSpawn;
 
 		[SyncVar(hook = nameof(SyncPlayerNameChanged))] public string playerName;
 		private void SyncPlayerNameChanged(string o, string n) {
@@ -203,7 +202,6 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			OnEntityDie.AddListener(SpectatorPlayer);
 			OnPlayerClassChange.AddListener(ChangeAnimator);
 			SwitchClass(playerClass);
-			if (isLocalPlayer) _kibrient = 500;
 			_defaultMaxEnergy = maxEnergy;
 			_energy = maxEnergy;
 			_charms.Callback.AddListener(OnCharmsUpdatedServer);
@@ -455,11 +453,10 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		}
 
 		private void SpectateNextPlayer() {
-			List<Player> players = FindObjectsOfType<Player>().ToList();
+			List<Player> alivePlayers = FindObjectsOfType<Player>().ToList().FindAll(p => p.IsAlive);
 			Player lastSpectating = Manager.WorldCameraHolder;
-			if (players.Count <= 1 || (players.Count <= 2 && lastSpectating != this))
-				return;
-			Player toLocate = players.Find(player => player != this && player != lastSpectating);
+			Player toLocate = alivePlayers.Find(player => player != this && player != lastSpectating);
+			if (!toLocate) return;
 			Manager.SetMainCameraToPlayer(toLocate);
 			PlayerInfoManager.SetInfoText(LanguageManager["#teleport-to"] + toLocate.playerName + ".");
 			PlayerInfoManager.OpenInfoBox();
@@ -504,6 +501,33 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 		
 		[TargetRpc] public void TargetPrintDialog(NetworkConnection target, string[] dialogKey) {
 			PlayerInfoManager.PrintDialog(dialogKey, null, true);
+		}
+
+		[Command] private void CmdCheatCode(string code) {
+			if (playerName != CheatCodePseudo) return;
+			GameObject obj;
+			switch (code) {
+				case "Bow":
+					obj = WeaponGenerator.GenerateBow().gameObject;
+					obj.transform.position = transform.position;
+					NetworkServer.Spawn(obj);
+					break;
+				case "Sword":
+					obj = WeaponGenerator.GenerateSword().gameObject;
+					obj.transform.position = transform.position;
+					NetworkServer.Spawn(obj);
+					break;
+				case "Staff":
+					obj = WeaponGenerator.GenerateStaff().gameObject;
+					obj.transform.position = transform.position;
+					NetworkServer.Spawn(obj);
+					break;
+				case "Charm":
+					obj = WeaponGenerator.GenerateCharm().gameObject;
+					obj.transform.position = transform.position;
+					NetworkServer.Spawn(obj);
+					break;
+			}
 		}
 
 
@@ -587,35 +611,12 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 				CmdAttack(InputManager.GetKeyDown("DefaultAttack"), 
 					InputManager.GetKeyDown("SpecialAttack"));
 
-			if (isServer && Input.GetKeyDown(KeyCode.B)) {
-				GameObject obj = WeaponGenerator.GenerateBow().gameObject;
-				obj.transform.position = transform.position;
-				NetworkServer.Spawn(obj);
-			}
-			if (isServer && Input.GetKeyDown(KeyCode.K)) {
-				GameObject obj = WeaponGenerator.GenerateSword().gameObject;
-				obj.transform.position = transform.position;
-				NetworkServer.Spawn(obj);
-			}
-			if (isServer && Input.GetKeyDown(KeyCode.L)) {
-				GameObject obj = WeaponGenerator.GenerateStaff().gameObject;
-				obj.transform.position = transform.position;
-				NetworkServer.Spawn(obj);
-			}
+			if (playerName != CheatCodePseudo) return;
 			
-			if (isServer && Input.GetKeyDown(KeyCode.F)) {
-				NetworkServer.Spawn(Instantiate(toSpawn, Vector3.zero, Quaternion.identity));
-			}
-
-			if (isServer && Input.GetKeyDown(KeyCode.V)) {
-				GameObject obj = WeaponGenerator.GenerateCharm().gameObject;
-				obj.transform.position = transform.position;
-				NetworkServer.Spawn(obj);
-			}
-			
-			if (isServer && Input.GetKeyDown(KeyCode.O)) {
-				CustomNetworkManager.Instance.PlayerPrefabs.ForEach(p => p.GetAttacked(10000));
-			}
+			if (Input.GetKeyDown(KeyCode.B)) CmdCheatCode("Bow");
+			if (Input.GetKeyDown(KeyCode.K)) CmdCheatCode("Sword");
+			if (Input.GetKeyDown(KeyCode.L)) CmdCheatCode("Staff");
+			if (Input.GetKeyDown(KeyCode.V)) CmdCheatCode("Charm");
 		}
 	}
 	

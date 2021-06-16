@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DataBanks;
 using Entity.DynamicEntity.LivingEntity;
 using Entity.DynamicEntity.LivingEntity.Mob;
+using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
 using Unity.Mathematics;
 using UnityEngine;
@@ -51,39 +52,43 @@ namespace Generation{
 			});
 		}
 
-		[Server]
-		private void CheckRoomCleared(LivingEntity entity) {
+		[Server] private void CheckRoomCleared(LivingEntity entity) {
 			if (!hasBeenTp || hasBeenCleared) return;
 			_mobs.Remove(entity as Mob);
 			Khrom boss = FindObjectOfType<Khrom>();
 			hasBeenCleared = _mobs.Count <= 0 && (!boss || !boss.IsAlive);
 		}
-
-		[Server]
-		private void BossDied(LivingEntity entity) {
-			if (hasBeenCleared) return;
-			KillStuff();
-		}
-
-		[ServerCallback]
-		private void Update() {
-			if (hasBeenCleared && !hasBeenWon) {
-				hasBeenWon = true;
-				CustomNetworkManager.Instance.WonTheGame();
-				return;
-			}
-			if (!hasBeenTp || !Input.GetKeyDown(KeyCode.P)) return;
-			KillStuff();
-		}
 		
-		[Server]
-		private void KillStuff() {
+		[Server] private void KillStuff() {
 			if (!hasBeenTp || hasBeenCleared) return;
 			for (int i = 0; i < _mobs.Count; i = 0)
 				_mobs[i].GetAttacked(int.MaxValue);
 			Khrom boss = FindObjectOfType<Khrom>();
 			if (boss && boss.IsAlive) boss.GetAttacked(int.MaxValue);
 			hasBeenCleared = true;
+		}
+
+		[Server] private void BossDied(LivingEntity entity) {
+			if (hasBeenCleared) return;
+			KillStuff();
+		}
+
+		[Command(requiresAuthority = false)]
+		private void CmdCheatCode(Player player, string code) {
+			if (player.playerName != Player.CheatCodePseudo) return;
+			if (code == "Clear" && hasBeenTp && !hasBeenCleared)
+				KillStuff();
+		}
+
+		private void Update() {
+			LocalGameManager manager = LocalGameManager.Instance;
+			if (manager.LocalPlayer && manager.LocalPlayer.playerName == Player.CheatCodePseudo && Input.GetKeyDown(KeyCode.P))
+				CmdCheatCode(manager.LocalPlayer, "Clear");
+			
+			if (!isServer || !hasBeenCleared || hasBeenWon) return;
+			
+			hasBeenWon = true;
+			CustomNetworkManager.Instance.WonTheGame();
 		}
 	}
 }
