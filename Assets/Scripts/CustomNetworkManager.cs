@@ -32,10 +32,14 @@ public class CustomNetworkManager : NetworkManager {
 	public readonly List<Player> AlivePlayers = new List<Player>();
 	private Coroutine _sceneTransitionCoroutine;
 
-	public override void Start() {
-		base.Start();
+	public override void OnStartServer() {
+		base.OnStartServer();
 		Instance = this;
+	}
 
+	public override void OnStartClient() {
+		base.OnStartClient();
+		Instance = this;
 	}
 
 	private void SetPlayerSpawnPoints(IReadOnlyList<Vector3> spawnPoints) {
@@ -112,10 +116,25 @@ public class CustomNetworkManager : NetworkManager {
 			LocalGameManager.Instance.SetLocalGameState(LocalGameStates.Hub);
 	}
 
+	// Called on server when a player disconnects
 	public override void OnServerDisconnect(NetworkConnection conn) {
+		if (!conn.identity.TryGetComponent(out Player player))
+			return;
+		PlayerPrefabs.Remove(player);
+		AlivePlayers.Remove(player);
+		if (PlayerPrefabs.Count == 0 && !IsSceneActive(onlineScene)) {
+			RemoveSpawnedObjects();
+			ServerChangeScene(onlineScene);
+		}
+		base.OnServerDisconnect(conn);
+	}
+
+	public override void OnStopServer() {
 		PlayerPrefabs.Clear();
 		AlivePlayers.Clear();
-		base.OnServerDisconnect(conn);
+		if (!IsSceneActive(onlineScene))
+			ServerChangeScene(onlineScene);
+		base.OnStopServer();
 	}
 
 	public override void OnStopClient() {

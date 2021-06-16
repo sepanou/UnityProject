@@ -120,25 +120,30 @@ namespace Entity.Collectibles {
 
 		public int GetKibryValue() => CharmData.GetKibryValue(bonuses);
 
-		[Server] public void SetIsGrounded(bool state) => _isGrounded = state;
+		[Server] public void SetIsGrounded(bool state) {
+			_isGrounded = state;
+			SyncIsGroundedChanged(!state, state);
+		}
 
 		[Server] public override void Interact(Player player)
 			=> StartCoroutine(OnTargetDetected(this, player));
 
 		[Server] public void LinkToPlayer(Player player) {
 			_isGrounded = false;
+			SyncIsGroundedChanged(true, false);
 			// Transform
 			transform.SetParent(player.transform, false);
 		}
 		
 		[Server] public void Drop(Player player) {
 			_isGrounded = true;
+			SyncIsGroundedChanged(false, true);
+			player.RemoveCharm(this);
 			// Transform
 			Transform current = transform;
 			current.SetParent(null, false);
 			current.localPosition = Vector3.zero;
 			current.position = player.transform.position;
-			player.RemoveCharm(this);
 		}
 	}
 	

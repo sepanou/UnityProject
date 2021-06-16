@@ -20,6 +20,7 @@ namespace Entity {
 		[SerializeField] protected SpriteRenderer spriteRenderer;
 		[SerializeField] private Collider2D interactionCollider;
 
+		protected bool ApplyLayersOnInstantiate = true;
 		protected bool AutoStopInteracting;
 		protected Func<Player, bool> InteractionCondition;
 		// <Player, bool : is he currently interacting with the object>
@@ -88,7 +89,8 @@ namespace Entity {
 
 		public override void OnStartClient() {
 			base.OnStartClient();
-			CmdApplyLayers();
+			if (ApplyLayersOnInstantiate)
+				CmdApplyLayers();
 		}
 
 		public SpriteRenderer GetSpriteRenderer() => spriteRenderer;

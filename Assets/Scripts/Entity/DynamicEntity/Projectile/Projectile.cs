@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using Entity.DynamicEntity.LivingEntity.Mob;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Entity.DynamicEntity.Weapon.RangedWeapon;
 using Mirror;
-using UI_Audio;
 using UnityEngine;
 
 namespace Entity.DynamicEntity.Projectile {
@@ -17,15 +15,22 @@ namespace Entity.DynamicEntity.Projectile {
 		private Mob _fromMob;
 		private Rigidbody2D _rigidBody;
 		private Vector2 _facingDirection;
-		private bool _fromSpecialAttack;
 		private float _spawnTime; // The time when the projectile was spawned
+		
+		[SyncVar] protected bool FromSpecialAttack;
 
 		protected new void Instantiate() {
 			base.Instantiate();
 			if (TryGetComponent(out _rigidBody)) _rigidBody.bodyType = netIdentity.isServer
 				? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
 		}
-		
+
+		public override void OnStartClient() {
+			if (Manager.LocalState == LocalGameStates.Forest)
+				ApplyLayersOnInstantiate = false;
+			base.OnStartClient();
+		}
+
 		[Server] protected virtual void Move() {
 			if (_rigidBody.velocity != Vector2.zero) return;
 			_rigidBody.velocity = _facingDirection * Speed;
@@ -56,7 +61,7 @@ namespace Entity.DynamicEntity.Projectile {
 			projectile._fromWeapon = source;
 			projectile._fromMob = null;
 			projectile._facingDirection = source.orientation;
-			projectile._fromSpecialAttack = special;
+			projectile.FromSpecialAttack = special;
 			projectile.Speed *= source.rangeData.projectileSpeedMultiplier;
 			projectile.transform.localScale *= source.rangeData.projectileSizeMultiplier;
 			projectile._spawnTime = Time.fixedTime;
@@ -69,8 +74,6 @@ namespace Entity.DynamicEntity.Projectile {
 		[Server] public static IEnumerator SpawnProjectiles(RangedWeapon source, Transform launchPoint, float delayPerSpawn = 0.1f) {
 			Projectile projectilePrefab = source.GetProjectile();
 			for (int i = 0; i < source.rangeData.projectileNumber; i++) {
-				if (source is Bow _) AudioDB.PlayUISound("shotArrow");
-				else AudioDB.PlayUISound("magicSimpleAttack"); // Wizard
 				Projectile projectile = BuildWeaponProjectile(projectilePrefab, source, launchPoint, false);
 				NetworkServer.Spawn(projectile.gameObject);
 				yield return new WaitForSeconds(delayPerSpawn);
@@ -83,8 +86,6 @@ namespace Entity.DynamicEntity.Projectile {
 
 			float startTime = Time.time;
 			while (Time.time - startTime < duration) {
-				if (source is Bow _) AudioDB.PlayUISound("shotArrow");
-				else AudioDB.PlayUISound("magicSpecialAttack"); // Wizard
 				Projectile projectile = BuildWeaponProjectile(projectilePrefab, source, launchPoint, true);
 				NetworkServer.Spawn(projectile.gameObject);
 				yield return new WaitForSeconds(0.2f);
@@ -101,15 +102,16 @@ namespace Entity.DynamicEntity.Projectile {
 		}
 
 		[ServerCallback] protected override void OnTriggerEnter2D(Collider2D other) {
-			base.OnTriggerEnter2D(other);
 			if (other.gameObject.TryGetComponent(out Player player)) {
 				if (_fromMob) player.GetAttacked(_fromMob.atk);
 				else return;
 			} else if (other.gameObject.TryGetComponent(out Mob mob)) {
-				if (_fromWeapon) mob.GetAttacked(_fromWeapon.GetDamage(_fromSpecialAttack));
+				if (_fromWeapon) mob.GetAttacked(_fromWeapon.GetDamage(FromSpecialAttack));
 				else return;
-			}
-
+			} else if (other.gameObject.TryGetComponent(out DynamicEntity _) ||
+			           other.gameObject.TryGetComponent(out Collectibles.Collectibles _))
+				return;
+			
 			NetworkServer.Destroy(gameObject);
 		}
 	}

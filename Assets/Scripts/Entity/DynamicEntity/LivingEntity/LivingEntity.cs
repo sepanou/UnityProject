@@ -169,7 +169,6 @@ namespace Entity.DynamicEntity.LivingEntity {
 			RpcAttackedAnimation();
 			if (IsAlive) return;
 			OnEntityDie?.Invoke(this);
-			Animator.SetTrigger(IsDeadId);
 			RpcDying();
 			_rigidBody.velocity = Vector2.zero;
 		}

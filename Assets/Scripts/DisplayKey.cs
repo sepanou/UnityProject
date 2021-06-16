@@ -13,13 +13,12 @@ public class DisplayKey: MonoBehaviour {
 	[SerializeField] private Image image;
 	private bool _keyNotFound;
 
-	private void Start() {
+	public void Initialize() {
 		image = GetComponent<Image>();
 		StopDisplay();
 		InputTexture inputTexture = inputTexturesDB.Textures[inputManager.GetKeyCode("Interact").ToString()];
 		_spr1 = inputTexture.sprite1;
 		_spr2 = inputTexture.sprite2;
-
 	}
 
 	public void StartDisplay() {

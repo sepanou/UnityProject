@@ -61,16 +61,16 @@ public class LocalGameManager: MonoBehaviour {
 	}
 
 	private void LoadGameDependencies(bool loadUI = false) {
+		inputManager.Initialize();
+		inputTexturesDB.SetEntries();
 		languageManager.Initialize();
 		playerInfoManager.Initialize();
+		inventoryManager.Initialize();
 		LanguageManager.InitLanguage();
 		if (!loadUI) return;
-		inputManager.Initialize();
 		audioManager.Initialize();
 		mouseCursor.Initialize();
 		menuSettingsManager.Initialize();
-		inventoryManager.Initialize();
-		inputTexturesDB.SetEntries();
 	}
 
 	public void SetLocalGameState(LocalGameStates state) {
@@ -96,6 +96,7 @@ public class LocalGameManager: MonoBehaviour {
 					SetMainCameraToPlayer(LocalPlayer);
 				}
 				AudioDB.PlayMusic("HubMusic");
+				inventoryManager.ClearAllInventories();
 				menuSettingsManager.CloseMenu();
 				startMenuManager.CloseStartMenu();
 				playerInfoManager.ShowPlayerClassUI();
