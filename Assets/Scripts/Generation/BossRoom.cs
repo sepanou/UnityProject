@@ -4,6 +4,7 @@ using Entity.DynamicEntity.LivingEntity;
 using Entity.DynamicEntity.LivingEntity.Mob;
 using Entity.DynamicEntity.LivingEntity.Player;
 using Mirror;
+using UI_Audio;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -36,6 +37,7 @@ namespace Generation{
 			if (hasBeenTp) return;
 			hasBeenTp = true;
 			_mobSpawns = new Vector3[mobsSpawnGO.Length];
+			AudioDB.PlayMusic("bossMusic");
 			for (int i = 0; i < _mobSpawns.Length; i++)
 				_mobSpawns[i] = mobsSpawnGO[i].transform.position;
 			Instantiate(bossPrefab, bossSpawnPoint.transform.position, quaternion.identity).TryGetComponent(out Mob boss);
