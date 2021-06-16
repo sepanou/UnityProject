@@ -1,5 +1,4 @@
 ﻿using Behaviour;
-using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
     public class Wolf : Mob {

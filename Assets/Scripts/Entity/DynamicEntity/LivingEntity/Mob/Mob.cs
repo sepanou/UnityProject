@@ -11,6 +11,7 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 		public abstract int cooldown { get; protected set; }
 		protected int cooldownCount = 0;
 		public abstract int atk { get; protected set; }
+		protected Coroutine IsAttacking;
 
 		public override void OnStartServer() {
 			OnEntityDie.AddListener(OnDeath);
@@ -49,14 +50,25 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 				default:
 					return;
 			}
-			Animator.Play(AttackAnims[(int) LastAnimationState]);
+			
+			if (IsAttacking is null)
+				IsAttacking = StartCoroutine(AttackAnimation());
 			target.GetAttacked(atk);
+		}
+		
+		protected IEnumerator AttackAnimation() {
+			IBehaviour temp = behaviour;
+			behaviour = new Idle();
+			Animator.Play(AttackAnims[(int) LastAnimationState]);
+			yield return new WaitForSeconds(0.3f);
+			behaviour = temp;
+			IsAttacking = null;
 		}
 
 		private IEnumerator DeathAnimation() {
 			behaviour = new Idle();
 			Animator.SetTrigger(IsDeadId);
-			yield return new WaitForSeconds(0.3f);
+			yield return new WaitForSeconds(0.5f);
 			NetworkServer.Destroy(gameObject);
 		}
 		
@@ -67,13 +79,15 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 		[ServerCallback]
 		private void FixedUpdate() {
 			if (CanAttack()) {
-				if (cooldownCount == 0)
+				if (cooldownCount == 0) {
 					Attack();
+				}
 				cooldownCount = (cooldownCount + 1) % cooldown;
 			}
 			if (behaviour is null) return;
 			Vector2 direction = behaviour.NextDirection();
-			Move(direction.x, direction.y);
+			if (direction != Vector2.zero)
+				Move(direction.x, direction.y);
 		}
 	}
 }

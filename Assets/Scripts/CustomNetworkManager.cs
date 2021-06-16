@@ -11,20 +11,22 @@ using Entity.DynamicEntity.Weapon;
 using Mirror;
 using UnityEngine;
 
-public class CustomNetworkManager: NetworkManager {
+public class CustomNetworkManager : NetworkManager {
 	public static CustomNetworkManager Instance;
-	
-	[Header("Scene transition")] 
-	[SerializeField] private Animator sceneAnimator;
-	
-	[Header("Hub Scene")]
-	[SerializeField] [Scene] private string hubScene;
+
+	[Header("Scene transition")] [SerializeField]
+	private Animator sceneAnimator;
+
+	[Header("Hub Scene")] [SerializeField] [Scene]
+	private string hubScene;
+
 	[SerializeField] private Vector3[] hubSpawnPoints;
-	
-	[Header("Forest Scene")]
-	[SerializeField] [Scene] private string forestScene;
+
+	[Header("Forest Scene")] [SerializeField] [Scene]
+	private string forestScene;
+
 	[SerializeField] private Vector3[] forestSpawnPoints;
-	
+
 	public readonly CustomEvent<Player> OnPlayerJoinServer = new CustomEvent<Player>();
 	public readonly List<Player> PlayerPrefabs = new List<Player>();
 	public readonly List<Player> AlivePlayers = new List<Player>();
@@ -33,7 +35,7 @@ public class CustomNetworkManager: NetworkManager {
 	public override void Start() {
 		base.Start();
 		Instance = this;
-		
+
 	}
 
 	private void SetPlayerSpawnPoints(IReadOnlyList<Vector3> spawnPoints) {
@@ -49,13 +51,15 @@ public class CustomNetworkManager: NetworkManager {
 		// Everybody is dead :(
 		RemoveSpawnedObjects();
 		ServerChangeScene(onlineScene);
-		PlayerPrefabs.ForEach(p => p.TargetPrintInfoMessage(p.connectionToClient, "You have not survived Paimpont Forest!"));
+		string[] msg = {"#lose"};
+		PlayerPrefabs.ForEach(p => p.TargetPrintDialog(p.connectionToClient, msg));
 	}
 
 	public void WonTheGame() {
 		RemoveSpawnedObjects();
 		ServerChangeScene(onlineScene);
-		PlayerPrefabs.ForEach(p => p.TargetPrintInfoMessage(p.connectionToClient, "You won the game!"));
+		string[] msg = {"#won"};
+		PlayerPrefabs.ForEach(p => p.TargetPrintDialog(p.connectionToClient, msg));
 	}
 
 	public void PlaySceneTransitionAnimation(string trigger) => sceneAnimator.Play(trigger);
