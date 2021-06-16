@@ -327,3 +327,10 @@ MonoBehaviour:
       translation: You can hit the 'Switch Weapon' key to switch between players.
     - fieldKey: '#teleport-to'
       translation: 'You are spectating '
+    - fieldKey: '#won'
+      translation: 'You have successfuly defeated the Great Khrom!
+
+        The kingdom
+        is now free of his madness.'
+    - fieldKey: '#lose'
+      translation: Unfortunately, you did not survive the dangers of Paimpont Forest...

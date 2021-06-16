@@ -9,6 +9,7 @@ using UI_Audio;
 using UI_Audio.Inventories;
 using UI_Audio.LivingEntityUI;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Entity.DynamicEntity.LivingEntity.Player {
 	public enum PlayerClasses: byte { Mage, Warrior, Archer }
@@ -499,6 +500,10 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 			PlayerInfoManager.SetInfoText(message);
 			PlayerInfoManager.OpenInfoBox();
 			StartCoroutine(PlayerInfoManager.DelayInfoBoxClosure(5)); // Auto close the info box
+		}
+		
+		[TargetRpc] public void TargetPrintDialog(NetworkConnection target, string[] dialogKey) {
+			PlayerInfoManager.PrintDialog(dialogKey, null, true);
 		}
 
 

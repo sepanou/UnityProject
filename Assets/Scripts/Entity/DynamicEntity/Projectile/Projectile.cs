@@ -105,6 +105,11 @@ namespace Entity.DynamicEntity.Projectile {
 				mob.GetAttacked(_fromWeapon.GetDamage(_fromSpecialAttack));
 			else if (_fromMob && other.gameObject.TryGetComponent(out Player player))
 				player.GetAttacked(_fromMob.atk);
+			else if (_fromWeapon && other.gameObject.TryGetComponent(out Player _))
+				return;
+			else if (_fromMob && other.gameObject.TryGetComponent(out Mob _))
+				return;
+			
 			NetworkServer.Destroy(gameObject);
 		}
 	}
