@@ -31,16 +31,21 @@ namespace Entity.DynamicEntity.Projectile {
 			_rigidBody.velocity = _facingDirection * Speed;
 		}
 
-		private static Projectile BuildMobProjectile(Projectile projectilePrefab, Mob mob, Vector2 direction) {
+		public static Projectile BuildMobProjectile(Projectile projectilePrefab, Mob mob, Vector2 direction) {
 			Projectile projectile = Instantiate(projectilePrefab, mob.transform.position, Quaternion.Euler(
 				new Vector3(0, 0, Vector2.SignedAngle(projectilePrefab.projectileOrientation, direction))
 			));
 			projectile._fromWeapon = null;
 			projectile._fromMob = mob;
 			projectile._facingDirection = direction;
+			if (mob is Khrom) {
+				projectile.Speed *= 2;
+				projectile.transform.localScale *= 2;
+			}
 			projectile._spawnTime = Time.fixedTime;
 			projectile.Instantiate();
 			SetSameRenderingParameters(mob, projectile);
+			NetworkServer.Spawn(projectile.gameObject);
 			return projectile;
 		}
 
@@ -100,6 +105,11 @@ namespace Entity.DynamicEntity.Projectile {
 				mob.GetAttacked(_fromWeapon.GetDamage(_fromSpecialAttack));
 			else if (_fromMob && other.gameObject.TryGetComponent(out Player player))
 				player.GetAttacked(_fromMob.atk);
+			else if (_fromWeapon && other.gameObject.TryGetComponent(out Player _))
+				return;
+			else if (_fromMob && other.gameObject.TryGetComponent(out Mob _))
+				return;
+			
 			NetworkServer.Destroy(gameObject);
 		}
 	}

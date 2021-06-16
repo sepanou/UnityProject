@@ -157,7 +157,7 @@ namespace Entity {
 				}
 
 				if (!_playerPool.ContainsKey(player))
-					yield return null;
+					yield break;
 
 				if (!_playerPool[player] || AutoStopInteracting)
 					CmdTryInteract(player);

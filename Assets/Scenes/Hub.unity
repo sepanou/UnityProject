@@ -59521,7 +59521,7 @@ MonoBehaviour:
   PersistNetworkManagerToOfflineScene: 0
   runInBackground: 1
   autoStartServerBuild: 1
-  serverTickRate: 30
+  serverTickRate: 60
   serverBatching: 0
   serverBatchInterval: 0
   offlineScene: Assets/Scenes/Hub.unity
@@ -59589,6 +59589,7 @@ MonoBehaviour:
   - {fileID: 1498433533527175071, guid: 2a0627d394dc469448722475f3847748, type: 3}
   - {fileID: 4076060016518188907, guid: 693db6aa6019a7f4dbe08e2d8dbeda58, type: 3}
   - {fileID: 8156293139754361776, guid: 771c4bd4ce650a04185fcf141a216509, type: 3}
+  - {fileID: 2587566166661676753, guid: 24c992b278603ce409fdf20ad2ebb8df, type: 3}
   sceneAnimator: {fileID: 807742234}
   hubScene: Assets/Scenes/Hub.unity
   hubSpawnPoints:
@@ -106940,8 +106941,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 997788941}
   m_HandleRect: {fileID: 997788940}
   m_Direction: 2
-  m_Value: 1.0000001
-  m_Size: 0.26947308
+  m_Value: 1
+  m_Size: 0.26943392
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -1,13 +1,12 @@
 ﻿using Behaviour;
 using Behaviour.Targeter;
-using UnityEngine;
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public class ForestSpirit: Mob {
-		public override int cooldown { get; protected set; } = 60;
-		public override int atk { get; protected set; } = 50;
+		public override int cooldown { get; protected set; } = 50;
+		public override int atk { get; protected set; } = 20;
 		private const float AtkMaxDist = 12;
-		private const float MovMinDist = 8;
+		private const float MovMinDist = 4;
 		private const float MovMaxDist = 16;
 
 		private void Start() {
@@ -40,7 +39,10 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 				default:
 					return;
 			}
-			// TODO: spawn projectile
+			
+			if (IsAttacking is null)
+				IsAttacking = StartCoroutine(AttackAnimation());
+			Projectile.Projectile.BuildMobProjectile(WeaponGenerator.GetStaffProjectile(), this, (target.transform.position - transform.position).normalized);
 		}
 	}
 }
