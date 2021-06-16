@@ -86,8 +86,8 @@ namespace Entity.DynamicEntity.LivingEntity.Mob {
 			}
 			if (behaviour is null) return;
 			Vector2 direction = behaviour.NextDirection();
-			if (direction != Vector2.zero)
-				Move(direction.x, direction.y);
+			if (direction == Vector2.zero) return;
+			Move(direction.x, direction.y);
 		}
 	}
 }

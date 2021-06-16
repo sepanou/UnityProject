@@ -13,12 +13,12 @@ namespace Generation{
 		[SerializeField] private GameObject[] mobsSpawnGO;
 		[SerializeField] private GameObject bossSpawnPoint;
 		[SerializeField] private GameObject bossPrefab;
-		[SerializeField] private bool hasBeenTp = false;
-		[SerializeField] private bool hasBeenCleared = false;
-		[SerializeField] private bool hasBeenWon = false;
-		[SerializeField] private int mobsToSpawn = 20;
+		private bool hasBeenTp = false;
+		private bool hasBeenCleared = false;
+		private bool hasBeenWon = false;
+		private int mobsToSpawn = 20;
 		private Vector3[] _mobSpawns;
-		[SerializeField] private List<Mob> _mobs = new List<Mob>();
+		private readonly List<Mob> _mobs = new List<Mob>();
 		private InputManager _inputManager;
 
 		[Server]

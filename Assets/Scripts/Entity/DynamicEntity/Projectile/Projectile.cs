@@ -38,6 +38,10 @@ namespace Entity.DynamicEntity.Projectile {
 			projectile._fromWeapon = null;
 			projectile._fromMob = mob;
 			projectile._facingDirection = direction;
+			if (mob is Khrom) {
+				projectile.Speed *= 2;
+				projectile.transform.localScale *= 2;
+			}
 			projectile._spawnTime = Time.fixedTime;
 			projectile.Instantiate();
 			SetSameRenderingParameters(mob, projectile);
