@@ -1,4 +1,5 @@
 ﻿using Entity.DynamicEntity.LivingEntity.Player;
+using Generation;
 using Mirror;
 using UI_Audio;
 using UnityEngine;
@@ -37,10 +38,7 @@ namespace Entity.StaticEntity {
 			base.OnTriggerExit2D(other);
 		}
 
-		[Server] public void Interact(Player player) {
-			CustomNetworkManager.Instance.AlivePlayers.ForEach(playerToTp => {
-				playerToTp.transform.position = new Vector3(11, -7, 0);
-			});
-		}
+		[Server] public void Interact(Player player)
+			=> FindObjectOfType<BossRoom>().GenerateStuffAndTP();
 	}
 }
