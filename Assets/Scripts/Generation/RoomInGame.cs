@@ -162,11 +162,8 @@ namespace Generation{
         } 
 
         [ServerCallback] private void Update() {
-            if (hasBeenCleared && Input.GetKeyDown(KeyCode.T)) {
-                CustomNetworkManager.Instance.AlivePlayers.ForEach(playerToTp => {
-                    playerToTp.transform.position = new Vector3(11, -7, 0);
-                });
-            }
+            if (hasBeenCleared && Input.GetKeyDown(KeyCode.T))
+                FindObjectOfType<BossRoom>().GenerateStuffAndTP();
             // Kills EVERYTHING :)
             if (!Input.GetKeyDown(KeyCode.P) || !hasBeenDiscovered) return;
             // Don't change to foreach or whatever otherwise, _mobs while be modified during the loop :/

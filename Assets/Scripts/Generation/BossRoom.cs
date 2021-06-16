@@ -13,7 +13,8 @@ namespace Generation{
 		[SerializeField] private GameObject[] mobsSpawnGO;
 		[SerializeField] private GameObject bossSpawnPoint;
 		[SerializeField] private GameObject bossPrefab;
-		private bool hasBeenCleared = false;
+		[SerializeField] private bool hasBeenTp = false;
+		[SerializeField] private bool hasBeenCleared = false;
 		private int mobsToSpawn = 20;
 		private Vector3[] _mobSpawns;
 		private List<Mob> _mobs;
@@ -26,52 +27,57 @@ namespace Generation{
 			Instantiate(mobGO, pos, quaternion.identity).TryGetComponent(out Mob mob);
 			--mobsToSpawn;
 			return mob;
-		} 
+		}
 
 		[Server]
-		public override void OnStartServer() {
+		public void GenerateStuffAndTP() {
 			_mobSpawns = new Vector3[mobsSpawnGO.Length];
 			for (int i = 0; i < _mobSpawns.Length; i++)
 				_mobSpawns[i] = mobsSpawnGO[i].transform.position;
 			_mobs = new List<Mob>();
-			base.OnStartServer();
 			Instantiate(bossPrefab, bossSpawnPoint.transform.position, quaternion.identity).TryGetComponent(out Mob boss);
 			boss.OnEntityDie.AddListener(BossDied);
-			_mobs.Add(boss);
 			NetworkServer.Spawn(boss.gameObject);
-			for (int i = 0; mobsToSpawn > 0 && i < _mobSpawns.Length * 2; ++i) {
+			for (int i = 0; i < mobsToSpawn; ++i) {
 				Mob mob = InstantiateRandomMob();
 				mob.OnEntityDie.AddListener(CheckRoomCleared);
 				_mobs.Add(mob);
 				NetworkServer.Spawn(mob.gameObject);
 			}
+			CustomNetworkManager.Instance.AlivePlayers.ForEach(playerToTp => {
+				playerToTp.transform.position = new Vector3(11, -7, 0);
+			});
+			hasBeenTp = true;
 		}
 
 		[Server]
 		private void CheckRoomCleared(LivingEntity entity) {
-			if (hasBeenCleared) return;
+			if (!hasBeenTp || hasBeenCleared) return;
 			_mobs.Remove(entity as Mob);
-			hasBeenCleared = _mobs.Count == 0;
-			if (mobsToSpawn <= 0) return;
-			InstantiateRandomMob();
+			Khrom boss = FindObjectOfType<Khrom>();
+			hasBeenCleared = _mobs.Count <= 0 && (!boss || !boss.IsAlive);
 		}
 
 		[Server]
 		private void BossDied(LivingEntity entity) {
+			if (hasBeenCleared) return;
 			KillStuff();
 		}
 
 		[ServerCallback]
 		private void Update() {
-			if (hasBeenCleared || !Input.GetKeyDown(KeyCode.P)) return;
+			if (!hasBeenTp || hasBeenCleared || !Input.GetKeyDown(KeyCode.P)) return;
 			KillStuff();
 		}
 		
 		[Server]
 		private void KillStuff() {
-			if (hasBeenCleared) return;
+			if (!hasBeenTp || hasBeenCleared) return;
+			hasBeenCleared = true;
 			for (int i = 0; i < _mobs.Count; i = 0)
 				_mobs[i].GetAttacked(int.MaxValue);
+			Khrom boss = FindObjectOfType<Khrom>();
+			if (boss && boss.IsAlive) boss.GetAttacked(int.MaxValue);
 		}
 	}
 }
