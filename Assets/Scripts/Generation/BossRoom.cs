@@ -15,6 +15,7 @@ namespace Generation{
 		[SerializeField] private GameObject bossPrefab;
 		[SerializeField] private bool hasBeenTp = false;
 		[SerializeField] private bool hasBeenCleared = false;
+		[SerializeField] private bool hasBeenWon = false;
 		[SerializeField] private int mobsToSpawn = 20;
 		private Vector3[] _mobSpawns;
 		[SerializeField] private List<Mob> _mobs = new List<Mob>();
@@ -66,7 +67,12 @@ namespace Generation{
 
 		[ServerCallback]
 		private void Update() {
-			if (!hasBeenTp || hasBeenCleared || !Input.GetKeyDown(KeyCode.P)) return;
+			if (hasBeenCleared && !hasBeenWon) {
+				hasBeenWon = true;
+				CustomNetworkManager.Instance.WonTheGame();
+				return;
+			}
+			if (!hasBeenTp || !Input.GetKeyDown(KeyCode.P)) return;
 			KillStuff();
 		}
 		
