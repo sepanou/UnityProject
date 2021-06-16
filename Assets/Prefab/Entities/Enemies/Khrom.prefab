@@ -135,9 +135,9 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
+  m_UseAutoMass: 1
+  m_Mass: 2.9185038
+  m_LinearDrag: 1000000
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -187,7 +187,7 @@ MonoBehaviour:
   syncInterval: 0.1
   spriteRenderer: {fileID: 5215461214401745811}
   interactionCollider: {fileID: 0}
-  speed: 3
+  speed: 1
   entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
     type: 3}
   nameTag: Great Khrom
