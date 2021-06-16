@@ -191,7 +191,7 @@ MonoBehaviour:
   entityUI: {fileID: 8398095544427678194, guid: b48116575ed06514aa2e3730e95013b7,
     type: 3}
   nameTag: Great Khrom
-  maxHealth: 1000
+  maxHealth: 150
   advancedMoves: 0
 --- !u!114 &5272519618421089043
 MonoBehaviour:

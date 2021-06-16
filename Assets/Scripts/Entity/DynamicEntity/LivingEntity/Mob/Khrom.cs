@@ -2,7 +2,7 @@
 
 namespace Entity.DynamicEntity.LivingEntity.Mob {
 	public class Khrom: Mob {
-		public override int cooldown { get; protected set; } = 1;
+		public override int cooldown { get; protected set; } = 30;
 		public override int atk { get; protected set; } = 50;
 		private const float AtkMaxDist = 128;
 		private NearestPlayerTargeter targeter;
