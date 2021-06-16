@@ -39,6 +39,6 @@ namespace Entity.StaticEntity {
 		}
 
 		[Server] public void Interact(Player player)
-			=> FindObjectOfType<BossRoom>().GenerateStuffAndTP();
+			=> FindObjectOfType<BossRoom>().GenerateStuffAndTp();
 	}
 }

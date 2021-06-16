@@ -15,9 +15,9 @@ namespace Generation{
 		[SerializeField] private GameObject bossPrefab;
 		[SerializeField] private bool hasBeenTp = false;
 		[SerializeField] private bool hasBeenCleared = false;
-		private int mobsToSpawn = 20;
+		[SerializeField] private int mobsToSpawn = 20;
 		private Vector3[] _mobSpawns;
-		private List<Mob> _mobs;
+		[SerializeField] private List<Mob> _mobs = new List<Mob>();
 		private InputManager _inputManager;
 
 		[Server]
@@ -30,15 +30,16 @@ namespace Generation{
 		}
 
 		[Server]
-		public void GenerateStuffAndTP() {
+		public void GenerateStuffAndTp() {
+			if (hasBeenTp) return;
+			hasBeenTp = true;
 			_mobSpawns = new Vector3[mobsSpawnGO.Length];
 			for (int i = 0; i < _mobSpawns.Length; i++)
 				_mobSpawns[i] = mobsSpawnGO[i].transform.position;
-			_mobs = new List<Mob>();
 			Instantiate(bossPrefab, bossSpawnPoint.transform.position, quaternion.identity).TryGetComponent(out Mob boss);
 			boss.OnEntityDie.AddListener(BossDied);
 			NetworkServer.Spawn(boss.gameObject);
-			for (int i = 0; i < mobsToSpawn; ++i) {
+			while (mobsToSpawn > 0) {
 				Mob mob = InstantiateRandomMob();
 				mob.OnEntityDie.AddListener(CheckRoomCleared);
 				_mobs.Add(mob);
@@ -47,7 +48,6 @@ namespace Generation{
 			CustomNetworkManager.Instance.AlivePlayers.ForEach(playerToTp => {
 				playerToTp.transform.position = new Vector3(11, -7, 0);
 			});
-			hasBeenTp = true;
 		}
 
 		[Server]
@@ -73,11 +73,11 @@ namespace Generation{
 		[Server]
 		private void KillStuff() {
 			if (!hasBeenTp || hasBeenCleared) return;
-			hasBeenCleared = true;
 			for (int i = 0; i < _mobs.Count; i = 0)
 				_mobs[i].GetAttacked(int.MaxValue);
 			Khrom boss = FindObjectOfType<Khrom>();
 			if (boss && boss.IsAlive) boss.GetAttacked(int.MaxValue);
+			hasBeenCleared = true;
 		}
 	}
 }
