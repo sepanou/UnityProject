@@ -359,6 +359,8 @@ namespace Entity.DynamicEntity.LivingEntity.Player {
 					maxHealth -= item.bonuses.healthBonus;
 					Health = changedHealth <= 0 ? Health : changedHealth;
 					Speed = DefaultSpeed * (1 + _currentCharmBonus.speedBonus);
+					if (_charms.Count == 0)
+						_currentCharmBonus = null;
 					break;
 				default:
 					Debug.LogWarning("An error happened while updating the sync charm list (Server)");

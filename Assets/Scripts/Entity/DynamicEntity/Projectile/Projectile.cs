@@ -108,9 +108,7 @@ namespace Entity.DynamicEntity.Projectile {
 			} else if (other.gameObject.TryGetComponent(out Mob mob)) {
 				if (_fromWeapon) mob.GetAttacked(_fromWeapon.GetDamage(FromSpecialAttack));
 				else return;
-			} else if (other.gameObject.TryGetComponent(out DynamicEntity _) ||
-			           other.gameObject.TryGetComponent(out Collectibles.Collectibles _))
-				return;
+			} else if (other.isTrigger) return;
 			
 			NetworkServer.Destroy(gameObject);
 		}
