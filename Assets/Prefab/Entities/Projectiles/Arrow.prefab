@@ -117,7 +117,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.34}
@@ -141,6 +141,7 @@ MonoBehaviour:
   interactionCollider: {fileID: 0}
   speed: 5
   projectileOrientation: {x: 0, y: 1}
+  isPlayerProjectile: 0
 --- !u!114 &2388094846923333019
 MonoBehaviour:
   m_ObjectHideFlags: 0

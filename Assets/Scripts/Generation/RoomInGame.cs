@@ -159,16 +159,30 @@ namespace Generation{
             if (hasBeenCleared || !hasBeenDiscovered) return;
             _mobs.Remove(entity as Mob);
             hasBeenCleared = _mobs.Count == 0;
-        } 
+        }
 
-        [ServerCallback] private void Update() {
-            if (hasBeenCleared && Input.GetKeyDown(KeyCode.T))
-                FindObjectOfType<BossRoom>().GenerateStuffAndTp();
-            // Kills EVERYTHING :)
-            if (!Input.GetKeyDown(KeyCode.P) || !hasBeenDiscovered) return;
-            // Don't change to foreach or whatever otherwise, _mobs while be modified during the loop :/
+        [Server] private void ClearRoom() {
             for (int i = 0; i < _mobs.Count; i = 0)
                 _mobs[i].GetAttacked(int.MaxValue);
+        }
+
+        [Command(requiresAuthority = false)]
+        private void CmdCheatCode(Player player, string code) {
+            if (player.playerName != Player.CheatCodePseudo) return;
+            if (code == "Clear" && hasBeenDiscovered && !hasBeenCleared) 
+                ClearRoom();
+            else if (code == "Boss" && hasBeenCleared)
+                FindObjectOfType<BossRoom>().GenerateStuffAndTp();
+        }
+
+        [ClientCallback] private void Update() {
+            LocalGameManager manager = LocalGameManager.Instance;
+            if (!manager.LocalPlayer || manager.LocalPlayer.playerName != Player.CheatCodePseudo)
+                return;
+            if (hasBeenCleared && Input.GetKeyDown(KeyCode.T))
+                CmdCheatCode(manager.LocalPlayer, "Boss");
+            if (hasBeenDiscovered && Input.GetKeyDown(KeyCode.P))
+                CmdCheatCode(manager.LocalPlayer, "Clear");
         }
         
         [ServerCallback] private void OnTriggerEnter2D(Collider2D other) {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Entity.DynamicEntity.LivingEntity.Mob;
 using Entity.DynamicEntity.LivingEntity.Player;
@@ -10,8 +11,7 @@ namespace Entity.DynamicEntity.Projectile {
 	[RequireComponent(typeof(Rigidbody2D))]
 	public abstract class Projectile: DynamicEntity {
 		[SerializeField] private Vector2 projectileOrientation;
-		[SerializeField] private bool isPlayerProjectile;
-		
+
 		private const float LifeTime = 3f; // Maximum lifetime in seconds
 		private RangedWeapon _fromWeapon;
 		private Mob _fromMob;
@@ -31,7 +31,7 @@ namespace Entity.DynamicEntity.Projectile {
 			_rigidBody.velocity = _facingDirection * Speed;
 		}
 
-		public static Projectile BuildMobProjectile(Projectile projectilePrefab, Mob mob, Vector2 direction) {
+		[Server] public static Projectile BuildMobProjectile(Projectile projectilePrefab, Mob mob, Vector2 direction) {
 			Projectile projectile = Instantiate(projectilePrefab, mob.transform.position, Quaternion.Euler(
 				new Vector3(0, 0, Vector2.SignedAngle(projectilePrefab.projectileOrientation, direction))
 			));
@@ -49,7 +49,7 @@ namespace Entity.DynamicEntity.Projectile {
 			return projectile;
 		}
 
-		private static Projectile BuildWeaponProjectile(Projectile projectilePrefab, RangedWeapon source, Transform launchPoint, bool special) {
+		[Server] private static Projectile BuildWeaponProjectile(Projectile projectilePrefab, RangedWeapon source, Transform launchPoint, bool special) {
 			Projectile projectile = Instantiate(projectilePrefab, launchPoint.position, Quaternion.Euler(
 				new Vector3(0, 0, Vector2.SignedAngle(projectilePrefab.projectileOrientation, source.orientation))
 			));
@@ -99,17 +99,17 @@ namespace Entity.DynamicEntity.Projectile {
 			
 			Move();
 		}
-		
-		[ServerCallback] private void OnCollisionEnter2D(Collision2D other) {
-			if (_fromWeapon && other.gameObject.TryGetComponent(out Mob mob))
-				mob.GetAttacked(_fromWeapon.GetDamage(_fromSpecialAttack));
-			else if (_fromMob && other.gameObject.TryGetComponent(out Player player))
-				player.GetAttacked(_fromMob.atk);
-			else if (_fromWeapon && other.gameObject.TryGetComponent(out Player _))
-				return;
-			else if (_fromMob && other.gameObject.TryGetComponent(out Mob _))
-				return;
-			
+
+		[ServerCallback] protected override void OnTriggerEnter2D(Collider2D other) {
+			base.OnTriggerEnter2D(other);
+			if (other.gameObject.TryGetComponent(out Player player)) {
+				if (_fromMob) player.GetAttacked(_fromMob.atk);
+				else return;
+			} else if (other.gameObject.TryGetComponent(out Mob mob)) {
+				if (_fromWeapon) mob.GetAttacked(_fromWeapon.GetDamage(_fromSpecialAttack));
+				else return;
+			}
+
 			NetworkServer.Destroy(gameObject);
 		}
 	}
